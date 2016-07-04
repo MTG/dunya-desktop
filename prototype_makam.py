@@ -163,25 +163,24 @@ class Window(QtGui.QWidget):
         self.proxy_model.setSourceModel(model)
         self.source_view.setModel(model)
 
-def add_score(model, subject, sender, date):
+
+def add_score(model, title, composer):
     model.insertRow(0)
-    model.setData(model.index(0, 0), subject)
-    model.setData(model.index(0, 1), sender)
-    model.setData(model.index(0, 2), date)
+    model.setData(model.index(0, 0), title)
+    model.setData(model.index(0, 1), composer)
+
 
 def create_score_model(parent):
     model = QtGui.QStandardItemModel(0, 2, parent)
 
-    model.setHeaderData(0, QtCore.Qt.Horizontal, "Subject")
-    model.setHeaderData(1, QtCore.Qt.Horizontal, "Sender")
-    model.setHeaderData(2, QtCore.Qt.Horizontal, "Date")
+    model.setHeaderData(0, QtCore.Qt.Horizontal, "Title")
+    model.setHeaderData(1, QtCore.Qt.Horizontal, "Composer")
 
     works = compmusic.dunya.makam.get_works()
-    print type(works)
+
     for work in works:
-        print work
-        #add_score(model, "Happy New Year!", "Grace K. <grace@software-inc.com>",
-        #        QtCore.QDateTime(QtCore.QDate(2006, 12, 31), QtCore.QTime(17, 3)))
+        if work['composers']:
+            add_score(model, work['title'], work['composers'][0]['name'])
 
     return model
 
