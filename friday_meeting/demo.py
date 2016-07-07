@@ -57,6 +57,10 @@ class DemoDialog(QtGui.QDialog, Ui_Dialog):
         self.comboBox_usul = set_combobox(self.comboBox_usul, self.usuls)
 
         self.pushButton_query.clicked.connect(self.do_query)
+        self.pushButton_select.clicked.connect(self.get_selection)
+
+    def get_selection(self):
+        print self.tableView_score.currentIndex()
 
     def do_query(self):
         # gazel and taksim uuids
@@ -90,50 +94,36 @@ class DemoDialog(QtGui.QDialog, Ui_Dialog):
 
         # filtering
         if len(lenghts) == 3:
-            intersection = [common for common in [common for common in lenghts[0][0] if common in lenghts[1][0]]
-                            if common in lenghts[2][0]]
+            work_list = [common for common in [common for common in lenghts[0][0] if common in lenghts[1][0]]
+                         if common in lenghts[2][0]]
         elif len(lenghts) == 2:
-            intersection = [common for common in lenghts[0][0] if common in lenghts[1][0]]
+            work_list = [common for common in lenghts[0][0] if common in lenghts[1][0]]
         else:
-            intersection = lenghts[0][0]
+            work_list = lenghts[0][0]
 
-        for element in intersection: print element
-
+        self.set_table(work_list)
         self.pushButton_query.setEnabled(True)
-        '''
-        if makam_id is not -1:
-            data = compmusic.dunya.makam.get_makam(makam_id)
 
-            # if the form is selected as gazel
-            if form_id == GAZEL:
-                if data['gazels']:
-                    query = [recording for recording in data['gazels']]
-            elif form_id == TAKSIM:
-                if data['taksims']:
-                    query = [recording for recording in data['taksims']]
+    def set_table(self, score_list):
+        self.tableView_score.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+        self.tableView_score.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows    )
 
-            # checking the recording different than the gazel and taksim form
-            else:
-                if data['works']:
-                    # checking the forms of the works
-                    if form_id != -1:
-                        works = []
-                        for ind, work in enumerate(data['works']):
-                            print ind, len(data['works'])
-                            metadata = compmusic.dunya.makam.get_work(work['mbid'])
-                            for form in metadata['forms']:
-                                if form['uuid'] == form_id:
-                                    for usul in metadata['usuls']:
-                                        if usul['uuid'] == usul_id:
-                                            print metadata
+        self.tableView_score.setRowCount(len(score_list))
+        self.tableView_score.setColumnCount(2)
+        self.tableView_score.verticalHeader().setVisible(False)
 
-                                    #print([metadata['mbid'], metadata['title']])
-                                    #works.append(work['mbid'])
-                else:
-                    print 'No recording'
+        for xx, element in enumerate(score_list):
+            title = QtGui.QTableWidgetItem(element['title'])
+            mbid = QtGui.QTableWidgetItem(element['mbid'])
 
-        self.pushButton_query.setEnabled(True)
-        '''
+            self.tableView_score.setItem(xx, 0, title)
+            self.tableView_score.setItem(xx, 1, mbid)
+
+        self.tableView_score.setHorizontalHeaderLabels(['Title', 'mbid'])
+        #self.tableView_score.hideColumn(1)
+        self.tableView_score.resizeColumnsToContents()
+        self.tableView_score.resizeRowsToContents()
+
 
 app = QtGui.QApplication(sys.argv)
 dialog = DemoDialog()
