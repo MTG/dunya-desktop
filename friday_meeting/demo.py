@@ -7,19 +7,30 @@ from PySide import QtCore, QtGui
 import compmusic.dunya.makam
 import time
 
-
 # setting the token
 compmusic.dunya.conn.set_token('***REMOVED***')
 
 
-def set_combobox(attribute):
-    attribute.setEditable(True)
-    attribute.setInsertPolicy(QtGui.QComboBox.NoInsert)
+def sort_dictionary(dictionary):
+    dictionary = sorted(dictionary, key=lambda k: k['name'])
+    return dictionary
 
-    # fetching attribute from dunya
-    for element in attribute:
-        attribute.addItem(element['name'])
-    element.setCurrentIndex(-1)
+
+def set_combobox(combobox, attribute):
+    combobox.setEditable(True)
+    combobox.setInsertPolicy(QtGui.QComboBox.NoInsert)
+
+    for elememt in attribute:
+        combobox.addItem(elememt['name'])
+    combobox.setCurrentIndex(-1)
+    return combobox
+
+
+def get_attribute_id(attribute, index):
+    if index is not -1:
+        return attribute[index]['uuid']
+    else:
+        return -1
 
 
 class DemoDialog(QtGui.QDialog, Ui_Dialog):
@@ -30,55 +41,36 @@ class DemoDialog(QtGui.QDialog, Ui_Dialog):
 
         # fetching makam,usul and form data from dunya
         self.makams = compmusic.dunya.makam.get_makams()
-        self.makams = sorted(self.makams, key=lambda k: k['name'])
+        self.makams = sort_dictionary(self.makams)
 
         self.usuls = compmusic.dunya.makam.get_usuls()
-        self.usuls = sorted(self.usuls, key=lambda k: k['name'])
+        self.usuls = sort_dictionary(self.usuls)
 
         self.forms = compmusic.dunya.makam.get_forms()
-        self.forms = sorted(self.forms, key=lambda k: k['name'])
+        self.forms = sort_dictionary(self.forms)
 
-        # combobox form
-        self.comboBox_form.setEditable(True)
-        self.comboBox_form.setInsertPolicy(QtGui.QComboBox.NoInsert)
-        self.set_form_combobox()
-
-        # combobox usul
-        self.comboBox_usul.setEditable(True)
-        self.comboBox_form.setInsertPolicy(QtGui.QComboBox.NoInsert)
-        self.set_usul_combobox()
-
-        # combobox makam
-        self.comboBox_makam.setEditable(True)
-        self.comboBox_makam.setInsertPolicy(QtGui.QComboBox.NoInsert)
-        self.set_makam_combobox()
+        # setting the combobox
+        self.comboBox_makam = set_combobox(self.comboBox_makam, self.makams)
+        self.comboBox_form = set_combobox(self.comboBox_form, self.forms)
+        self.comboBox_usul = set_combobox(self.comboBox_usul, self.usuls)
 
         self.pushButton_query.clicked.connect(self.do_query)
 
     def do_query(self):
-        selected_makam = self.comboBox_makam.currentIndex()
-        selected_usul = self.comboBox_form.currentIndex()
-        selected_form = self.comboBox_usul.currentIndex()
+        self.pushButton_query.setDisabled(True)
+        makam_id = get_attribute_id(self.makams, self.comboBox_makam.currentIndex())
+        usul_id = self.comboBox_form.currentIndex()
+        form_id = self.comboBox_usul.currentIndex()
 
-        print selected_makam, selected_usul, selected_form
+        filtered_list = []
 
-    def set_makam_combobox(self):
-        # fetching makams from dunya
-        for makam in self.makams:
-            self.comboBox_makam.addItem(makam['name'])
-        self.comboBox_makam.setCurrentIndex(-1)
+        if makam_id is not -1:
+            data = compmusic.dunya.makam.get_makam(makam_id)
 
-    def set_usul_combobox(self):
-        # fetching forms from dunya
-        for form in self.usuls:
-            self.comboBox_usul.addItem(form['name'])
-        self.comboBox_usul.setCurrentIndex(-1)
+        self.pushButton_query.setEnabled(True)
+        #print makam_id, usul_id, form_id
+        #print selected_makam_id, selected_usul, selected_form
 
-    def set_form_combobox(self):
-        # fetching forms from dunya
-        for form in self.forms:
-            self.comboBox_form.addItem(form['name'])
-        self.comboBox_form.setCurrentIndex(-1)
 
 
 app = QtGui.QApplication(sys.argv)
