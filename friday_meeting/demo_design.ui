@@ -65,6 +65,13 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>comboBox_makam</tabstop>
+  <tabstop>comboBox_form</tabstop>
+  <tabstop>comboBox_usul</tabstop>
+  <tabstop>pushButton_query</tabstop>
+  <tabstop>tableView_score</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
