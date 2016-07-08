@@ -51,6 +51,10 @@ class DemoDialog(QtGui.QDialog, Ui_Dialog):
         self.forms = compmusic.dunya.makam.get_forms()
         self.forms = sort_dictionary(self.forms)
 
+        self.work_metadata = compmusic.dunya.makam.get_works()
+        print len(self.work_metadata)
+        print self.work_metadata[0].keys()
+
         # setting the combobox
         self.comboBox_makam = set_combobox(self.comboBox_makam, self.makams)
         self.comboBox_form = set_combobox(self.comboBox_form, self.forms)
@@ -60,7 +64,7 @@ class DemoDialog(QtGui.QDialog, Ui_Dialog):
         self.pushButton_select.clicked.connect(self.get_selection)
 
     def get_selection(self):
-        print self.tableView_score.currentIndex()
+        print self.tableView_score.currentItem().row()
 
     def do_query(self):
         # gazel and taksim uuids
@@ -114,10 +118,12 @@ class DemoDialog(QtGui.QDialog, Ui_Dialog):
 
         for xx, element in enumerate(score_list):
             title = QtGui.QTableWidgetItem(element['title'])
-            mbid = QtGui.QTableWidgetItem(element['mbid'])
-
             self.tableView_score.setItem(xx, 0, title)
-            self.tableView_score.setItem(xx, 1, mbid)
+
+            work_metadata = (item for item in self.work_metadata if item["mbid"] == element['mbid']).next()
+            if work_metadata['composers']:
+                composer = QtGui.QTableWidgetItem(work_metadata['composers'][0]['name'])
+                self.tableView_score.setItem(xx, 1, composer)
 
         self.tableView_score.setHorizontalHeaderLabels(['Title', 'mbid'])
         #self.tableView_score.hideColumn(1)
