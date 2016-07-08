@@ -5,6 +5,7 @@ from PySide import QtCore, QtGui
 
 import compmusic.dunya.makam
 import time
+import webbrowser
 
 # setting the token
 compmusic.dunya.conn.set_token('***REMOVED***')
@@ -40,6 +41,7 @@ class DemoDialog(QtGui.QDialog, Ui_Dialog):
         super(DemoDialog, self).__init__(parent)
         # setting the qt-designer design
         self.setupUi(self)
+        self.setWindowTitle('CompMusic Makam Works')
 
         # fetching makam,usul and form data from dunya
         self.makams = compmusic.dunya.makam.get_makams()
@@ -52,19 +54,33 @@ class DemoDialog(QtGui.QDialog, Ui_Dialog):
         self.forms = sort_dictionary(self.forms)
 
         self.work_metadata = compmusic.dunya.makam.get_works()
-        print len(self.work_metadata)
-        print self.work_metadata[0].keys()
 
         # setting the combobox
         self.comboBox_makam = set_combobox(self.comboBox_makam, self.makams)
         self.comboBox_form = set_combobox(self.comboBox_form, self.forms)
         self.comboBox_usul = set_combobox(self.comboBox_usul, self.usuls)
 
+        # signals
+        # buttons
         self.pushButton_query.clicked.connect(self.do_query)
-        self.pushButton_select.clicked.connect(self.get_selection)
+        self.pushButton_select.clicked.connect(self.get_selection_button)
 
-    def get_selection(self):
-        print self.tableView_score.currentItem().row()
+        # table signals
+        self.tableView_score.doubleClicked.connect(self.get_selection_double_click)
+
+    def get_selection_double_click(self):
+        webbrowser.open(url=u"https://musicbrainz.org/work/{0:s}".format(
+            self.work_list[self.tableView_score.currentItem().row()]['mbid']))
+
+    def get_selection_button(self):
+        print self.work_list[self.tableView_score.currentItem().row()]['mbid']
+        #self.open_recordings()
+
+    #def open_recordings(self):
+    #    self.wid = QtGui.QWidget()
+    #    self.wid.resize(250, 150)
+    #    self.wid.setWindowTitle('NewWindow')
+    #    self.wid.show()
 
     def do_query(self):
         # gazel and taksim uuids
@@ -105,12 +121,13 @@ class DemoDialog(QtGui.QDialog, Ui_Dialog):
         else:
             work_list = lenghts[0][0]
 
+        self.work_list = work_list
         self.set_table(work_list)
         self.pushButton_query.setEnabled(True)
 
     def set_table(self, score_list):
         self.tableView_score.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
-        self.tableView_score.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows    )
+        self.tableView_score.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
 
         self.tableView_score.setRowCount(len(score_list))
         self.tableView_score.setColumnCount(2)
@@ -125,7 +142,7 @@ class DemoDialog(QtGui.QDialog, Ui_Dialog):
                 composer = QtGui.QTableWidgetItem(work_metadata['composers'][0]['name'])
                 self.tableView_score.setItem(xx, 1, composer)
 
-        self.tableView_score.setHorizontalHeaderLabels(['Title', 'mbid'])
+        self.tableView_score.setHorizontalHeaderLabels(['Title', 'Composer'])
         #self.tableView_score.hideColumn(1)
         self.tableView_score.resizeColumnsToContents()
         self.tableView_score.resizeRowsToContents()
