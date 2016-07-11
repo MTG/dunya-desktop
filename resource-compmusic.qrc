@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="compmusic">
+    <file>images/compmusic-logo-black.png</file>
+    <file>images/compmusic-logo-white.png</file>
+    <file>images/logoDunya.png</file>
+    <file>images/login.png</file>
+  </qresource>
+</RCC>
