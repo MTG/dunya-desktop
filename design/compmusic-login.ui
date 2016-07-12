@@ -26,7 +26,7 @@
    <string>CompMusic</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="resource-compmusic.qrc">
+   <iconset resource="../resource-compmusic.qrc">
     <normaloff>:/compmusic/images/compmusic-logo-white.png</normaloff>:/compmusic/images/compmusic-logo-white.png</iconset>
   </property>
   <property name="layoutDirection">
@@ -48,7 +48,7 @@
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap resource="resource-compmusic.qrc">:/compmusic/images/compmusic-logo-white.png</pixmap>
+    <pixmap resource="../resource-compmusic.qrc">:/compmusic/images/compmusic-logo-white.png</pixmap>
    </property>
    <property name="scaledContents">
     <bool>true</bool>
@@ -70,9 +70,9 @@
   <widget class="QLineEdit" name="lineEdit_id">
    <property name="geometry">
     <rect>
-     <x>270</x>
+     <x>260</x>
      <y>120</y>
-     <width>141</width>
+     <width>161</width>
      <height>27</height>
     </rect>
    </property>
@@ -98,9 +98,9 @@
   <widget class="QPushButton" name="pushButton_login">
    <property name="geometry">
     <rect>
-     <x>270</x>
+     <x>260</x>
      <y>190</y>
-     <width>141</width>
+     <width>161</width>
      <height>27</height>
     </rect>
    </property>
@@ -125,7 +125,7 @@ QToolButton:pressed {
     <string notr="true">Login</string>
    </property>
    <property name="icon">
-    <iconset resource="resource-compmusic.qrc">
+    <iconset resource="../resource-compmusic.qrc">
      <normaloff>:/compmusic/images/login.png</normaloff>:/compmusic/images/login.png</iconset>
    </property>
    <property name="shortcut">
@@ -170,7 +170,7 @@ QToolButton:pressed {
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap resource="resource-compmusic.qrc">:/compmusic/images/logoDunya.png</pixmap>
+    <pixmap resource="../resource-compmusic.qrc">:/compmusic/images/logoDunya.png</pixmap>
    </property>
    <property name="scaledContents">
     <bool>true</bool>
@@ -179,9 +179,9 @@ QToolButton:pressed {
   <widget class="QLineEdit" name="lineEdit_password">
    <property name="geometry">
     <rect>
-     <x>270</x>
+     <x>260</x>
      <y>150</y>
-     <width>141</width>
+     <width>161</width>
      <height>27</height>
     </rect>
    </property>
@@ -211,8 +211,9 @@ QToolButton:pressed {
   <tabstop>lineEdit_password</tabstop>
  </tabstops>
  <resources>
+  <include location="../resource-compmusic.qrc"/>
+  <include location="../resource-compmusic.qrc"/>
   <include location="resource-compmusic.qrc"/>
-  <include location="../../.designer/backup/resource-compmusic.qrc"/>
  </resources>
  <connections/>
 </ui>
