@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>700</width>
+    <height>500</height>
+   </rect>
+  </property>
   <property name="baseSize">
    <size>
     <width>4</width>
@@ -259,7 +267,7 @@ QTabBar::tab:selected {
                 <string>Query</string>
                </property>
                <property name="icon">
-                <iconset resource="../resource-compmusic.qrc">
+                <iconset resource="resource-compmusic.qrc">
                  <normaloff>:/compmusic/images/magnifying-glass.png</normaloff>:/compmusic/images/magnifying-glass.png</iconset>
                </property>
                <property name="checkable">
@@ -318,7 +326,7 @@ QTabBar::tab:selected {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>619</width>
+     <width>700</width>
      <height>25</height>
     </rect>
    </property>
@@ -326,7 +334,7 @@ QTabBar::tab:selected {
   <widget class="QStatusBar" name="statusbar_makam"/>
  </widget>
  <resources>
-  <include location="../resource-compmusic.qrc"/>
+  <include location="resource-compmusic.qrc"/>
  </resources>
  <connections/>
 </ui>

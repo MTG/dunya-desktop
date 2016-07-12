@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'makam_main.ui'
 #
-# Created: Tue Jul 12 17:49:24 2016
+# Created: Tue Jul 12 18:03:48 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,6 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(700, 500)
         MainWindow.setBaseSize(QtCore.QSize(4, 4))
         self.centralwidget_makam = QtGui.QWidget(MainWindow)
         self.centralwidget_makam.setObjectName("centralwidget_makam")
@@ -172,7 +173,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.tabWidget_makam_corpus)
         MainWindow.setCentralWidget(self.centralwidget_makam)
         self.menubar_makam = QtGui.QMenuBar(MainWindow)
-        self.menubar_makam.setGeometry(QtCore.QRect(0, 0, 619, 25))
+        self.menubar_makam.setGeometry(QtCore.QRect(0, 0, 700, 25))
         self.menubar_makam.setObjectName("menubar_makam")
         MainWindow.setMenuBar(self.menubar_makam)
         self.statusbar_makam = QtGui.QStatusBar(MainWindow)
