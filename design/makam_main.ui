@@ -306,6 +306,19 @@ QTabBar::tab:selected {
              </item>
             </layout>
            </item>
+           <item row="1" column="0">
+            <widget class="QToolButton" name="toolButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Try</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>

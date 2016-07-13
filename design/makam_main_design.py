@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'makam_main.ui'
 #
-# Created: Tue Jul 12 18:03:48 2016
+# Created: Wed Jul 13 19:11:22 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -163,6 +163,14 @@ class Ui_MainWindow(object):
         self.tableView_results.setObjectName("tableView_results")
         self.verticalLayout_results.addWidget(self.tableView_results)
         self.gridLayout_2.addLayout(self.verticalLayout_results, 0, 0, 1, 1)
+        self.toolButton = QtGui.QToolButton(self.frame_results)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.toolButton.sizePolicy().hasHeightForWidth())
+        self.toolButton.setSizePolicy(sizePolicy)
+        self.toolButton.setObjectName("toolButton")
+        self.gridLayout_2.addWidget(self.toolButton, 1, 0, 1, 1)
         self.verticalLayout_2.addWidget(self.frame_results)
         self.tabWidget_makam_corpus.addTab(self.tab_audio, "")
         self.tab_metadata = QtGui.QWidget()
@@ -197,6 +205,7 @@ class Ui_MainWindow(object):
         self.label_filter_usul.setText(QtGui.QApplication.translate("MainWindow", "Usul:", None, QtGui.QApplication.UnicodeUTF8))
         self.toolButton_query.setText(QtGui.QApplication.translate("MainWindow", "Query", None, QtGui.QApplication.UnicodeUTF8))
         self.lineEdit_filter.setPlaceholderText(QtGui.QApplication.translate("MainWindow", "Type here to filter the results...", None, QtGui.QApplication.UnicodeUTF8))
+        self.toolButton.setText(QtGui.QApplication.translate("MainWindow", "Try", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget_makam_corpus.setTabText(self.tabWidget_makam_corpus.indexOf(self.tab_audio), QtGui.QApplication.translate("MainWindow", "Audio", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget_makam_corpus.setTabText(self.tabWidget_makam_corpus.indexOf(self.tab_metadata), QtGui.QApplication.translate("MainWindow", "Metadata", None, QtGui.QApplication.UnicodeUTF8))
 
