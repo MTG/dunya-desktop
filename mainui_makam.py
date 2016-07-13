@@ -6,14 +6,18 @@ from PySide import QtCore, QtGui
 import compmusic.dunya.makam
 import time
 import webbrowser
+import concurrent.futures
+import itertools
+
+from multiprocessing.pool import ThreadPool as Pool
 
 # setting the token
 compmusic.dunya.conn.set_token('***REMOVED***')
 
 
-def sort_dictionary(dictionary):
+def sort_dictionary(dictionary, key):
     """sorts the given dictionary according to the keys"""
-    dictionary = sorted(dictionary, key=lambda k: k['name'])
+    dictionary = sorted(dictionary, key=lambda k: k[key])
     return dictionary
 
 
@@ -36,6 +40,13 @@ def get_attribute_id(attribute, index):
         return -1
 
 
+class StandardItemModel(QtGui.QStandardItemModel):
+    checkBoxToggled = QtCore.Signal(QtGui.QStandardItem, QtCore.Qt.CheckState)
+
+    def __init__(self, *args, **kwargs):
+        super(StandardItemModel, self).__init__(*args, **kwargs)
+
+
 class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         # setting the interface
@@ -47,26 +58,31 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.setWindowTitle('Turkish Makam Music Corpus')
 
         # proxy modal
-        self.proxy_modal = QtGui.QSortFilterProxyModel()
+        self.proxy_model = QtGui.QSortFilterProxyModel()
 
         # fetching makam,usul and form data from dunya
         self.makams = compmusic.dunya.makam.get_makams()
-        self.makams = sort_dictionary(self.makams)
+        self.makams = sort_dictionary(self.makams, 'name')
 
         self.usuls = compmusic.dunya.makam.get_usuls()
-        self.usuls = sort_dictionary(self.usuls)
+        self.usuls = sort_dictionary(self.usuls, 'name')
 
         self.forms = compmusic.dunya.makam.get_forms()
-        self.forms = sort_dictionary(self.forms)
+        self.forms = sort_dictionary(self.forms, 'name')
 
         # setting the combobox
         self.comboBox_makam = set_combobox(self.comboBox_makam, self.makams)
         self.comboBox_form = set_combobox(self.comboBox_form, self.forms)
         self.comboBox_usul = set_combobox(self.comboBox_usul, self.usuls)
 
+        self.lineEdit_filter.setDisabled(True)
+
         # signals
         # buttons
         self.toolButton_query.clicked.connect(self.do_query)
+
+        # line edit
+        self.lineEdit_filter.textChanged.connect(self.proxy_model.setFilterRegExp)
 
     def do_query(self):
         # gazel and taksim uuids
@@ -143,7 +159,6 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
                 recording_list = lengths_recording_taksims[0][0]
             elif form_id == GAZEL:
                 recording_list = lengths_recording_gazels[0][0]
-
         else:
             work_list = lenghts_works[0][0]
             recording_list = lengths_recording_gazels[0][0] + lengths_recording_taksims[0][0]
@@ -152,47 +167,60 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.recording_list = recording_list
 
         # for element in lengths_recording: print element
-
         self.set_table(work_list, recording_list)
         self.toolButton_query.setEnabled(True)
 
     def set_table(self, score_list, recording_list):
         # setting the table for no edit and row selection
-        #self.tableView_results.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
-        #self.tableView_results.setSelectionBitemehavior(QtGui.QAbstractItemView.SelectRows)
+        self.tableView_results.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+        self.tableView_results.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
 
-        # setting the modal
-        model = QtGui.QStandardItemModel(self)
+        # creating a pool for multi-processing
+        pool = Pool(4)
+        for element in score_list:
+            pool.apply_async(self.adding_items_to_table, (element,))
+        pool.close()
 
-        # getting the related audio-recordings
+        start = time.time()
+        pool.join()
+        print time.time() - start, 'secs'
 
-        for xx, element in enumerate(score_list):
+        # sorting the recording dictionary
+        self.recording_list = sort_dictionary(self.recording_list, 'title')
+
+        model = StandardItemModel(len(self.recording_list), 2)
+        model.setHorizontalHeaderLabels(['Title', 'Artists'])
+
+        for row, item in enumerate(self.recording_list):
+            title_item = QtGui.QStandardItem(item['title'])
+            title_item.setCheckable(True)
+            title_item.setCheckState(QtCore.Qt.Checked)
+
+            artists = ''
+            for artist in item['artists']:
+                artists += artist['name'] + ", "
+
+            artist_item = QtGui.QStandardItem(artists)
+
+            model.setItem(row, 0, title_item)
+            model.setItem(row, 1, artist_item)
+
+        self.proxy_model.setSourceModel(model)
+        self.proxy_model.setFilterKeyColumn(-1)
+
+        self.tableView_results.setModel(self.proxy_model)
+        self.lineEdit_filter.setEnabled(True)
+
+        self.tableView_results.resizeColumnsToContents()
+        #self.tableView_results.resizeRowsToContents()
+
+    def adding_items_to_table(self, element):
+        try:
             work_data = compmusic.dunya.makam.get_work(element['mbid'])
             for rec in work_data['recordings']:
-                print work_data['title'], rec['artists']
-            #for rec in compmusic.dunya.makam.get_work(element['mbid'])['recordings']: print rec
-
-
-        '''
-        self.tableView_score.setRowCount(len(score_list))
-        self.tableView_score.setColumnCount(2)
-        self.tableView_score.verticalHeader().setVisible(False)
-
-        for xx, element in enumerate(score_list):
-            title = QtGui.QTableWidgetItem(element['title'])
-            self.tableView_score.setItem(xx, 0, title)
-
-            work_metadata = (item for item in self.work_metadata if item["mbid"] == element['mbid']).next()
-            if work_metadata['composers']:
-                composer = QtGui.QTableWidgetItem(work_metadata['composers'][0]['name'])
-                self.tableView_score.setItem(xx, 1, composer)
-
-        self.tableView_score.setHorizontalHeaderLabels(['Title', 'Composer'])
-        # self.tableView_score.hideColumn(1)
-        self.tableView_score.resizeColumnsToContents()
-        self.tableView_score.resizeRowsToContents()
-        '''
-
+                self.recording_list.append(rec)
+        except:
+            print('error with item')
 
 app = QtGui.QApplication(sys.argv)
 dialog = MainMakam()
