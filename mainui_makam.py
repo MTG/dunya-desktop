@@ -5,9 +5,6 @@ from PySide import QtCore, QtGui
 
 import compmusic.dunya.makam
 import time
-import webbrowser
-import concurrent.futures
-import itertools
 
 from multiprocessing.pool import ThreadPool as Pool
 
@@ -38,13 +35,6 @@ def get_attribute_id(attribute, index):
         return attribute[index]['uuid']
     else:
         return -1
-
-
-class StandardItemModel(QtGui.QStandardItemModel):
-    checkBoxToggled = QtCore.Signal(QtGui.QStandardItem, QtCore.Qt.CheckState)
-
-    def __init__(self, *args, **kwargs):
-        super(StandardItemModel, self).__init__(*args, **kwargs)
 
 
 class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
@@ -82,7 +72,13 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.toolButton_query.clicked.connect(self.do_query)
 
         # line edit
-        self.lineEdit_filter.textChanged.connect(self.proxy_model.setFilterRegExp)
+        self.lineEdit_filter.textChanged.connect(self.filtering_the_table)
+
+    def filtering_the_table(self):
+        regExp = QtCore.QRegExp(self.lineEdit_filter.text(),
+                                QtCore.Qt.CaseInsensitive)
+
+        self.proxy_model.setFilterRegExp(regExp)
 
     def do_query(self):
         # gazel and taksim uuids
@@ -188,8 +184,8 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         # sorting the recording dictionary
         self.recording_list = sort_dictionary(self.recording_list, 'title')
 
-        model = StandardItemModel(len(self.recording_list), 2)
-        model.setHorizontalHeaderLabels(['Title', 'Artists'])
+        self.model = QtGui.QStandardItemModel(len(self.recording_list), 2)
+        self.model.setHorizontalHeaderLabels(['Title', 'Artists'])
 
         for row, item in enumerate(self.recording_list):
             title_item = QtGui.QStandardItem(item['title'])
@@ -202,17 +198,24 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
 
             artist_item = QtGui.QStandardItem(artists)
 
-            model.setItem(row, 0, title_item)
-            model.setItem(row, 1, artist_item)
+            self.model.setItem(row, 0, title_item)
+            self.model.setItem(row, 1, artist_item)
 
-        self.proxy_model.setSourceModel(model)
+        self.proxy_model.setSourceModel(self.model)
         self.proxy_model.setFilterKeyColumn(-1)
 
         self.tableView_results.setModel(self.proxy_model)
         self.lineEdit_filter.setEnabled(True)
+        self.tableView_results.verticalHeader().hide()
+        self.tableView_results.setWordWrap(True)
+        self.tableView_results.setTextElideMode(QtCore.Qt.ElideMiddle)
 
-        self.tableView_results.resizeColumnsToContents()
-        #self.tableView_results.resizeRowsToContents()
+        self.tableView_results.horizontalHeader().setStretchLastSection(True)
+        self.tableView_results.verticalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
+        self.tableView_results.resizeColumnToContents(0)
+        self.tableView_results.resizeRowsToContents()
+
+        self.model.itemChanged.connect(self.test)
 
     def adding_items_to_table(self, element):
         try:
