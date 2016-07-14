@@ -65,6 +65,7 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.comboBox_form = set_combobox(self.comboBox_form, self.forms)
         self.comboBox_usul = set_combobox(self.comboBox_usul, self.usuls)
 
+        # setting filter line editer disabled in the beginning
         self.lineEdit_filter.setDisabled(True)
 
         # signals
@@ -75,10 +76,11 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.lineEdit_filter.textChanged.connect(self.filtering_the_table)
 
     def filtering_the_table(self):
-        regExp = QtCore.QRegExp(self.lineEdit_filter.text(),
-                                QtCore.Qt.CaseInsensitive)
+        """Insensitive case filter"""
+        # setting the case
+        reg_exp = QtCore.QRegExp(self.lineEdit_filter.text(), QtCore.Qt.CaseInsensitive)
 
-        self.proxy_model.setFilterRegExp(regExp)
+        self.proxy_model.setFilterRegExp(reg_exp)
 
     def do_query(self):
         # gazel and taksim uuids
@@ -159,14 +161,16 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
             work_list = lenghts_works[0][0]
             recording_list = lengths_recording_gazels[0][0] + lengths_recording_taksims[0][0]
 
-        self.work_list = work_list
+        # recording list
         self.recording_list = recording_list
 
-        # for element in lengths_recording: print element
-        self.set_table(work_list, recording_list)
+        # setting the table
+        self.set_table(work_list)
+
+        # enabling the query button
         self.toolButton_query.setEnabled(True)
 
-    def set_table(self, score_list, recording_list):
+    def set_table(self, score_list):
         # setting the table for no edit and row selection
         self.tableView_results.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
         self.tableView_results.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
@@ -176,48 +180,64 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         for element in score_list:
             pool.apply_async(self.adding_items_to_table, (element,))
         pool.close()
-
-        start = time.time()
+        # starting the multi-processing
         pool.join()
-        print time.time() - start, 'secs'
 
         # sorting the recording dictionary
         self.recording_list = sort_dictionary(self.recording_list, 'title')
 
+        # creating the table model
+        # setting the column and row
         self.model = QtGui.QStandardItemModel(len(self.recording_list), 2)
         self.model.setHorizontalHeaderLabels(['Title', 'Artists'])
 
+        # adding items to the model
         for row, item in enumerate(self.recording_list):
+            # creating an item
             title_item = QtGui.QStandardItem(item['title'])
+
+            # setting the created item checkable
             title_item.setCheckable(True)
             title_item.setCheckState(QtCore.Qt.Checked)
 
+            # creating an item for artists column.
             artists = ''
+            # appending all artists in the same item
             for artist in item['artists']:
                 artists += artist['name'] + ", "
 
             artist_item = QtGui.QStandardItem(artists)
 
+            # setting the items in to the model
             self.model.setItem(row, 0, title_item)
             self.model.setItem(row, 1, artist_item)
 
+        # setting the model
         self.proxy_model.setSourceModel(self.model)
+        # filtering affects all columns by setting it as -1
         self.proxy_model.setFilterKeyColumn(-1)
 
+        # setting the proxy model to the table
         self.tableView_results.setModel(self.proxy_model)
+
+        # filter line edit is enabled
         self.lineEdit_filter.setEnabled(True)
+
+        # hiding the vertical headers
         self.tableView_results.verticalHeader().hide()
+
+        # arranging the artist column for being multi-line
         self.tableView_results.setWordWrap(True)
         self.tableView_results.setTextElideMode(QtCore.Qt.ElideMiddle)
 
+        # setting the widths of rows and columns
         self.tableView_results.horizontalHeader().setStretchLastSection(True)
         self.tableView_results.verticalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
         self.tableView_results.resizeColumnToContents(0)
         self.tableView_results.resizeRowsToContents()
 
-        self.model.itemChanged.connect(self.test)
-
     def adding_items_to_table(self, element):
+        """This function is used for the multiprocess"""
         try:
             work_data = compmusic.dunya.makam.get_work(element['mbid'])
             for rec in work_data['recordings']:
