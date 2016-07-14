@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'makam_main.ui'
 #
-# Created: Wed Jul 13 19:11:22 2016
+# Created: Thu Jul 14 19:40:22 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(700, 500)
+        MainWindow.resize(664, 652)
         MainWindow.setBaseSize(QtCore.QSize(4, 4))
         self.centralwidget_makam = QtGui.QWidget(MainWindow)
         self.centralwidget_makam.setObjectName("centralwidget_makam")
@@ -163,14 +163,38 @@ class Ui_MainWindow(object):
         self.tableView_results.setObjectName("tableView_results")
         self.verticalLayout_results.addWidget(self.tableView_results)
         self.gridLayout_2.addLayout(self.verticalLayout_results, 0, 0, 1, 1)
-        self.toolButton = QtGui.QToolButton(self.frame_results)
+        self.frame = QtGui.QFrame(self.frame_results)
+        self.frame.setMinimumSize(QtCore.QSize(0, 70))
+        self.frame.setFrameShape(QtGui.QFrame.StyledPanel)
+        self.frame.setFrameShadow(QtGui.QFrame.Raised)
+        self.frame.setObjectName("frame")
+        self.gridLayout_3 = QtGui.QGridLayout(self.frame)
+        self.gridLayout_3.setObjectName("gridLayout_3")
+        self.horizontalLayout = QtGui.QHBoxLayout()
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.toolButton_download_audio = QtGui.QToolButton(self.frame)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.toolButton.sizePolicy().hasHeightForWidth())
-        self.toolButton.setSizePolicy(sizePolicy)
-        self.toolButton.setObjectName("toolButton")
-        self.gridLayout_2.addWidget(self.toolButton, 1, 0, 1, 1)
+        sizePolicy.setHeightForWidth(self.toolButton_download_audio.sizePolicy().hasHeightForWidth())
+        self.toolButton_download_audio.setSizePolicy(sizePolicy)
+        self.toolButton_download_audio.setMinimumSize(QtCore.QSize(0, 40))
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(":/compmusic/images/sound-waves.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.toolButton_download_audio.setIcon(icon1)
+        self.toolButton_download_audio.setObjectName("toolButton_download_audio")
+        self.horizontalLayout.addWidget(self.toolButton_download_audio)
+        self.toolButton_download_pdm = QtGui.QToolButton(self.frame)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.toolButton_download_pdm.sizePolicy().hasHeightForWidth())
+        self.toolButton_download_pdm.setSizePolicy(sizePolicy)
+        self.toolButton_download_pdm.setMinimumSize(QtCore.QSize(0, 40))
+        self.toolButton_download_pdm.setObjectName("toolButton_download_pdm")
+        self.horizontalLayout.addWidget(self.toolButton_download_pdm)
+        self.gridLayout_3.addLayout(self.horizontalLayout, 0, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.frame, 1, 0, 1, 1)
         self.verticalLayout_2.addWidget(self.frame_results)
         self.tabWidget_makam_corpus.addTab(self.tab_audio, "")
         self.tab_metadata = QtGui.QWidget()
@@ -181,7 +205,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.tabWidget_makam_corpus)
         MainWindow.setCentralWidget(self.centralwidget_makam)
         self.menubar_makam = QtGui.QMenuBar(MainWindow)
-        self.menubar_makam.setGeometry(QtCore.QRect(0, 0, 700, 25))
+        self.menubar_makam.setGeometry(QtCore.QRect(0, 0, 664, 25))
         self.menubar_makam.setObjectName("menubar_makam")
         MainWindow.setMenuBar(self.menubar_makam)
         self.statusbar_makam = QtGui.QStatusBar(MainWindow)
@@ -205,7 +229,8 @@ class Ui_MainWindow(object):
         self.label_filter_usul.setText(QtGui.QApplication.translate("MainWindow", "Usul:", None, QtGui.QApplication.UnicodeUTF8))
         self.toolButton_query.setText(QtGui.QApplication.translate("MainWindow", "Query", None, QtGui.QApplication.UnicodeUTF8))
         self.lineEdit_filter.setPlaceholderText(QtGui.QApplication.translate("MainWindow", "Type here to filter the results...", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolButton.setText(QtGui.QApplication.translate("MainWindow", "Try", None, QtGui.QApplication.UnicodeUTF8))
+        self.toolButton_download_audio.setText(QtGui.QApplication.translate("MainWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.toolButton_download_pdm.setText(QtGui.QApplication.translate("MainWindow", "Predominant Melody", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget_makam_corpus.setTabText(self.tabWidget_makam_corpus.indexOf(self.tab_audio), QtGui.QApplication.translate("MainWindow", "Audio", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget_makam_corpus.setTabText(self.tabWidget_makam_corpus.indexOf(self.tab_metadata), QtGui.QApplication.translate("MainWindow", "Metadata", None, QtGui.QApplication.UnicodeUTF8))
 

@@ -5,8 +5,10 @@ from PySide import QtCore, QtGui
 
 import compmusic.dunya.makam
 import time
+import os
 
 from multiprocessing.pool import ThreadPool as Pool
+from threading import Thread
 
 # setting the token
 compmusic.dunya.conn.set_token('***REMOVED***')
@@ -68,12 +70,29 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         # setting filter line editer disabled in the beginning
         self.lineEdit_filter.setDisabled(True)
 
+        self.thread = QtCore.QThread()
+
         # signals
         # buttons
         self.toolButton_query.clicked.connect(self.do_query)
 
+        #self.toolButton_download_audio.clicked.connect(self.download_audio)
+        self.toolButton_download_audio.clicked.connect(self.download_audio_thread)
+
         # line edit
         self.lineEdit_filter.textChanged.connect(self.filtering_the_table)
+
+    def download_audio_thread(self):
+        thread = Thread(target=self.download_audio)
+        thread.start()
+
+    def download_audio(self):
+        if not os.path.isdir("audio"):
+            os.makedirs("audio")
+
+        for xx, rec in enumerate(self.recording_list):
+            print xx, rec['title']
+            compmusic.dunya.makam.download_mp3(rec['mbid'], "audio")
 
     def filtering_the_table(self):
         """Insensitive case filter"""
@@ -165,7 +184,10 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.recording_list = recording_list
 
         # setting the table
-        self.set_table(work_list)
+        thread = Thread(target=self.set_table, args=(work_list,))
+        thread.start()
+
+        #self.set_table(work_list)
 
         # enabling the query button
         self.toolButton_query.setEnabled(True)
