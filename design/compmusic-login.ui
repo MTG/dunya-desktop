@@ -214,7 +214,7 @@ QToolButton:pressed {
   <include location="resource-compmusic.qrc"/>
   <include location="resource-compmusic.qrc"/>
   <include location="resource-compmusic.qrc"/>
-  <include location="../resource-compmusic.qrc"/>
+  <include location="resource-compmusic.qrc"/>
  </resources>
  <connections/>
 </ui>

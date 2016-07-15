@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import sys
 
 from design.makam_main_design import Ui_MainWindow
@@ -52,6 +55,11 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         # proxy modal
         self.proxy_model = QtGui.QSortFilterProxyModel()
 
+        # progress bar
+        self.progress_bar = QtGui.QProgressBar()
+        self.statusBar().addPermanentWidget(self.progress_bar)
+        self.progress_bar.setGeometry(30, 40, 200, 25)
+
         # fetching makam,usul and form data from dunya
         self.makams = compmusic.dunya.makam.get_makams()
         self.makams = sort_dictionary(self.makams, 'name')
@@ -92,6 +100,12 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
 
         for xx, rec in enumerate(self.recording_list):
             print xx, rec['title']
+            progress = (float(xx + 1) / len(self.recording_list)) * 100
+            print progress
+            self.progress_bar.setValue(progress)
+            #self.statusBar().showMessage('{0} is downloading...'.format(u''.join(rec['title'].decode('utf-8').strip())))
+            #self.tableView_results.
+
             compmusic.dunya.makam.download_mp3(rec['mbid'], "audio")
 
     def filtering_the_table(self):
