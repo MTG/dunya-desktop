@@ -1,0 +1,10 @@
+<RCC>
+  <qresource prefix="compmusic">
+    <file>../icons/sound-waves.svg</file>
+    <file>../icons/compmusic-logo-black.png</file>
+    <file>../icons/compmusic-logo-white.png</file>
+    <file>../icons/logoDunya.png</file>
+    <file>../icons/login.png</file>
+    <file>../icons/magnifying-glass.png</file>
+  </qresource>
+</RCC>
