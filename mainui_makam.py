@@ -27,8 +27,12 @@ TAKSIM = u'b4658cef-f3cd-4ced-a534-1dd0a0d5b2de'
 
 
 class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
+    # signals for query
     query_finished = QtCore.pyqtSignal()
     query_step_done = QtCore.pyqtSignal()
+
+    # signal for downloading audio
+    download_audio_finished = QtCore.pyqtSignal()
 
     def __init__(self, parent=None):
         # setting the interface
@@ -70,7 +74,13 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
 
         # query index for progress bar
         self.query_index = 0
-        self.query_step_done.connect(self.update_progress_query)
+        self.query_finished.connect(self.add_model_to_table)
+        self.query_step_done.connect(lambda: self.update_progress_bar(self.query_index, self.work_list))
+
+        # downloading audio
+        self.downloading_audio_index = 0
+        self.download_audio_finished.connect(lambda: self.update_progress_bar(self.downloading_audio_index,
+                                                                              self.recording_list))
 
         # setting filter line editer disabled in the beginning
         self.lineEdit_filter.setDisabled(True)
@@ -79,15 +89,16 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         # buttons
         self.toolButton_query.clicked.connect(self.query_thread)
         self.toolButton_query.clicked.connect(lambda: self.progress_bar.setVisible(True))
-        self.query_finished.connect(self.add_model_to_table)
+        self.toolButton_download_audio.clicked.connect(self.download_audio_thread)
+
 
         # line edit
         self.lineEdit_filter.textChanged.connect(self.filtering_the_table)
 
-    def update_progress_query(self):
+    def update_progress_bar(self, index, fulllist):
         """Updates the progressbar while querying"""
 
-        progress = (float(self.query_index) / len(self.work_list)) * 100
+        progress = (float(index) / len(fulllist)) * 100
         self.progress_bar.setValue(progress)
 
     def query_thread(self):
@@ -97,18 +108,37 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         query_thread.start()
 
     def download_audio_thread(self):
-        thread = Thread(target=self.download_audio)
-        thread.start()
+        self.progress_bar.setVisible(True)
+        self.toolButton_download_audio.setDisabled(True)
 
-    def download_audio(self):
+        query_thread = Thread(target=self.download_audio_parallel)
+        query_thread.start()
+
+    def download_audio_parallel(self):
         if not os.path.isdir("audio"):
             os.makedirs("audio")
 
-        for xx, rec in enumerate(self.recording_list):
-            progress = (float(xx + 1) / len(self.recording_list)) * 100
-            self.progress_bar.setValue(progress)
+        for rec in self.recording_list:
+            self.download_audio(rec)
 
+        # creating a pool for multi-processing
+        #pool = Pool(cpu_count())
+        #for rec in self.recording_list:
+        #    pool.apply_async(self.download_audio, (rec,))
+        #pool.close()
+        #pool.join()
+
+        self.progress_bar.setVisible(False)
+        self.toolButton_download_audio.setEnabled(True)
+
+    def download_audio(self, rec):
+        try:
+            print rec['title'], 'is downloading'
             compmusic.dunya.makam.download_mp3(rec['mbid'], "audio")
+        except:
+            print('error with item')
+        self.downloading_audio_index += 1
+        self.download_audio_finished.emit()
 
     def filtering_the_table(self):
         """Insensitive case filter for line edit"""
@@ -217,7 +247,7 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         # creating a pool for multi-processing
         pool = Pool(cpu_count())
         for element in score_list:
-            pool.apply_async(self.adding_items_to_table, (element,))
+            pool.apply_async(self.fetching_recs_of_works, (element,))
         pool.close()
 
         # starting the multi-processing
@@ -252,6 +282,17 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
             self.recording_model.setItem(row, 1, artist_item)
 
         self.query_finished.emit()
+
+    def fetching_recs_of_works(self, element):
+        """This function is used for the multiprocess"""
+        try:
+            work_data = compmusic.dunya.makam.get_work(element['mbid'])
+            for xx, rec in enumerate(work_data['recordings']):
+                self.recording_list.append(rec)
+        except:
+            print('error with item')
+        self.query_index += 1
+        self.query_step_done.emit()
 
     def add_model_to_table(self):
         """Adds the created model to table"""
@@ -288,18 +329,6 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.query_index = 0
         self.progress_bar.setVisible(False)
         self.progress_bar.setValue(0)
-
-    def adding_items_to_table(self, element):
-        """This function is used for the multiprocess"""
-        try:
-            work_data = compmusic.dunya.makam.get_work(element['mbid'])
-            for xx, rec in enumerate(work_data['recordings']):
-                self.recording_list.append(rec)
-        except:
-            print('error with item')
-        self.query_index += 1
-        self.query_step_done.emit()
-
 
 app = QtGui.QApplication(sys.argv)
 dialog = MainMakam()
