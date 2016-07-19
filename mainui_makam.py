@@ -10,16 +10,11 @@ import compmusic.dunya.makam
 import time
 import os
 
-from ipyparallel import Client
-
 from threading import Thread
 from utilities import utilities
 from multiprocessing import cpu_count
 
-#from multiprocessing import Pool
 from multiprocessing.pool import ThreadPool as Pool
-#from multiprocessing.pool import ThreadPool
-#from multiprocessing.dummy import Pool
 
 # setting the token
 compmusic.dunya.conn.set_token('***REMOVED***')
@@ -196,7 +191,7 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
             elif form_id != -1:
                 if form_id != GAZEL or form_id != TAKSIM:
                     work_list = length_works[0][0]
-                    #recording_list = length_recording_gazels[0][0] + length_recording_taksims[0][0]
+                    recording_list = []
                 else:
                     # TODO: Add only taksim or gazel selection
                     work_list = length_works[0][0]
