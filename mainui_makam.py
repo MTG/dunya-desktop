@@ -8,6 +8,7 @@ from PyQt4 import QtCore, QtGui
 
 import time
 import os
+import webbrowser
 
 import compmusic.dunya.makam
 from utilities import utilities
@@ -91,9 +92,14 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.toolButton_query.clicked.connect(lambda: self.progress_bar.setVisible(True))
         self.toolButton_download_audio.clicked.connect(self.download_audio_thread)
 
-
         # line edit
         self.lineEdit_filter.textChanged.connect(self.filtering_the_table)
+        # table signals
+        self.tableView_results.doubleClicked.connect(self.get_selection_double_click)
+
+    def get_selection_double_click(self):
+        webbrowser.open(url=u"https://musicbrainz.org/recording/{0:s}".format(
+            self.recording_list[self.tableView_results.currentIndex().row()]['mbid']))
 
     def update_progress_bar(self, index, fulllist):
         """Updates the progressbar while querying"""
