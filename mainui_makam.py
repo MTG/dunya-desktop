@@ -6,14 +6,16 @@ import sys
 from ui_files.makam_main_design import Ui_MainWindow
 from PyQt4 import QtCore, QtGui
 
-import compmusic.dunya.makam
 import time
 import os
 
-from threading import Thread
+import compmusic.dunya.makam
 from utilities import utilities
-from multiprocessing import cpu_count
 
+
+# multiprocessing and threading
+from threading import Thread
+from multiprocessing import cpu_count
 from multiprocessing.pool import ThreadPool as Pool
 
 # setting the token
@@ -48,6 +50,8 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.progress_bar = QtGui.QProgressBar()
         self.statusBar().addPermanentWidget(self.progress_bar)
         self.progress_bar.setGeometry(30, 40, 200, 25)
+        # hiding the progress bar
+        self.progress_bar.setVisible(False)
 
         # fetching makam,usul and form data from dunya
         self.makams = compmusic.dunya.makam.get_makams()
@@ -74,6 +78,7 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         # signals
         # buttons
         self.toolButton_query.clicked.connect(self.query_thread)
+        self.toolButton_query.clicked.connect(lambda: self.progress_bar.setVisible(True))
         self.query_finished.connect(self.add_model_to_table)
 
         # line edit
@@ -87,6 +92,7 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
 
     def query_thread(self):
         """Creates a thread for querying"""
+
         query_thread = Thread(target=self.do_query)
         query_thread.start()
 
@@ -210,7 +216,6 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
 
         # creating a pool for multi-processing
         pool = Pool(cpu_count())
-
         for element in score_list:
             pool.apply_async(self.adding_items_to_table, (element,))
         pool.close()
@@ -276,11 +281,13 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.tableView_results.verticalHeader().hide()
         # setting the widths of rows and columns
         self.tableView_results.horizontalHeader().setStretchLastSection(True)
-        #self.tableView_results.verticalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
+        self.tableView_results.verticalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
         self.tableView_results.resizeColumnToContents(0)
         self.tableView_results.resizeRowsToContents()
 
         self.query_index = 0
+        self.progress_bar.setVisible(False)
+        self.progress_bar.setValue(0)
 
     def adding_items_to_table(self, element):
         """This function is used for the multiprocess"""
@@ -292,6 +299,7 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
             print('error with item')
         self.query_index += 1
         self.query_step_done.emit()
+
 
 app = QtGui.QApplication(sys.argv)
 dialog = MainMakam()
