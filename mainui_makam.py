@@ -3,7 +3,7 @@
 
 import sys
 
-from design.makam_main_design import Ui_MainWindow
+from ui_files.makam_main_design import Ui_MainWindow
 from PySide import QtCore, QtGui
 
 import compmusic.dunya.makam
