@@ -26,7 +26,7 @@
    <string>CompMusic</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="resource-compmusic.qrc">
+   <iconset>
     <normaloff>:/compmusic/images/compmusic-logo-white.png</normaloff>:/compmusic/images/compmusic-logo-white.png</iconset>
   </property>
   <property name="layoutDirection">
@@ -48,7 +48,7 @@
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap resource="resource-compmusic.qrc">:/compmusic/images/compmusic-logo-white.png</pixmap>
+    <pixmap resource="resources.qrc">:/compmusic/icons/compmusic-logo-white.png</pixmap>
    </property>
    <property name="scaledContents">
     <bool>true</bool>
@@ -125,8 +125,8 @@ QToolButton:pressed {
     <string notr="true">Login</string>
    </property>
    <property name="icon">
-    <iconset resource="resource-compmusic.qrc">
-     <normaloff>:/compmusic/images/login.png</normaloff>:/compmusic/images/login.png</iconset>
+    <iconset resource="resources.qrc">
+     <normaloff>:/compmusic/icons/login.png</normaloff>:/compmusic/icons/login.png</iconset>
    </property>
    <property name="shortcut">
     <string/>
@@ -170,7 +170,7 @@ QToolButton:pressed {
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap resource="resource-compmusic.qrc">:/compmusic/images/logoDunya.png</pixmap>
+    <pixmap resource="resources.qrc">:/compmusic/icons/logoDunya.png</pixmap>
    </property>
    <property name="scaledContents">
     <bool>true</bool>
@@ -211,9 +211,10 @@ QToolButton:pressed {
   <tabstop>lineEdit_password</tabstop>
  </tabstops>
  <resources>
-  <include location="resource-compmusic.qrc"/>
-  <include location="resource-compmusic.qrc"/>
-  <include location="resource-compmusic.qrc"/>
+  <include location="resources.qrc"/>
+  <include location="resources.qrc"/>
+  <include location="resources.qrc"/>
+  <include location="resources.qrc"/>
   <include location="resource-compmusic.qrc"/>
  </resources>
  <connections/>

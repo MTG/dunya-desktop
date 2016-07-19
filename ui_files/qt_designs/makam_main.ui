@@ -267,7 +267,7 @@ QTabBar::tab:selected {
                 <string>Query</string>
                </property>
                <property name="icon">
-                <iconset resource="resource-compmusic.qrc">
+                <iconset>
                  <normaloff>:/compmusic/images/magnifying-glass.png</normaloff>:/compmusic/images/magnifying-glass.png</iconset>
                </property>
                <property name="checkable">
@@ -341,8 +341,8 @@ QTabBar::tab:selected {
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="resource-compmusic.qrc">
-                    <normaloff>:/compmusic/images/sound-waves.svg</normaloff>:/compmusic/images/sound-waves.svg</iconset>
+                   <iconset resource="resources.qrc">
+                    <normaloff>:/compmusic/icons/sound-waves.svg</normaloff>:/compmusic/icons/sound-waves.svg</iconset>
                   </property>
                  </widget>
                 </item>
@@ -398,7 +398,7 @@ QTabBar::tab:selected {
   <widget class="QStatusBar" name="statusbar_makam"/>
  </widget>
  <resources>
-  <include location="resource-compmusic.qrc"/>
+  <include location="resources.qrc"/>
  </resources>
  <connections/>
 </ui>
