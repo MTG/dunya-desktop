@@ -281,7 +281,7 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.tableView_results.verticalHeader().hide()
         # setting the widths of rows and columns
         self.tableView_results.horizontalHeader().setStretchLastSection(True)
-        self.tableView_results.verticalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+        #self.tableView_results.verticalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
         self.tableView_results.resizeColumnToContents(0)
         self.tableView_results.resizeRowsToContents()
 
