@@ -10,36 +10,12 @@ import compmusic.dunya.makam
 import time
 import os
 
+from utilities import utilities
 from multiprocessing.pool import ThreadPool as Pool
 from threading import Thread
 
 # setting the token
 compmusic.dunya.conn.set_token('***REMOVED***')
-
-
-def sort_dictionary(dictionary, key):
-    """sorts the given dictionary according to the keys"""
-    dictionary = sorted(dictionary, key=lambda k: k[key])
-    return dictionary
-
-
-def set_combobox(combobox, attribute):
-    """Sets the given comboboxes"""
-    combobox.setEditable(True)
-    combobox.setInsertPolicy(QtGui.QComboBox.NoInsert)
-
-    for elememt in attribute:
-        combobox.addItem(elememt['name'])
-    combobox.setCurrentIndex(-1)
-    return combobox
-
-
-def get_attribute_id(attribute, index):
-    """Returns the mb id of the selected attributes"""
-    if index is not -1:
-        return attribute[index]['uuid']
-    else:
-        return -1
 
 
 class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
@@ -62,18 +38,18 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
 
         # fetching makam,usul and form data from dunya
         self.makams = compmusic.dunya.makam.get_makams()
-        self.makams = sort_dictionary(self.makams, 'name')
+        self.makams = utilities.sort_dictionary(self.makams, 'name')
 
         self.usuls = compmusic.dunya.makam.get_usuls()
-        self.usuls = sort_dictionary(self.usuls, 'name')
+        self.usuls = utilities.sort_dictionary(self.usuls, 'name')
 
         self.forms = compmusic.dunya.makam.get_forms()
-        self.forms = sort_dictionary(self.forms, 'name')
+        self.forms = utilities.sort_dictionary(self.forms, 'name')
 
         # setting the combobox
-        self.comboBox_makam = set_combobox(self.comboBox_makam, self.makams)
-        self.comboBox_form = set_combobox(self.comboBox_form, self.forms)
-        self.comboBox_usul = set_combobox(self.comboBox_usul, self.usuls)
+        self.comboBox_makam = utilities.set_combobox(self.comboBox_makam, self.makams)
+        self.comboBox_form = utilities.set_combobox(self.comboBox_form, self.forms)
+        self.comboBox_usul = utilities.set_combobox(self.comboBox_usul, self.usuls)
 
         # setting filter line editer disabled in the beginning
         self.lineEdit_filter.setDisabled(True)
@@ -124,9 +100,9 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.toolButton_query.setDisabled(True)
 
         # getting the user selections
-        makam_id = get_attribute_id(self.makams, self.comboBox_makam.currentIndex())
-        form_id = get_attribute_id(self.forms, self.comboBox_form.currentIndex())
-        usul_id = get_attribute_id(self.usuls, self.comboBox_usul.currentIndex())
+        makam_id = utilities.get_attribute_id(self.makams, self.comboBox_makam.currentIndex())
+        form_id = utilities.get_attribute_id(self.forms, self.comboBox_form.currentIndex())
+        usul_id = utilities.get_attribute_id(self.usuls, self.comboBox_usul.currentIndex())
 
         # arranging the recordings and works for the filtering process
         lengths_recording_taksims = []
@@ -220,7 +196,7 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         pool.join()
 
         # sorting the recording dictionary
-        self.recording_list = sort_dictionary(self.recording_list, 'title')
+        self.recording_list = utilities.sort_dictionary(self.recording_list, 'title')
 
         # creating the table model
         # setting the column and row
