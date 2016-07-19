@@ -45,14 +45,9 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         # proxy modal
         self.proxy_model = QtGui.QSortFilterProxyModel()
 
-        # setting the table for no edit and row selection
-        self.tableView_results.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
-        self.tableView_results.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
-
         # creating the table model
         # setting the column and row
         self.recording_model = QtGui.QStandardItemModel()
-        self.recording_model.setHorizontalHeaderLabels(['Title', 'Artists'])
 
         # progress bar
         self.progress_bar = QtGui.QProgressBar()
@@ -90,43 +85,13 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.lineEdit_filter.textChanged.connect(self.filtering_the_table)
 
     def update_progress_query(self):
+        """Updates the progressbar while querying"""
+
         progress = (float(self.query_index) / len(self.work_list)) * 100
         self.progress_bar.setValue(progress)
 
-    def add_model_to_table(self):
-        print "Query FINISHED"
-        self.tableView_results.setEnabled(True)
-        # setting the model
-        self.proxy_model.setSourceModel(self.recording_model)
-        print "proxy set"
-
-        # filtering affects all columns by setting it as -1
-        self.proxy_model.setFilterKeyColumn(-1)
-        print "proxy filter"
-
-        # setting the proxy model to the table
-        self.tableView_results.setModel(self.proxy_model)
-        print "proxy model set"
-
-        # filter line edit is enabled
-        self.lineEdit_filter.setEnabled(True)
-
-        # hiding the vertical headers
-        self.tableView_results.verticalHeader().hide()
-
-        # arranging the artist column for being multi-line
-        self.tableView_results.setWordWrap(True)
-        self.tableView_results.setTextElideMode(QtCore.Qt.ElideMiddle)
-
-        # setting the widths of rows and columns
-        self.tableView_results.horizontalHeader().setStretchLastSection(True)
-        self.tableView_results.verticalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
-        self.tableView_results.resizeColumnToContents(0)
-        self.tableView_results.resizeRowsToContents()
-
-        self.query_index = 0
-
     def query_thread(self):
+        """Creates a thread for querying"""
         query_thread = Thread(target=self.do_query)
         query_thread.start()
 
@@ -139,21 +104,20 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
             os.makedirs("audio")
 
         for xx, rec in enumerate(self.recording_list):
-            print xx, rec['title']
             progress = (float(xx + 1) / len(self.recording_list)) * 100
-            print progress
             self.progress_bar.setValue(progress)
 
             compmusic.dunya.makam.download_mp3(rec['mbid'], "audio")
 
     def filtering_the_table(self):
-        """Insensitive case filter"""
+        """Insensitive case filter for line edit"""
+
         # setting the case
         reg_exp = QtCore.QRegExp(self.lineEdit_filter.text(), QtCore.Qt.CaseInsensitive)
-
         self.proxy_model.setFilterRegExp(reg_exp)
 
     def do_query(self):
+        """fetches the recordings"""
         self.tableView_results.setDisabled(True)
         # setting the push button disable
         self.toolButton_query.setDisabled(True)
@@ -241,36 +205,33 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.recording_list = recording_list
         self.work_list = work_list
 
-        self.set_table(work_list)
+        self.fetch_related_recs(work_list)
 
         # enabling the query button
         self.toolButton_query.setEnabled(True)
 
-    def set_table(self, score_list):
-        #for element in score_list:
-        #    work_data = compmusic.dunya.makam.get_work(element['mbid'])
-        #    for rec in work_data['recordings']:
-        #        self.recording_list.append(rec)
+    def fetch_related_recs(self, score_list):
+        """Fetches the related recordings"""
 
         # creating a pool for multi-processing
-        pool = Pool(cpu_count()-1)
+        pool = Pool(cpu_count())
 
         for element in score_list:
             pool.apply_async(self.adding_items_to_table, (element,))
         pool.close()
+
         # starting the multi-processing
-        print "pool closed"
         pool.join()
-        print "pool finished"
+
         # sorting the recording dictionary
         self.recording_list = utilities.sort_dictionary(self.recording_list, 'title')
+
         # arranging the rows of the model
+        self.recording_model.setHorizontalHeaderLabels(['Title', 'Artists'])
         self.recording_model.setRowCount(len(self.recording_list))
 
-        print "row count is set "
         # adding items to the model
         for row, item in enumerate(self.recording_list):
-            print row, len(self.recording_list)
             # creating an item
             title_item = QtGui.QStandardItem(item['title'])
 
@@ -290,12 +251,41 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
             self.recording_model.setItem(row, 0, title_item)
             self.recording_model.setItem(row, 1, artist_item)
 
-        print "for loop is finished"
-        thread = Thread(target=self.query_finished.emit)
-        print "ready to emit"
-        thread.start()
-        print "emitted"
-        #self.query_finished.emit()
+        self.query_finished.emit()
+
+    def add_model_to_table(self):
+        """Adds the created model to table"""
+        # setting the table for no edit and row selection
+        self.tableView_results.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+        self.tableView_results.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
+
+        self.tableView_results.setEnabled(True)
+
+        # arranging the artist column for being multi-line
+        self.tableView_results.setWordWrap(True)
+        self.tableView_results.setTextElideMode(QtCore.Qt.ElideMiddle)
+
+        # setting the model
+        self.proxy_model.setSourceModel(self.recording_model)
+
+        # filtering affects all columns by setting it as -1
+        self.proxy_model.setFilterKeyColumn(-1)
+
+        # setting the proxy model to the table
+        self.tableView_results.setModel(self.proxy_model)
+
+        # filter line edit is enabled
+        self.lineEdit_filter.setEnabled(True)
+
+        # hiding the vertical headers
+        self.tableView_results.verticalHeader().hide()
+        # setting the widths of rows and columns
+        self.tableView_results.horizontalHeader().setStretchLastSection(True)
+        #self.tableView_results.verticalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
+        self.tableView_results.resizeColumnToContents(0)
+        self.tableView_results.resizeRowsToContents()
+
+        self.query_index = 0
 
     def adding_items_to_table(self, element):
         """This function is used for the multiprocess"""
@@ -303,7 +293,6 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
             work_data = compmusic.dunya.makam.get_work(element['mbid'])
             for xx, rec in enumerate(work_data['recordings']):
                 self.recording_list.append(rec)
-
         except:
             print('error with item')
         self.query_index += 1
