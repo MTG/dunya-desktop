@@ -1,4 +1,5 @@
-from PySide import QtGui
+from PyQt4 import QtGui
+
 
 def sort_dictionary(dictionary, key):
     """sorts the given dictionary according to the keys"""
