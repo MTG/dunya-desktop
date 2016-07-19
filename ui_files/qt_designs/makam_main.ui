@@ -16,8 +16,15 @@
     <height>4</height>
    </size>
   </property>
+  <property name="mouseTracking">
+   <bool>false</bool>
+  </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>CompMusic</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/compmusic/icons/compmusic-logo-black.png</normaloff>:/compmusic/icons/compmusic-logo-black.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget_makam">
    <layout class="QVBoxLayout" name="verticalLayout">
