@@ -267,8 +267,8 @@ QTabBar::tab:selected {
                 <string>Query</string>
                </property>
                <property name="icon">
-                <iconset>
-                 <normaloff>:/compmusic/images/magnifying-glass.png</normaloff>:/compmusic/images/magnifying-glass.png</iconset>
+                <iconset resource="resources.qrc">
+                 <normaloff>:/compmusic/icons/magnifying-glass.png</normaloff>:/compmusic/icons/magnifying-glass.png</iconset>
                </property>
                <property name="checkable">
                 <bool>false</bool>

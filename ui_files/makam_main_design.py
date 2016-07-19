@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'makam_main.ui'
+# Form implementation generated from reading ui file 'ui_files/qt_designs/makam_main.ui'
 #
-# Created: Thu Jul 14 19:40:22 2016
+# Created: Tue Jul 19 13:28:20 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -140,7 +140,7 @@ class Ui_MainWindow(object):
         self.toolButton_query.setMinimumSize(QtCore.QSize(50, 25))
         self.toolButton_query.setMaximumSize(QtCore.QSize(30, 25))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/compmusic/images/magnifying-glass.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/compmusic/icons/magnifying-glass.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_query.setIcon(icon)
         self.toolButton_query.setCheckable(False)
         self.toolButton_query.setObjectName("toolButton_query")
@@ -180,7 +180,7 @@ class Ui_MainWindow(object):
         self.toolButton_download_audio.setSizePolicy(sizePolicy)
         self.toolButton_download_audio.setMinimumSize(QtCore.QSize(0, 40))
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/compmusic/images/sound-waves.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/compmusic/icons/sound-waves.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_download_audio.setIcon(icon1)
         self.toolButton_download_audio.setObjectName("toolButton_download_audio")
         self.horizontalLayout.addWidget(self.toolButton_download_audio)
@@ -234,4 +234,4 @@ class Ui_MainWindow(object):
         self.tabWidget_makam_corpus.setTabText(self.tabWidget_makam_corpus.indexOf(self.tab_audio), QtGui.QApplication.translate("MainWindow", "Audio", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget_makam_corpus.setTabText(self.tabWidget_makam_corpus.indexOf(self.tab_metadata), QtGui.QApplication.translate("MainWindow", "Metadata", None, QtGui.QApplication.UnicodeUTF8))
 
-import resource_rc
+import resources_rc
