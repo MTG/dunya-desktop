@@ -13,7 +13,6 @@ import webbrowser
 import compmusic.dunya.makam
 from utilities import utilities
 
-
 # multiprocessing and threading
 from threading import Thread
 from multiprocessing import cpu_count
@@ -72,19 +71,25 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.forms = utilities.sort_dictionary(self.forms, 'name')
 
         # setting the combobox
-        self.comboBox_makam = utilities.set_combobox(self.comboBox_makam, self.makams)
-        self.comboBox_form = utilities.set_combobox(self.comboBox_form, self.forms)
-        self.comboBox_usul = utilities.set_combobox(self.comboBox_usul, self.usuls)
+        self.comboBox_makam = utilities.set_combobox(self.comboBox_makam,
+                                                     self.makams)
+        self.comboBox_form = utilities.set_combobox(self.comboBox_form,
+                                                    self.forms)
+        self.comboBox_usul = utilities.set_combobox(self.comboBox_usul,
+                                                    self.usuls)
 
         # query index for progress bar
         self.query_index = 0
         self.query_finished.connect(self.add_model_to_table)
-        self.query_step_done.connect(lambda: self.update_progress_bar(self.query_index, self.work_list))
+        self.query_step_done.connect(lambda: self.update_progress_bar(
+            self.query_index, self.work_list))
 
         # downloading audio
         self.downloading_audio_index = 0
-        self.download_audio_finished.connect(lambda: self.update_progress_bar(self.downloading_audio_index,
-                                                                              self.recording_list))
+        self.download_audio_finished.connect(lambda:
+                                             self.update_progress_bar(
+                                                 self.downloading_audio_index,
+                                                 self.recording_list))
 
         # setting filter line editer disabled in the beginning
         self.lineEdit_filter.setDisabled(True)
@@ -92,13 +97,17 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         # signals
         # buttons
         self.toolButton_query.clicked.connect(self.query_thread)
-        self.toolButton_query.clicked.connect(lambda: self.progress_bar.setVisible(True))
-        self.toolButton_download_audio.clicked.connect(self.download_audio_thread)
+        self.toolButton_query.clicked.connect(lambda:
+                                              self.progress_bar.setVisible(
+                                                  True))
+        self.toolButton_download_audio.clicked.connect(
+            self.download_audio_thread)
 
         # line edit
         self.lineEdit_filter.textChanged.connect(self.filtering_the_table)
         # table signals
-        self.tableView_results.doubleClicked.connect(self.get_selection_double_click)
+        self.tableView_results.doubleClicked.connect(
+            self.get_selection_double_click)
         self.horizontal_header.sectionClicked.connect(self.test)
 
     @QtCore.pyqtSlot(int)
@@ -107,11 +116,11 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.horizontal_header_menu = QtGui.QMenu()
         self.header_signal_mapper = QtCore.QSignalMapper()
 
-        self.column_index = index
         # getting the unique values in the selected column
         # getting row values
-        row_values = [str(self.recording_model.item(row, index).text().toUtf8())
-                      for row in range(self.recording_model.rowCount())]
+        row_values = [
+            str(self.recording_model.item(row, index).text().toUtf8())
+            for row in range(self.recording_model.rowCount())]
         # getting unique one
         unique_values = []
         for row in row_values:
@@ -128,36 +137,41 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
 
         for action_index, action_name in enumerate(unique_values):
             action = QtGui.QAction(action_name.decode('utf-8', 'ignore'), self)
+            action.setCheckable(True)
             self.header_signal_mapper.setMapping(action, action_index)
             action.triggered.connect(self.header_signal_mapper.map)
             self.horizontal_header_menu.addAction(action)
 
         self.header_signal_mapper.mapped.connect(self.on_signal_mapper)
 
-        header_pos = self.tableView_results.mapToGlobal(self.horizontal_header.pos())
+        header_pos = self.tableView_results.mapToGlobal(
+            self.horizontal_header.pos())
 
         pos_y = header_pos.y() + self.horizontal_header.height()
-        pos_x = header_pos.x() + self.horizontal_header.sectionPosition(self.column_index)
+        pos_x = header_pos.x() + self.horizontal_header.sectionPosition(
+            self.column_index)
 
         self.horizontal_header_menu.exec_(QtCore.QPoint(pos_x, pos_y))
 
     def on_action_all_triggered(self):
-        filter_string = QtCore.QRegExp("", QtCore.Qt.CaseInsensitive)#, QtCore.QRegExp.RegExp)
+        filter_string = QtCore.QRegExp("", QtCore.Qt.CaseInsensitive)
         self.proxy_model.setFilterRegExp(filter_string)
         self.proxy_model.setFilterKeyColumn(self.column_index)
 
     def on_signal_mapper(self, index):
         action_string = self.header_signal_mapper.mapping(index).text()
-        filter_string = QtCore.QRegExp(action_string, QtCore.Qt.CaseInsensitive)
-                                       #QtCore.QRegExp.RegExp)
+        filter_string = QtCore.QRegExp(action_string,
+                                       QtCore.Qt.CaseInsensitive)
         self.proxy_model.setFilterRegExp(filter_string)
         self.proxy_model.setFilterKeyColumn(self.column_index)
 
     def get_selection_double_click(self):
         print self.tableView_results.currentIndex().row()
-        print self.tableView_results.verticalHeader().logicalIndex(self.tableView_results.currentIndex().row())
+        print self.tableView_results.verticalHeader().logicalIndex(
+            self.tableView_results.currentIndex().row())
         webbrowser.open(url=u"https://musicbrainz.org/recording/{0:s}".format(
-            self.recording_list[self.tableView_results.currentIndex().row()]['mbid']))
+            self.recording_list[self.tableView_results.currentIndex().row()][
+                'mbid']))
 
     def update_progress_bar(self, index, fulllist):
         """Updates the progressbar while querying"""
@@ -187,13 +201,6 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         for rec in self.recording_list:
             self.download_audio(rec)
 
-        # creating a pool for multi-processing
-        #pool = Pool(cpu_count())
-        #for rec in self.recording_list:
-        #    pool.apply_async(self.download_audio, (rec,))
-        #pool.close()
-        #pool.join()
-
         self.progress_bar.setVisible(False)
         self.toolButton_download_audio.setEnabled(True)
 
@@ -210,7 +217,8 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         """Insensitive case filter for line edit"""
 
         # setting the case
-        reg_exp = QtCore.QRegExp(self.lineEdit_filter.text(), QtCore.Qt.CaseInsensitive)
+        reg_exp = QtCore.QRegExp(self.lineEdit_filter.text(),
+                                 QtCore.Qt.CaseInsensitive)
         self.proxy_model.setFilterRegExp(reg_exp)
 
     def do_query(self):
@@ -220,9 +228,12 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.toolButton_query.setDisabled(True)
 
         # getting the user selections
-        makam_id = utilities.get_attribute_id(self.makams, self.comboBox_makam.currentIndex())
-        form_id = utilities.get_attribute_id(self.forms, self.comboBox_form.currentIndex())
-        usul_id = utilities.get_attribute_id(self.usuls, self.comboBox_usul.currentIndex())
+        makam_id = utilities.get_attribute_id(self.makams,
+                                              self.comboBox_makam.currentIndex())
+        form_id = utilities.get_attribute_id(self.forms,
+                                             self.comboBox_form.currentIndex())
+        usul_id = utilities.get_attribute_id(self.usuls,
+                                             self.comboBox_usul.currentIndex())
 
         # arranging the recordings and works for the filtering process
         length_recording_taksims = []
@@ -235,8 +246,10 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
             length_works.append([data['works'], len(data['works'])])
 
             # merging the recordings
-            length_recording_taksims.append([data['taksims'], len(data['taksims'])])
-            length_recording_gazels.append([data['gazels'], len(data['gazels'])])
+            length_recording_taksims.append(
+                [data['taksims'], len(data['taksims'])])
+            length_recording_gazels.append(
+                [data['gazels'], len(data['gazels'])])
 
         # if usul is selected
         if usul_id != -1:
@@ -244,8 +257,10 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
             length_works.append([data['works'], len(data['works'])])
 
             # merging the recordings
-            length_recording_taksims.append([data['taksims'], len(data['taksims'])])
-            length_recording_gazels.append([data['gazels'], len(data['gazels'])])
+            length_recording_taksims.append(
+                [data['taksims'], len(data['taksims'])])
+            length_recording_gazels.append(
+                [data['gazels'], len(data['gazels'])])
 
         # if form is selected
         if form_id != -1:
@@ -255,31 +270,40 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
 
         # sorting the lengths
         length_works = sorted(length_works, key=lambda x: x[1])[::-1]
-        length_recording_gazels = sorted(length_recording_gazels, key=lambda x: x[1])[::-1]
-        length_recording_taksims = sorted(length_recording_taksims, key=lambda x: x[1])[::-1]
+        length_recording_gazels = sorted(length_recording_gazels,
+                                         key=lambda x: x[1])[::-1]
+        length_recording_taksims = sorted(length_recording_taksims,
+                                          key=lambda x: x[1])[::-1]
 
         # filtering
         recording_list = []
         # if all attributes are selected by the user
         if len(length_works) == 3:
             work_list = [common for common in
-                         [common for common in length_works[0][0] if common in length_works[1][0]]
+                         [common for common in length_works[0][0] if
+                          common in length_works[1][0]]
                          if common in length_works[2][0]]
 
             if form_id == TAKSIM:
-                recording_list = [common for common in [common for common in length_recording_taksims[0][0]
-                                                        if common in length_recording_taksims[1][0]]
+                recording_list = [common for common in
+                                  [common for common in
+                                   length_recording_taksims[0][0] if common in
+                                   length_recording_taksims[1][0]]
                                   if common in length_recording_taksims[2][0]]
             elif form_id == GAZEL:
-                recording_list = [common for common in [common for common in length_recording_gazels[0][0]
-                                                        if common in length_recording_gazels[1][0]]
+                recording_list = [common for common in
+                                  [common for common in
+                                   length_recording_gazels[0][0] if common in
+                                   length_recording_gazels[1][0]]
                                   if common in length_recording_gazels[2][0]]
 
         elif len(length_works) == 2:
-            work_list = [common for common in length_works[0][0] if common in length_works[1][0]]
+            work_list = [common for common in length_works[0][0] if
+                         common in length_works[1][0]]
 
             if form_id == -1:
-                recording_list = length_recording_taksims[0][0] + length_recording_gazels[0][0]
+                recording_list = length_recording_taksims[0][0] + \
+                                 length_recording_gazels[0][0]
             elif form_id == TAKSIM:
                 recording_list = length_recording_taksims[0][0]
             elif form_id == GAZEL:
@@ -288,7 +312,8 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
             # if form is not selected
             if form_id == -1:
                 work_list = length_works[0][0]
-                recording_list = length_recording_gazels[0][0] + length_recording_taksims[0][0]
+                recording_list = length_recording_gazels[0][0] + \
+                                 length_recording_taksims[0][0]
 
             elif form_id != -1:
                 if form_id != GAZEL or form_id != TAKSIM:
@@ -320,7 +345,8 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         pool.join()
 
         # sorting the recording dictionary
-        self.recording_list = utilities.sort_dictionary(self.recording_list, 'title')
+        self.recording_list = utilities.sort_dictionary(self.recording_list,
+                                                        'title')
 
         # arranging the rows of the model
         self.recording_model.setHorizontalHeaderLabels(['Title', 'Artists'])
@@ -339,8 +365,9 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
             artists = ''
             # appending all artists in the same item
             # removing the duplicate artists
-            item['artists'] = [dict(tupleized) for tupleized in set(tuple(element.items())
-                                                          for element in item['artists'])]
+            item['artists'] = [dict(tupleized) for tupleized in
+                               set(tuple(element.items())
+                                   for element in item['artists'])]
 
             for artist in item['artists']:
                 artists += artist['name'] + ", "
@@ -367,8 +394,10 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
     def add_model_to_table(self):
         """Adds the created model to table"""
         # setting the table for no edit and row selection
-        self.tableView_results.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
-        self.tableView_results.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
+        self.tableView_results.setEditTriggers(
+            QtGui.QAbstractItemView.NoEditTriggers)
+        self.tableView_results.setSelectionBehavior(
+            QtGui.QAbstractItemView.SelectRows)
 
         self.tableView_results.setEnabled(True)
 
@@ -392,13 +421,14 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.tableView_results.verticalHeader()
         # setting the widths of rows and columns
         self.tableView_results.horizontalHeader().setStretchLastSection(True)
-        #self.tableView_results.verticalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+        # self.tableView_results.verticalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
         self.tableView_results.resizeColumnToContents(0)
         self.tableView_results.resizeRowsToContents()
 
         self.query_index = 0
         self.progress_bar.setVisible(False)
         self.progress_bar.setValue(0)
+
 
 app = QtGui.QApplication(sys.argv)
 dialog = MainMakam()
