@@ -3,8 +3,7 @@ from PyQt4 import QtGui
 
 def sort_dictionary(dictionary, key):
     """sorts the given dictionary according to the keys"""
-    dictionary = sorted(dictionary, key=lambda k: k[key])
-    return dictionary
+    return sorted(dictionary, key=lambda k: k[key])
 
 
 def set_combobox(combobox, attribute):
