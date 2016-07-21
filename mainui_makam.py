@@ -108,14 +108,14 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         # table signals
         self.tableView_results.doubleClicked.connect(
             self.get_selection_double_click)
-        self.horizontal_header.sectionClicked.connect(self.test)
+        self.horizontal_header.sectionClicked.connect(self.header_filter)
 
     @QtCore.pyqtSlot(int)
-    def test(self, index):
+    def header_filter(self, index):
         # filter for table header
         self.horizontal_header_menu = QtGui.QMenu()
         self.header_signal_mapper = QtCore.QSignalMapper()
-
+        self.column_index = index
         # getting the unique values in the selected column
         # getting row values
         row_values = [
@@ -421,7 +421,8 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.tableView_results.verticalHeader()
         # setting the widths of rows and columns
         self.tableView_results.horizontalHeader().setStretchLastSection(True)
-        # self.tableView_results.verticalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+        self.tableView_results.verticalHeader().setResizeMode(
+            QtGui.QHeaderView.Stretch)
         self.tableView_results.resizeColumnToContents(0)
         self.tableView_results.resizeRowsToContents()
 
