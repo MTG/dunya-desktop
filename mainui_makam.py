@@ -58,6 +58,9 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         # hiding the progress bar
         self.progress_bar.setVisible(False)
 
+        # horizontal header for filtering the results
+        self.horizontal_header = self.tableView_results.horizontalHeader()
+
         # fetching makam,usul and form data from dunya
         self.makams = compmusic.dunya.makam.get_makams()
         self.makams = utilities.sort_dictionary(self.makams, 'name')
@@ -96,8 +99,63 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.lineEdit_filter.textChanged.connect(self.filtering_the_table)
         # table signals
         self.tableView_results.doubleClicked.connect(self.get_selection_double_click)
+        self.horizontal_header.sectionClicked.connect(self.test)
+
+    @QtCore.pyqtSlot(int)
+    def test(self, index):
+        # filter for table header
+        self.horizontal_header_menu = QtGui.QMenu()
+        self.header_signal_mapper = QtCore.QSignalMapper()
+
+        self.column_index = index
+        # getting the unique values in the selected column
+        # getting row values
+        row_values = [str(self.recording_model.item(row, index).text().toUtf8())
+                      for row in range(self.recording_model.rowCount())]
+        # getting unique one
+        unique_values = []
+        for row in row_values:
+            for element in row.split(','):
+                unique_values.append(element.strip())
+        unique_values = sorted(set(unique_values))
+
+        # action for selecting all values
+        action_all = QtGui.QAction('All', self)
+        self.horizontal_header_menu.addAction(action_all)
+        self.horizontal_header_menu.addSeparator()
+
+        action_all.triggered.connect(self.on_action_all_triggered)
+
+        for action_index, action_name in enumerate(unique_values):
+            action = QtGui.QAction(action_name.decode('utf-8', 'ignore'), self)
+            self.header_signal_mapper.setMapping(action, action_index)
+            action.triggered.connect(self.header_signal_mapper.map)
+            self.horizontal_header_menu.addAction(action)
+
+        self.header_signal_mapper.mapped.connect(self.on_signal_mapper)
+
+        header_pos = self.tableView_results.mapToGlobal(self.horizontal_header.pos())
+
+        pos_y = header_pos.y() + self.horizontal_header.height()
+        pos_x = header_pos.x() + self.horizontal_header.sectionPosition(self.column_index)
+
+        self.horizontal_header_menu.exec_(QtCore.QPoint(pos_x, pos_y))
+
+    def on_action_all_triggered(self):
+        filter_string = QtCore.QRegExp("", QtCore.Qt.CaseInsensitive)#, QtCore.QRegExp.RegExp)
+        self.proxy_model.setFilterRegExp(filter_string)
+        self.proxy_model.setFilterKeyColumn(self.column_index)
+
+    def on_signal_mapper(self, index):
+        action_string = self.header_signal_mapper.mapping(index).text()
+        filter_string = QtCore.QRegExp(action_string, QtCore.Qt.CaseInsensitive)
+                                       #QtCore.QRegExp.RegExp)
+        self.proxy_model.setFilterRegExp(filter_string)
+        self.proxy_model.setFilterKeyColumn(self.column_index)
 
     def get_selection_double_click(self):
+        print self.tableView_results.currentIndex().row()
+        print self.tableView_results.verticalHeader().logicalIndex(self.tableView_results.currentIndex().row())
         webbrowser.open(url=u"https://musicbrainz.org/recording/{0:s}".format(
             self.recording_list[self.tableView_results.currentIndex().row()]['mbid']))
 
@@ -105,6 +163,8 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         """Updates the progressbar while querying"""
 
         progress = (float(index) / len(fulllist)) * 100
+        self.progress_bar.setTextVisible(True)
+        self.progress_bar.setFormat("{0}/{1}".format(index, len(fulllist)))
         self.progress_bar.setValue(progress)
 
     def query_thread(self):
@@ -278,9 +338,13 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
             # creating an item for artists column.
             artists = ''
             # appending all artists in the same item
+            # removing the duplicate artists
+            item['artists'] = [dict(tupleized) for tupleized in set(tuple(element.items())
+                                                          for element in item['artists'])]
+
             for artist in item['artists']:
                 artists += artist['name'] + ", "
-
+            artists = artists[:-2]
             artist_item = QtGui.QStandardItem(artists)
 
             # setting the items in to the model
@@ -325,7 +389,7 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.lineEdit_filter.setEnabled(True)
 
         # hiding the vertical headers
-        self.tableView_results.verticalHeader().hide()
+        self.tableView_results.verticalHeader()
         # setting the widths of rows and columns
         self.tableView_results.horizontalHeader().setStretchLastSection(True)
         #self.tableView_results.verticalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
