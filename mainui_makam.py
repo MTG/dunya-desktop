@@ -203,7 +203,7 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
 
     def download_audio(self, rec):
         try:
-            print rec['title'], 'is downloading'
+            print(rec['title'], 'is downloading')
             compmusic.dunya.makam.download_mp3(rec['mbid'], "audio")
         except:
             print('error with item')
