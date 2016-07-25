@@ -26,6 +26,12 @@ GAZEL = u'a1d59289-ea72-4050-9253-01ca12bb5556'
 TAKSIM = u'b4658cef-f3cd-4ced-a534-1dd0a0d5b2de'
 
 
+def show_checked_index(topLeft, bottomRight):
+    print "signal"
+    print topLeft.row(), topLeft.column(), 'topLeft'
+    print bottomRight.row(), bottomRight.column()
+
+
 class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
     # signals for query
     query_finished = QtCore.pyqtSignal()
@@ -109,6 +115,7 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.tableView_results.doubleClicked.connect(
                                             self.get_selection_double_click)
         self.horizontal_header.sectionClicked.connect(self.header_filter)
+        self.proxy_model.dataChanged.connect(show_checked_index)
 
     @QtCore.pyqtSlot(int)
     def header_filter(self, index):
@@ -346,17 +353,14 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
                                                         'title')
 
         # arranging the rows of the model
-        self.recording_model.setHorizontalHeaderLabels(['Title', 'Artists'])
+        self.recording_model.setHorizontalHeaderLabels(['', 'Title',
+                                                        'Artists'])
         self.recording_model.setRowCount(len(self.recording_list))
 
         # adding items to the model
         for row, item in enumerate(self.recording_list):
             # creating an item
             title_item = QtGui.QStandardItem(item['title'])
-
-            # setting the created item checkable
-            title_item.setCheckable(True)
-            title_item.setCheckState(QtCore.Qt.Checked)
 
             # creating an item for artists column.
             artists = ''
@@ -371,9 +375,12 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
             artists = artists[:-2]
             artist_item = QtGui.QStandardItem(artists)
 
+            check_item = QtGui.QStandardItem()
+            check_item.setCheckable(True)
             # setting the items in to the model
-            self.recording_model.setItem(row, 0, title_item)
-            self.recording_model.setItem(row, 1, artist_item)
+            self.recording_model.setItem(row, 0, check_item)
+            self.recording_model.setItem(row, 1, title_item)
+            self.recording_model.setItem(row, 2, artist_item)
 
         self.query_finished.emit()
 
@@ -420,7 +427,8 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.tableView_results.horizontalHeader().setStretchLastSection(True)
         self.tableView_results.verticalHeader().setResizeMode(
             QtGui.QHeaderView.Stretch)
-        self.tableView_results.resizeColumnToContents(0)
+        self.tableView_results.resizeColumnToContents(1)
+        self.tableView_results.setColumnWidth(0, 28)
         self.tableView_results.resizeRowsToContents()
 
         self.query_index = 0
