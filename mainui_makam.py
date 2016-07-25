@@ -107,7 +107,7 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.lineEdit_filter.textChanged.connect(self.filtering_the_table)
         # table signals
         self.tableView_results.doubleClicked.connect(
-            self.get_selection_double_click)
+                                            self.get_selection_double_click)
         self.horizontal_header.sectionClicked.connect(self.header_filter)
 
     @QtCore.pyqtSlot(int)
@@ -166,9 +166,6 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.proxy_model.setFilterKeyColumn(self.column_index)
 
     def get_selection_double_click(self):
-        print self.tableView_results.currentIndex().row()
-        print self.tableView_results.verticalHeader().logicalIndex(
-            self.tableView_results.currentIndex().row())
         webbrowser.open(url=u"https://musicbrainz.org/recording/{0:s}".format(
             self.recording_list[self.tableView_results.currentIndex().row()][
                 'mbid']))
@@ -384,7 +381,7 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         """This function is used for the multiprocess"""
         try:
             work_data = compmusic.dunya.makam.get_work(element['mbid'])
-            for xx, rec in enumerate(work_data['recordings']):
+            for rec in work_data['recordings']:
                 self.recording_list.append(rec)
         except:
             print('error with item')
