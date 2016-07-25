@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>664</width>
-    <height>652</height>
+    <width>629</width>
+    <height>622</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -27,8 +27,8 @@
     <normaloff>:/compmusic/icons/compmusic-logo-black.png</normaloff>:/compmusic/icons/compmusic-logo-black.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget_makam">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
+   <layout class="QGridLayout" name="gridLayout_4">
+    <item row="0" column="0">
      <widget class="QLabel" name="label_makam">
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:600;&quot;&gt;Turkish Makam Corpus&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -41,8 +41,11 @@
       </property>
      </widget>
     </item>
-    <item>
+    <item row="1" column="0">
      <widget class="QTabWidget" name="tabWidget_makam_corpus">
+      <property name="statusTip">
+       <string>Audio corpus and audio related features</string>
+      </property>
       <property name="styleSheet">
        <string notr="true">QTabWidget::pane { /* The tab widget frame */
     border-top: 2px solid #C2C7CB;
@@ -156,7 +159,17 @@ QTabBar::tab:selected {
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="comboBox_makam"/>
+              <widget class="QComboBox" name="comboBox_makam">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="statusTip">
+                <string>Select makam</string>
+               </property>
+              </widget>
              </item>
              <item>
               <spacer name="horizontalSpacer_makam_form">
@@ -191,7 +204,17 @@ QTabBar::tab:selected {
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="comboBox_form"/>
+              <widget class="QComboBox" name="comboBox_form">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="statusTip">
+                <string>Select form</string>
+               </property>
+              </widget>
              </item>
              <item>
               <spacer name="horizontalSpacer_form_usul">
@@ -232,7 +255,17 @@ QTabBar::tab:selected {
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="comboBox_usul"/>
+              <widget class="QComboBox" name="comboBox_usul">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="statusTip">
+                <string>Select usul</string>
+               </property>
+              </widget>
              </item>
              <item>
               <spacer name="horizontalSpacer">
@@ -315,10 +348,22 @@ QTabBar::tab:selected {
            </item>
            <item row="1" column="0">
             <widget class="QFrame" name="frame">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>70</height>
+               <height>45</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>60</height>
               </size>
              </property>
              <property name="frameShape">
@@ -327,52 +372,134 @@ QTabBar::tab:selected {
              <property name="frameShadow">
               <enum>QFrame::Raised</enum>
              </property>
-             <layout class="QGridLayout" name="gridLayout_3">
-              <item row="0" column="0">
-               <layout class="QHBoxLayout" name="horizontalLayout">
-                <item>
-                 <widget class="QToolButton" name="toolButton_download_audio">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>...</string>
-                  </property>
-                  <property name="icon">
-                   <iconset resource="resources.qrc">
-                    <normaloff>:/compmusic/icons/sound-waves.svg</normaloff>:/compmusic/icons/sound-waves.svg</iconset>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QToolButton" name="toolButton_download_pdm">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Predominant Melody</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
+             <layout class="QHBoxLayout" name="horizontalLayout">
+              <item>
+               <spacer name="horizontalSpacer_features_left">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QToolButton" name="toolButton_download_audio">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>75</width>
+                  <height>35</height>
+                 </size>
+                </property>
+                <property name="statusTip">
+                 <string>Download the selected audio recordings</string>
+                </property>
+                <property name="text">
+                 <string>Audio</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/compmusic/icons/sound-waves.svg</normaloff>:/compmusic/icons/sound-waves.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>18</width>
+                  <height>18</height>
+                 </size>
+                </property>
+                <property name="checkable">
+                 <bool>false</bool>
+                </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonTextBesideIcon</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="toolButton_download_pdm">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>180</width>
+                  <height>35</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Predominant Melody</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/compmusic/icons/pdm_icon.png</normaloff>:/compmusic/icons/pdm_icon.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>23</width>
+                  <height>23</height>
+                 </size>
+                </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonTextBesideIcon</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="toolButton_histogram">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Histogram</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/compmusic/icons/bozkurt_pcd.svg</normaloff>:/compmusic/icons/bozkurt_pcd.svg</iconset>
+                </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonTextBesideIcon</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_features_right">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </widget>
@@ -397,7 +524,7 @@ QTabBar::tab:selected {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>664</width>
+     <width>629</width>
      <height>25</height>
     </rect>
    </property>
