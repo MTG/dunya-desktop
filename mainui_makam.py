@@ -115,8 +115,9 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.tableView_results.doubleClicked.connect(
                                             self.get_selection_double_click)
         self.horizontal_header.sectionClicked.connect(self.header_filter)
-        self.proxy_model.dataChanged.connect(show_checked_index)
-
+        #self.proxy_model.dataChanged.connect(show_checked_index)
+        #self.tableView_results.dataChanged.connect(show_checked_index)
+        self.recording_model.dataChanged.connect(show_checked_index)
     @QtCore.pyqtSlot(int)
     def header_filter(self, index):
         # filter for table header
@@ -405,6 +406,9 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
 
         self.tableView_results.setEnabled(True)
 
+        # hiding the vertical headers
+        self.tableView_results.verticalHeader().hide()
+
         # arranging the artist column for being multi-line
         self.tableView_results.setWordWrap(True)
         self.tableView_results.setTextElideMode(QtCore.Qt.ElideMiddle)
@@ -421,12 +425,8 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         # filter line edit is enabled
         self.lineEdit_filter.setEnabled(True)
 
-        # hiding the vertical headers
-        self.tableView_results.verticalHeader()
         # setting the widths of rows and columns
         self.tableView_results.horizontalHeader().setStretchLastSection(True)
-        self.tableView_results.verticalHeader().setResizeMode(
-            QtGui.QHeaderView.Stretch)
         self.tableView_results.resizeColumnToContents(1)
         self.tableView_results.setColumnWidth(0, 28)
         self.tableView_results.resizeRowsToContents()
