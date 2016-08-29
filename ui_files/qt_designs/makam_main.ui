@@ -202,7 +202,7 @@ QTabBar::tab:selected {
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>25</height>
+                 <height>28</height>
                 </size>
                </property>
                <property name="statusTip">
@@ -247,7 +247,7 @@ QTabBar::tab:selected {
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>25</height>
+                 <height>28</height>
                 </size>
                </property>
                <property name="statusTip">
@@ -298,7 +298,7 @@ QTabBar::tab:selected {
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>25</height>
+                 <height>28</height>
                 </size>
                </property>
                <property name="statusTip">
