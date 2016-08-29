@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>673</width>
-    <height>469</height>
+    <height>451</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -387,7 +387,7 @@ QTabBar::tab:selected {
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>30</height>
+            <height>25</height>
            </size>
           </property>
           <property name="maximumSize">
@@ -436,7 +436,7 @@ QTabBar::tab:selected {
              <property name="maximumSize">
               <size>
                <width>75</width>
-               <height>35</height>
+               <height>25</height>
               </size>
              </property>
              <property name="statusTip">
@@ -480,7 +480,7 @@ QTabBar::tab:selected {
              <property name="maximumSize">
               <size>
                <width>180</width>
-               <height>35</height>
+               <height>25</height>
               </size>
              </property>
              <property name="text">
@@ -506,7 +506,7 @@ QTabBar::tab:selected {
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>30</height>
+               <height>25</height>
               </size>
              </property>
              <property name="text">
