@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>629</width>
-    <height>622</height>
+    <width>773</width>
+    <height>844</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -342,7 +342,11 @@ QTabBar::tab:selected {
               </widget>
              </item>
              <item>
-              <widget class="QTableView" name="tableView_results"/>
+              <widget class="QTableView" name="tableView_results">
+               <property name="styleSheet">
+                <string notr="true"/>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -524,7 +528,7 @@ QTabBar::tab:selected {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>629</width>
+     <width>773</width>
      <height>25</height>
     </rect>
    </property>
