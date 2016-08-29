@@ -115,9 +115,7 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.tableView_results.doubleClicked.connect(
                                             self.get_selection_double_click)
         self.horizontal_header.sectionClicked.connect(self.header_filter)
-        #self.proxy_model.dataChanged.connect(show_checked_index)
-        #self.tableView_results.dataChanged.connect(show_checked_index)
-        self.recording_model.dataChanged.connect(show_checked_index)
+
     @QtCore.pyqtSlot(int)
     def header_filter(self, index):
         # filter for table header
@@ -434,6 +432,7 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.query_index = 0
         self.progress_bar.setVisible(False)
         self.progress_bar.setValue(0)
+        self.recording_model.dataChanged.connect(show_checked_index)
 
 
 app = QtGui.QApplication(sys.argv)
