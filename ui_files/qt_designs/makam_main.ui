@@ -29,19 +29,22 @@
   <widget class="QWidget" name="centralwidget_makam">
    <layout class="QGridLayout" name="gridLayout_mainwindow">
     <property name="leftMargin">
-     <number>3</number>
+     <number>5</number>
     </property>
     <property name="topMargin">
-     <number>3</number>
+     <number>5</number>
     </property>
     <property name="rightMargin">
-     <number>3</number>
+     <number>5</number>
     </property>
     <property name="bottomMargin">
+     <number>3</number>
+    </property>
+    <property name="horizontalSpacing">
      <number>0</number>
     </property>
-    <property name="spacing">
-     <number>3</number>
+    <property name="verticalSpacing">
+     <number>5</number>
     </property>
     <item row="0" column="0">
      <widget class="QLabel" name="label_makam">
@@ -116,10 +119,10 @@ QTabBar::tab:selected {
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <property name="spacing">
-         <number>3</number>
+         <number>5</number>
         </property>
         <property name="leftMargin">
-         <number>4</number>
+         <number>5</number>
         </property>
         <property name="topMargin">
          <number>5</number>
@@ -199,7 +202,7 @@ QTabBar::tab:selected {
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>30</height>
+                 <height>25</height>
                 </size>
                </property>
                <property name="statusTip">
@@ -244,7 +247,7 @@ QTabBar::tab:selected {
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>30</height>
+                 <height>25</height>
                 </size>
                </property>
                <property name="statusTip">
@@ -295,7 +298,7 @@ QTabBar::tab:selected {
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>30</height>
+                 <height>25</height>
                 </size>
                </property>
                <property name="statusTip">
@@ -384,7 +387,7 @@ QTabBar::tab:selected {
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>45</height>
+            <height>30</height>
            </size>
           </property>
           <property name="maximumSize">
@@ -427,7 +430,7 @@ QTabBar::tab:selected {
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>30</height>
+               <height>25</height>
               </size>
              </property>
              <property name="maximumSize">
@@ -471,7 +474,7 @@ QTabBar::tab:selected {
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>30</height>
+               <height>25</height>
               </size>
              </property>
              <property name="maximumSize">
