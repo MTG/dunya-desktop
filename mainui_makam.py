@@ -19,7 +19,7 @@ from multiprocessing import cpu_count
 from multiprocessing.pool import ThreadPool as Pool
 
 # setting the token
-compmusic.dunya.conn.set_token('***REMOVED***')
+compmusic.dunya.conn.set_token('b24315d957c8b5bb5fc78abed762764b2d34ca62')
 
 # gazel and taksim uuids
 GAZEL = u'a1d59289-ea72-4050-9253-01ca12bb5556'
