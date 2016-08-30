@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>673</width>
-    <height>451</height>
+    <height>456</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -48,8 +48,14 @@
     </property>
     <item row="0" column="0">
      <widget class="QLabel" name="label_makam">
+      <property name="font">
+       <font>
+        <family>Ubuntu</family>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:600;&quot;&gt;Turkish Makam Corpus&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Turkish Makam Corpus&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -61,6 +67,11 @@
     </item>
     <item row="1" column="0">
      <widget class="QTabWidget" name="tabWidget_makam_corpus">
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
       <property name="statusTip">
        <string>Audio corpus and audio related features</string>
       </property>
@@ -141,6 +152,11 @@ QTabBar::tab:selected {
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Filtering&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
@@ -189,6 +205,11 @@ QTabBar::tab:selected {
                  <height>16777215</height>
                 </size>
                </property>
+               <property name="font">
+                <font>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
                <property name="text">
                 <string>Makam:</string>
                </property>
@@ -202,8 +223,13 @@ QTabBar::tab:selected {
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>30</height>
+                 <height>25</height>
                 </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>9</pointsize>
+                </font>
                </property>
                <property name="statusTip">
                 <string>Select makam</string>
@@ -234,6 +260,11 @@ QTabBar::tab:selected {
                  <height>16777215</height>
                 </size>
                </property>
+               <property name="font">
+                <font>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
                <property name="text">
                 <string>Form:</string>
                </property>
@@ -247,8 +278,13 @@ QTabBar::tab:selected {
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>30</height>
+                 <height>25</height>
                 </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>9</pointsize>
+                </font>
                </property>
                <property name="statusTip">
                 <string>Select form</string>
@@ -285,6 +321,11 @@ QTabBar::tab:selected {
                  <height>16777215</height>
                 </size>
                </property>
+               <property name="font">
+                <font>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
                <property name="text">
                 <string>Usul:</string>
                </property>
@@ -298,8 +339,13 @@ QTabBar::tab:selected {
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>30</height>
+                 <height>25</height>
                 </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>9</pointsize>
+                </font>
                </property>
                <property name="statusTip">
                 <string>Select usul</string>
@@ -361,6 +407,11 @@ QTabBar::tab:selected {
         </item>
         <item>
          <widget class="QLineEdit" name="lineEdit_filter">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -371,6 +422,11 @@ QTabBar::tab:selected {
         </item>
         <item>
          <widget class="QTableView" name="tableView_results">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
           <property name="styleSheet">
            <string notr="true"/>
           </property>
@@ -439,6 +495,11 @@ QTabBar::tab:selected {
                <height>25</height>
               </size>
              </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
              <property name="statusTip">
               <string>Download the selected audio recordings</string>
              </property>
@@ -483,6 +544,11 @@ QTabBar::tab:selected {
                <height>25</height>
               </size>
              </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
              <property name="text">
               <string>Predominant Melody</string>
              </property>
@@ -492,8 +558,8 @@ QTabBar::tab:selected {
              </property>
              <property name="iconSize">
               <size>
-               <width>23</width>
-               <height>23</height>
+               <width>20</width>
+               <height>20</height>
               </size>
              </property>
              <property name="toolButtonStyle">
@@ -508,6 +574,11 @@ QTabBar::tab:selected {
                <width>0</width>
                <height>25</height>
               </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
              </property>
              <property name="text">
               <string>Histogram</string>
@@ -559,7 +630,19 @@ QTabBar::tab:selected {
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar_makam"/>
+  <widget class="QStatusBar" name="statusbar_makam">
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>18</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+  </widget>
  </widget>
  <resources>
   <include location="resources.qrc"/>
