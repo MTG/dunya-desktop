@@ -76,6 +76,15 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.forms = compmusic.dunya.makam.get_forms()
         self.forms = utilities.sort_dictionary(self.forms, 'name')
 
+        self.composers = compmusic.dunya.makam.get_composers()
+        self.composers = utilities.sort_dictionary(self.composers, 'name')
+
+        self.performers = compmusic.dunya.makam.get_artists()
+        self.performers = utilities.sort_dictionary(self.performers, 'name')
+
+        self.instruments = compmusic.dunya.makam.get_instruments()
+        self.instruments = utilities.sort_dictionary(self.instruments, 'name')
+
         # setting the combobox
         font = QtGui.QFont()
         font.setPointSize(10)
@@ -83,14 +92,31 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
                                                      self.makams)
         self.comboBox_makam.lineEdit().setPlaceholderText("Makam...")
         self.comboBox_makam.lineEdit().setFont(font)
+
         self.comboBox_form = utilities.set_combobox(self.comboBox_form,
                                                     self.forms)
         self.comboBox_form.lineEdit().setFont(font)
         self.comboBox_form.lineEdit().setPlaceholderText("Form")
+
         self.comboBox_usul = utilities.set_combobox(self.comboBox_usul,
                                                     self.usuls)
         self.comboBox_usul.lineEdit().setPlaceholderText("Usul")
         self.comboBox_usul.lineEdit().setFont(font)
+
+        self.comboBox_composer = utilities.set_combobox(self.comboBox_composer,
+                                                        self.composers)
+        self.comboBox_composer.lineEdit().setPlaceholderText('Composer...')
+        self.comboBox_composer.lineEdit().setFont(font)
+
+        self.comboBox_performer = utilities.set_combobox(self.comboBox_performer,
+                                                         self.performers)
+        self.comboBox_performer.lineEdit().setPlaceholderText('Performer...')
+        self.comboBox_performer.lineEdit().setFont(font)
+
+        self.comboBox_instrument = utilities.set_combobox(self.comboBox_instrument,
+                                                          self.instruments)
+        self.comboBox_instrument.lineEdit().setPlaceholderText('Instrument...')
+        self.comboBox_instrument.lineEdit().setFont(font)
 
         # query index for progress bar
         self.query_index = 0
