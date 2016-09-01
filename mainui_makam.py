@@ -77,15 +77,20 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.forms = utilities.sort_dictionary(self.forms, 'name')
 
         # setting the combobox
+        font = QtGui.QFont()
+        font.setPointSize(10)
         self.comboBox_makam = utilities.set_combobox(self.comboBox_makam,
                                                      self.makams)
         self.comboBox_makam.lineEdit().setPlaceholderText("Makam...")
+        self.comboBox_makam.lineEdit().setFont(font)
         self.comboBox_form = utilities.set_combobox(self.comboBox_form,
                                                     self.forms)
+        self.comboBox_form.lineEdit().setFont(font)
         self.comboBox_form.lineEdit().setPlaceholderText("Form")
         self.comboBox_usul = utilities.set_combobox(self.comboBox_usul,
                                                     self.usuls)
         self.comboBox_usul.lineEdit().setPlaceholderText("Usul")
+        self.comboBox_usul.lineEdit().setFont(font)
 
         # query index for progress bar
         self.query_index = 0
