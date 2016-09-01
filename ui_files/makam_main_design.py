@@ -25,7 +25,7 @@ except AttributeError:
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(673, 456)
+        MainWindow.resize(553, 495)
         MainWindow.setBaseSize(QtCore.QSize(4, 4))
         MainWindow.setMouseTracking(False)
         icon = QtGui.QIcon()
@@ -34,12 +34,13 @@ class Ui_MainWindow(object):
         self.centralwidget_makam = QtGui.QWidget(MainWindow)
         self.centralwidget_makam.setObjectName(_fromUtf8("centralwidget_makam"))
         self.gridLayout_mainwindow = QtGui.QGridLayout(self.centralwidget_makam)
-        self.gridLayout_mainwindow.setContentsMargins(5, 5, 5, 3)
+        self.gridLayout_mainwindow.setContentsMargins(5, 9, 5, 3)
         self.gridLayout_mainwindow.setHorizontalSpacing(0)
-        self.gridLayout_mainwindow.setVerticalSpacing(5)
+        self.gridLayout_mainwindow.setVerticalSpacing(8)
         self.gridLayout_mainwindow.setObjectName(_fromUtf8("gridLayout_mainwindow"))
         self.label_makam = QtGui.QLabel(self.centralwidget_makam)
         font = QtGui.QFont()
+        font.setFamily(_fromUtf8("Ubuntu"))
         font.setPointSize(11)
         self.label_makam.setFont(font)
         self.label_makam.setAlignment(QtCore.Qt.AlignCenter)
@@ -106,7 +107,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.label_filtering.sizePolicy().hasHeightForWidth())
         self.label_filtering.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
-        font.setPointSize(10)
+        font.setPointSize(11)
         self.label_filtering.setFont(font)
         self.label_filtering.setObjectName(_fromUtf8("label_filtering"))
         self.verticalLayout_2.addWidget(self.label_filtering)
@@ -116,101 +117,380 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.frame_attiributes.sizePolicy().hasHeightForWidth())
         self.frame_attiributes.setSizePolicy(sizePolicy)
+        self.frame_attiributes.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.frame_attiributes.setFrameShape(QtGui.QFrame.StyledPanel)
         self.frame_attiributes.setFrameShadow(QtGui.QFrame.Raised)
+        self.frame_attiributes.setLineWidth(1)
         self.frame_attiributes.setObjectName(_fromUtf8("frame_attiributes"))
         self.gridLayout_filtering = QtGui.QGridLayout(self.frame_attiributes)
-        self.gridLayout_filtering.setMargin(3)
+        self.gridLayout_filtering.setSizeConstraint(QtGui.QLayout.SetNoConstraint)
+        self.gridLayout_filtering.setMargin(2)
         self.gridLayout_filtering.setSpacing(3)
         self.gridLayout_filtering.setObjectName(_fromUtf8("gridLayout_filtering"))
-        self.horizontalLayout_filtering = QtGui.QHBoxLayout()
-        self.horizontalLayout_filtering.setSizeConstraint(QtGui.QLayout.SetFixedSize)
-        self.horizontalLayout_filtering.setSpacing(1)
-        self.horizontalLayout_filtering.setObjectName(_fromUtf8("horizontalLayout_filtering"))
-        self.label_filter_makam = QtGui.QLabel(self.frame_attiributes)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_filter_makam.sizePolicy().hasHeightForWidth())
-        self.label_filter_makam.setSizePolicy(sizePolicy)
-        self.label_filter_makam.setMaximumSize(QtCore.QSize(55, 16777215))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.label_filter_makam.setFont(font)
-        self.label_filter_makam.setObjectName(_fromUtf8("label_filter_makam"))
-        self.horizontalLayout_filtering.addWidget(self.label_filter_makam)
+        self.line_seperator = QtGui.QFrame(self.frame_attiributes)
+        self.line_seperator.setFrameShape(QtGui.QFrame.HLine)
+        self.line_seperator.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line_seperator.setObjectName(_fromUtf8("line_seperator"))
+        self.gridLayout_filtering.addWidget(self.line_seperator, 1, 0, 1, 1)
+        self.horizontalLayout_otheratt = QtGui.QHBoxLayout()
+        self.horizontalLayout_otheratt.setObjectName(_fromUtf8("horizontalLayout_otheratt"))
+        self.comboBox_composer = QtGui.QComboBox(self.frame_attiributes)
+        self.comboBox_composer.setMinimumSize(QtCore.QSize(104, 0))
+        self.comboBox_composer.setStyleSheet(_fromUtf8("QComboBox {\n"
+"    border: 1px solid gray;\n"
+"    border-radius: 3px;\n"
+"    /*padding: 1px 18px 1px 3px;*/\n"
+"    min-width: 6em;\n"
+"}\n"
+"\n"
+"QComboBox:editable {\n"
+"    background: white;\n"
+"}\n"
+"\n"
+"QComboBox:!editable, QComboBox::drop-down:editable {\n"
+"     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                 stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,\n"
+"                                 stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);\n"
+"}\n"
+"\n"
+"/* QComboBox gets the \"on\" state when the popup is open */\n"
+"QComboBox:!editable:on, QComboBox::drop-down:editable:on {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                stop: 0 #D3D3D3, stop: 0.4 #D8D8D8,\n"
+"                                stop: 0.5 #DDDDDD, stop: 1.0 #E1E1E1);\n"
+"}\n"
+"\n"
+"QComboBox:on { /* shift the text when the popup opens */\n"
+"    padding-top: 3px;\n"
+"    padding-left: 4px;\n"
+"}\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    subcontrol-origin: padding;\n"
+"    subcontrol-position: top right;\n"
+"    width: 15px;\n"
+"\n"
+"    border-left-width: 1px;\n"
+"    border-left-color: darkgray;\n"
+"    border-left-style: solid; /* just a single line */\n"
+"    border-top-right-radius: 3px; /* same radius as the QComboBox */\n"
+"    border-bottom-right-radius: 3px;\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow {\n"
+"    image: url(/usr/share/icons/crystalsvg/16x16/actions/1downarrow.png);\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow:on { /* shift the arrow when popup is open */\n"
+"    top: 1px;\n"
+"    left: 1px;\n"
+"}"))
+        self.comboBox_composer.setObjectName(_fromUtf8("comboBox_composer"))
+        self.horizontalLayout_otheratt.addWidget(self.comboBox_composer)
+        self.comboBox_performer = QtGui.QComboBox(self.frame_attiributes)
+        self.comboBox_performer.setStyleSheet(_fromUtf8("QComboBox {\n"
+"    border: 1px solid gray;\n"
+"    border-radius: 3px;\n"
+"    /*padding: 1px 18px 1px 3px;*/\n"
+"    min-width: 6em;\n"
+"}\n"
+"\n"
+"QComboBox:editable {\n"
+"    background: white;\n"
+"}\n"
+"\n"
+"QComboBox:!editable, QComboBox::drop-down:editable {\n"
+"     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                 stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,\n"
+"                                 stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);\n"
+"}\n"
+"\n"
+"/* QComboBox gets the \"on\" state when the popup is open */\n"
+"QComboBox:!editable:on, QComboBox::drop-down:editable:on {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                stop: 0 #D3D3D3, stop: 0.4 #D8D8D8,\n"
+"                                stop: 0.5 #DDDDDD, stop: 1.0 #E1E1E1);\n"
+"}\n"
+"\n"
+"QComboBox:on { /* shift the text when the popup opens */\n"
+"    padding-top: 3px;\n"
+"    padding-left: 4px;\n"
+"}\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    subcontrol-origin: padding;\n"
+"    subcontrol-position: top right;\n"
+"    width: 15px;\n"
+"\n"
+"    border-left-width: 1px;\n"
+"    border-left-color: darkgray;\n"
+"    border-left-style: solid; /* just a single line */\n"
+"    border-top-right-radius: 3px; /* same radius as the QComboBox */\n"
+"    border-bottom-right-radius: 3px;\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow {\n"
+"    image: url(/usr/share/icons/crystalsvg/16x16/actions/1downarrow.png);\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow:on { /* shift the arrow when popup is open */\n"
+"    top: 1px;\n"
+"    left: 1px;\n"
+"}"))
+        self.comboBox_performer.setObjectName(_fromUtf8("comboBox_performer"))
+        self.horizontalLayout_otheratt.addWidget(self.comboBox_performer)
+        self.comboBox_instrument = QtGui.QComboBox(self.frame_attiributes)
+        self.comboBox_instrument.setStyleSheet(_fromUtf8("QComboBox {\n"
+"    border: 1px solid gray;\n"
+"    border-radius: 3px;\n"
+"    /*padding: 1px 18px 1px 3px;*/\n"
+"    min-width: 6em;\n"
+"}\n"
+"\n"
+"QComboBox:editable {\n"
+"    background: white;\n"
+"}\n"
+"\n"
+"QComboBox:!editable, QComboBox::drop-down:editable {\n"
+"     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                 stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,\n"
+"                                 stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);\n"
+"}\n"
+"\n"
+"/* QComboBox gets the \"on\" state when the popup is open */\n"
+"QComboBox:!editable:on, QComboBox::drop-down:editable:on {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                stop: 0 #D3D3D3, stop: 0.4 #D8D8D8,\n"
+"                                stop: 0.5 #DDDDDD, stop: 1.0 #E1E1E1);\n"
+"}\n"
+"\n"
+"QComboBox:on { /* shift the text when the popup opens */\n"
+"    padding-top: 3px;\n"
+"    padding-left: 4px;\n"
+"}\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    subcontrol-origin: padding;\n"
+"    subcontrol-position: top right;\n"
+"    width: 15px;\n"
+"\n"
+"    border-left-width: 1px;\n"
+"    border-left-color: darkgray;\n"
+"    border-left-style: solid; /* just a single line */\n"
+"    border-top-right-radius: 3px; /* same radius as the QComboBox */\n"
+"    border-bottom-right-radius: 3px;\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow {\n"
+"    image: url(/usr/share/icons/crystalsvg/16x16/actions/1downarrow.png);\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow:on { /* shift the arrow when popup is open */\n"
+"    top: 1px;\n"
+"    left: 1px;\n"
+"}"))
+        self.comboBox_instrument.setObjectName(_fromUtf8("comboBox_instrument"))
+        self.horizontalLayout_otheratt.addWidget(self.comboBox_instrument)
+        self.gridLayout_filtering.addLayout(self.horizontalLayout_otheratt, 2, 0, 1, 1)
+        self.horizontalLayout_2 = QtGui.QHBoxLayout()
+        self.horizontalLayout_2.setSizeConstraint(QtGui.QLayout.SetFixedSize)
+        self.horizontalLayout_2.setObjectName(_fromUtf8("horizontalLayout_2"))
         self.comboBox_makam = QtGui.QComboBox(self.frame_attiributes)
-        self.comboBox_makam.setMinimumSize(QtCore.QSize(0, 25))
+        self.comboBox_makam.setMinimumSize(QtCore.QSize(125, 25))
         font = QtGui.QFont()
-        font.setPointSize(9)
+        font.setPointSize(8)
         self.comboBox_makam.setFont(font)
+        self.comboBox_makam.setStyleSheet(_fromUtf8("QComboBox {\n"
+"    border: 1px solid gray;\n"
+"    border-radius: 3px;\n"
+"    padding: 1px 18px 1px 3px;\n"
+"    min-width: 6em;\n"
+"}\n"
+"\n"
+"QComboBox:editable {\n"
+"    background: white;\n"
+"}\n"
+"\n"
+"QComboBox:!editable, QComboBox::drop-down:editable {\n"
+"     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                 stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,\n"
+"                                 stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);\n"
+"}\n"
+"\n"
+"/* QComboBox gets the \"on\" state when the popup is open */\n"
+"QComboBox:!editable:on, QComboBox::drop-down:editable:on {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                stop: 0 #D3D3D3, stop: 0.4 #D8D8D8,\n"
+"                                stop: 0.5 #DDDDDD, stop: 1.0 #E1E1E1);\n"
+"}\n"
+"\n"
+"QComboBox:on { /* shift the text when the popup opens */\n"
+"    padding-top: 3px;\n"
+"    padding-left: 4px;\n"
+"}\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    subcontrol-origin: padding;\n"
+"    subcontrol-position: top right;\n"
+"    width: 15px;\n"
+"\n"
+"    border-left-width: 1px;\n"
+"    border-left-color: darkgray;\n"
+"    border-left-style: solid; /* just a single line */\n"
+"    border-top-right-radius: 3px; /* same radius as the QComboBox */\n"
+"    border-bottom-right-radius: 3px;\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow {\n"
+"    image: url(/usr/share/icons/crystalsvg/16x16/actions/1downarrow.png);\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow:on { /* shift the arrow when popup is open */\n"
+"    top: 1px;\n"
+"    left: 1px;\n"
+"}"))
+        self.comboBox_makam.setEditable(True)
         self.comboBox_makam.setObjectName(_fromUtf8("comboBox_makam"))
-        self.horizontalLayout_filtering.addWidget(self.comboBox_makam)
-        spacerItem = QtGui.QSpacerItem(7, 10, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout_filtering.addItem(spacerItem)
-        self.label_filter_form = QtGui.QLabel(self.frame_attiributes)
-        self.label_filter_form.setMaximumSize(QtCore.QSize(40, 16777215))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.label_filter_form.setFont(font)
-        self.label_filter_form.setObjectName(_fromUtf8("label_filter_form"))
-        self.horizontalLayout_filtering.addWidget(self.label_filter_form)
+        self.horizontalLayout_2.addWidget(self.comboBox_makam)
         self.comboBox_form = QtGui.QComboBox(self.frame_attiributes)
-        self.comboBox_form.setMinimumSize(QtCore.QSize(0, 25))
+        self.comboBox_form.setMinimumSize(QtCore.QSize(104, 25))
         font = QtGui.QFont()
-        font.setPointSize(9)
+        font.setPointSize(8)
         self.comboBox_form.setFont(font)
+        self.comboBox_form.setStyleSheet(_fromUtf8("QComboBox {\n"
+"    border: 1px solid gray;\n"
+"    border-radius: 3px;\n"
+"    /*padding: 1px 18px 1px 3px;*/\n"
+"    min-width: 6em;\n"
+"}\n"
+"\n"
+"QComboBox:editable {\n"
+"    background: white;\n"
+"}\n"
+"\n"
+"QComboBox:!editable, QComboBox::drop-down:editable {\n"
+"     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                 stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,\n"
+"                                 stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);\n"
+"}\n"
+"\n"
+"/* QComboBox gets the \"on\" state when the popup is open */\n"
+"QComboBox:!editable:on, QComboBox::drop-down:editable:on {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                stop: 0 #D3D3D3, stop: 0.4 #D8D8D8,\n"
+"                                stop: 0.5 #DDDDDD, stop: 1.0 #E1E1E1);\n"
+"}\n"
+"\n"
+"QComboBox:on { /* shift the text when the popup opens */\n"
+"    padding-top: 3px;\n"
+"    padding-left: 4px;\n"
+"}\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    subcontrol-origin: padding;\n"
+"    subcontrol-position: top right;\n"
+"    width: 15px;\n"
+"\n"
+"    border-left-width: 1px;\n"
+"    border-left-color: darkgray;\n"
+"    border-left-style: solid; /* just a single line */\n"
+"    border-top-right-radius: 3px; /* same radius as the QComboBox */\n"
+"    border-bottom-right-radius: 3px;\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow {\n"
+"    image: url(/usr/share/icons/crystalsvg/16x16/actions/1downarrow.png);\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow:on { /* shift the arrow when popup is open */\n"
+"    top: 1px;\n"
+"    left: 1px;\n"
+"}"))
+        self.comboBox_form.setEditable(True)
         self.comboBox_form.setObjectName(_fromUtf8("comboBox_form"))
-        self.horizontalLayout_filtering.addWidget(self.comboBox_form)
-        spacerItem1 = QtGui.QSpacerItem(7, 10, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout_filtering.addItem(spacerItem1)
-        self.label_filter_usul = QtGui.QLabel(self.frame_attiributes)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_filter_usul.sizePolicy().hasHeightForWidth())
-        self.label_filter_usul.setSizePolicy(sizePolicy)
-        self.label_filter_usul.setMaximumSize(QtCore.QSize(40, 16777215))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.label_filter_usul.setFont(font)
-        self.label_filter_usul.setObjectName(_fromUtf8("label_filter_usul"))
-        self.horizontalLayout_filtering.addWidget(self.label_filter_usul)
+        self.horizontalLayout_2.addWidget(self.comboBox_form)
         self.comboBox_usul = QtGui.QComboBox(self.frame_attiributes)
-        self.comboBox_usul.setMinimumSize(QtCore.QSize(0, 25))
+        self.comboBox_usul.setMinimumSize(QtCore.QSize(104, 25))
         font = QtGui.QFont()
-        font.setPointSize(9)
+        font.setPointSize(8)
         self.comboBox_usul.setFont(font)
+        self.comboBox_usul.setStyleSheet(_fromUtf8("QComboBox {\n"
+"    border: 1px solid gray;\n"
+"    border-radius: 3px;\n"
+"    /*padding: 1px 18px 1px 3px;*/\n"
+"    min-width: 6em;\n"
+"}\n"
+"\n"
+"QComboBox:editable {\n"
+"    background: white;\n"
+"}\n"
+"\n"
+"QComboBox:!editable, QComboBox::drop-down:editable {\n"
+"     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                 stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,\n"
+"                                 stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);\n"
+"}\n"
+"\n"
+"/* QComboBox gets the \"on\" state when the popup is open */\n"
+"QComboBox:!editable:on, QComboBox::drop-down:editable:on {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                stop: 0 #D3D3D3, stop: 0.4 #D8D8D8,\n"
+"                                stop: 0.5 #DDDDDD, stop: 1.0 #E1E1E1);\n"
+"}\n"
+"\n"
+"QComboBox:on { /* shift the text when the popup opens */\n"
+"    padding-top: 3px;\n"
+"    padding-left: 4px;\n"
+"}\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    subcontrol-origin: padding;\n"
+"    subcontrol-position: top right;\n"
+"    width: 15px;\n"
+"\n"
+"    border-left-width: 1px;\n"
+"    border-left-color: darkgray;\n"
+"    border-left-style: solid; /* just a single line */\n"
+"    border-top-right-radius: 3px; /* same radius as the QComboBox */\n"
+"    border-bottom-right-radius: 3px;\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow {\n"
+"    image: url(/usr/share/icons/crystalsvg/16x16/actions/1downarrow.png);\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow:on { /* shift the arrow when popup is open */\n"
+"    top: 1px;\n"
+"    left: 1px;\n"
+"}"))
+        self.comboBox_usul.setEditable(True)
         self.comboBox_usul.setObjectName(_fromUtf8("comboBox_usul"))
-        self.horizontalLayout_filtering.addWidget(self.comboBox_usul)
-        spacerItem2 = QtGui.QSpacerItem(7, 5, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout_filtering.addItem(spacerItem2)
+        self.horizontalLayout_2.addWidget(self.comboBox_usul)
+        self.gridLayout_filtering.addLayout(self.horizontalLayout_2, 0, 0, 1, 1)
+        self.horizontalLayout_query = QtGui.QHBoxLayout()
+        self.horizontalLayout_query.setSpacing(0)
+        self.horizontalLayout_query.setObjectName(_fromUtf8("horizontalLayout_query"))
         self.toolButton_query = QtGui.QToolButton(self.frame_attiributes)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.toolButton_query.sizePolicy().hasHeightForWidth())
-        self.toolButton_query.setSizePolicy(sizePolicy)
-        self.toolButton_query.setMinimumSize(QtCore.QSize(50, 25))
-        self.toolButton_query.setMaximumSize(QtCore.QSize(30, 25))
+        self.toolButton_query.setMinimumSize(QtCore.QSize(60, 60))
+        self.toolButton_query.setMaximumSize(QtCore.QSize(60, 60))
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap(_fromUtf8(":/compmusic/icons/magnifying-glass.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_query.setIcon(icon1)
-        self.toolButton_query.setCheckable(False)
+        self.toolButton_query.setIconSize(QtCore.QSize(25, 25))
         self.toolButton_query.setObjectName(_fromUtf8("toolButton_query"))
-        self.horizontalLayout_filtering.addWidget(self.toolButton_query)
-        self.gridLayout_filtering.addLayout(self.horizontalLayout_filtering, 1, 0, 1, 1)
+        self.horizontalLayout_query.addWidget(self.toolButton_query)
+        self.gridLayout_filtering.addLayout(self.horizontalLayout_query, 0, 1, 3, 1)
         self.verticalLayout_2.addWidget(self.frame_attiributes)
         self.lineEdit_filter = QtGui.QLineEdit(self.tab_audio)
         font = QtGui.QFont()
-        font.setPointSize(9)
+        font.setPointSize(10)
         self.lineEdit_filter.setFont(font)
         self.lineEdit_filter.setText(_fromUtf8(""))
         self.lineEdit_filter.setObjectName(_fromUtf8("lineEdit_filter"))
         self.verticalLayout_2.addWidget(self.lineEdit_filter)
         self.tableView_results = QtGui.QTableView(self.tab_audio)
         font = QtGui.QFont()
-        font.setPointSize(9)
+        font.setPointSize(10)
         self.tableView_results.setFont(font)
         self.tableView_results.setStyleSheet(_fromUtf8(""))
         self.tableView_results.setObjectName(_fromUtf8("tableView_results"))
@@ -229,8 +509,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout = QtGui.QHBoxLayout(self.frame)
         self.horizontalLayout.setMargin(3)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        spacerItem3 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem3)
+        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem)
         self.toolButton_download_audio = QtGui.QToolButton(self.frame)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -279,8 +559,8 @@ class Ui_MainWindow(object):
         self.toolButton_histogram.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.toolButton_histogram.setObjectName(_fromUtf8("toolButton_histogram"))
         self.horizontalLayout.addWidget(self.toolButton_histogram)
-        spacerItem4 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem4)
+        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem1)
         self.verticalLayout_2.addWidget(self.frame)
         self.tabWidget_makam_corpus.addTab(self.tab_audio, _fromUtf8(""))
         self.tab_metadata = QtGui.QWidget()
@@ -291,7 +571,7 @@ class Ui_MainWindow(object):
         self.gridLayout_mainwindow.addWidget(self.tabWidget_makam_corpus, 1, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget_makam)
         self.menubar_makam = QtGui.QMenuBar(MainWindow)
-        self.menubar_makam.setGeometry(QtCore.QRect(0, 0, 673, 25))
+        self.menubar_makam.setGeometry(QtCore.QRect(0, 0, 553, 25))
         self.menubar_makam.setObjectName(_fromUtf8("menubar_makam"))
         MainWindow.setMenuBar(self.menubar_makam)
         self.statusbar_makam = QtGui.QStatusBar(MainWindow)
@@ -301,9 +581,6 @@ class Ui_MainWindow(object):
         self.statusbar_makam.setFont(font)
         self.statusbar_makam.setObjectName(_fromUtf8("statusbar_makam"))
         MainWindow.setStatusBar(self.statusbar_makam)
-        self.label_filter_makam.setBuddy(self.comboBox_makam)
-        self.label_filter_form.setBuddy(self.comboBox_form)
-        self.label_filter_usul.setBuddy(self.comboBox_usul)
 
         self.retranslateUi(MainWindow)
         self.tabWidget_makam_corpus.setCurrentIndex(1)
@@ -315,13 +592,10 @@ class Ui_MainWindow(object):
         self.tabWidget_makam_corpus.setStatusTip(_translate("MainWindow", "Audio corpus and audio related features", None))
         self.tabWidget_makam_corpus.setTabText(self.tabWidget_makam_corpus.indexOf(self.tab_score), _translate("MainWindow", "Score", None))
         self.label_filtering.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Filtering</span></p></body></html>", None))
-        self.label_filter_makam.setText(_translate("MainWindow", "Makam:", None))
         self.comboBox_makam.setStatusTip(_translate("MainWindow", "Select makam", None))
-        self.label_filter_form.setText(_translate("MainWindow", "Form:", None))
         self.comboBox_form.setStatusTip(_translate("MainWindow", "Select form", None))
-        self.label_filter_usul.setText(_translate("MainWindow", "Usul:", None))
         self.comboBox_usul.setStatusTip(_translate("MainWindow", "Select usul", None))
-        self.toolButton_query.setText(_translate("MainWindow", "Query", None))
+        self.toolButton_query.setText(_translate("MainWindow", "...", None))
         self.lineEdit_filter.setPlaceholderText(_translate("MainWindow", "Type here to filter the results...", None))
         self.toolButton_download_audio.setStatusTip(_translate("MainWindow", "Download the selected audio recordings", None))
         self.toolButton_download_audio.setText(_translate("MainWindow", "Audio", None))
