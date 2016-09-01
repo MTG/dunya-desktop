@@ -47,7 +47,7 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
 
         # title of the window
-        self.setWindowTitle('CompMusic')
+        self.setWindowTitle('Dunya Desktop')
 
         # proxy modal
         self.proxy_model = QtGui.QSortFilterProxyModel()
@@ -79,10 +79,13 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         # setting the combobox
         self.comboBox_makam = utilities.set_combobox(self.comboBox_makam,
                                                      self.makams)
+        self.comboBox_makam.lineEdit().setPlaceholderText("Makam...")
         self.comboBox_form = utilities.set_combobox(self.comboBox_form,
                                                     self.forms)
+        self.comboBox_form.lineEdit().setPlaceholderText("Form")
         self.comboBox_usul = utilities.set_combobox(self.comboBox_usul,
                                                     self.usuls)
+        self.comboBox_usul.lineEdit().setPlaceholderText("Usul")
 
         # query index for progress bar
         self.query_index = 0
@@ -107,7 +110,7 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
                                               self.progress_bar.setVisible(
                                                   True))
         self.toolButton_download_audio.clicked.connect(
-            self.download_audio_thread)
+                                                    self.download_audio_thread)
 
         # line edit
         self.lineEdit_filter.textChanged.connect(self.filtering_the_table)
