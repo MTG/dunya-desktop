@@ -18,7 +18,7 @@ class ComboBox(QtGui.QComboBox):
             print element['name']
         self.setCurrentIndex(-1)
 
-    def get_attribute_id(attribute, index):
+    def get_attribute_id(self, attribute, index):
         """Returns the mb id of the selected attributes"""
         if index is not -1:
             return attribute[index]['uuid']
