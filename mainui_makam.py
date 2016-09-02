@@ -90,7 +90,7 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         font.setPointSize(10)
         self.comboBox_makam = utilities.set_combobox(self.comboBox_makam,
                                                      self.makams)
-        self.comboBox_makam.lineEdit().setPlaceholderText("Makam...")
+        self.comboBox_makam.lineEdit().setPlaceholderText("Makam")
         self.comboBox_makam.lineEdit().setFont(font)
 
         self.comboBox_form = utilities.set_combobox(self.comboBox_form,
@@ -105,17 +105,17 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
 
         self.comboBox_composer = utilities.set_combobox(self.comboBox_composer,
                                                         self.composers)
-        self.comboBox_composer.lineEdit().setPlaceholderText('Composer...')
+        self.comboBox_composer.lineEdit().setPlaceholderText('Composer')
         self.comboBox_composer.lineEdit().setFont(font)
 
         self.comboBox_performer = utilities.set_combobox(self.comboBox_performer,
                                                          self.performers)
-        self.comboBox_performer.lineEdit().setPlaceholderText('Performer...')
+        self.comboBox_performer.lineEdit().setPlaceholderText('Performer')
         self.comboBox_performer.lineEdit().setFont(font)
 
         self.comboBox_instrument = utilities.set_combobox(self.comboBox_instrument,
                                                           self.instruments)
-        self.comboBox_instrument.lineEdit().setPlaceholderText('Instrument...')
+        self.comboBox_instrument.lineEdit().setPlaceholderText('Instrument')
         self.comboBox_instrument.lineEdit().setFont(font)
 
         # query index for progress bar
