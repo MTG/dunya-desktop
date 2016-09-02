@@ -25,12 +25,13 @@ except AttributeError:
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(655, 495)
+        MainWindow.resize(679, 675)
         MainWindow.setBaseSize(QtCore.QSize(4, 4))
         MainWindow.setMouseTracking(False)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/compmusic/icons/compmusic-logo-black.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
+        MainWindow.setStyleSheet(_fromUtf8(""))
         self.centralwidget_makam = QtGui.QWidget(MainWindow)
         self.centralwidget_makam.setObjectName(_fromUtf8("centralwidget_makam"))
         self.gridLayout_mainwindow = QtGui.QGridLayout(self.centralwidget_makam)
@@ -151,7 +152,8 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QComboBox:editable {\n"
-"    background: white;\n"
+"   background: rgb(255, 255, 255);\n"
+"    /*background: transparent*/\n"
 "}\n"
 "\n"
 "QComboBox:!editable, QComboBox::drop-down:editable {\n"
@@ -204,7 +206,8 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QComboBox:editable {\n"
-"    background: white;\n"
+"   background: rgb(255, 255, 255);\n"
+"    /*background: transparent*/\n"
 "}\n"
 "\n"
 "QComboBox:!editable, QComboBox::drop-down:editable {\n"
@@ -257,7 +260,8 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QComboBox:editable {\n"
-"    background: white;\n"
+"   background: rgb(255, 255, 255);\n"
+"    /*background: transparent*/\n"
 "}\n"
 "\n"
 "QComboBox:!editable, QComboBox::drop-down:editable {\n"
@@ -310,7 +314,8 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QComboBox:editable {\n"
-"    background: white;\n"
+"   background: rgb(255, 255, 255);\n"
+"    /*background: transparent*/\n"
 "}\n"
 "\n"
 "QComboBox:!editable, QComboBox::drop-down:editable {\n"
@@ -363,7 +368,8 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QComboBox:editable {\n"
-"    background: white;\n"
+"   background: rgb(255, 255, 255);\n"
+"    /*background: transparent*/\n"
 "}\n"
 "\n"
 "QComboBox:!editable, QComboBox::drop-down:editable {\n"
@@ -418,7 +424,8 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QComboBox:editable {\n"
-"    background: white;\n"
+"   background: rgb(255, 255, 255);\n"
+"    /*background: transparent*/\n"
 "}\n"
 "\n"
 "QComboBox:!editable, QComboBox::drop-down:editable {\n"
@@ -476,7 +483,13 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(10)
         self.tableView_results.setFont(font)
-        self.tableView_results.setStyleSheet(_fromUtf8(""))
+        self.tableView_results.setStyleSheet(_fromUtf8("/*background-image: url(:/compmusic/icons/compmusic-logo-opac.svg); */\n"
+"background-image: url(:/compmusic/icons/COMPMUSIC_LOGO_BN_2_sobre_NEGRE-scaled.svg);\n"
+"background-repeat: no-repeat;\n"
+"background-attachment: fixed; \n"
+"background-position: center;\n"
+"/*background-repeat: no-repeat;*/\n"
+"background-color: rgb(228, 228, 228)"))
         self.tableView_results.setObjectName(_fromUtf8("tableView_results"))
         self.verticalLayout_2.addWidget(self.tableView_results)
         self.frame = QtGui.QFrame(self.tab_audio)
@@ -487,6 +500,7 @@ class Ui_MainWindow(object):
         self.frame.setSizePolicy(sizePolicy)
         self.frame.setMinimumSize(QtCore.QSize(0, 25))
         self.frame.setMaximumSize(QtCore.QSize(16777215, 60))
+        self.frame.setStyleSheet(_fromUtf8(""))
         self.frame.setFrameShape(QtGui.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtGui.QFrame.Raised)
         self.frame.setObjectName(_fromUtf8("frame"))
@@ -555,7 +569,7 @@ class Ui_MainWindow(object):
         self.gridLayout_mainwindow.addWidget(self.tabWidget_makam_corpus, 1, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget_makam)
         self.menubar_makam = QtGui.QMenuBar(MainWindow)
-        self.menubar_makam.setGeometry(QtCore.QRect(0, 0, 655, 25))
+        self.menubar_makam.setGeometry(QtCore.QRect(0, 0, 679, 25))
         self.menubar_makam.setObjectName(_fromUtf8("menubar_makam"))
         MainWindow.setMenuBar(self.menubar_makam)
         self.statusbar_makam = QtGui.QStatusBar(MainWindow)

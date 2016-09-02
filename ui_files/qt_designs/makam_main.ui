@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>655</width>
-    <height>495</height>
+    <width>679</width>
+    <height>675</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -25,6 +25,9 @@
   <property name="windowIcon">
    <iconset resource="resources.qrc">
     <normaloff>:/compmusic/icons/compmusic-logo-black.png</normaloff>:/compmusic/icons/compmusic-logo-black.png</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget_makam">
    <layout class="QGridLayout" name="gridLayout_mainwindow">
@@ -182,7 +185,7 @@ QTabBar::tab:selected {
           <property name="lineWidth">
            <number>1</number>
           </property>
-          <layout class="QGridLayout" name="gridLayout_filtering" rowstretch="0,0,0">
+          <layout class="QGridLayout" name="gridLayout_filtering" rowstretch="0,0">
            <property name="sizeConstraint">
             <enum>QLayout::SetNoConstraint</enum>
            </property>
@@ -255,7 +258,8 @@ QTabBar::tab:selected {
 }
 
 QComboBox:editable {
-    background: white;
+   background: rgb(255, 255, 255);
+	/*background: transparent*/
 }
 
 QComboBox:!editable, QComboBox::drop-down:editable {
@@ -313,7 +317,8 @@ QComboBox::down-arrow:on { /* shift the arrow when popup is open */
 }
 
 QComboBox:editable {
-    background: white;
+   background: rgb(255, 255, 255);
+	/*background: transparent*/
 }
 
 QComboBox:!editable, QComboBox::drop-down:editable {
@@ -371,7 +376,8 @@ QComboBox::down-arrow:on { /* shift the arrow when popup is open */
 }
 
 QComboBox:editable {
-    background: white;
+   background: rgb(255, 255, 255);
+	/*background: transparent*/
 }
 
 QComboBox:!editable, QComboBox::drop-down:editable {
@@ -429,7 +435,8 @@ QComboBox::down-arrow:on { /* shift the arrow when popup is open */
 }
 
 QComboBox:editable {
-    background: white;
+   background: rgb(255, 255, 255);
+	/*background: transparent*/
 }
 
 QComboBox:!editable, QComboBox::drop-down:editable {
@@ -487,7 +494,8 @@ QComboBox::down-arrow:on { /* shift the arrow when popup is open */
 }
 
 QComboBox:editable {
-    background: white;
+   background: rgb(255, 255, 255);
+	/*background: transparent*/
 }
 
 QComboBox:!editable, QComboBox::drop-down:editable {
@@ -561,7 +569,8 @@ QComboBox::down-arrow:on { /* shift the arrow when popup is open */
 }
 
 QComboBox:editable {
-    background: white;
+   background: rgb(255, 255, 255);
+	/*background: transparent*/
 }
 
 QComboBox:!editable, QComboBox::drop-down:editable {
@@ -650,7 +659,13 @@ QComboBox::down-arrow:on { /* shift the arrow when popup is open */
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true"/>
+           <string notr="true">/*background-image: url(:/compmusic/icons/compmusic-logo-opac.svg); */
+background-image: url(:/compmusic/icons/COMPMUSIC_LOGO_BN_2_sobre_NEGRE-scaled.svg);
+background-repeat: no-repeat;
+background-attachment: fixed; 
+background-position: center;
+/*background-repeat: no-repeat;*/
+background-color: rgb(228, 228, 228)</string>
           </property>
          </widget>
         </item>
@@ -673,6 +688,9 @@ QComboBox::down-arrow:on { /* shift the arrow when popup is open */
             <width>16777215</width>
             <height>60</height>
            </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true"/>
           </property>
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
@@ -847,7 +865,7 @@ QComboBox::down-arrow:on { /* shift the arrow when popup is open */
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>655</width>
+     <width>679</width>
      <height>25</height>
     </rect>
    </property>
