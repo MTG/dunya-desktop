@@ -25,11 +25,11 @@ except AttributeError:
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(679, 675)
+        MainWindow.resize(679, 656)
         MainWindow.setBaseSize(QtCore.QSize(4, 4))
         MainWindow.setMouseTracking(False)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/compmusic/icons/compmusic-logo-black.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/compmusic/icons/logoDunya.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setStyleSheet(_fromUtf8(""))
         self.centralwidget_makam = QtGui.QWidget(MainWindow)
@@ -484,7 +484,7 @@ class Ui_MainWindow(object):
         font.setPointSize(10)
         self.tableView_results.setFont(font)
         self.tableView_results.setStyleSheet(_fromUtf8("/*background-image: url(:/compmusic/icons/compmusic-logo-opac.svg); */\n"
-"background-image: url(:/compmusic/icons/COMPMUSIC_LOGO_BN_2_sobre_NEGRE-scaled.svg);\n"
+"background-image: url(:/compmusic/icons/compmusic-logo-opac.svg);\n"
 "background-repeat: no-repeat;\n"
 "background-attachment: fixed; \n"
 "background-position: center;\n"
