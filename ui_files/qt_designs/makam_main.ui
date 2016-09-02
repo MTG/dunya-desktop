@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>679</width>
-    <height>675</height>
+    <height>656</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -24,7 +24,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="resources.qrc">
-    <normaloff>:/compmusic/icons/compmusic-logo-black.png</normaloff>:/compmusic/icons/compmusic-logo-black.png</iconset>
+    <normaloff>:/compmusic/icons/logoDunya.png</normaloff>:/compmusic/icons/logoDunya.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -35,7 +35,7 @@
      <number>5</number>
     </property>
     <property name="topMargin">
-     <number>9</number>
+     <number>19</number>
     </property>
     <property name="rightMargin">
      <number>5</number>
@@ -660,7 +660,7 @@ QComboBox::down-arrow:on { /* shift the arrow when popup is open */
           </property>
           <property name="styleSheet">
            <string notr="true">/*background-image: url(:/compmusic/icons/compmusic-logo-opac.svg); */
-background-image: url(:/compmusic/icons/COMPMUSIC_LOGO_BN_2_sobre_NEGRE-scaled.svg);
+background-image: url(:/compmusic/icons/compmusic-logo-opac.svg);
 background-repeat: no-repeat;
 background-attachment: fixed; 
 background-position: center;
