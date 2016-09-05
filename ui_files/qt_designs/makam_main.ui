@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>679</width>
-    <height>656</height>
+    <width>680</width>
+    <height>655</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>680</width>
+    <height>655</height>
+   </size>
   </property>
   <property name="baseSize">
    <size>
@@ -20,7 +26,7 @@
    <bool>false</bool>
   </property>
   <property name="windowTitle">
-   <string>CompMusic</string>
+   <string>Dunya Desktop</string>
   </property>
   <property name="windowIcon">
    <iconset resource="resources.qrc">
@@ -865,7 +871,7 @@ background-color: rgb(228, 228, 228)</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>679</width>
+     <width>680</width>
      <height>25</height>
     </rect>
    </property>
