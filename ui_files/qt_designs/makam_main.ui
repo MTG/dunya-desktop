@@ -30,7 +30,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="resources.qrc">
-    <normaloff>:/compmusic/icons/logoDunya.png</normaloff>:/compmusic/icons/logoDunya.png</iconset>
+    <normaloff>:/compmusic/icons/dunya.svg</normaloff>:/compmusic/icons/dunya.svg</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
