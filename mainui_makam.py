@@ -47,7 +47,7 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
 
         # title of the window
-        self.setWindowTitle('CompMusic')
+        self.setWindowTitle('Dunya Desktop')
 
         # proxy modal
         self.proxy_model = QtGui.QSortFilterProxyModel()
@@ -76,13 +76,47 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         self.forms = compmusic.dunya.makam.get_forms()
         self.forms = utilities.sort_dictionary(self.forms, 'name')
 
+        self.composers = compmusic.dunya.makam.get_composers()
+        self.composers = utilities.sort_dictionary(self.composers, 'name')
+
+        self.performers = compmusic.dunya.makam.get_artists()
+        self.performers = utilities.sort_dictionary(self.performers, 'name')
+
+        self.instruments = compmusic.dunya.makam.get_instruments()
+        self.instruments = utilities.sort_dictionary(self.instruments, 'name')
+
         # setting the combobox
+        font = QtGui.QFont()
+        font.setPointSize(10)
         self.comboBox_makam = utilities.set_combobox(self.comboBox_makam,
                                                      self.makams)
+        self.comboBox_makam.lineEdit().setPlaceholderText("Makam")
+        self.comboBox_makam.lineEdit().setFont(font)
+
         self.comboBox_form = utilities.set_combobox(self.comboBox_form,
                                                     self.forms)
+        self.comboBox_form.lineEdit().setFont(font)
+        self.comboBox_form.lineEdit().setPlaceholderText("Form")
+
         self.comboBox_usul = utilities.set_combobox(self.comboBox_usul,
                                                     self.usuls)
+        self.comboBox_usul.lineEdit().setPlaceholderText("Usul")
+        self.comboBox_usul.lineEdit().setFont(font)
+
+        self.comboBox_composer = utilities.set_combobox(self.comboBox_composer,
+                                                        self.composers)
+        self.comboBox_composer.lineEdit().setPlaceholderText('Composer')
+        self.comboBox_composer.lineEdit().setFont(font)
+
+        self.comboBox_performer = utilities.set_combobox(self.comboBox_performer,
+                                                         self.performers)
+        self.comboBox_performer.lineEdit().setPlaceholderText('Performer')
+        self.comboBox_performer.lineEdit().setFont(font)
+
+        self.comboBox_instrument = utilities.set_combobox(self.comboBox_instrument,
+                                                          self.instruments)
+        self.comboBox_instrument.lineEdit().setPlaceholderText('Instrument')
+        self.comboBox_instrument.lineEdit().setFont(font)
 
         # query index for progress bar
         self.query_index = 0
@@ -107,7 +141,7 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
                                               self.progress_bar.setVisible(
                                                   True))
         self.toolButton_download_audio.clicked.connect(
-            self.download_audio_thread)
+                                                    self.download_audio_thread)
 
         # line edit
         self.lineEdit_filter.textChanged.connect(self.filtering_the_table)
@@ -232,16 +266,25 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
 
         # getting the user selections
         makam_id = utilities.get_attribute_id(self.makams,
-                                              self.comboBox_makam.currentIndex())
+                                          self.comboBox_makam.currentIndex())
         form_id = utilities.get_attribute_id(self.forms,
                                              self.comboBox_form.currentIndex())
         usul_id = utilities.get_attribute_id(self.usuls,
                                              self.comboBox_usul.currentIndex())
+        composer_id = utilities.get_attribute_id(self.composers,
+                                     self.comboBox_composer.currentIndex())
+        performer_id = utilities.get_attribute_id_other(self.performers,
+                                      self.comboBox_performer.currentIndex())
+        instrument_id = utilities.get_attribute_id(self.instruments,
+                                       self.comboBox_instrument.currentIndex())
 
         # arranging the recordings and works for the filtering process
         length_recording_taksims = []
         length_recording_gazels = []
         length_works = []
+
+        # filtering
+        recording_list = []
 
         # if makam is selected
         if makam_id != -1:
@@ -271,6 +314,23 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
             data = compmusic.dunya.makam.get_form(form_id)
             length_works.append([data['works'], len(data['works'])])
 
+        # if composer is selected
+        if composer_id != -1:
+            data = compmusic.dunya.makam.get_composer(composer_id)
+            length_works.append([data['works'], len(data['works'])])
+
+        # if performer is selected
+        if performer_id != -1:
+            data = compmusic.dunya.makam.get_artist(performer_id)
+            for release in data['releases']:
+                try:
+                    release_data = compmusic.dunya.makam.get_release(release['mbid'])
+                    for rec in release_data['recordings']:
+                        rec['artists'] = [u''.join(self.performers[self.comboBox_performer.currentIndex()]['name'])]
+                        recording_list.append(rec)
+                except:
+                    print "amk"
+
         # sorting the lengths
         length_works = sorted(length_works, key=lambda x: x[1])[::-1]
         length_recording_gazels = sorted(length_recording_gazels,
@@ -278,56 +338,58 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         length_recording_taksims = sorted(length_recording_taksims,
                                           key=lambda x: x[1])[::-1]
 
-        # filtering
-        recording_list = []
         # if all attributes are selected by the user
-        if len(length_works) == 3:
-            work_list = [common for common in
-                         [common for common in length_works[0][0] if
-                          common in length_works[1][0]]
-                         if common in length_works[2][0]]
+        if makam_id != -1 or usul_id != -1 or form_id != -1:
+            if len(length_works) == 3:
+                work_list = [common for common in
+                             [common for common in length_works[0][0] if
+                              common in length_works[1][0]]
+                             if common in length_works[2][0]]
 
-            if form_id == TAKSIM:
-                recording_list = [common for common in
-                                  [common for common in
-                                   length_recording_taksims[0][0] if common in
-                                   length_recording_taksims[1][0]]
-                                  if common in length_recording_taksims[2][0]]
-            elif form_id == GAZEL:
-                recording_list = [common for common in
-                                  [common for common in
-                                   length_recording_gazels[0][0] if common in
-                                   length_recording_gazels[1][0]]
-                                  if common in length_recording_gazels[2][0]]
+                if form_id == TAKSIM:
+                    recording_list = [common for common in
+                                      [common for common in
+                                       length_recording_taksims[0][0] if common in
+                                       length_recording_taksims[1][0]]
+                                      if common in length_recording_taksims[2][0]]
+                elif form_id == GAZEL:
+                    recording_list = [common for common in
+                                      [common for common in
+                                       length_recording_gazels[0][0] if common in
+                                       length_recording_gazels[1][0]]
+                                      if common in length_recording_gazels[2][0]]
 
-        elif len(length_works) == 2:
-            work_list = [common for common in length_works[0][0] if
-                         common in length_works[1][0]]
+            elif len(length_works) == 2:
+                work_list = [common for common in length_works[0][0] if
+                             common in length_works[1][0]]
 
-            if form_id == -1:
-                recording_list = length_recording_taksims[0][0] + \
-                                 length_recording_gazels[0][0]
-            elif form_id == TAKSIM:
-                recording_list = length_recording_taksims[0][0]
-            elif form_id == GAZEL:
-                recording_list = length_recording_gazels[0][0]
+                if form_id == -1:
+                    recording_list = length_recording_taksims[0][0] + \
+                                     length_recording_gazels[0][0]
+                elif form_id == TAKSIM:
+                    recording_list = length_recording_taksims[0][0]
+                elif form_id == GAZEL:
+                    recording_list = length_recording_gazels[0][0]
+            else:
+                # if form is not selected
+                if form_id == -1:
+                    work_list = length_works[0][0]
+                    recording_list = length_recording_gazels[0][0] + \
+                                     length_recording_taksims[0][0]
+
+                elif form_id != -1:
+                    if form_id != GAZEL or form_id != TAKSIM:
+                        work_list = length_works[0][0]
+                        recording_list = []
+                    else:
+                        # TODO: Add only taksim or gazel selection
+                        work_list = length_works[0][0]
         else:
-            # if form is not selected
-            if form_id == -1:
-                work_list = length_works[0][0]
-                recording_list = length_recording_gazels[0][0] + \
-                                 length_recording_taksims[0][0]
-
-            elif form_id != -1:
-                if form_id != GAZEL or form_id != TAKSIM:
-                    work_list = length_works[0][0]
-                    recording_list = []
-                else:
-                    # TODO: Add only taksim or gazel selection
-                    work_list = length_works[0][0]
+            work_list = []
 
         # recording list
         self.recording_list = recording_list
+        print recording_list
         self.work_list = work_list
 
         self.fetch_related_recs(work_list)
@@ -350,7 +412,6 @@ class MainMakam(QtGui.QMainWindow, Ui_MainWindow):
         # sorting the recording dictionary
         self.recording_list = utilities.sort_dictionary(self.recording_list,
                                                         'title')
-
         # arranging the rows of the model
         self.recording_model.setHorizontalHeaderLabels(['', 'Title',
                                                         'Artists'])

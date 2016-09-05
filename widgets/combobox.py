@@ -2,25 +2,15 @@ from PyQt4 import QtGui
 
 
 class ComboBox(QtGui.QComboBox):
-    def __init__(self, attribute):
+    def __init__(self, parent):
 
-        QtGui.QComboBox.__init__(self)
+        QtGui.QComboBox.__init__(self, parent)
         self.setEditable(True)
         self.setInsertPolicy(QtGui.QComboBox.NoInsert)
 
-        self.attribute = attribute
-        self.set_combobox()
+        self.set_css()
 
-    def set_combobox(self):
-        """Add attributes to  combobox"""
-        for element in self.attribute:
-            self.addItem(element['name'])
-            print element['name']
-        self.setCurrentIndex(-1)
-
-    def get_attribute_id(attribute, index):
-        """Returns the mb id of the selected attributes"""
-        if index is not -1:
-            return attribute[index]['uuid']
-        else:
-            return -1
+    def set_css(self):
+        with open("../ui_files/css/combobox.css") as f:
+            css = f.read()
+        self.setStyleSheet(css)

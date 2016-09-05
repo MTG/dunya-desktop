@@ -23,3 +23,10 @@ def get_attribute_id(attribute, index):
         return attribute[index]['uuid']
     else:
         return -1
+
+def get_attribute_id_other(attribute, index):
+    """Returns the mb id of the selected attributes"""
+    if index is not -1:
+        return attribute[index]['mbid']
+    else:
+        return -1
