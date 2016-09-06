@@ -1,15 +1,16 @@
 import sys
-
 from PyQt4 import QtCore, QtGui
-from widgets.tabwidget import TabWidgetMakam
+
 from widgets.combobox import ComboBox
 from widgets.table import TableWidget
+from widgets.tabwidget import TabWidgetMakam
+
 import resources_rc
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-    def _fromUtf8(s):
+    def _from_utf8(s):
         return s
 
 try:
@@ -23,22 +24,24 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 
 
-class UiMainWindow(object):
-    def setup_ui(self, MainWindow):
+class MainWindow(QtGui.QMainWindow):
+    def __init__(self):
+        QtGui.QMainWindow.__init__(self)
+
         # window sizes
-        MainWindow.resize(680, 655)
-        MainWindow.setMinimumSize(QtCore.QSize(680, 655))
-        MainWindow.setBaseSize(QtCore.QSize(4, 4))
-        MainWindow.setMouseTracking(False)
+        self.resize(680, 655)
+        self.setMinimumSize(QtCore.QSize(680, 655))
+        self.setBaseSize(QtCore.QSize(4, 4))
+        self.setMouseTracking(False)
 
         # main window icon
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/compmusic/icons/dunya.svg")),
-            QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        MainWindow.setWindowIcon(icon)
+                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.setWindowIcon(icon)
 
         # central widget
-        self.central_widget = QtGui.QWidget(MainWindow)
+        self.central_widget = QtGui.QWidget(self)
 
         # grid layout for main window
         self.gridLayout_mainwindow = QtGui.QGridLayout(self.central_widget)
@@ -59,7 +62,7 @@ class UiMainWindow(object):
         self.label_main.setWordWrap(False)
 
         self.gridLayout_mainwindow.addWidget(self.label_main, 0, 0, 1, 1)
-        self.tabWidget = TabWidgetMakam(parent=self.central_widget)
+        self.tabWidget = TabWidgetMakam(self.central_widget)
 
         self.verticalLayout = QtGui.QVBoxLayout(self.tabWidget.tab_audio)
         self.verticalLayout.setContentsMargins(5, 5, 5, 2)
@@ -67,13 +70,13 @@ class UiMainWindow(object):
 
         # setting the label for filtering section
         self.label_filtering = QtGui.QLabel(self.tabWidget.tab_audio)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,
-                                       QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
+        size_policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,
+                                        QtGui.QSizePolicy.Fixed)
+        size_policy.setHorizontalStretch(0)
+        size_policy.setVerticalStretch(0)
+        size_policy.setHeightForWidth(
             self.label_filtering.sizePolicy().hasHeightForWidth())
-        self.label_filtering.setSizePolicy(sizePolicy)
+        self.label_filtering.setSizePolicy(size_policy)
 
         # font for filtering label
         font = QtGui.QFont()
@@ -82,30 +85,30 @@ class UiMainWindow(object):
         self.verticalLayout.addWidget(self.label_filtering)
 
         # frame for attributes
-        self.frame_attiributes = QtGui.QFrame(self.tabWidget.tab_audio)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred,
-                                       QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.frame_attiributes.sizePolicy().hasHeightForWidth())
-        self.frame_attiributes.setSizePolicy(sizePolicy)
-        self.frame_attiributes.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
-        self.frame_attiributes.setFrameShape(QtGui.QFrame.StyledPanel)
-        self.frame_attiributes.setFrameShadow(QtGui.QFrame.Raised)
-        self.frame_attiributes.setLineWidth(1)
+        self.frame_attributes = QtGui.QFrame(self.tabWidget.tab_audio)
+        size_policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred,
+                                        QtGui.QSizePolicy.Fixed)
+        size_policy.setHorizontalStretch(0)
+        size_policy.setVerticalStretch(0)
+        size_policy.setHeightForWidth(
+            self.frame_attributes.sizePolicy().hasHeightForWidth())
+        self.frame_attributes.setSizePolicy(size_policy)
+        self.frame_attributes.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+        self.frame_attributes.setFrameShape(QtGui.QFrame.StyledPanel)
+        self.frame_attributes.setFrameShadow(QtGui.QFrame.Raised)
+        self.frame_attributes.setLineWidth(1)
 
         # grid layout for filtering section
-        self.gridLayout_filtering = QtGui.QGridLayout(self.frame_attiributes)
+        self.gridLayout_filtering = QtGui.QGridLayout(self.frame_attributes)
         self.gridLayout_filtering.setSizeConstraint(
             QtGui.QLayout.SetNoConstraint)
         self.gridLayout_filtering.setMargin(2)
         self.gridLayout_filtering.setSpacing(3)
 
         # spacer in grid layout of filtering section
-        spacerItem = QtGui.QSpacerItem(3, 20, QtGui.QSizePolicy.Fixed,
-                                       QtGui.QSizePolicy.Minimum)
-        self.gridLayout_filtering.addItem(spacerItem, 0, 1, 1, 1)
+        spacer_item = QtGui.QSpacerItem(3, 20, QtGui.QSizePolicy.Fixed,
+                                        QtGui.QSizePolicy.Minimum)
+        self.gridLayout_filtering.addItem(spacer_item, 0, 1, 1, 1)
 
         # query button and layout
         self.horizontalLayout_query = QtGui.QHBoxLayout()
@@ -113,7 +116,7 @@ class UiMainWindow(object):
         self.horizontalLayout_query.setObjectName(
             _fromUtf8("horizontalLayout_query"))
 
-        self.toolButton_query = QtGui.QToolButton(self.frame_attiributes)
+        self.toolButton_query = QtGui.QToolButton(self.frame_attributes)
         self.toolButton_query.setMinimumSize(QtCore.QSize(50, 50))
         self.toolButton_query.setMaximumSize(QtCore.QSize(60, 60))
         icon1 = QtGui.QIcon()
@@ -127,38 +130,38 @@ class UiMainWindow(object):
                                             2, 1)
         # combo boxes
         # performer
-        self.comboBox_performer = ComboBox(self.frame_attiributes)
+        self.comboBox_performer = ComboBox(self.frame_attributes)
         self.gridLayout_filtering.addWidget(self.comboBox_performer,
                                             1, 2, 1, 1)
         # melodic structure
-        self.comboBox_melodic = ComboBox(self.frame_attiributes)
+        self.comboBox_melodic = ComboBox(self.frame_attributes)
         self.gridLayout_filtering.addWidget(self.comboBox_melodic, 0, 0, 1, 1)
 
         # form structure
-        self.comboBox_form = ComboBox(self.frame_attiributes)
+        self.comboBox_form = ComboBox(self.frame_attributes)
         self.gridLayout_filtering.addWidget(self.comboBox_form, 0, 2, 1, 1)
 
         # rhythmic structure
-        self.comboBox_rhythm = ComboBox(self.frame_attiributes)
+        self.comboBox_rhythm = ComboBox(self.frame_attributes)
         self.gridLayout_filtering.addWidget(self.comboBox_rhythm, 0, 4, 1, 1)
 
         # instrument
-        self.comboBox_instrument = ComboBox(self.frame_attiributes)
+        self.comboBox_instrument = ComboBox(self.frame_attributes)
         self.gridLayout_filtering.addWidget(self.comboBox_instrument,
                                             1, 4, 1, 1)
 
-        spacerItem1 = QtGui.QSpacerItem(3, 20, QtGui.QSizePolicy.Minimum,
-                                        QtGui.QSizePolicy.Fixed)
-        self.gridLayout_filtering.addItem(spacerItem1, 1, 3, 1, 1)
+        spacer_item1 = QtGui.QSpacerItem(3, 20, QtGui.QSizePolicy.Minimum,
+                                         QtGui.QSizePolicy.Fixed)
+        self.gridLayout_filtering.addItem(spacer_item1, 1, 3, 1, 1)
 
         # composer
-        self.comboBox_composer = ComboBox(self.frame_attiributes)
+        self.comboBox_composer = ComboBox(self.frame_attributes)
         self.gridLayout_filtering.addWidget(self.comboBox_composer, 1, 0, 1, 1)
 
-        spacerItem2 = QtGui.QSpacerItem(3, 20, QtGui.QSizePolicy.Minimum,
-                                        QtGui.QSizePolicy.Fixed)
-        self.gridLayout_filtering.addItem(spacerItem2, 0, 5, 1, 1)
-        self.verticalLayout.addWidget(self.frame_attiributes)
+        spacer_item2 = QtGui.QSpacerItem(3, 20, QtGui.QSizePolicy.Minimum,
+                                         QtGui.QSizePolicy.Fixed)
+        self.gridLayout_filtering.addItem(spacer_item2, 0, 5, 1, 1)
+        self.verticalLayout.addWidget(self.frame_attributes)
 
         # line edit for filtering the results
         self.lineEdit_filter = QtGui.QLineEdit(self.tabWidget.tab_audio)
@@ -177,30 +180,30 @@ class UiMainWindow(object):
 
         self.gridLayout_mainwindow.addWidget(self.tabWidget, 1, 0, 1, 1)
 
-        MainWindow.setCentralWidget(self.central_widget)
+        self.setCentralWidget(self.central_widget)
 
         # menu bar
-        self.menubar = QtGui.QMenuBar(MainWindow)
+        self.menubar = QtGui.QMenuBar(self)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 680, 25))
-        MainWindow.setMenuBar(self.menubar)
+        self.setMenuBar(self.menubar)
 
         # status bar
-        self.statusbar = QtGui.QStatusBar(MainWindow)
+        self.statusbar = QtGui.QStatusBar(self)
         self.statusbar.setMinimumSize(QtCore.QSize(0, 18))
         font = QtGui.QFont()
         font.setPointSize(9)
         self.statusbar.setFont(font)
-        MainWindow.setStatusBar(self.statusbar)
+        self.setStatusBar(self.statusbar)
 
-        self.retranslateUi(MainWindow)
+        self.retranslate_ui()
         self.tabWidget.setCurrentIndex(1)
 
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(self)
 
-    def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(_translate("MainWindow", "CompMusic", None))
+    def retranslate_ui(self):
+        self.setWindowTitle(_translate("MainWindow", "CompMusic", None))
         self.label_main.setText(_translate("MainWindow",
-                                      "<html><head/><body><p><span style=\" font-size:14pt; font-weight:600;\">Turkish Makam Corpus</span></p></body></html>",
+                                           "<html><head/><body><p><span style=\" font-size:14pt; font-weight:600;\">Turkish Makam Corpus</span></p></body></html>",
                                            None))
         self.tabWidget.setStatusTip(
             _translate("MainWindow", "Audio corpus and audio related features",
@@ -221,13 +224,11 @@ class UiMainWindow(object):
             _translate("MainWindow", "Audio", None))
 
 
-class MainMakam(QtGui.QMainWindow, UiMainWindow):
-
-    def __init__(self, parent=None):
+class MainMakam(MainWindow):
+    def __init__(self):
         # setting the interface
-        super(MainMakam, self).__init__(parent)
+        super(MainMakam, self).__init__()
         # setting the qt-designer design
-        self.setup_ui(self)
 
 
 app = QtGui.QApplication(sys.argv)
