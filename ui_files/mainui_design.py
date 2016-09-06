@@ -1,27 +1,14 @@
 import sys
+
 from PyQt4 import QtCore, QtGui
 
 from widgets.combobox import ComboBox
 from widgets.table import TableWidget
 from widgets.tabwidget import TabWidgetMakam
 
+from utilities import utilities
+
 import resources_rc
-
-try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    def _from_utf8(s):
-        return s
-
-try:
-    _encoding = QtGui.QApplication.UnicodeUTF8
-
-
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig, _encoding)
-except AttributeError:
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig)
 
 
 class MainWindow(QtGui.QMainWindow):
@@ -36,7 +23,7 @@ class MainWindow(QtGui.QMainWindow):
 
         # main window icon
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/compmusic/icons/dunya.svg")),
+        icon.addPixmap(QtGui.QPixmap(utilities._fromUtf8(":/compmusic/icons/dunya.svg")),
                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.setWindowIcon(icon)
 
@@ -54,7 +41,7 @@ class MainWindow(QtGui.QMainWindow):
 
         # 11 point font
         font = QtGui.QFont()
-        font.setFamily(_fromUtf8("Ubuntu"))
+        font.setFamily(utilities._fromUtf8("Ubuntu"))
         font.setPointSize(11)
 
         self.label_main.setFont(font)
@@ -154,14 +141,14 @@ class MainWindow(QtGui.QMainWindow):
         self.horizontalLayout_query = QtGui.QHBoxLayout()
         self.horizontalLayout_query.setSpacing(0)
         self.horizontalLayout_query.setObjectName(
-            _fromUtf8("horizontalLayout_query"))
+            utilities._fromUtf8("horizontalLayout_query"))
 
         self.toolButton_query = QtGui.QToolButton(self.frame_attributes)
         self.toolButton_query.setMinimumSize(QtCore.QSize(50, 50))
         self.toolButton_query.setMaximumSize(QtCore.QSize(60, 60))
         icon1 = QtGui.QIcon()
         icon1.addPixmap(
-            QtGui.QPixmap(_fromUtf8(":/compmusic/icons/magnifying-glass.png")),
+            QtGui.QPixmap(utilities._fromUtf8(":/compmusic/icons/magnifying-glass.png")),
             QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_query.setIcon(icon1)
         self.toolButton_query.setIconSize(QtCore.QSize(25, 25))
@@ -174,7 +161,7 @@ class MainWindow(QtGui.QMainWindow):
         font = QtGui.QFont()
         font.setPointSize(10)
         self.lineEdit_filter.setFont(font)
-        self.lineEdit_filter.setText(_fromUtf8(""))
+        self.lineEdit_filter.setText(utilities._fromUtf8(""))
         self.verticalLayout.addWidget(self.lineEdit_filter)
 
         # table for results
@@ -207,27 +194,27 @@ class MainWindow(QtGui.QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(self)
 
     def retranslate_ui(self):
-        self.setWindowTitle(_translate("MainWindow", "CompMusic", None))
-        self.label_main.setText(_translate("MainWindow",
+        self.setWindowTitle(utilities._translate("MainWindow", "CompMusic", None))
+        self.label_main.setText(utilities._translate("MainWindow",
                                            "<html><head/><body><p><span style=\" font-size:14pt; font-weight:600;\">Turkish Makam Corpus</span></p></body></html>",
                                            None))
         self.tabWidget.setStatusTip(
-            _translate("MainWindow", "Audio corpus and audio related features",
+            utilities._translate("MainWindow", "Audio corpus and audio related features",
                        None))
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.tabWidget.tab_score),
-            _translate("MainWindow", "Score", None))
-        self.label_filtering.setText(_translate("MainWindow",
+            utilities._translate("MainWindow", "Score", None))
+        self.label_filtering.setText(utilities._translate("MainWindow",
                                                 "<html><head/><body><p><span style=\" font-weight:600;\">Filtering</span></p></body></html>",
                                                 None))
-        self.toolButton_query.setText(_translate("MainWindow", "...", None))
+        self.toolButton_query.setText(utilities._translate("MainWindow", "...", None))
         self.lineEdit_filter.setPlaceholderText(
-            _translate("MainWindow", "Type here to filter the results...",
+            utilities._translate("MainWindow", "Type here to filter the results...",
                        None))
 
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.tabWidget.tab_audio),
-            _translate("MainWindow", "Audio", None))
+            utilities._translate("MainWindow", "Audio", None))
 
 
 class MainMakam(MainWindow):
