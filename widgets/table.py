@@ -17,9 +17,9 @@ class TableWidget(QtGui.QTableWidget):
         self.setWordWrap(True)
         self.setTextElideMode(QtCore.Qt.ElideMiddle)
 
-        self.set_css()
+        self._set_css()
 
-    def set_css(self):
+    def _set_css(self):
         with open("../ui_files/css/tableview.css") as f:
             css = f.read()
         self.setStyleSheet(css)
