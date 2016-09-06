@@ -126,15 +126,19 @@ class MainWindow(QtGui.QMainWindow):
         # composer
         self.comboBox_composer = ComboBox(self.frame_attributes)
         self.gridLayout_filtering.addWidget(self.comboBox_composer, 1, 0, 1, 1)
+        self.comboBox_composer.set_placeholder_text('Composer')
 
         # performer
         self.comboBox_performer = ComboBox(self.frame_attributes)
         self.gridLayout_filtering.addWidget(self.comboBox_performer,
                                             1, 2, 1, 1)
+        self.comboBox_performer.set_placeholder_text('Performer')
+
         # instrument
         self.comboBox_instrument = ComboBox(self.frame_attributes)
         self.gridLayout_filtering.addWidget(self.comboBox_instrument,
                                             1, 4, 1, 1)
+        self.comboBox_instrument.set_placeholder_text('Instrument')
 
         spacer_item1 = QtGui.QSpacerItem(3, 20, QtGui.QSizePolicy.Minimum,
                                          QtGui.QSizePolicy.Fixed)
