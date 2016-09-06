@@ -8,9 +8,16 @@ class ComboBox(QtGui.QComboBox):
         self.setEditable(True)
         self.setInsertPolicy(QtGui.QComboBox.NoInsert)
 
-        self.set_css()
+        self._set_css()
 
-    def set_css(self):
+    def _set_css(self):
         with open("../ui_files/css/combobox.css") as f:
             css = f.read()
         self.setStyleSheet(css)
+
+    def set_placeholder_text(self, text):
+        font = QtGui.QFont()
+        font.setPointSize(10)
+
+        self.lineEdit().setPlaceholderText(text)
+        self.lineEdit().setFont(font)
