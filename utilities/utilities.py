@@ -9,11 +9,13 @@ except AttributeError:
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
 
+
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
+
 
 def sort_dictionary(dictionary, key):
     """sorts the given dictionary according to the keys"""
@@ -37,6 +39,7 @@ def get_attribute_id(attribute, index):
         return attribute[index]['uuid']
     else:
         return -1
+
 
 def get_attribute_id_other(attribute, index):
     """Returns the mb id of the selected attributes"""
