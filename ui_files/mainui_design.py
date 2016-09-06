@@ -110,6 +110,42 @@ class MainWindow(QtGui.QMainWindow):
                                         QtGui.QSizePolicy.Minimum)
         self.gridLayout_filtering.addItem(spacer_item, 0, 1, 1, 1)
 
+        # combo boxes
+        # melodic structure
+        self.comboBox_melodic = ComboBox(self.frame_attributes)
+        self.gridLayout_filtering.addWidget(self.comboBox_melodic, 0, 0, 1, 1)
+
+        # form structure
+        self.comboBox_form = ComboBox(self.frame_attributes)
+        self.gridLayout_filtering.addWidget(self.comboBox_form, 0, 2, 1, 1)
+
+        # rhythmic structure
+        self.comboBox_rhythm = ComboBox(self.frame_attributes)
+        self.gridLayout_filtering.addWidget(self.comboBox_rhythm, 0, 4, 1, 1)
+
+        # composer
+        self.comboBox_composer = ComboBox(self.frame_attributes)
+        self.gridLayout_filtering.addWidget(self.comboBox_composer, 1, 0, 1, 1)
+
+        # performer
+        self.comboBox_performer = ComboBox(self.frame_attributes)
+        self.gridLayout_filtering.addWidget(self.comboBox_performer,
+                                            1, 2, 1, 1)
+        # instrument
+        self.comboBox_instrument = ComboBox(self.frame_attributes)
+        self.gridLayout_filtering.addWidget(self.comboBox_instrument,
+                                            1, 4, 1, 1)
+
+        spacer_item1 = QtGui.QSpacerItem(3, 20, QtGui.QSizePolicy.Minimum,
+                                         QtGui.QSizePolicy.Fixed)
+        self.gridLayout_filtering.addItem(spacer_item1, 1, 3, 1, 1)
+
+
+        spacer_item2 = QtGui.QSpacerItem(3, 20, QtGui.QSizePolicy.Minimum,
+                                         QtGui.QSizePolicy.Fixed)
+        self.gridLayout_filtering.addItem(spacer_item2, 0, 5, 1, 1)
+        self.verticalLayout.addWidget(self.frame_attributes)
+
         # query button and layout
         self.horizontalLayout_query = QtGui.QHBoxLayout()
         self.horizontalLayout_query.setSpacing(0)
@@ -128,40 +164,6 @@ class MainWindow(QtGui.QMainWindow):
         self.horizontalLayout_query.addWidget(self.toolButton_query)
         self.gridLayout_filtering.addLayout(self.horizontalLayout_query, 0, 6,
                                             2, 1)
-        # combo boxes
-        # performer
-        self.comboBox_performer = ComboBox(self.frame_attributes)
-        self.gridLayout_filtering.addWidget(self.comboBox_performer,
-                                            1, 2, 1, 1)
-        # melodic structure
-        self.comboBox_melodic = ComboBox(self.frame_attributes)
-        self.gridLayout_filtering.addWidget(self.comboBox_melodic, 0, 0, 1, 1)
-
-        # form structure
-        self.comboBox_form = ComboBox(self.frame_attributes)
-        self.gridLayout_filtering.addWidget(self.comboBox_form, 0, 2, 1, 1)
-
-        # rhythmic structure
-        self.comboBox_rhythm = ComboBox(self.frame_attributes)
-        self.gridLayout_filtering.addWidget(self.comboBox_rhythm, 0, 4, 1, 1)
-
-        # instrument
-        self.comboBox_instrument = ComboBox(self.frame_attributes)
-        self.gridLayout_filtering.addWidget(self.comboBox_instrument,
-                                            1, 4, 1, 1)
-
-        spacer_item1 = QtGui.QSpacerItem(3, 20, QtGui.QSizePolicy.Minimum,
-                                         QtGui.QSizePolicy.Fixed)
-        self.gridLayout_filtering.addItem(spacer_item1, 1, 3, 1, 1)
-
-        # composer
-        self.comboBox_composer = ComboBox(self.frame_attributes)
-        self.gridLayout_filtering.addWidget(self.comboBox_composer, 1, 0, 1, 1)
-
-        spacer_item2 = QtGui.QSpacerItem(3, 20, QtGui.QSizePolicy.Minimum,
-                                         QtGui.QSizePolicy.Fixed)
-        self.gridLayout_filtering.addItem(spacer_item2, 0, 5, 1, 1)
-        self.verticalLayout.addWidget(self.frame_attributes)
 
         # line edit for filtering the results
         self.lineEdit_filter = QtGui.QLineEdit(self.tabWidget.tab_audio)
