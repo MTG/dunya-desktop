@@ -1,20 +1,5 @@
 from PyQt4 import QtCore, QtGui
-
-try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    def _fromUtf8(s):
-        return s
-
-try:
-    _encoding = QtGui.QApplication.UnicodeUTF8
-
-
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig, _encoding)
-except AttributeError:
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig)
+from utilities import utilities
 
 
 class TabWidget(QtGui.QTabWidget):
@@ -42,8 +27,8 @@ class TabWidgetMakam(TabWidget):
     def add_tabs(self):
         # score tab
         self.tab_score = QtGui.QWidget()
-        self.addTab(self.tab_score, _fromUtf8(""))
+        self.addTab(self.tab_score, utilities._fromUtf8(""))
 
         # audio tab
         self.tab_audio = QtGui.QWidget()
-        self.addTab(self.tab_audio, _fromUtf8(""))
+        self.addTab(self.tab_audio, utilities._fromUtf8(""))
