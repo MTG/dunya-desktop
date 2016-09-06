@@ -1,7 +1,7 @@
 import sys
 
 from PyQt4 import QtCore, QtGui
-from widgets.tab_widget import TabWidgetMakam
+from widgets.tabwidget import TabWidgetMakam
 from widgets.combobox import ComboBox
 from widgets.table import TableWidget
 import resources_rc
