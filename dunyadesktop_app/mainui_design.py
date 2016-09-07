@@ -8,6 +8,10 @@ from widgets.tabwidget import TabWidgetMakam
 
 import ui_files.resources_rc
 
+DUNYA_ICON = ":/compmusic/icons/dunya.svg"
+QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"
+
+
 class MainWindow(QtGui.QMainWindow):
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
@@ -20,8 +24,7 @@ class MainWindow(QtGui.QMainWindow):
 
         # main window icon
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(
-            utilities._fromUtf8(":/compmusic/icons/dunya.svg")),
+        icon.addPixmap(QtGui.QPixmap(utilities._fromUtf8(DUNYA_ICON)),
                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.setWindowIcon(icon)
 
@@ -129,7 +132,6 @@ class MainWindow(QtGui.QMainWindow):
                                          QtGui.QSizePolicy.Fixed)
         self.gridLayout_filtering.addItem(spacer_item1, 1, 3, 1, 1)
 
-
         spacer_item2 = QtGui.QSpacerItem(3, 20, QtGui.QSizePolicy.Minimum,
                                          QtGui.QSizePolicy.Fixed)
         self.gridLayout_filtering.addItem(spacer_item2, 0, 5, 1, 1)
@@ -138,17 +140,13 @@ class MainWindow(QtGui.QMainWindow):
         # query button and layout
         self.horizontalLayout_query = QtGui.QHBoxLayout()
         self.horizontalLayout_query.setSpacing(0)
-        self.horizontalLayout_query.setObjectName(
-            utilities._fromUtf8("horizontalLayout_query"))
 
         self.toolButton_query = QtGui.QToolButton(self.frame_attributes)
         self.toolButton_query.setMinimumSize(QtCore.QSize(50, 50))
         self.toolButton_query.setMaximumSize(QtCore.QSize(60, 60))
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(
-            QtGui.QPixmap(
-                utilities._fromUtf8(":/compmusic/icons/magnifying-glass.png")),
-            QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(utilities._fromUtf8(QUERY_ICON)),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_query.setIcon(icon1)
         self.toolButton_query.setIconSize(QtCore.QSize(25, 25))
         self.horizontalLayout_query.addWidget(self.toolButton_query)
@@ -160,7 +158,6 @@ class MainWindow(QtGui.QMainWindow):
         font = QtGui.QFont()
         font.setPointSize(10)
         self.lineEdit_filter.setFont(font)
-        self.lineEdit_filter.setText(utilities._fromUtf8(""))
         self.verticalLayout.addWidget(self.lineEdit_filter)
 
         # table for results
@@ -195,22 +192,21 @@ class MainWindow(QtGui.QMainWindow):
     def retranslate_ui(self):
         self.setWindowTitle(
             utilities._translate("MainWindow", "CompMusic", None))
-        self.label_main.setText(utilities._translate("MainWindow",
-                                           "<html><head/><body><p><span style=\" font-size:14pt; font-weight:600;\">Turkish Makam Corpus</span></p></body></html>",
-                                                     None))
+
         self.tabWidget.setStatusTip(
-            utilities._translate("MainWindow", "Audio corpus and audio related features",
+            utilities._translate("MainWindow",
+                                 "Audio corpus and audio related features",
                                  None))
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.tabWidget.tab_score),
             utilities._translate("MainWindow", "Score", None))
         self.label_filtering.setText(utilities._translate("MainWindow",
-                                                "<html><head/><body><p><span style=\" font-weight:600;\">Filtering</span></p></body></html>",
+                                                          "<html><head/><body><p><span style=\" font-weight:600;\">Filtering</span></p></body></html>",
                                                           None))
-        self.toolButton_query.setText(
-            utilities._translate("MainWindow", "...", None))
+
         self.lineEdit_filter.setPlaceholderText(
-            utilities._translate("MainWindow", "Type here to filter the results...",
+            utilities._translate("MainWindow",
+                                 "Type here to filter the results...",
                                  None))
 
         self.tabWidget.setTabText(
@@ -222,7 +218,7 @@ class MainMakam(MainWindow):
     def __init__(self):
         # setting the interface
         super(MainMakam, self).__init__()
-        # setting the qt-designer design
+
 
 
 app = QtGui.QApplication(sys.argv)
