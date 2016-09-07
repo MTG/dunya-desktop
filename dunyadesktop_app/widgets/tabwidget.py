@@ -9,15 +9,15 @@ CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
 class TabWidget(QtGui.QTabWidget):
     def __init__(self, parent=None):
         super(TabWidget, self).__init__(parent)
-        self.set_font()
-        self.set_css()
+        self._set_font()
+        self._set_css()
 
-    def set_font(self):
+    def _set_font(self):
         font = QtGui.QFont()
         font.setPointSize(10)
         self.setFont(font)
 
-    def set_css(self):
+    def _set_css(self):
         with open(CSS_PATH)as f:
             css = f.read()
         self.setStyleSheet(css)
@@ -26,9 +26,9 @@ class TabWidget(QtGui.QTabWidget):
 class TabWidgetMakam(TabWidget):
     def __init__(self, parent=None):
         super(TabWidgetMakam, self).__init__(parent)
-        self.add_tabs()
+        self._add_tabs()
 
-    def add_tabs(self):
+    def _add_tabs(self):
         # score tab
         self.tab_score = QtGui.QWidget()
         self.addTab(self.tab_score, utilities._fromUtf8(""))
