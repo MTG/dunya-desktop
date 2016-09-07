@@ -16,17 +16,7 @@ class MainWindow(QtGui.QMainWindow):
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
 
-        # window sizes
-        self.resize(680, 655)
-        self.setMinimumSize(QtCore.QSize(680, 655))
-        self.setBaseSize(QtCore.QSize(4, 4))
-        self.setMouseTracking(False)
-
-        # main window icon
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(utilities._fromUtf8(DUNYA_ICON)),
-                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.setWindowIcon(icon)
+        self._set_mainwindow()
 
         # central widget
         self.central_widget = QtGui.QWidget(self)
@@ -39,25 +29,71 @@ class MainWindow(QtGui.QMainWindow):
 
         # label for central widget
         self.label_main = QtGui.QLabel(self.central_widget)
+        self._set_label_main()
 
-        # 11 point font
-        font = QtGui.QFont()
-        font.setFamily(utilities._fromUtf8("Ubuntu"))
-        font.setPointSize(11)
-
-        self.label_main.setFont(font)
-        self.label_main.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_main.setWordWrap(False)
-
-        self.gridLayout_mainwindow.addWidget(self.label_main, 0, 0, 1, 1)
         self.tabWidget = TabWidgetMakam(self.central_widget)
 
         self.verticalLayout = QtGui.QVBoxLayout(self.tabWidget.tab_audio)
         self.verticalLayout.setContentsMargins(5, 5, 5, 2)
         self.verticalLayout.setSpacing(5)
 
-        # setting the label for filtering section
         self.label_filtering = QtGui.QLabel(self.tabWidget.tab_audio)
+        self._set_label_filtering()
+
+        self.frame_attributes = QtGui.QFrame(self.tabWidget.tab_audio)
+        self._set_frame_attributes()
+
+        self.gridLayout_filtering = QtGui.QGridLayout(self.frame_attributes)
+        self._set_gridlayout_filtering()
+
+        self.lineEdit_filter = QtGui.QLineEdit(self.tabWidget.tab_audio)
+        self._set_line_edit_filter()
+
+        self.tableView_results = TableWidget(self.tabWidget.tab_audio)
+        self.verticalLayout.addWidget(self.tableView_results)
+
+        self.gridLayout_mainwindow.addWidget(self.tabWidget, 1, 0, 1, 1)
+
+        self.setCentralWidget(self.central_widget)
+
+        # menu bar
+        self.menubar = QtGui.QMenuBar(self)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 680, 25))
+        self.setMenuBar(self.menubar)
+
+        # status bar
+        self.statusbar = QtGui.QStatusBar(self)
+        self._set_status_bar()
+
+        self._retranslate_ui()
+        self.tabWidget.setCurrentIndex(1)
+
+        QtCore.QMetaObject.connectSlotsByName(self)
+
+    def _set_mainwindow(self):
+        # window sizes
+        self.resize(680, 655)
+        self.setMinimumSize(QtCore.QSize(680, 655))
+        self.setBaseSize(QtCore.QSize(4, 4))
+        self.setMouseTracking(False)
+
+        # main window icon
+        icon_dunya = QtGui.QIcon()
+        icon_dunya.addPixmap(QtGui.QPixmap(utilities._fromUtf8(DUNYA_ICON)),
+                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.setWindowIcon(icon_dunya)
+
+    def _set_label_main(self):
+        # 11 point font
+        font = QtGui.QFont()
+        font.setFamily(utilities._fromUtf8("Ubuntu"))
+        font.setPointSize(11)
+        self.label_main.setFont(font)
+        self.label_main.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_main.setWordWrap(False)
+        self.gridLayout_mainwindow.addWidget(self.label_main, 0, 0, 1, 1)
+
+    def _set_label_filtering(self):
         size_policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,
                                         QtGui.QSizePolicy.Fixed)
         size_policy.setHorizontalStretch(0)
@@ -72,8 +108,7 @@ class MainWindow(QtGui.QMainWindow):
         self.label_filtering.setFont(font)
         self.verticalLayout.addWidget(self.label_filtering)
 
-        # frame for attributes
-        self.frame_attributes = QtGui.QFrame(self.tabWidget.tab_audio)
+    def _set_frame_attributes(self):
         size_policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred,
                                         QtGui.QSizePolicy.Fixed)
         size_policy.setHorizontalStretch(0)
@@ -86,8 +121,7 @@ class MainWindow(QtGui.QMainWindow):
         self.frame_attributes.setFrameShadow(QtGui.QFrame.Raised)
         self.frame_attributes.setLineWidth(1)
 
-        # grid layout for filtering section
-        self.gridLayout_filtering = QtGui.QGridLayout(self.frame_attributes)
+    def _set_gridlayout_filtering(self):
         self.gridLayout_filtering.setSizeConstraint(
             QtGui.QLayout.SetNoConstraint)
         self.gridLayout_filtering.setMargin(2)
@@ -144,52 +178,29 @@ class MainWindow(QtGui.QMainWindow):
         self.toolButton_query = QtGui.QToolButton(self.frame_attributes)
         self.toolButton_query.setMinimumSize(QtCore.QSize(50, 50))
         self.toolButton_query.setMaximumSize(QtCore.QSize(60, 60))
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(utilities._fromUtf8(QUERY_ICON)),
+        icon_query = QtGui.QIcon()
+        icon_query.addPixmap(QtGui.QPixmap(utilities._fromUtf8(QUERY_ICON)),
                         QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.toolButton_query.setIcon(icon1)
+        self.toolButton_query.setIcon(icon_query)
         self.toolButton_query.setIconSize(QtCore.QSize(25, 25))
         self.horizontalLayout_query.addWidget(self.toolButton_query)
         self.gridLayout_filtering.addLayout(self.horizontalLayout_query, 0, 6,
                                             2, 1)
 
-        # line edit for filtering the results
-        self.lineEdit_filter = QtGui.QLineEdit(self.tabWidget.tab_audio)
+    def _set_line_edit_filter(self):
         font = QtGui.QFont()
         font.setPointSize(10)
         self.lineEdit_filter.setFont(font)
         self.verticalLayout.addWidget(self.lineEdit_filter)
 
-        # table for results
-        self.tableView_results = TableWidget(self.tabWidget.tab_audio)
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.tableView_results.setFont(font)
-        self.verticalLayout.addWidget(self.tableView_results)
-
-        self.gridLayout_mainwindow.addWidget(self.tabWidget, 1, 0, 1, 1)
-
-        self.setCentralWidget(self.central_widget)
-
-        # menu bar
-        self.menubar = QtGui.QMenuBar(self)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 680, 25))
-        self.setMenuBar(self.menubar)
-
-        # status bar
-        self.statusbar = QtGui.QStatusBar(self)
+    def _set_status_bar(self):
         self.statusbar.setMinimumSize(QtCore.QSize(0, 18))
         font = QtGui.QFont()
         font.setPointSize(9)
         self.statusbar.setFont(font)
         self.setStatusBar(self.statusbar)
 
-        self.retranslate_ui()
-        self.tabWidget.setCurrentIndex(1)
-
-        QtCore.QMetaObject.connectSlotsByName(self)
-
-    def retranslate_ui(self):
+    def _retranslate_ui(self):
         self.setWindowTitle(
             utilities._translate("MainWindow", "CompMusic", None))
 
