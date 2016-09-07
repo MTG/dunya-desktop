@@ -80,7 +80,7 @@ class MainWindow(QtGui.QMainWindow):
         # main window icon
         icon_dunya = QtGui.QIcon()
         icon_dunya.addPixmap(QtGui.QPixmap(utilities._fromUtf8(DUNYA_ICON)),
-                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                             QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.setWindowIcon(icon_dunya)
 
     def _set_label_main(self):
@@ -180,7 +180,7 @@ class MainWindow(QtGui.QMainWindow):
         self.toolButton_query.setMaximumSize(QtCore.QSize(60, 60))
         icon_query = QtGui.QIcon()
         icon_query.addPixmap(QtGui.QPixmap(utilities._fromUtf8(QUERY_ICON)),
-                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                             QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_query.setIcon(icon_query)
         self.toolButton_query.setIconSize(QtCore.QSize(25, 25))
         self.horizontalLayout_query.addWidget(self.toolButton_query)
@@ -229,7 +229,6 @@ class MainMakam(MainWindow):
     def __init__(self):
         # setting the interface
         super(MainMakam, self).__init__()
-
 
 
 app = QtGui.QApplication(sys.argv)
