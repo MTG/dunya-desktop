@@ -7,8 +7,7 @@ from widgets.table import TableWidget
 from widgets.tabwidget import TabWidgetMakam
 
 from utilities import utilities
-
-import resources_rc
+import ui_files.resources_rc
 
 
 class MainWindow(QtGui.QMainWindow):
