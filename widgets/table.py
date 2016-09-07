@@ -1,6 +1,8 @@
-from PyQt4 import QtGui
-from PyQt4 import QtCore
+import os
+from PyQt4 import QtGui, QtCore
 
+CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
+                        'tableview.css')
 
 class TableWidget(QtGui.QTableWidget):
     def __init__(self, *__args):
@@ -20,6 +22,6 @@ class TableWidget(QtGui.QTableWidget):
         self._set_css()
 
     def _set_css(self):
-        with open("../ui_files/css/tableview.css") as f:
+        with open(CSS_PATH) as f:
             css = f.read()
         self.setStyleSheet(css)

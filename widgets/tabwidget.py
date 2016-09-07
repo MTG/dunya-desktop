@@ -1,6 +1,10 @@
+import os
+
 from PyQt4 import QtCore, QtGui
 from utilities import utilities
 
+CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
+                        'tabwidget.css')
 
 class TabWidget(QtGui.QTabWidget):
     def __init__(self, parent=None):
@@ -14,7 +18,7 @@ class TabWidget(QtGui.QTabWidget):
         self.setFont(font)
 
     def set_css(self):
-        with open("../ui_files/css/tabwidget.css") as f:
+        with open(CSS_PATH)as f:
             css = f.read()
         self.setStyleSheet(css)
 
