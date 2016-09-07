@@ -20,6 +20,12 @@ class TableWidget(QtGui.QTableWidget):
         self.setTextElideMode(QtCore.Qt.ElideMiddle)
 
         self._set_css()
+        self._set_font()
+
+    def _set_font(self):
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.setFont(font)
 
     def _set_css(self):
         with open(CSS_PATH) as f:
