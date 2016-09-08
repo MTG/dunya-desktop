@@ -1,12 +1,10 @@
-import sys
 from PyQt4 import QtCore, QtGui
 
 from utilities import utilities
 from widgets.table import TableWidget
 from widgets.tabwidget import TabWidget
-from widgets.audiotabwidget import AudioAttFrame
+from widgets.audioattframe import AudioAttFrame
 
-from abc import abstractmethod
 import ui_files.resources_rc
 
 DUNYA_ICON = ":/compmusic/icons/dunya.svg"
@@ -119,7 +117,6 @@ class MainWindow(QtGui.QMainWindow):
         self.statusbar.setFont(font)
         self.setStatusBar(self.statusbar)
 
-    @abstractmethod
     def _retranslate_ui(self):
         self.setWindowTitle(
             utilities._translate("MainWindow", "Dunya Desktop", None))
