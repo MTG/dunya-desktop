@@ -1,10 +1,9 @@
-import sys
-
 from PyQt4 import QtGui, QtCore
+
 from combobox import ComboBox
 
-
 QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"
+
 
 class AudioAttFrame(QtGui.QFrame):
     def __init__(self):
@@ -28,7 +27,6 @@ class AudioAttFrame(QtGui.QFrame):
         self.setFrameShape(QtGui.QFrame.StyledPanel)
         self.setFrameShadow(QtGui.QFrame.Raised)
         self.setLineWidth(1)
-
 
     def _set_gridlayout_filtering(self):
         self.gridLayout_filtering.setSizeConstraint(
