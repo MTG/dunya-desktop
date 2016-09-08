@@ -1,0 +1,14 @@
+sudo: required
+
+language: python
+
+python:
+  - "2.7_with_system_site_packages" # For PyQ
+
+before_install:
+  - pip install setuptools --upgrade
+  - pip install -r requirements
+  - pip install flake8
+
+before_script:
+  - "flake8 tomato --ignore=E501"
