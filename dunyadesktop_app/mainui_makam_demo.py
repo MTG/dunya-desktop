@@ -10,12 +10,16 @@ from multiprocessing.pool import ThreadPool as Pool
 from threading import Thread
 
 import compmusic.dunya.makam
+from ConfigParser import ConfigParser
 
 from ui_files.makam_main_design import Ui_MainWindow
 from utilities import utilities
 
-# setting the token
-compmusic.dunya.conn.set_token('***REMOVED***')
+config = ConfigParser()
+config.read('config.cfg')
+DUNYA_TOKEN = config.get('dunya', 'token')
+
+compmusic.dunya.conn.set_token(DUNYA_TOKEN)
 
 # gazel and taksim uuids
 GAZEL = u'a1d59289-ea72-4050-9253-01ca12bb5556'
