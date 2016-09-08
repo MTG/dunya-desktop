@@ -4,8 +4,9 @@ from PyQt4 import QtCore, QtGui
 from utilities import utilities
 from widgets.combobox import ComboBox
 from widgets.table import TableWidget
-from widgets.tabwidget import TabWidgetMakam
+from widgets.tabwidget import TabWidget
 
+from abc import abstractmethod
 import ui_files.resources_rc
 
 DUNYA_ICON = ":/compmusic/icons/dunya.svg"
@@ -31,7 +32,7 @@ class MainWindow(QtGui.QMainWindow):
         self.label_main = QtGui.QLabel(self.central_widget)
         self._set_label_main()
 
-        self.tabWidget = TabWidgetMakam(self.central_widget)
+        self.tabWidget = TabWidget(self.central_widget)
 
         self.verticalLayout = QtGui.QVBoxLayout(self.tabWidget.tab_audio)
         self.verticalLayout.setContentsMargins(5, 5, 5, 2)
@@ -200,17 +201,16 @@ class MainWindow(QtGui.QMainWindow):
         self.statusbar.setFont(font)
         self.setStatusBar(self.statusbar)
 
+    @abstractmethod
     def _retranslate_ui(self):
         self.setWindowTitle(
-            utilities._translate("MainWindow", "CompMusic", None))
+            utilities._translate("MainWindow", "Dunya Desktop", None))
 
         self.tabWidget.setStatusTip(
             utilities._translate("MainWindow",
                                  "Audio corpus and audio related features",
                                  None))
-        self.tabWidget.setTabText(
-            self.tabWidget.indexOf(self.tabWidget.tab_score),
-            utilities._translate("MainWindow", "Score", None))
+
         self.label_filtering.setText(utilities._translate("MainWindow",
                                                           "<html><head/><body><p><span style=\" font-weight:600;\">Filtering</span></p></body></html>",
                                                           None))
@@ -222,16 +222,4 @@ class MainWindow(QtGui.QMainWindow):
 
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.tabWidget.tab_audio),
-            utilities._translate("MainWindow", "Audio", None))
-
-
-class MainMakam(MainWindow):
-    def __init__(self):
-        # setting the interface
-        super(MainMakam, self).__init__()
-
-
-app = QtGui.QApplication(sys.argv)
-dialog = MainMakam()
-dialog.show()
-app.exec_()
+            utilities._translate("MainWindow", "Audio Collection", None))
