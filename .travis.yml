@@ -12,3 +12,7 @@ before_install:
 
 before_script:
   - "flake8 dunyadesktop_app --ignore=E501"
+
+script:
+#  - nosetests unittests
+  - nosetests --with-coverage
