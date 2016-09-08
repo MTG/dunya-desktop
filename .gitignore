@@ -1,4 +1,5 @@
 .idea
+dunyadesktop_app/config.cfg
 audio
 test*.py
 .Python
