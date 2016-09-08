@@ -11,4 +11,4 @@ before_install:
   - pip install flake8
 
 before_script:
-  - "flake8 tomato --ignore=E501"
+  - "flake8 dunyadesktop_app --ignore=E501"
