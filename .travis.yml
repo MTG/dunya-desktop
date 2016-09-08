@@ -10,6 +10,9 @@ before_install:
   - pip install -r requirements
   - pip install flake8
 
+install:
+  - bash .misc/install.sh
+
 before_script:
   - "flake8 dunyadesktop_app --ignore=E501"
 
