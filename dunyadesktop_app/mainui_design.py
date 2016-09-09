@@ -4,6 +4,7 @@ from utilities import utilities
 from widgets.table import TableWidget
 from widgets.tabwidget import TabWidget
 from widgets.audioattframe import AudioAttFrame
+from widgets.progressbar import ProgressBar
 
 import ui_files.resources_rc
 
@@ -60,6 +61,9 @@ class MainWindowDesign(QtGui.QMainWindow):
         # status bar
         self.statusbar = QtGui.QStatusBar(self)
         self._set_status_bar()
+        self.progress_bar = ProgressBar(self)
+        self.statusbar.addPermanentWidget(self.progress_bar)
+        self.progress_bar.setVisible(False)
 
         self._retranslate_ui()
         self.tabWidget.setCurrentIndex(1)
