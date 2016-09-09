@@ -11,7 +11,7 @@ DUNYA_ICON = ":/compmusic/icons/dunya.svg"
 QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"
 
 
-class MainWindow(QtGui.QMainWindow):
+class MainWindowDesign(QtGui.QMainWindow):
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
 

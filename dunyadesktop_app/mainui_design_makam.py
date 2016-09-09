@@ -1,13 +1,12 @@
-import sys
 from PyQt4 import QtGui
-from mainui_design import MainWindow
+from mainui_design import MainWindowDesign
 from utilities import utilities
 
 
-class MainMakam(MainWindow):
+class MainWindowMakamDesign(MainWindowDesign):
     def __init__(self):
         # setting the interface
-        MainWindow.__init__(self)
+        MainWindowDesign.__init__(self)
 
         self._set_main_label()
         self._set_score_tab()
@@ -33,7 +32,10 @@ class MainMakam(MainWindow):
         self.frame_attributes.comboBox_form.set_placeholder_text('Form')
         self.frame_attributes.comboBox_rhythm.set_placeholder_text('Usul')
 
+# uncomment to test the interface
+'''
 app = QtGui.QApplication(sys.argv)
 dialog = MainMakam()
 dialog.show()
 app.exec_()
+'''
