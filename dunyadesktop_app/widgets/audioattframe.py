@@ -13,6 +13,7 @@ class AudioAttFrame(QtGui.QFrame):
 
         self.gridLayout_filtering = QtGui.QGridLayout(self)
         self._set_gridlayout_filtering()
+        self._retranslate_status_tips()
 
     def _set_frame_attributes(self):
         size_policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred,
@@ -92,3 +93,13 @@ class AudioAttFrame(QtGui.QFrame):
         self.horizontalLayout_query.addWidget(self.toolButton_query)
         self.gridLayout_filtering.addLayout(self.horizontalLayout_query, 0, 6,
                                             2, 1)
+
+    def _retranslate_status_tips(self):
+        self.comboBox_melodic.setStatusTip("Select melodic attribute")
+        self.comboBox_form.setStatusTip("Select form attribute")
+        self.comboBox_rhythm.setStatusTip("Select rhythm attribute")
+        self.comboBox_composer.setStatusTip("Select composer")
+        self.comboBox_performer.setStatusTip("Select performer")
+        self.comboBox_instrument.setStatusTip("Select instrument")
+
+        self.toolButton_query.setStatusTip("Query your selection")

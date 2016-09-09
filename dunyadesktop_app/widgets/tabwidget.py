@@ -16,6 +16,8 @@ class TabWidget(QtGui.QTabWidget):
         self.tab_audio = QtGui.QWidget()
         self.addTab(self.tab_audio, utilities._fromUtf8(""))
 
+        self._retranslate_status_tips()
+
     def _set_font(self):
         font = QtGui.QFont()
         font.setPointSize(10)
@@ -25,3 +27,6 @@ class TabWidget(QtGui.QTabWidget):
         with open(CSS_PATH)as f:
             css = f.read()
         self.setStyleSheet(css)
+
+    def _retranslate_status_tips(self):
+        self.tab_audio.setStatusTip("Audio collection of related culture...")

@@ -121,11 +121,6 @@ class MainWindow(QtGui.QMainWindow):
         self.setWindowTitle(
             utilities._translate("MainWindow", "Dunya Desktop", None))
 
-        self.tabWidget.setStatusTip(
-            utilities._translate("MainWindow",
-                                 "Audio corpus and audio related features",
-                                 None))
-
         self.label_filtering.setText(utilities._translate("MainWindow",
                                                           "<html><head/><body><p><span style=\" font-weight:600;\">Filtering</span></p></body></html>",
                                                           None))
