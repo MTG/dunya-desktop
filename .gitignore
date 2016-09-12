@@ -1,5 +1,5 @@
 .idea
-dunyadesktop_app/config.cfg
+dunyadesktop_app/cultures/config.cfg
 dunyadesktop_app/ui_files/makam_main_design.py
 audio
 test*.py
