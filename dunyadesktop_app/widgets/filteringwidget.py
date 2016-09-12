@@ -11,10 +11,10 @@ class FilteringWidget(QtGui.QWidget):
         self.setWindowTitle('Attribute')
         v_layout = QtGui.QVBoxLayout(self)
 
-        self.search_edit = QtGui.QLineEdit()
+        self.filtering_edit = QtGui.QLineEdit()
         self.table_attribute = TableWidget()
 
-        v_layout.addWidget(self.search_edit)
+        v_layout.addWidget(self.filtering_edit)
         v_layout.addWidget(self.table_attribute)
         self.setLayout(v_layout)
 
