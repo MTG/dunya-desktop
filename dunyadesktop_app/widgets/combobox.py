@@ -24,3 +24,8 @@ class ComboBox(QtGui.QComboBox):
 
         self.lineEdit().setPlaceholderText(text)
         self.lineEdit().setFont(font)
+
+    def add_items(self, attribute):
+        for att in attribute:
+            self.addItem(att['name'])
+        self.setCurrentIndex(-1)
