@@ -4,6 +4,7 @@ from PyQt4 import QtGui, QtCore
 CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
                         'tableview.css')
 
+
 class TableWidget(QtGui.QTableWidget):
     def __init__(self, *__args):
         QtGui.QTableWidget.__init__(self, *__args)
@@ -21,6 +22,8 @@ class TableWidget(QtGui.QTableWidget):
 
         self._set_css()
         self._set_font()
+
+        self.horizontal_header = self.horizontalHeader()
 
     def _set_font(self):
         font = QtGui.QFont()
