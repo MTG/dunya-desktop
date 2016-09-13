@@ -1,4 +1,4 @@
-QTableWidget {
+QTableView {
     /*background-image: url(:/compmusic/icons/compmusic-logo-opac.svg); */
     background-image: url(:/compmusic/icons/compmusic-logo-opac.svg);
     background-repeat: no-repeat;

@@ -5,9 +5,9 @@ CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
                         'tableview.css')
 
 
-class TableWidget(QtGui.QTableWidget):
+class TableView(QtGui.QTableView):
     def __init__(self, *__args):
-        QtGui.QTableWidget.__init__(self, *__args)
+        QtGui.QTableView.__init__(self, *__args)
 
         # setting the table for no edit and row selection
         self.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
