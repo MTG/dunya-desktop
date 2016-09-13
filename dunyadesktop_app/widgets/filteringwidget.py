@@ -29,3 +29,15 @@ class FilteringWidget(QtGui.QWidget):
         self.proxy_model.setSourceModel(self.filtering_model)
 
         self.table_attribute.setModel(self.proxy_model)
+        self.table_attribute.setColumnWidth(0, 28)
+
+        self.table_attribute.entered.connect(self.item_entered)
+        self.table_attribute.item_exited.connect(self.item_exited)
+
+    def item_entered(self, item):
+        self.table_attribute.model().sourceModel().item(item.row(),
+                        item.column()).setBackground(QtGui.QColor('moccasin'))
+
+    def item_exited(self, item):
+        self.table_attribute.model().sourceModel().item(item.row(),
+            item.column()).setBackground(QtGui.QTableWidgetItem().background())
