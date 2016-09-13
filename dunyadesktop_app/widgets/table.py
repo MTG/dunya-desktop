@@ -12,6 +12,7 @@ class TableView(QtGui.QTableView):
         # setting the table for no edit and row selection
         self.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
         self.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
+        self.setMouseTracking(True)
 
         # hiding the vertical headers
         self.verticalHeader().hide()

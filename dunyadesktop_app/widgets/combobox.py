@@ -13,7 +13,6 @@ class ComboBox(QtGui.QComboBox):
         self.setInsertPolicy(QtGui.QComboBox.NoInsert)
 
         self._set_css()
-        self.filtering_widget = FilteringWidget()
 
         self.highlighted.connect(self.show_search_box)
 
@@ -30,10 +29,12 @@ class ComboBox(QtGui.QComboBox):
         self.lineEdit().setFont(font)
 
     def add_items(self, attribute):
+        self.attribute = attribute
         for att in attribute:
             self.addItem(att['name'])
         self.setCurrentIndex(-1)
 
     def show_search_box(self):
         self.hidePopup()
+        self.filtering_widget = FilteringWidget(self.attribute)
         self.filtering_widget.show()
