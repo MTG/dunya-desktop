@@ -1,8 +1,8 @@
 # dunya-desktop
 
-**dunya-desktop** is a desktop application that has been developed for accessing and visualizing the music information sources, the features and the analysis results that are part of the [CompMusic](compmusic.upf.edu) Project.
+**dunya-desktop** is a desktop application that has been developed for accessing and visualizing the music information sources, the features and the analysis results that are part of the [CompMusic](http://compmusic.upf.edu) Project.
 
-dunya-desktop mainly uses [PyQt4](https://www.riverbankcomputing.com/software/pyqt/download), python bindings for Qt application framework, for the user interface design and [pycompmusic](https://github.com/MTG/pycompmusic) module for reaching the backend of [Dunya](dunya.compmusic.upf.edu).
+dunya-desktop mainly uses [PyQt4](https://www.riverbankcomputing.com/software/pyqt/download), python bindings for Qt application framework, for the user interface design and [pycompmusic](https://github.com/MTG/pycompmusic) module for reaching the backend of [Dunya](http://dunya.compmusic.upf.edu).
 
 License
 =======
