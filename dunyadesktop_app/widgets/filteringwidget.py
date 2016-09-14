@@ -34,6 +34,7 @@ class FilteringWidget(QtGui.QWidget):
 
         self.proxy_model = SortFilterProxyModel()
         self.proxy_model.setSourceModel(self.filtering_model)
+        self.proxy_model.setFilterKeyColumn(-1)
 
         self.table_attribute.horizontalHeader().hide()
         self.table_attribute.setModel(self.proxy_model)
@@ -43,6 +44,8 @@ class FilteringWidget(QtGui.QWidget):
 
         self.table_attribute.entered.connect(self.item_entered)
         self.table_attribute.item_exited.connect(self.item_exited)
+
+        self.filtering_edit.textChanged.connect(lambda: self.proxy_model.filtering_the_table(self.filtering_edit.text()))
         #self.table_attribute.table_scrolled.connect(self.item_exited)
 
     def item_entered(self, item):
