@@ -1,12 +1,14 @@
 import os
-from PyQt4 import QtGui
-from filteringwidget import FilteringWidget
+from PyQt4 import QtGui, QtCore
+from filteringdialog import FilteringDialog
 
 CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
                         'combobox.css')
 
 
 class ComboBox(QtGui.QComboBox):
+    combobox_clicked = QtCore.pyqtSignal()
+
     def __init__(self, parent):
         QtGui.QComboBox.__init__(self, parent)
         self.setEditable(True)
@@ -36,5 +38,5 @@ class ComboBox(QtGui.QComboBox):
 
     def show_search_box(self):
         self.hidePopup()
-        self.filtering_widget = FilteringWidget(self.attribute)
-        self.filtering_widget.show()
+        self.filtering_widget = FilteringDialog(self.attribute)
+        self.filtering_widget.exec_()

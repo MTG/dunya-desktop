@@ -6,9 +6,9 @@ from dunyadesktop_app.models.proxymodel import SortFilterProxyModel
 import dunyadesktop_app.ui_files.resources_rc
 
 
-class FilteringWidget(QtGui.QWidget):
+class FilteringDialog(QtGui.QDialog):
     def __init__(self, attribute):
-        QtGui.QWidget.__init__(self)
+        QtGui.QDialog.__init__(self)
         self.attribute = attribute
 
         self.setWindowTitle('Attribute')
