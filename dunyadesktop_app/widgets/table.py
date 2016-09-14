@@ -8,6 +8,7 @@ CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
 class TableView(QtGui.QTableView):
     cell_exited = QtCore.pyqtSignal(int, int)
     item_exited = QtCore.pyqtSignal(QtGui.QStandardItem)
+    table_scrolled = QtCore.pyqtSignal(QtGui.QStandardItem)
 
     def __init__(self, *__args):
         QtGui.QTableView.__init__(self, *__args)
@@ -31,6 +32,8 @@ class TableView(QtGui.QTableView):
         self._set_font()
 
         self.horizontal_header = self.horizontalHeader()
+        self.horizontal_header.setStretchLastSection(True)
+        self.resizeRowsToContents()
 
     def eventFilter(self, widget, event):
         if widget is self.viewport():
@@ -48,6 +51,15 @@ class TableView(QtGui.QTableView):
                 self.cell_exited.emit(row, column)
                 self._last_index = QtCore.QPersistentModelIndex(index)
         return QtGui.QTableWidget.eventFilter(self, widget, event)
+
+    def wheelEvent(self, QWheelEvent):
+        super(TableView, self).wheelEvent(QWheelEvent)
+
+        #row = self._last_index.row()
+        #column = self._last_index.column()
+        #item = self.model().sourceModel().item(row, column)
+
+        #self.table_scrolled.emit(item)
 
     def _set_font(self):
         font = QtGui.QFont()

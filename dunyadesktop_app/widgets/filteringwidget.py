@@ -16,10 +16,17 @@ class FilteringWidget(QtGui.QWidget):
 
         self.filtering_edit = QtGui.QLineEdit()
         self.table_attribute = TableView()
-        self.table_attribute.horizontalHeader().hide()
+
+        self.button_box = QtGui.QDialogButtonBox()
+        self.button_box.addButton('OK',
+                                  QtGui.QDialogButtonBox.AcceptRole)
+        self.button_box.addButton('Cancel',
+                                  QtGui.QDialogButtonBox.RejectRole)
 
         v_layout.addWidget(self.filtering_edit)
         v_layout.addWidget(self.table_attribute)
+        v_layout.addWidget(self.button_box)
+
         self.setLayout(v_layout)
 
         self.filtering_model = FilteringModel()
@@ -28,11 +35,15 @@ class FilteringWidget(QtGui.QWidget):
         self.proxy_model = SortFilterProxyModel()
         self.proxy_model.setSourceModel(self.filtering_model)
 
+        self.table_attribute.horizontalHeader().hide()
         self.table_attribute.setModel(self.proxy_model)
         self.table_attribute.setColumnWidth(0, 28)
 
+        self.filtering_edit.setPlaceholderText('Type here to filter...')
+
         self.table_attribute.entered.connect(self.item_entered)
         self.table_attribute.item_exited.connect(self.item_exited)
+        #self.table_attribute.table_scrolled.connect(self.item_exited)
 
     def item_entered(self, item):
         self.table_attribute.model().sourceModel().item(item.row(),
