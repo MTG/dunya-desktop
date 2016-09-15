@@ -9,3 +9,10 @@ def set_token():
     DUNYA_TOKEN = config.get('dunya', 'token')
 
     compmusic.dunya.conn.set_token(DUNYA_TOKEN)
+
+def set_hostname():
+    config = ConfigParser()
+    config.read(os.path.join(os.path.dirname(__file__), 'config.cfg'))
+    DUNYA_HOSTNAME = config.get('dunya', 'hostname')
+
+    compmusic.dunya.conn.set_hostname(DUNYA_HOSTNAME)
