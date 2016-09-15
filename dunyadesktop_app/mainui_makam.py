@@ -1,12 +1,12 @@
 import sys
-from cultures import token
+from cultures import apiconfig
 from cultures.makam import utilities
 
 from PyQt4 import QtGui
 from mainui_design_makam import MainWindowMakamDesign
 
-token.set_token()
-
+apiconfig.set_token()
+apiconfig.set_hostname()
 
 class MainWindowMakam(MainWindowMakamDesign):
     def __init__(self):
