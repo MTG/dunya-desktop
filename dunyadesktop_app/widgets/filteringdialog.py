@@ -45,7 +45,8 @@ class FilteringDialog(QtGui.QDialog):
         self.table_attribute.entered.connect(self.item_entered)
         self.table_attribute.item_exited.connect(self.item_exited)
 
-        self.filtering_edit.textChanged.connect(lambda: self.proxy_model.filtering_the_table(self.filtering_edit.text()))
+        self.filtering_edit.textChanged.connect(lambda:
+            self.proxy_model.filtering_the_table(self.filtering_edit.text()))
         #self.table_attribute.table_scrolled.connect(self.item_exited)
 
     def item_entered(self, item):
