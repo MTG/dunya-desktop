@@ -42,12 +42,17 @@ class FilteringDialog(QtGui.QDialog):
 
         self.filtering_edit.setPlaceholderText('Type here to filter...')
 
-        self.table_attribute.entered.connect(self.item_entered)
-        self.table_attribute.item_exited.connect(self.item_exited)
+        # signals
+        #self.table_attribute.entered.connect(self.item_entered)
+        #self.table_attribute.item_exited.connect(self.item_exited)
 
         self.filtering_edit.textChanged.connect(lambda:
             self.proxy_model.filtering_the_table(self.filtering_edit.text()))
-        #self.table_attribute.table_scrolled.connect(self.item_exited)
+
+        #self.filtering_model.dataChanged.connect(self.test)
+
+        self.button_box.accepted.connect(self.pressed_accepted)
+        self.button_box.rejected.connect(self.pressed_rejected)
 
     def item_entered(self, item):
         self.table_attribute.model().sourceModel().item(item.row(),
@@ -56,3 +61,17 @@ class FilteringDialog(QtGui.QDialog):
     def item_exited(self, item):
         self.table_attribute.model().sourceModel().item(item.row(),
             item.column()).setBackground(QtGui.QTableWidgetItem().background())
+
+    def pressed_accepted(self):
+        print "accepted"
+
+    def pressed_rejected(self):
+        self.close()
+'''
+    def test(self, topLeft, bottomRight):
+        #print topLeft.row(), topLeft.column(), 'topLeft'
+        #print bottomRight.row(), bottomRight.column()
+
+        print self.filtering_model.item(topLeft.row(),
+                                        topLeft.column()).checkState()
+'''
