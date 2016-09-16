@@ -23,6 +23,9 @@ class ComboBox(QtGui.QComboBox):
             css = f.read()
         self.setStyleSheet(css)
 
+    def wheelEvent(self, QWheelEvent):
+        pass
+
     def set_placeholder_text(self, text):
         font = QtGui.QFont()
         font.setPointSize(10)
@@ -36,7 +39,13 @@ class ComboBox(QtGui.QComboBox):
             self.addItem(att['name'])
         self.setCurrentIndex(-1)
 
+    def get_attribute_id(self):
+        index = self.currentIndex()
+        if index is not -1:
+            return self.attribute[index]['uuid']
+        else:
+            return ''
+
     def show_search_box(self):
-        self.hidePopup()
         self.filtering_widget = FilteringDialog(self.attribute)
         self.filtering_widget.exec_()
