@@ -14,6 +14,7 @@ class FilteringDialog(QtGui.QDialog):
     def __init__(self, attribute):
         QtGui.QDialog.__init__(self)
         self.attribute = attribute
+        self.setFixedSize(200, 300)
 
         self.setWindowTitle('Attribute')
         v_layout = QtGui.QVBoxLayout(self)
