@@ -52,7 +52,11 @@ class ComboBox(QtGui.QComboBox):
     def get_attribute_id(self):
         index = self.currentIndex()
         if index is not -1:
-            return self.attribute[index]['uuid']
+            try:
+                return self.attribute[index]['uuid']
+            except:
+                return self.attribute[index]['mbid']
+
         else:
             return ''
 
