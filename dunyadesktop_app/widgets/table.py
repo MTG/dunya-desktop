@@ -10,7 +10,6 @@ CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
 class TableView(QtGui.QTableView):
     cell_exited = QtCore.pyqtSignal(int, int)
     item_exited = QtCore.pyqtSignal(QtGui.QStandardItem)
-    table_scrolled = QtCore.pyqtSignal(QtGui.QStandardItem)
 
     def __init__(self, *__args):
         QtGui.QTableView.__init__(self, *__args)
