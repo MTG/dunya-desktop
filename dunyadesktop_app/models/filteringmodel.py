@@ -13,9 +13,4 @@ class FilteringModel(QtGui.QStandardItemModel):
 
         for row, item in enumerate(attribute):
             name = QtGui.QStandardItem(item['name'])
-
-            check_item = QtGui.QStandardItem()
-            check_item.setCheckable(True)
-
-            self.setItem(row, 0, check_item)
-            self.setItem(row, 1, name)
+            self.setItem(row, 0, name)
