@@ -19,6 +19,7 @@ class MainWindowMakam(MainWindowMakamDesign):
         (self.makams, self.forms, self.usuls, self.composers,
          self.performers, self.instruments) = utilities.get_attributes()
         self._set_combobox_attributes()
+        self.frame_attributes.comboBox_instrument.setDisabled(True)
 
         self.frame_attributes.toolButton_query.clicked.connect(self.query)
 
