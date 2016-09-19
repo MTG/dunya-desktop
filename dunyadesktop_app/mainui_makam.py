@@ -16,7 +16,7 @@ class MainWindowMakam(MainWindowMakamDesign):
     def __init__(self):
         MainWindowMakamDesign.__init__(self)
 
-        (self.makams, self.usuls, self.forms, self.composers,
+        (self.makams, self.forms, self.usuls, self.composers,
          self.performers, self.instruments) = utilities.get_attributes()
         self._set_combobox_attributes()
 

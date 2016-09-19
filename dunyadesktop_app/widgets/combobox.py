@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 import os
 
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtGui
 
 from .filteringdialog import FilteringDialog
 
@@ -10,7 +10,6 @@ CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
 
 
 class ComboBox(QtGui.QComboBox):
-    combobox_clicked = QtCore.pyqtSignal()
 
     def __init__(self, parent):
         QtGui.QComboBox.__init__(self, parent)
@@ -40,7 +39,7 @@ class ComboBox(QtGui.QComboBox):
 
     def add_items(self, attribute):
         self.attribute = attribute
-        for att in attribute:
+        for att in self.attribute:
             self.addItem(att['name'])
         self.setCurrentIndex(-1)
 
