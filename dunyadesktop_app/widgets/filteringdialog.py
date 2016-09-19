@@ -59,13 +59,11 @@ class FilteringDialog(QtGui.QDialog):
 
     def item_entered(self, item):
         self.table_attribute.model().sourceModel().item(item.row(),
-                                                        item.column()).setBackground(
-            QtGui.QColor('moccasin'))
+            item.column()).setBackground(QtGui.QColor('moccasin'))
 
     def item_exited(self, item):
         self.table_attribute.model().sourceModel().item(item.row(),
-                                                        item.column()).setBackground(
-            QtGui.QTableWidgetItem().background())
+            item.column()).setBackground(QtGui.QTableWidgetItem().background())
 
     def button_box_accepted(self):
         self.selection = self.table_attribute.currentIndex()
