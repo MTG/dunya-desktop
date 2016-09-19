@@ -11,9 +11,9 @@ import dunyadesktop_app.ui_files.resources_rc
 
 
 class FilteringDialog(QtGui.QDialog):
-    def __init__(self, attribute):
+    def __init__(self):
         QtGui.QDialog.__init__(self)
-        self.attribute = attribute
+        self.attribute = None
         self.setFixedSize(200, 300)
 
         self.setWindowTitle('Attribute')
@@ -35,7 +35,6 @@ class FilteringDialog(QtGui.QDialog):
         self.setLayout(v_layout)
 
         self.filtering_model = FilteringModel()
-        self.filtering_model.add_items(self.attribute)
 
         self.proxy_model = SortFilterProxyModel()
         self.proxy_model.setSourceModel(self.filtering_model)
@@ -54,10 +53,8 @@ class FilteringDialog(QtGui.QDialog):
         self.filtering_edit.textChanged.connect(lambda:
             self.proxy_model.filtering_the_table(self.filtering_edit.text()))
 
-        #self.filtering_model.dataChanged.connect(self.test)
-
-        self.button_box.accepted.connect(self.pressed_accepted)
         self.button_box.rejected.connect(self.pressed_rejected)
+        self.table_attribute.doubleClicked.connect(self.close)
 
     def item_entered(self, item):
         self.table_attribute.model().sourceModel().item(item.row(),
@@ -67,16 +64,5 @@ class FilteringDialog(QtGui.QDialog):
         self.table_attribute.model().sourceModel().item(item.row(),
             item.column()).setBackground(QtGui.QTableWidgetItem().background())
 
-    def pressed_accepted(self):
-        print "accepted"
-
     def pressed_rejected(self):
         self.close()
-'''
-    def test(self, topLeft, bottomRight):
-        #print topLeft.row(), topLeft.column(), 'topLeft'
-        #print bottomRight.row(), bottomRight.column()
-
-        print self.filtering_model.item(topLeft.row(),
-                                        topLeft.column()).checkState()
-'''
