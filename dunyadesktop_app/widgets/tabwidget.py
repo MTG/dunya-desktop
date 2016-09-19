@@ -1,4 +1,6 @@
+from __future__ import absolute_import
 import os
+
 from PyQt4 import QtGui
 
 from dunyadesktop_app.utilities import utilities

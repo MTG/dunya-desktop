@@ -1,9 +1,12 @@
+from __future__ import absolute_import
 import sys
-from cultures import apiconfig
-from cultures.makam import utilities
-from compmusic.dunya import makam
 
 from PyQt4 import QtGui
+
+from compmusic.dunya import makam
+
+from cultures import apiconfig
+from cultures.makam import utilities
 from mainui_design_makam import MainWindowMakamDesign
 
 apiconfig.set_token()

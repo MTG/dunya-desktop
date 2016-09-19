@@ -1,6 +1,8 @@
+from __future__ import absolute_import
+
 from PyQt4 import QtGui, QtCore
 
-from combobox import ComboBox
+from .combobox import ComboBox
 
 QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"
 

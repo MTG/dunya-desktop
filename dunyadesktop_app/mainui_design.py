@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from PyQt4 import QtCore, QtGui
 
 from utilities import utilities
@@ -6,7 +8,7 @@ from widgets.tabwidget import TabWidget
 from widgets.audioattframe import AudioAttFrame
 from widgets.progressbar import ProgressBar
 
-import ui_files.resources_rc
+import dunyadesktop_app.ui_files.resources_rc
 
 DUNYA_ICON = ":/compmusic/icons/dunya.svg"
 QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"

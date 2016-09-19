@@ -1,4 +1,6 @@
-from PyQt4 import QtGui, QtCore
+from __future__ import absolute_import
+
+from PyQt4 import QtGui
 
 
 class FilteringModel(QtGui.QStandardItemModel):

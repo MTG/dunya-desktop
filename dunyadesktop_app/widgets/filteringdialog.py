@@ -1,5 +1,7 @@
+from __future__ import absolute_import
+
 from PyQt4 import QtGui, QtCore
-from table import TableView
+from dunyadesktop_app.widgets.table import TableView
 from dunyadesktop_app.models.filteringmodel import FilteringModel
 from dunyadesktop_app.models.proxymodel import SortFilterProxyModel
 

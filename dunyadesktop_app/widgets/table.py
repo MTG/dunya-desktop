@@ -1,4 +1,6 @@
+from __future__ import absolute_import
 import os
+
 from PyQt4 import QtGui, QtCore
 
 CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
