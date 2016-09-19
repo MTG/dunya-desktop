@@ -16,6 +16,11 @@ class ComboBox(QtGui.QComboBox):
         self.setInsertPolicy(QtGui.QComboBox.NoInsert)
 
         self._set_css()
+
+        self.cancel_button = QtGui.QToolButton(self)
+        self.cancel_button.setStyleSheet('border: 0px; padding: 12px;')
+        self.cancel_button.setIcon(QtGui.QIcon('/home/hsercanatli/Codes/dunya-desktop/dunyadesktop_app/ui_files/icons/cancel-music.svg'))
+
         self.dialog_filtering = FilteringDialog()
         self.dialog_filtering.table_attribute.doubleClicked.connect(
                                                             self.set_selection)
@@ -26,6 +31,15 @@ class ComboBox(QtGui.QComboBox):
         with open(CSS_PATH) as f:
             css = f.read()
         self.setStyleSheet(css)
+
+    def resizeEvent(self, QResizeEvent):
+        button_size = self.cancel_button.sizeHint()
+        frame_width = self.lineEdit().style().pixelMetric(
+                                            QtGui.QStyle.PM_DefaultFrameWidth)
+        self.cancel_button.move(self.rect().right()-2*frame_width-button_size.width(),
+                         (self.rect().bottom()-button_size.height() + 1) / 2)
+        super(ComboBox, self).resizeEvent(QResizeEvent)
+        self.cancel_button.setVisible(False)
 
     def wheelEvent(self, QWheelEvent):
         pass
@@ -65,5 +79,6 @@ class ComboBox(QtGui.QComboBox):
             index_row = index.row()
         except:
             index_row = index
+        print index_row
         self.setCurrentIndex(index_row)
         self.lineEdit().setText(self.attribute[index_row]['name'])
