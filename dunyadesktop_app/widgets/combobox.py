@@ -19,8 +19,6 @@ class ComboBox(QtGui.QComboBox):
 
         self._set_css()
 
-        self.highlighted.connect(self.show_search_box)
-
     def _set_css(self):
         with open(CSS_PATH) as f:
             css = f.read()
@@ -28,6 +26,10 @@ class ComboBox(QtGui.QComboBox):
 
     def wheelEvent(self, QWheelEvent):
         pass
+
+    def mousePressEvent(self, QMouseEvent):
+        self.filtering_widget = FilteringDialog(self.attribute)
+        self.filtering_widget.exec_()
 
     def set_placeholder_text(self, text):
         font = QtGui.QFont()
@@ -48,7 +50,3 @@ class ComboBox(QtGui.QComboBox):
             return self.attribute[index]['uuid']
         else:
             return ''
-
-    def show_search_box(self):
-        self.filtering_widget = FilteringDialog(self.attribute)
-        self.filtering_widget.exec_()
