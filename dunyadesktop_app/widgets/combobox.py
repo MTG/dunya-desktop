@@ -10,13 +10,16 @@ CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
 
 
 class ComboBox(QtGui.QComboBox):
-
     def __init__(self, parent):
         QtGui.QComboBox.__init__(self, parent)
         self.setEditable(True)
         self.setInsertPolicy(QtGui.QComboBox.NoInsert)
 
         self._set_css()
+        self.dialog_filtering = FilteringDialog()
+        self.dialog_filtering.table_attribute.doubleClicked.connect(
+                                                            self.set_selection)
+        #self.dialog_filtering.button_box.accepted.connect(self.set_selection)
 
     def _set_css(self):
         with open(CSS_PATH) as f:
@@ -27,8 +30,10 @@ class ComboBox(QtGui.QComboBox):
         pass
 
     def mousePressEvent(self, QMouseEvent):
-        self.filtering_widget = FilteringDialog(self.attribute)
-        self.filtering_widget.exec_()
+        self.dialog_filtering.attribute = self.attribute
+        self.dialog_filtering.setWindowTitle("")
+        self.dialog_filtering.filtering_model.add_items(self.attribute)
+        self.dialog_filtering.exec_()
 
     def set_placeholder_text(self, text):
         font = QtGui.QFont()
@@ -49,3 +54,8 @@ class ComboBox(QtGui.QComboBox):
             return self.attribute[index]['uuid']
         else:
             return ''
+
+    def set_selection(self, index):
+        index_row = index.row()
+        self.setCurrentIndex(index_row)
+        self.lineEdit().setText(self.attribute[index_row]['name'])
