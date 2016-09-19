@@ -11,6 +11,8 @@ import dunyadesktop_app.ui_files.resources_rc
 
 
 class FilteringDialog(QtGui.QDialog):
+    ok_button_clicked = QtCore.pyqtSignal()
+
     def __init__(self):
         QtGui.QDialog.__init__(self)
         self.attribute = None
@@ -45,24 +47,30 @@ class FilteringDialog(QtGui.QDialog):
         self.table_attribute.setColumnWidth(0, 28)
 
         self.filtering_edit.setPlaceholderText('Type here to filter...')
-
-        # signals
-        #self.table_attribute.entered.connect(self.item_entered)
-        #self.table_attribute.item_exited.connect(self.item_exited)
+        self.selection = -1
 
         self.filtering_edit.textChanged.connect(lambda:
-            self.proxy_model.filtering_the_table(self.filtering_edit.text()))
+                                                self.proxy_model.filtering_the_table(
+                                                    self.filtering_edit.text()))
 
         self.button_box.rejected.connect(self.pressed_rejected)
         self.table_attribute.doubleClicked.connect(self.close)
+        self.button_box.accepted.connect(self.button_box_accepted)
 
     def item_entered(self, item):
         self.table_attribute.model().sourceModel().item(item.row(),
-                        item.column()).setBackground(QtGui.QColor('moccasin'))
+                                                        item.column()).setBackground(
+            QtGui.QColor('moccasin'))
 
     def item_exited(self, item):
         self.table_attribute.model().sourceModel().item(item.row(),
-            item.column()).setBackground(QtGui.QTableWidgetItem().background())
+                                                        item.column()).setBackground(
+            QtGui.QTableWidgetItem().background())
+
+    def button_box_accepted(self):
+        self.selection = self.table_attribute.currentIndex()
+        self.close()
+        self.ok_button_clicked.emit()
 
     def pressed_rejected(self):
         self.close()

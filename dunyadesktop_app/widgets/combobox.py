@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 import os
 
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 
 from .filteringdialog import FilteringDialog
 
@@ -19,7 +19,8 @@ class ComboBox(QtGui.QComboBox):
         self.dialog_filtering = FilteringDialog()
         self.dialog_filtering.table_attribute.doubleClicked.connect(
                                                             self.set_selection)
-        #self.dialog_filtering.button_box.accepted.connect(self.set_selection)
+        self.dialog_filtering.ok_button_clicked.connect(
+            lambda: self.set_selection(self.dialog_filtering.selection))
 
     def _set_css(self):
         with open(CSS_PATH) as f:
@@ -56,6 +57,9 @@ class ComboBox(QtGui.QComboBox):
             return ''
 
     def set_selection(self, index):
-        index_row = index.row()
+        try:
+            index_row = index.row()
+        except:
+            index_row = index
         self.setCurrentIndex(index_row)
         self.lineEdit().setText(self.attribute[index_row]['name'])
