@@ -27,6 +27,7 @@ class ComboBox(QtGui.QComboBox):
                                                             self.set_selection)
         self.dialog_filtering.ok_button_clicked.connect(
             lambda: self.set_selection(self.dialog_filtering.selection))
+
     def _set_css(self):
         with open(CSS_PATH) as f:
             css = f.read()
@@ -79,6 +80,5 @@ class ComboBox(QtGui.QComboBox):
             index_row = index.row()
         except:
             index_row = index
-        print(index_row)
         self.setCurrentIndex(index_row)
         self.lineEdit().setText(self.attribute[index_row]['name'])

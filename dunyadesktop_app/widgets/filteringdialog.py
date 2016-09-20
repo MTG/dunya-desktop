@@ -54,8 +54,8 @@ class FilteringDialog(QtGui.QDialog):
                                                     self.filtering_edit.text()))
 
         self.button_box.rejected.connect(self.pressed_rejected)
-        self.table_attribute.doubleClicked.connect(self.close)
-        self.button_box.accepted.connect(self.button_box_accepted)
+        self.table_attribute.doubleClicked.connect(self.get_selected_item_index)
+        self.button_box.accepted.connect(self.get_selected_item_index)
 
     def item_entered(self, item):
         self.table_attribute.model().sourceModel().item(item.row(),
@@ -65,8 +65,9 @@ class FilteringDialog(QtGui.QDialog):
         self.table_attribute.model().sourceModel().item(item.row(),
             item.column()).setBackground(QtGui.QTableWidgetItem().background())
 
-    def button_box_accepted(self):
-        self.selection = self.table_attribute.currentIndex()
+    def get_selected_item_index(self):
+        self.selection = self.table_attribute.model().mapToSource(
+                         self.table_attribute.currentIndex())
         self.close()
         self.ok_button_clicked.emit()
 
