@@ -8,7 +8,8 @@ from .filteringdialog import FilteringDialog
 
 CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
                         'combobox.css')
-
+ICON_PATH_CANCEL = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
+                                'icons', 'cancel-music.svg')
 
 class ComboBox(QtGui.QComboBox):
     def __init__(self, parent):
@@ -20,7 +21,7 @@ class ComboBox(QtGui.QComboBox):
 
         self.cancel_button = QtGui.QToolButton(self)
         self.cancel_button.setStyleSheet('border: 0px; padding: 0px;')
-        self.cancel_button.setIcon(QtGui.QIcon('/home/hsercanatli/Codes/dunya-desktop/dunyadesktop_app/ui_files/icons/cancel-music.svg'))
+        self.cancel_button.setIcon(QtGui.QIcon(ICON_PATH_CANCEL))
         self.cancel_button.setVisible(False)
 
         # signals
