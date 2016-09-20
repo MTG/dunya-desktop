@@ -22,6 +22,10 @@ class ComboBox(QtGui.QComboBox):
         self.cancel_button.setStyleSheet('border: 0px; padding: 0px;')
         self.cancel_button.setIcon(QtGui.QIcon('/home/hsercanatli/Codes/dunya-desktop/dunyadesktop_app/ui_files/icons/cancel-music.svg'))
 
+        # signals
+        self.cancel_button.clicked.connect(self.reset_attribute_selection)
+        self.lineEdit().textEdited.connect(lambda:
+                                           self.cancel_button.setVisible(True))
         self.dialog_filtering = FilteringDialog()
         self.dialog_filtering.table_attribute.doubleClicked.connect(
                                                             self.set_selection)
@@ -82,3 +86,8 @@ class ComboBox(QtGui.QComboBox):
         self.setCurrentIndex(index_row)
         self.lineEdit().setText(self.attribute[index_row]['name'])
         self.cancel_button.setVisible(True)
+
+    def reset_attribute_selection(self):
+        self.lineEdit().setText('')
+        self.setCurrentIndex(-1)
+        self.cancel_button.setVisible(False)
