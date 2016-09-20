@@ -21,6 +21,7 @@ class ComboBox(QtGui.QComboBox):
         self.cancel_button = QtGui.QToolButton(self)
         self.cancel_button.setStyleSheet('border: 0px; padding: 0px;')
         self.cancel_button.setIcon(QtGui.QIcon('/home/hsercanatli/Codes/dunya-desktop/dunyadesktop_app/ui_files/icons/cancel-music.svg'))
+        self.cancel_button.setVisible(False)
 
         # signals
         self.cancel_button.clicked.connect(self.reset_attribute_selection)
@@ -43,7 +44,6 @@ class ComboBox(QtGui.QComboBox):
                                             QtGui.QStyle.PM_DefaultFrameWidth)
         self.cancel_button.move(self.rect().right()-9*frame_width-button_size.width(),
                          (self.rect().bottom()-button_size.height() + 1) / 2)
-        self.cancel_button.setVisible(False)
         super(ComboBox, self).resizeEvent(QResizeEvent)
 
     def wheelEvent(self, QWheelEvent):
