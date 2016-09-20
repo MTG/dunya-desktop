@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+from __future__ import print_function
 import os
 
 from PyQt4 import QtGui, QtCore
@@ -18,7 +19,7 @@ class ComboBox(QtGui.QComboBox):
         self._set_css()
 
         self.cancel_button = QtGui.QToolButton(self)
-        self.cancel_button.setStyleSheet('border: 0px; padding: 12px;')
+        self.cancel_button.setStyleSheet('border: 0px; padding: 0px;')
         self.cancel_button.setIcon(QtGui.QIcon('/home/hsercanatli/Codes/dunya-desktop/dunyadesktop_app/ui_files/icons/cancel-music.svg'))
 
         self.dialog_filtering = FilteringDialog()
@@ -26,7 +27,6 @@ class ComboBox(QtGui.QComboBox):
                                                             self.set_selection)
         self.dialog_filtering.ok_button_clicked.connect(
             lambda: self.set_selection(self.dialog_filtering.selection))
-
     def _set_css(self):
         with open(CSS_PATH) as f:
             css = f.read()
@@ -36,7 +36,7 @@ class ComboBox(QtGui.QComboBox):
         button_size = self.cancel_button.sizeHint()
         frame_width = self.lineEdit().style().pixelMetric(
                                             QtGui.QStyle.PM_DefaultFrameWidth)
-        self.cancel_button.move(self.rect().right()-2*frame_width-button_size.width(),
+        self.cancel_button.move(self.rect().right()-9*frame_width-button_size.width(),
                          (self.rect().bottom()-button_size.height() + 1) / 2)
         super(ComboBox, self).resizeEvent(QResizeEvent)
         self.cancel_button.setVisible(False)
@@ -79,6 +79,6 @@ class ComboBox(QtGui.QComboBox):
             index_row = index.row()
         except:
             index_row = index
-        print index_row
+        print(index_row)
         self.setCurrentIndex(index_row)
         self.lineEdit().setText(self.attribute[index_row]['name'])
