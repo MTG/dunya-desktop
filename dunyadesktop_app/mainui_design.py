@@ -72,6 +72,9 @@ class MainWindowDesign(QtGui.QMainWindow):
 
         QtCore.QMetaObject.connectSlotsByName(self)
 
+        self.lineEdit_filter.setDisabled(True)
+        self.tableView_results.setDisabled(True)
+
     def _set_mainwindow(self):
         # window sizes
         self.resize(680, 655)
