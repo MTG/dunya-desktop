@@ -118,7 +118,6 @@ class AudioAttFrame(QtGui.QFrame):
         self.toolButton_query.setStatusTip("Query your selection")
 
     def set_toolbutton(self):
-        print("changed!!!")
         index_melodic = self.comboBox_melodic.currentIndex()
         index_form = self.comboBox_form.currentIndex()
         index_rhythm = self.comboBox_rhythm.currentIndex()
