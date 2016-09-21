@@ -57,12 +57,6 @@ class TableView(QtGui.QTableView):
     def wheelEvent(self, QWheelEvent):
         super(TableView, self).wheelEvent(QWheelEvent)
 
-        #row = self._last_index.row()
-        #column = self._last_index.column()
-        #item = self.model().sourceModel().item(row, column)
-
-        #self.table_scrolled.emit(item)
-
     def _set_font(self):
         font = QtGui.QFont()
         font.setPointSize(10)
