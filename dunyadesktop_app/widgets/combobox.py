@@ -41,8 +41,9 @@ class ComboBox(QtGui.QComboBox):
         button_size = self.cancel_button.sizeHint()
         frame_width = self.lineEdit().style().pixelMetric(
                                             QtGui.QStyle.PM_DefaultFrameWidth)
-        self.cancel_button.move(self.rect().right()-9*frame_width-button_size.width(),
-                         (self.rect().bottom()-button_size.height() + 1) / 2)
+        self.cancel_button.move(
+                        self.rect().right()-9*frame_width-button_size.width(),
+                        (self.rect().bottom()-button_size.height() + 1) / 2)
         super(ComboBox, self).resizeEvent(QResizeEvent)
 
     def wheelEvent(self, QWheelEvent):
