@@ -17,6 +17,17 @@ class AudioAttFrame(QtGui.QFrame):
         self._set_gridlayout_filtering()
         self._retranslate_status_tips()
 
+        self.toolButton_query.setDisabled(True)
+
+        self.comboBox_melodic.currentIndexChanged.connect(self.set_toolbutton)
+        self.comboBox_form.currentIndexChanged.connect(self.set_toolbutton)
+        self.comboBox_rhythm.currentIndexChanged.connect(self.set_toolbutton)
+        self.comboBox_composer.currentIndexChanged.connect(self.set_toolbutton)
+        self.comboBox_performer.currentIndexChanged.connect(
+                                                           self.set_toolbutton)
+        self.comboBox_instrument.currentIndexChanged.connect(
+                                                           self.set_toolbutton)
+
     def _set_frame_attributes(self):
         size_policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred,
                                         QtGui.QSizePolicy.Fixed)
@@ -105,3 +116,19 @@ class AudioAttFrame(QtGui.QFrame):
         self.comboBox_instrument.setStatusTip("Select instrument")
 
         self.toolButton_query.setStatusTip("Query your selection")
+
+    def set_toolbutton(self):
+        print("changed!!!")
+        index_melodic = self.comboBox_melodic.currentIndex()
+        index_form = self.comboBox_form.currentIndex()
+        index_rhythm = self.comboBox_rhythm.currentIndex()
+        index_composer = self.comboBox_composer.currentIndex()
+        index_performer = self.comboBox_performer.currentIndex()
+        index_instrument = self.comboBox_instrument.currentIndex()
+
+        if index_melodic is -1 and index_form is -1 and index_rhythm is -1 \
+                and index_composer is -1 and index_performer is -1 and \
+                        index_instrument is -1:
+            self.toolButton_query.setDisabled(True)
+        else:
+            self.toolButton_query.setEnabled(True)
