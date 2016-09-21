@@ -4,8 +4,6 @@ import sys
 
 from PyQt4 import QtGui
 
-from compmusic.dunya import makam
-
 from cultures import apiconfig
 from cultures.makam import utilities
 from mainui_design_makam import MainWindowMakamDesign
@@ -27,6 +25,7 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.frame_attributes.toolButton_query.clicked.connect(self.query)
 
         self.thread_query = QueryThread()
+        self.thread_query.query_completed.connect(self.test)
 
     def _set_combobox_attributes(self):
         self.frame_attributes.comboBox_melodic.add_items(self.makams)
@@ -37,7 +36,6 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.frame_attributes.comboBox_instrument.add_items(self.instruments)
 
     def query(self):
-        self.frame_attributes.toolButton_query.setDisabled(True)
         mid = self.frame_attributes.comboBox_melodic.get_attribute_id()
         fid = self.frame_attributes.comboBox_form.get_attribute_id()
         uid = self.frame_attributes.comboBox_rhythm.get_attribute_id()
@@ -52,6 +50,9 @@ class MainWindowMakam(MainWindowMakamDesign):
 
         self.thread_query.start()
 
+    def test(self):
+        self.frame_attributes.toolButton_query.setEnabled(True)
+        print("yes, completed...")
 
 app = QtGui.QApplication(sys.argv)
 mainwindow_makam = MainWindowMakam()
