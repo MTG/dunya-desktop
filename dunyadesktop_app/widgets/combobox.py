@@ -29,8 +29,6 @@ class ComboBox(QtGui.QComboBox):
         self.lineEdit().textEdited.connect(lambda:
                                            self.cancel_button.setVisible(True))
         self.dialog_filtering = FilteringDialog()
-        self.dialog_filtering.table_attribute.doubleClicked.connect(
-                                                            self.set_selection)
         self.dialog_filtering.ok_button_clicked.connect(
             lambda: self.set_selection(self.dialog_filtering.selection))
 
