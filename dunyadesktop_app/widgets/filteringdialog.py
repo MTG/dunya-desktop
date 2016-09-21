@@ -18,6 +18,9 @@ class FilteringDialog(QtGui.QDialog):
         self.attribute = None
         self.setFixedSize(200, 300)
 
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.Popup)
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+
         self.setWindowTitle('Attribute')
         v_layout = QtGui.QVBoxLayout(self)
 
@@ -54,20 +57,22 @@ class FilteringDialog(QtGui.QDialog):
                                                     self.filtering_edit.text()))
 
         self.button_box.rejected.connect(self.pressed_rejected)
-        self.table_attribute.doubleClicked.connect(self.get_selected_item_index)
+        self.table_attribute.doubleClicked.connect(
+            self.get_selected_item_index)
         self.button_box.accepted.connect(self.get_selected_item_index)
 
     def item_entered(self, item):
         self.table_attribute.model().sourceModel().item(item.row(),
-            item.column()).setBackground(QtGui.QColor('moccasin'))
+                        item.column()).setBackground(QtGui.QColor('moccasin'))
 
     def item_exited(self, item):
         self.table_attribute.model().sourceModel().item(item.row(),
             item.column()).setBackground(QtGui.QTableWidgetItem().background())
 
     def get_selected_item_index(self):
+        self.filtering_edit.setText('')
         self.selection = self.table_attribute.model().mapToSource(
-                         self.table_attribute.currentIndex())
+            self.table_attribute.currentIndex())
         self.close()
         self.ok_button_clicked.emit()
 
