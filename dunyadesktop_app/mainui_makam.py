@@ -6,8 +6,8 @@ from PyQt4 import QtGui
 
 from cultures import apiconfig
 from cultures.makam import utilities
+from cultures.makam.query import QueryThread
 from mainui_design_makam import MainWindowMakamDesign
-from threads.query import QueryThread
 
 apiconfig.set_token()
 apiconfig.set_hostname()
