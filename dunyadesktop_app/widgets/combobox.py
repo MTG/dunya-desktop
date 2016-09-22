@@ -25,9 +25,11 @@ class ComboBox(QtGui.QComboBox):
         self.cancel_button.setVisible(False)
 
         # signals
+        self.currentIndexChanged.connect(self.change_lineedit_status)
         self.cancel_button.clicked.connect(self.reset_attribute_selection)
         self.lineEdit().textEdited.connect(lambda:
                                            self.cancel_button.setVisible(True))
+        self.lineEdit().editingFinished.connect(self.check_lineedit_status)
         self.dialog_filtering = FilteringDialog()
         self.dialog_filtering.ok_button_clicked.connect(
             lambda: self.set_selection(self.dialog_filtering.selection))
@@ -93,3 +95,13 @@ class ComboBox(QtGui.QComboBox):
         self.lineEdit().setText('')
         self.setCurrentIndex(-1)
         self.cancel_button.setVisible(False)
+
+    def change_lineedit_status(self):
+        if self.currentIndex() is not -1:
+            self.lineEdit().setReadOnly(True)
+        else:
+            self.lineEdit().setReadOnly(False)
+
+    def check_lineedit_status(self):
+        if str(self.lineEdit().text()) == u'':
+            self.cancel_button.setVisible(False)

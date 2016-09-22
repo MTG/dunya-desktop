@@ -19,6 +19,7 @@ class AudioAttFrame(QtGui.QFrame):
 
         self.toolButton_query.setDisabled(True)
 
+        # signals
         self.comboBox_melodic.currentIndexChanged.connect(self.set_toolbutton)
         self.comboBox_form.currentIndexChanged.connect(self.set_toolbutton)
         self.comboBox_rhythm.currentIndexChanged.connect(self.set_toolbutton)
