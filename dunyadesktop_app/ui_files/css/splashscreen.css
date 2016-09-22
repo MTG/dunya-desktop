@@ -1,0 +1,10 @@
+QDialog {
+    /*background-image: url(:/compmusic/icons/compmusic-logo-opac.svg); */
+    background-image: url(:/compmusic/icons/dunya-desktop-logo.svg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-color: lightgrey;
+    /*background-repeat: no-repeat;*/
+    /*background-color: rgb(228, 228, 228)*/
+}
