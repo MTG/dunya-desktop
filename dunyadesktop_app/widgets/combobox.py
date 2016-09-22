@@ -103,7 +103,5 @@ class ComboBox(QtGui.QComboBox):
             self.lineEdit().setReadOnly(False)
 
     def check_lineedit_status(self):
-        if str(self.lineEdit().text().toUtf8()) is u'':
-            pass
-        else:
+        if str(self.lineEdit().text().toUtf8()) == '':
             self.cancel_button.setVisible(False)
