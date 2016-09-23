@@ -46,13 +46,8 @@ class AudioAttFrame(QtGui.QFrame):
     def _set_gridlayout_filtering(self):
         self.gridLayout_filtering.setSizeConstraint(
             QtGui.QLayout.SetNoConstraint)
-        self.gridLayout_filtering.setMargin(2)
-        self.gridLayout_filtering.setSpacing(3)
-
-        # spacer in grid layout of filtering section
-        spacer_item = QtGui.QSpacerItem(3, 20, QtGui.QSizePolicy.Fixed,
-                                        QtGui.QSizePolicy.Minimum)
-        self.gridLayout_filtering.addItem(spacer_item, 0, 1, 1, 1)
+        self.gridLayout_filtering.setMargin(5)
+        self.gridLayout_filtering.setSpacing(5)
 
         # combo boxes
         # melodic structure
@@ -84,13 +79,18 @@ class AudioAttFrame(QtGui.QFrame):
                                             1, 4, 1, 1)
         self.comboBox_instrument.set_placeholder_text('Instrument')
 
-        spacer_item1 = QtGui.QSpacerItem(3, 20, QtGui.QSizePolicy.Minimum,
+        spacer_item1 = QtGui.QSpacerItem(7, 20, QtGui.QSizePolicy.Minimum,
                                          QtGui.QSizePolicy.Fixed)
-        self.gridLayout_filtering.addItem(spacer_item1, 1, 3, 1, 1)
 
-        spacer_item2 = QtGui.QSpacerItem(3, 20, QtGui.QSizePolicy.Minimum,
+        spacer_item2 = QtGui.QSpacerItem(7, 20, QtGui.QSizePolicy.Minimum,
                                          QtGui.QSizePolicy.Fixed)
-        self.gridLayout_filtering.addItem(spacer_item2, 0, 5, 1, 1)
+
+        spacer_item3 = QtGui.QSpacerItem(7, 20, QtGui.QSizePolicy.Minimum,
+                                         QtGui.QSizePolicy.Fixed)
+
+        self.gridLayout_filtering.addItem(spacer_item1, 1, 1, 1, 1)
+        self.gridLayout_filtering.addItem(spacer_item2, 1, 3, 1, 1)
+        self.gridLayout_filtering.addItem(spacer_item3, 1, 5, 1, 1)
 
         # query button and layout
         self.horizontalLayout_query = QtGui.QHBoxLayout()
