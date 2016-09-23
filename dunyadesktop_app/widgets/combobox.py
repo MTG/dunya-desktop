@@ -44,7 +44,7 @@ class ComboBox(QtGui.QComboBox):
         frame_width = self.lineEdit().style().pixelMetric(
                                             QtGui.QStyle.PM_DefaultFrameWidth)
         self.cancel_button.move(
-                        self.rect().right()-9*frame_width-button_size.width(),
+                        self.rect().right()-18*frame_width-button_size.width(),
                         (self.rect().bottom()-button_size.height() + 1) / 2)
         super(ComboBox, self).resizeEvent(QResizeEvent)
 
@@ -61,7 +61,7 @@ class ComboBox(QtGui.QComboBox):
 
     def set_placeholder_text(self, text):
         font = QtGui.QFont()
-        font.setPointSize(10)
+        font.setPointSize(11)
 
         self.lineEdit().setPlaceholderText(text)
         self.lineEdit().setFont(font)
