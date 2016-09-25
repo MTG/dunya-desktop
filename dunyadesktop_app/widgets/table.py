@@ -37,29 +37,9 @@ class TableView(QtGui.QTableView):
         self.horizontal_header.setStretchLastSection(True)
         self.resizeRowsToContents()
 
-    def eventFilter(self, widget, event):
-        if widget is self.viewport():
-            index = self._last_index
-            if event.type() == QtCore.QEvent.MouseMove:
-                index = self.indexAt(event.pos())
-            elif event.type() == QtCore.QEvent.Leave:
-                index = QtCore.QModelIndex()
-            if index != self._last_index:
-                row = self._last_index.row()
-                column = self._last_index.column()
-                item = self.model().sourceModel().item(row, column)
-                if item is not None:
-                    self.item_exited.emit(item)
-                self.cell_exited.emit(row, column)
-                self._last_index = QtCore.QPersistentModelIndex(index)
-        return QtGui.QTableWidget.eventFilter(self, widget, event)
-
-    def wheelEvent(self, QWheelEvent):
-        super(TableView, self).wheelEvent(QWheelEvent)
-
     def _set_font(self):
         font = QtGui.QFont()
-        font.setPointSize(10)
+        font.setPointSize(12)
         self.setFont(font)
 
     def _set_css(self):

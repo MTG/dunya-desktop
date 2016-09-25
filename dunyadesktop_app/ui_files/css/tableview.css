@@ -7,3 +7,8 @@ QTableView {
     /*background-repeat: no-repeat;*/
     background-color: rgb(228, 228, 228)
 }
+
+QTableView::item:hover {
+    border-color: #3ad1ed;
+    background-color: #b0c0c8;
+    }
