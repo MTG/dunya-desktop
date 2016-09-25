@@ -1,11 +1,13 @@
 from __future__ import absolute_import
+import os
 
 from PyQt4 import QtGui, QtCore
 
 from .combobox import ComboBox
 
 QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"
-
+CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
+                        'audioattframe.css')
 
 class AudioAttFrame(QtGui.QFrame):
     def __init__(self):
@@ -16,6 +18,7 @@ class AudioAttFrame(QtGui.QFrame):
         self.gridLayout_filtering = QtGui.QGridLayout(self)
         self._set_gridlayout_filtering()
         self._retranslate_status_tips()
+        self._set_css()
 
         self.toolButton_query.setDisabled(True)
 
@@ -117,6 +120,11 @@ class AudioAttFrame(QtGui.QFrame):
         self.comboBox_instrument.setStatusTip("Select instrument")
 
         self.toolButton_query.setStatusTip("Query your selection")
+
+    def _set_css(self):
+        with open(CSS_PATH) as f:
+            css = f.read()
+        self.setStyleSheet(css)
 
     def set_toolbutton(self):
         index_melodic = self.comboBox_melodic.currentIndex()

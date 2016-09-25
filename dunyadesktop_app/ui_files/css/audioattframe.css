@@ -1,0 +1,17 @@
+QFrame {
+    border: 1px solid;
+    border-color: #319ab6;
+    /*border-color: #FFF9F9;*/
+    border-radius: 3px;
+    /*padding: 2px;*/
+    background-color: #e4e4e4;
+}
+
+QToolButton#cancel_button {border: 1px solid;
+            border-color: #bfbfbf;
+            border-radius: 5px;
+            }
+
+QToolButton:hover{background-color: #c7dde0;
+                  border-radius: 5px;
+                  }
