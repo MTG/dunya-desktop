@@ -20,7 +20,8 @@ class ComboBox(QtGui.QComboBox):
         self._set_css()
 
         self.cancel_button = QtGui.QToolButton(self)
-        self.cancel_button.setStyleSheet('border: 0px; padding: 0px;')
+        self.cancel_button.setStyleSheet('border: 0px;'
+                                         'padding: 0px;')
         self.cancel_button.setIcon(QtGui.QIcon(ICON_PATH_CANCEL))
         self.cancel_button.setVisible(False)
 
