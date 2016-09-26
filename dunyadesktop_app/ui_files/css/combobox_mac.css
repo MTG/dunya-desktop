@@ -1,19 +1,22 @@
 QComboBox {
-    border: 1px solid gray;
+    border: 2px groove #8F94AA;
     border-radius: 3px;
-    /*padding: 1px 18px 1px 3px;*/
-    min-width: 6em;
+    padding: 3px 10px 1px 3px;
+    /*min-width: 6em;*/
 }
 
 QComboBox:editable {
-   background: rgb(255, 255, 255);
+    background: #fdfdff;
 	/*background: transparent*/
 }
 
 QComboBox:!editable, QComboBox::drop-down:editable {
-     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+    /*background: qlineargradient(spread:reflect, x1:1, y1:0, x2:1, y2:0.551, stop:0 rgb(218, 218, 218), stop:1 rgba(245, 245, 245, 255));*/
+    /*background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                  stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
                                  stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
+                                 */
+    background: #DEE7ED;
 }
 
 /* QComboBox gets the "on" state when the popup is open */
