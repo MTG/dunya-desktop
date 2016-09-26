@@ -7,6 +7,8 @@ from widgets.table import TableView
 from widgets.tabwidget import TabWidget
 from widgets.audioattframe import AudioAttFrame
 from widgets.progressbar import ProgressBar
+from models.recordingmodel import RecordingModel
+from models.proxymodel import SortFilterProxyModel
 
 import dunyadesktop_app.ui_files.resources_rc
 
@@ -50,6 +52,14 @@ class MainWindowDesign(QtGui.QMainWindow):
 
         self.tableView_results = TableView(self.tabWidget.tab_audio)
         self.verticalLayout.addWidget(self.tableView_results)
+
+        self.recording_model= RecordingModel()
+
+        self.proxy_model = SortFilterProxyModel()
+        self.proxy_model.setSourceModel(self.recording_model)
+        self.proxy_model.setFilterKeyColumn(-1)
+
+        self.tableView_results.setModel(self.proxy_model)
 
         self.gridLayout_mainwindow.addWidget(self.tabWidget, 1, 0, 1, 1)
 
