@@ -20,12 +20,15 @@ class MainWindowMakam(MainWindowMakamDesign):
         (self.makams, self.forms, self.usuls, self.composers,
          self.performers, self.instruments) = utilities.get_attributes()
         self._set_combobox_attributes()
+
         self.frame_attributes.comboBox_instrument.setDisabled(True)
-
-        self.frame_attributes.toolButton_query.clicked.connect(self.query)
-
+        self.recordings = []
         self.thread_query = QueryThread()
+
+        # signals
+        self.frame_attributes.toolButton_query.clicked.connect(self.query)
         self.thread_query.query_completed.connect(self.test)
+        self.thread_query.fetching_completed.connect(self.recording_model.add_recording)
 
     def _set_combobox_attributes(self):
         self.frame_attributes.comboBox_melodic.add_items(self.makams)
@@ -50,9 +53,12 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.thread_query.cmbid = cmbid
         self.thread_query.ambid = ambid
 
+        self.progress_bar.setVisible(True)
+
         self.thread_query.start()
 
     def test(self):
+        self.progress_bar.setVisible(False)
         self.frame_attributes.toolButton_query.setEnabled(True)
         print("yes, completed...")
 
