@@ -1,13 +1,23 @@
 from __future__ import absolute_import
 from __future__ import print_function
 import os
+import platform
 
 from PyQt4 import QtGui, QtCore
 
 from .filteringdialog import FilteringDialog
 
-CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
-                        'combobox.css')
+if platform.system() == 'Linux':
+    BUTTON_POS = 9
+    FONT_SIZE = 9
+    CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
+                            'combobox.css')
+else:
+    CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
+                            'combobox_mac.css')
+    BUTTON_POS = 18
+    FONT_SIZE = 11
+
 ICON_PATH_CANCEL = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                                 'icons', 'cancel-music.svg')
 
@@ -16,6 +26,9 @@ class ComboBox(QtGui.QComboBox):
         QtGui.QComboBox.__init__(self, parent)
         self.setEditable(True)
         self.setInsertPolicy(QtGui.QComboBox.NoInsert)
+
+        if platform.system() == 'Linux':
+            self.setFixedHeight(23)
 
         self._set_css()
 
@@ -45,7 +58,7 @@ class ComboBox(QtGui.QComboBox):
         frame_width = self.lineEdit().style().pixelMetric(
                                             QtGui.QStyle.PM_DefaultFrameWidth)
         self.cancel_button.move(
-                        self.rect().right()-18*frame_width-button_size.width(),
+                self.rect().right()-BUTTON_POS*frame_width-button_size.width(),
                         (self.rect().bottom()-button_size.height() + 1) / 2)
         super(ComboBox, self).resizeEvent(QResizeEvent)
 
@@ -62,7 +75,7 @@ class ComboBox(QtGui.QComboBox):
 
     def set_placeholder_text(self, text):
         font = QtGui.QFont()
-        font.setPointSize(11)
+        font.setPointSize(FONT_SIZE)
 
         self.lineEdit().setPlaceholderText(text)
         self.lineEdit().setFont(font)

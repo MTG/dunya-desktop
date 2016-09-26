@@ -1,9 +1,19 @@
 from __future__ import absolute_import
 import os
+import platform
 
 from PyQt4 import QtGui, QtCore
 
 from .combobox import ComboBox
+
+if platform.system() == 'Linux':
+    MARGIN = 2
+    SPACING = 3
+    SPACE = 3
+else:
+    MARGIN = 5
+    SPACING = 5
+    SPACE = 7
 
 QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"
 CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
@@ -18,7 +28,8 @@ class AudioAttFrame(QtGui.QFrame):
         self.gridLayout_filtering = QtGui.QGridLayout(self)
         self._set_gridlayout_filtering()
         self._retranslate_status_tips()
-        self._set_css()
+        if platform.system() != 'Linux':
+            self._set_css()
 
         self.toolButton_query.setDisabled(True)
 
@@ -49,8 +60,8 @@ class AudioAttFrame(QtGui.QFrame):
     def _set_gridlayout_filtering(self):
         self.gridLayout_filtering.setSizeConstraint(
             QtGui.QLayout.SetNoConstraint)
-        self.gridLayout_filtering.setMargin(5)
-        self.gridLayout_filtering.setSpacing(5)
+        self.gridLayout_filtering.setMargin(MARGIN)
+        self.gridLayout_filtering.setSpacing(SPACING)
 
         # combo boxes
         # melodic structure
@@ -82,26 +93,26 @@ class AudioAttFrame(QtGui.QFrame):
                                             1, 4, 1, 1)
         self.comboBox_instrument.set_placeholder_text('Instrument')
 
-        spacer_item1 = QtGui.QSpacerItem(7, 20, QtGui.QSizePolicy.Minimum,
+        spacer_item1 = QtGui.QSpacerItem(SPACE, 20, QtGui.QSizePolicy.Minimum,
                                          QtGui.QSizePolicy.Fixed)
 
-        spacer_item2 = QtGui.QSpacerItem(7, 20, QtGui.QSizePolicy.Minimum,
+        spacer_item2 = QtGui.QSpacerItem(SPACE, 20, QtGui.QSizePolicy.Minimum,
                                          QtGui.QSizePolicy.Fixed)
 
-        spacer_item3 = QtGui.QSpacerItem(7, 20, QtGui.QSizePolicy.Minimum,
-                                         QtGui.QSizePolicy.Fixed)
+        if platform.system() != 'Linux':
+            spacer_item3 = QtGui.QSpacerItem(SPACE, 20, QtGui.QSizePolicy.Minimum,
+                                             QtGui.QSizePolicy.Fixed)
+            self.gridLayout_filtering.addItem(spacer_item3, 1, 5, 1, 1)
 
         self.gridLayout_filtering.addItem(spacer_item1, 1, 1, 1, 1)
         self.gridLayout_filtering.addItem(spacer_item2, 1, 3, 1, 1)
-        self.gridLayout_filtering.addItem(spacer_item3, 1, 5, 1, 1)
 
         # query button and layout
         self.horizontalLayout_query = QtGui.QHBoxLayout()
         self.horizontalLayout_query.setSpacing(0)
 
         self.toolButton_query = QtGui.QToolButton(self)
-        self.toolButton_query.setMinimumSize(QtCore.QSize(50, 50))
-        self.toolButton_query.setMaximumSize(QtCore.QSize(60, 60))
+        self.toolButton_query.setFixedSize(QtCore.QSize(50, 50))
         icon_query = QtGui.QIcon()
         icon_query.addPixmap(QtGui.QPixmap(QUERY_ICON),
                              QtGui.QIcon.Normal, QtGui.QIcon.Off)

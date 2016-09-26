@@ -1,7 +1,13 @@
 from __future__ import absolute_import
 import os
+import platform
 
 from PyQt4 import QtGui, QtCore
+
+if platform.system() == 'Linux':
+    FONT_SIZE = 9
+else:
+    FONT_SIZE = 12
 
 CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
                         'tableview.css')
@@ -39,7 +45,7 @@ class TableView(QtGui.QTableView):
 
     def _set_font(self):
         font = QtGui.QFont()
-        font.setPointSize(12)
+        font.setPointSize(FONT_SIZE)
         self.setFont(font)
 
     def _set_css(self):
