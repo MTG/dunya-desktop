@@ -36,6 +36,8 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.frame_attributes.comboBox_instrument.add_items(self.instruments)
 
     def query(self):
+        self.frame_attributes.toolButton_query.setEnabled(False)
+
         mid = self.frame_attributes.comboBox_melodic.get_attribute_id()
         fid = self.frame_attributes.comboBox_form.get_attribute_id()
         uid = self.frame_attributes.comboBox_rhythm.get_attribute_id()
