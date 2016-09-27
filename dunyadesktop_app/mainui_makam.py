@@ -27,8 +27,9 @@ class MainWindowMakam(MainWindowMakamDesign):
 
         # signals
         self.frame_attributes.toolButton_query.clicked.connect(self.query)
+        self.thread_query.fetching_completed.connect(self.work_received)
         self.thread_query.query_completed.connect(self.test)
-        self.thread_query.fetching_completed.connect(self.recording_model.add_recording)
+        self.recording_model.rec_fetched.connect(self.append_recording)
 
     def _set_combobox_attributes(self):
         self.frame_attributes.comboBox_melodic.add_items(self.makams)
@@ -40,6 +41,9 @@ class MainWindowMakam(MainWindowMakamDesign):
 
     def query(self):
         self.frame_attributes.toolButton_query.setEnabled(False)
+        self.lineEdit_filter.setEnabled(True)
+        self.tableView_results.setEnabled(True)
+        self.tableView_results.horizontal_header.show()
 
         mid = self.frame_attributes.comboBox_melodic.get_attribute_id()
         fid = self.frame_attributes.comboBox_form.get_attribute_id()
@@ -54,8 +58,15 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.thread_query.ambid = ambid
 
         self.progress_bar.setVisible(True)
-
         self.thread_query.start()
+
+    def append_recording(self, rec_mbid):
+        self.recordings.append(type(str(rec_mbid.toUtf8())))
+
+    def work_received(self, work):
+        self.recording_model.add_recording(work)
+        self.tableView_results.resizeColumnToContents(1)
+        self.tableView_results.setColumnWidth(0, 28)
 
     def test(self):
         self.progress_bar.setVisible(False)
