@@ -33,8 +33,9 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.thread_query.query_completed.connect(self.query_finished)
         self.thread_query.fetching_completed.connect(self.work_received)
         self.recording_model.rec_fetched.connect(self.append_recording)
-        self.lineEdit_filter.textChanged.connect(lambda:
-            self.proxy_model.filtering_the_table(self.lineEdit_filter.text()))
+        self.lineEdit_filter.textChanged.connect(
+            lambda:self.proxy_model.filtering_the_table(
+                self.lineEdit_filter.text()))
 
     def _set_combobox_attributes(self):
         self.frame_attributes.comboBox_melodic.add_items(self.makams)

@@ -83,6 +83,7 @@ class MainWindowDesign(QtGui.QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(self)
 
         self.lineEdit_filter.setDisabled(True)
+        self.tableView_results.setGridStyle(QtCore.Qt.DotLine)
         self.tableView_results.setDisabled(True)
 
     def _set_mainwindow(self):
