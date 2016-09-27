@@ -6,8 +6,8 @@ from compmusic.dunya import makam
 
 class QueryThread(QtCore.QThread):
     fetching_completed = QtCore.pyqtSignal(dict)
+    progress_number = QtCore.pyqtSignal(int)
     query_completed = QtCore.pyqtSignal()
-
 
     def __init__(self):
         QtCore.QThread.__init__(self)
@@ -22,7 +22,7 @@ class QueryThread(QtCore.QThread):
 
     def check_selection(self):
         iteration = iter([self.mid, self.fid, self.uid,
-                               self.cmbid, self.ambid])
+                          self.cmbid, self.ambid])
         return any(iteration) and not any(iteration)
 
     def fetch_recordings(self):
@@ -55,7 +55,9 @@ class QueryThread(QtCore.QThread):
         else:
             print("more selection")
             self.works = makam.get_works_by_query(mid=self.mid, uid=self.uid,
-                                              fid=self.fid, cmbid=self.cmbid,
-                                              ambid=self.ambid)
+                                                  fid=self.fid,
+                                                  cmbid=self.cmbid,
+                                                  ambid=self.ambid)
+        self.progress_number.emit(len(self.works))
         self.fetch_recordings()
         self.query_completed.emit()
