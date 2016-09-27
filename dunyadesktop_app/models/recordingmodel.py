@@ -10,6 +10,10 @@ class RecordingModel(QtGui.QStandardItemModel):
         QtGui.QStandardItemModel.__init__(self)
         self.setHorizontalHeaderLabels(['', 'Title', 'Artists'])
 
+    def clear_items(self):
+        self.clear()
+        self.setHorizontalHeaderLabels(['', 'Title', 'Artists'])
+
     def add_recording(self, work):
         for rec in work['recordings']:
             check_item = QtGui.QStandardItem()

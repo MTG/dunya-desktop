@@ -30,9 +30,11 @@ class MainWindowMakam(MainWindowMakamDesign):
         # signals
         self.frame_attributes.toolButton_query.clicked.connect(self.query)
         self.thread_query.progress_number.connect(self.set_progress_number)
-        self.thread_query.query_completed.connect(self.test)
+        self.thread_query.query_completed.connect(self.query_finished)
         self.thread_query.fetching_completed.connect(self.work_received)
         self.recording_model.rec_fetched.connect(self.append_recording)
+        self.lineEdit_filter.textChanged.connect(lambda:
+            self.proxy_model.filtering_the_table(self.lineEdit_filter.text()))
 
     def _set_combobox_attributes(self):
         self.frame_attributes.comboBox_melodic.add_items(self.makams)
@@ -43,6 +45,8 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.frame_attributes.comboBox_instrument.add_items(self.instruments)
 
     def query(self):
+        self.work_count = 0
+        self.recording_model.clear_items()
         self.frame_attributes.toolButton_query.setEnabled(False)
         self.lineEdit_filter.setEnabled(True)
         self.tableView_results.setEnabled(True)
@@ -77,10 +81,10 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.tableView_results.resizeColumnToContents(1)
         self.tableView_results.setColumnWidth(0, 28)
 
-    def test(self):
+    def query_finished(self):
         self.progress_bar.setVisible(False)
         self.progress_bar.setValue(0)
-        self.progress_bar.setFormat("{0}/{1}".format(index, work_number))
+        self.progress_bar.setFormat("")
         self.frame_attributes.toolButton_query.setEnabled(True)
         print("yes, completed...")
 
