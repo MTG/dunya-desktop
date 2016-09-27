@@ -23,12 +23,15 @@ class MainWindowMakam(MainWindowMakamDesign):
 
         self.frame_attributes.comboBox_instrument.setDisabled(True)
         self.recordings = []
+        self.work_count = 0
+        self.progress_number = 0
         self.thread_query = QueryThread()
 
         # signals
         self.frame_attributes.toolButton_query.clicked.connect(self.query)
-        self.thread_query.fetching_completed.connect(self.work_received)
+        self.thread_query.progress_number.connect(self.set_progress_number)
         self.thread_query.query_completed.connect(self.test)
+        self.thread_query.fetching_completed.connect(self.work_received)
         self.recording_model.rec_fetched.connect(self.append_recording)
 
     def _set_combobox_attributes(self):
@@ -60,16 +63,24 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.progress_bar.setVisible(True)
         self.thread_query.start()
 
+    def set_progress_number(self, progress_number):
+        self.progress_number = progress_number
+
     def append_recording(self, rec_mbid):
         self.recordings.append(type(str(rec_mbid.toUtf8())))
 
     def work_received(self, work):
+        self.work_count += 1
+        self.progress_bar.update_progress_bar(self.work_count,
+                                              self.progress_number)
         self.recording_model.add_recording(work)
         self.tableView_results.resizeColumnToContents(1)
         self.tableView_results.setColumnWidth(0, 28)
 
     def test(self):
         self.progress_bar.setVisible(False)
+        self.progress_bar.setValue(0)
+        self.progress_bar.setFormat("{0}/{1}".format(index, work_number))
         self.frame_attributes.toolButton_query.setEnabled(True)
         print("yes, completed...")
 
