@@ -14,9 +14,6 @@ CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
 
 
 class TableView(QtGui.QTableView):
-    cell_exited = QtCore.pyqtSignal(int, int)
-    item_exited = QtCore.pyqtSignal(QtGui.QStandardItem)
-
     def __init__(self, *__args):
         QtGui.QTableView.__init__(self, *__args)
 
@@ -33,6 +30,9 @@ class TableView(QtGui.QTableView):
         self.setWordWrap(True)
         self.setTextElideMode(QtCore.Qt.ElideMiddle)
 
+        self.horizontalHeader().setStretchLastSection(True)
+        self.setColumnWidth(0, 10)
+
         self._last_index = QtCore.QPersistentModelIndex()
         self.viewport().installEventFilter(self)
 
@@ -41,7 +41,7 @@ class TableView(QtGui.QTableView):
 
         self.horizontal_header = self.horizontalHeader()
         self.horizontal_header.setStretchLastSection(True)
-        self.resizeRowsToContents()
+        self.horizontal_header.hide()
 
     def _set_font(self):
         font = QtGui.QFont()
