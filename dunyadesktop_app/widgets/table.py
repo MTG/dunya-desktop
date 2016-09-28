@@ -43,6 +43,8 @@ class TableView(QtGui.QTableView):
         self.horizontal_header.setStretchLastSection(True)
         self.horizontal_header.hide()
 
+        self.horizontal_header.setResizeMode(QtGui.QHeaderView.Fixed)
+
     def _set_font(self):
         font = QtGui.QFont()
         font.setPointSize(FONT_SIZE)
