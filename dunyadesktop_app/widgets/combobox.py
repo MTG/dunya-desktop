@@ -113,8 +113,13 @@ class ComboBox(QtGui.QComboBox):
     def change_lineedit_status(self):
         if self.currentIndex() is not -1:
             self.lineEdit().setReadOnly(True)
+            self.change_background("#F3F4E3;")
         else:
             self.lineEdit().setReadOnly(False)
+            self.change_background()
+
+    def change_background(self, color=''):
+        self.lineEdit().setStyleSheet("background-color: {0};".format(color))
 
     def check_lineedit_status(self):
         if str(self.lineEdit().text().toUtf8()) == '':
