@@ -105,8 +105,6 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.progress_bar.setFormat("")
         self.frame_attributes.toolButton_query.setEnabled(True)
 
-        #if len(self.recordings) !=
-        print("yes, completed...")
 '''
     def show_on_mb(self):
         index = self.tableView_results.model().mapToSource(

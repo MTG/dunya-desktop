@@ -30,10 +30,16 @@ class QueryThread(QtCore.QThread):
         for work in self.works:
             self.fetching_completed.emit(makam.get_work(work['mbid']))
 
+    def check_attribute_existence(self, combobox_index):
+        if len(self.data['works']) > 0 or len(self.recordings) > 0:
+            self.combobox_status[combobox_index] = 1
+        else:
+            self.combobox_status[combobox_index] = 2
+
     def run(self):
-        check_list = [self.mid, self.fid, self.uid, self.cmbid,
-                           self.ambid]
-        combobox_status = [0, 0, 0, 0, 0, 0]
+        check_list = [self.mid, self.fid, self.uid, self.cmbid,self.ambid]
+        self.combobox_status = [0, 0, 0, 0, 0, 0]
+
         if self.check_selection():
             iteration = iter([self.mid, self.fid, self.uid,
                               self.cmbid, self.ambid])
@@ -43,50 +49,31 @@ class QueryThread(QtCore.QThread):
                 self.data = makam.get_makam(self.mid)
                 self.recordings = [rec for rec in self.data['taksims']]
                 self.recordings += [rec for rec in self.data['gazels']]
-                if len(self.data['works'])>0 or len(self.recordings)>0:
-                    combobox_status[0] = 1
-                else:
-                    combobox_status[0] = 2
+                self.check_attribute_existence(0)
 
             elif selection is 1:
                 self.data = makam.get_form(self.fid)
-                if len(self.data['works'])>0:
-                    combobox_status[1] = 1
-                else:
-                    combobox_status[1] = 2
+                self.check_attribute_existence(1)
 
             elif selection is 2:
                 self.data = makam.get_usul(self.uid)
-                if len(self.data['works'])>0:
-                    combobox_status[2] = 1
-                else:
-                    combobox_status[2] = 2
+                self.check_attribute_existence(2)
 
             elif selection is 3:
                 self.data = makam.get_composer(self.cmbid)
-                if len(self.data['works'])>0:
-                    combobox_status[3] = 1
-                else:
-                    combobox_status[3] = 2
+                self.check_attribute_existence(3)
 
             elif selection is 4:
                 self.data = makam.get_artist(self.ambid)
-                if len(self.data['works'])>0:
-                    combobox_status[4] = 1
-                else:
-                    combobox_status[4] = 2
+                self.check_attribute_existence(4)
 
             else:
                 self.data = makam.get_instrument(self.iid)
-                if len(self.data['works'])>0:
-                    combobox_status[5] = 1
-                else:
-                    combobox_status[5] = 2
+                self.check_attribute_existence(5)
 
             self.works = [work for work in self.data['works']]
 
         else:
-            print("more selection")
             self.works = makam.get_works_by_query(mid=self.mid, uid=self.uid,
                                                   fid=self.fid,
                                                   cmbid=self.cmbid,
@@ -96,12 +83,12 @@ class QueryThread(QtCore.QThread):
 
             if len(self.works) > 0:
                 for i in selected_indexes:
-                    combobox_status[i] = 1
+                    self.combobox_status[i] = 1
             else:
                 for i in selected_indexes:
-                    combobox_status[i] = 2
+                    self.combobox_status[i] = 2
 
-        self.combobox_results.emit(combobox_status)
+        self.combobox_results.emit(self.combobox_status)
         self.progress_number.emit(len(self.works))
         self.fetch_recordings()
         self.query_completed.emit()
