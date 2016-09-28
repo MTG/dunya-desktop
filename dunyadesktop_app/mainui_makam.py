@@ -1,8 +1,9 @@
 from __future__ import print_function
 from __future__ import absolute_import
 import sys
+import webbrowser
 
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 
 from cultures import apiconfig
 from cultures.makam import utilities
@@ -36,6 +37,7 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.lineEdit_filter.textChanged.connect(
             lambda:self.proxy_model.filtering_the_table(
                 self.lineEdit_filter.text()))
+        # self.tableView_results.doubleClicked.connect(self.show_on_mb)
 
     def _set_combobox_attributes(self):
         self.frame_attributes.comboBox_melodic.add_items(self.makams)
@@ -72,7 +74,7 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.progress_number = progress_number
 
     def append_recording(self, rec_mbid):
-        self.recordings.append(type(str(rec_mbid.toUtf8())))
+        self.recordings.append(str(rec_mbid.toUtf8()))
 
     def work_received(self, work):
         self.work_count += 1
@@ -88,6 +90,13 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.progress_bar.setFormat("")
         self.frame_attributes.toolButton_query.setEnabled(True)
         print("yes, completed...")
+'''
+    def show_on_mb(self):
+        index = self.tableView_results.model().mapToSource(
+            self.tableView_results.currentIndex())
+        webbrowser.open(url=u"https://musicbrainz.org/recording/{0}".
+                        format(self.recordings[index.row()]))
+'''
 
 app = QtGui.QApplication(sys.argv)
 mainwindow_makam = MainWindowMakam()
