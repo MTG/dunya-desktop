@@ -1,18 +1,24 @@
 from __future__ import absolute_import
+import os
 
 from PyQt4 import QtGui, QtCore
 
+DUNYA_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'icons',
+                        'dunya.svg')
 
 class RecordingModel(QtGui.QStandardItemModel):
     rec_fetched = QtCore.pyqtSignal(str)
 
     def __init__(self):
         QtGui.QStandardItemModel.__init__(self)
+        self.set_columns()
+
+    def set_columns(self):
         self.setHorizontalHeaderLabels(['', 'Title', 'Artists'])
 
     def clear_items(self):
         self.clear()
-        self.setHorizontalHeaderLabels(['', 'Title', 'Artists'])
+        self.set_columns()
 
     def add_recording(self, work):
         for rec in work['recordings']:
@@ -31,6 +37,9 @@ class RecordingModel(QtGui.QStandardItemModel):
 
             artists = artists[:-2]
             artist_item = QtGui.QStandardItem(artists)
+
+            dunya = QtGui.QStandardItem()
+            dunya.setIcon(QtGui.QIcon(DUNYA_ICON))
 
             mbid = rec['mbid']
             self.rec_fetched.emit(mbid)
