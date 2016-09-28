@@ -30,6 +30,8 @@ class MainWindowMakam(MainWindowMakamDesign):
 
         # signals
         self.frame_attributes.toolButton_query.clicked.connect(self.query)
+        self.thread_query.combobox_results.connect(
+            self.change_combobox_backgrounds)
         self.thread_query.progress_number.connect(self.set_progress_number)
         self.thread_query.query_completed.connect(self.query_finished)
         self.thread_query.fetching_completed.connect(self.work_received)
@@ -84,11 +86,26 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.tableView_results.resizeColumnToContents(1)
         self.tableView_results.setColumnWidth(0, 28)
 
+    def change_combobox_backgrounds(self, combobox_status):
+        color_palette = {0: '', 1: '#D9F4DD', 2: '#F4D1D0'}
+        self.frame_attributes.comboBox_melodic.change_background(
+            color=color_palette[combobox_status[0]])
+        self.frame_attributes.comboBox_form.change_background(
+            color=color_palette[combobox_status[1]])
+        self.frame_attributes.comboBox_rhythm.change_background(
+            color=color_palette[combobox_status[2]])
+        self.frame_attributes.comboBox_composer.change_background(
+            color=color_palette[combobox_status[3]])
+        self.frame_attributes.comboBox_performer.change_background(
+            color=color_palette[combobox_status[4]])
+
     def query_finished(self):
         self.progress_bar.setVisible(False)
         self.progress_bar.setValue(0)
         self.progress_bar.setFormat("")
         self.frame_attributes.toolButton_query.setEnabled(True)
+
+        #if len(self.recordings) !=
         print("yes, completed...")
 '''
     def show_on_mb(self):
