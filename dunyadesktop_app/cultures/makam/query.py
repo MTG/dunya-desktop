@@ -37,7 +37,7 @@ class QueryThread(QtCore.QThread):
             self.combobox_status[combobox_index] = 2
 
     def run(self):
-        check_list = [self.mid, self.fid, self.uid, self.cmbid,self.ambid]
+        check_list = [self.mid, self.fid, self.uid, self.cmbid, self.ambid]
         self.combobox_status = [0, 0, 0, 0, 0, 0]
 
         if self.check_selection():
