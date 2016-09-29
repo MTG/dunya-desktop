@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="compmusic">
+    <file>../icons/play.png</file>
+    <file>../icons/pause.png</file>
     <file>../icons/sound-waves.svg</file>
     <file>../icons/compmusic-logo-black.png</file>
     <file>../icons/compmusic-logo-white.png</file>
