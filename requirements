@@ -1,2 +1,3 @@
 git+https://github.com/MTG/pycompmusic.git#egg=pycompmusic
 pyqtgraph
+pyglet
