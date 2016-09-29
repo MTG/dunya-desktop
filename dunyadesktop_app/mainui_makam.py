@@ -11,7 +11,7 @@ from cultures.makam.query import QueryThread
 from mainui_design_makam import MainWindowMakamDesign
 
 apiconfig.set_token()
-apiconfig.set_hostname()
+#apiconfig.set_hostname()
 
 
 class MainWindowMakam(MainWindowMakamDesign):
@@ -50,6 +50,7 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.frame_attributes.comboBox_instrument.add_items(self.instruments)
 
     def query(self):
+        self.recordings = []
         self.work_count = 0
         self.recording_model.clear_items()
         self.frame_attributes.toolButton_query.setEnabled(False)
