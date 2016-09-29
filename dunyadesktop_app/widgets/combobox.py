@@ -3,7 +3,7 @@ from __future__ import print_function
 import os
 import platform
 
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtGui
 
 from .filteringdialog import FilteringDialog
 
@@ -25,6 +25,7 @@ CSS_BUTTON = '''QToolButton {border: 0px;
                              padding: 0px;}
                 QToolButton:hover{background-color: #c7dde0;
                                   border-radius: 5px;}'''
+
 
 class ComboBox(QtGui.QComboBox):
     def __init__(self, parent):
@@ -60,10 +61,10 @@ class ComboBox(QtGui.QComboBox):
     def resizeEvent(self, QResizeEvent):
         button_size = self.cancel_button.sizeHint()
         frame_width = self.lineEdit().style().pixelMetric(
-                                            QtGui.QStyle.PM_DefaultFrameWidth)
+            QtGui.QStyle.PM_DefaultFrameWidth)
         self.cancel_button.move(
-                self.rect().right()-BUTTON_POS*frame_width-button_size.width(),
-                        (self.rect().bottom()-button_size.height() + 1) / 2)
+            self.rect().right() - BUTTON_POS * frame_width-button_size.width(),
+            (self.rect().bottom() - button_size.height() + 1) / 2)
         super(ComboBox, self).resizeEvent(QResizeEvent)
 
     def wheelEvent(self, QWheelEvent):
