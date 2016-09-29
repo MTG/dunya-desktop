@@ -21,6 +21,11 @@ else:
 ICON_PATH_CANCEL = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                                 'icons', 'cancel-music.svg')
 
+CSS_BUTTON = '''QToolButton {border: 0px;
+                             padding: 0px;}
+                QToolButton:hover{background-color: #c7dde0;
+                                  border-radius: 5px;}'''
+
 class ComboBox(QtGui.QComboBox):
     def __init__(self, parent):
         QtGui.QComboBox.__init__(self, parent)
@@ -33,8 +38,7 @@ class ComboBox(QtGui.QComboBox):
         self._set_css()
 
         self.cancel_button = QtGui.QToolButton(self)
-        self.cancel_button.setStyleSheet('border: 0px;'
-                                         'padding: 0px;')
+        self.cancel_button.setStyleSheet(CSS_BUTTON)
         self.cancel_button.setIcon(QtGui.QIcon(ICON_PATH_CANCEL))
         self.cancel_button.setVisible(False)
 
