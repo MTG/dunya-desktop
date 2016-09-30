@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from PyQt4 import QtCore, QtGui
 
 from utilities import utilities
-from widgets.table import TableView
+from widgets.tableresults import TableViewResults
 from widgets.tabwidget import TabWidget
 from widgets.audioattframe import AudioAttFrame
 from widgets.progressbar import ProgressBar
@@ -50,7 +50,7 @@ class MainWindowDesign(QtGui.QMainWindow):
         self.lineEdit_filter = QtGui.QLineEdit(self.tabWidget.tab_audio)
         self._set_line_edit_filter()
 
-        self.tableView_results = TableView(self.tabWidget.tab_audio)
+        self.tableView_results = TableViewResults(self.tabWidget.tab_audio)
         self.verticalLayout.addWidget(self.tableView_results)
 
         self.recording_model= RecordingModel()

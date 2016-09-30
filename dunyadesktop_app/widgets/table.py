@@ -39,13 +39,6 @@ class TableView(QtGui.QTableView):
         self._set_css()
         self._set_font()
 
-        self.setSortingEnabled(True)
-        self.horizontal_header = self.horizontalHeader()
-        self.horizontal_header.setStretchLastSection(True)
-        self.horizontal_header.hide()
-
-       #self.horizontal_header.sectionClicked.connect(self.header_clicked_once)
-
     def _set_font(self):
         font = QtGui.QFont()
         font.setPointSize(FONT_SIZE)
@@ -55,6 +48,3 @@ class TableView(QtGui.QTableView):
         with open(CSS_PATH) as f:
             css = f.read()
         self.setStyleSheet(css)
-
-    def header_clicked_once(self, index):
-        print("header clicked once", index)

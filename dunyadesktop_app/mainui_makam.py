@@ -30,16 +30,19 @@ class MainWindowMakam(MainWindowMakamDesign):
 
         # signals
         self.frame_attributes.toolButton_query.clicked.connect(self.query)
+
         self.thread_query.combobox_results.connect(
             self.change_combobox_backgrounds)
         self.thread_query.progress_number.connect(self.set_progress_number)
         self.thread_query.query_completed.connect(self.query_finished)
         self.thread_query.fetching_completed.connect(self.work_received)
+
         self.recording_model.rec_fetched.connect(self.append_recording)
+
         self.lineEdit_filter.textChanged.connect(
             lambda:self.proxy_model.filtering_the_table(
                 self.lineEdit_filter.text()))
-        # self.tableView_results.doubleClicked.connect(self.show_on_mb)
+        self.tableView_results.doubleClicked.connect(self.show_on_mb)
 
     def _set_combobox_attributes(self):
         self.frame_attributes.comboBox_melodic.add_items(self.makams)
@@ -106,13 +109,13 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.progress_bar.setFormat("")
         self.frame_attributes.toolButton_query.setEnabled(True)
 
-'''
     def show_on_mb(self):
         index = self.tableView_results.model().mapToSource(
             self.tableView_results.currentIndex())
-        webbrowser.open(url=u"https://musicbrainz.org/recording/{0}".
-                        format(self.recordings[index.row()]))
-'''
+        print(index.row())
+
+        #webbrowser.open(url=u"https://musicbrainz.org/recording/{0}".
+        #                format(self.recordings[index.row()]))
 
 app = QtGui.QApplication(sys.argv)
 mainwindow_makam = MainWindowMakam()
