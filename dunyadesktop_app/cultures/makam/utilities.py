@@ -32,6 +32,7 @@ def get_attributes():
 
 class FeatureDownloaderThread(QtCore.QThread):
     TEMP = tempfile.gettempdir()
+    feautures_downloaded = QtCore.pyqtSignal(dict, dict)
 
     def __init__(self):
         QtCore.QThread.__init__(self)
@@ -43,8 +44,10 @@ class FeatureDownloaderThread(QtCore.QThread):
         if not os.path.exists(rec_folder):
             os.makedirs(rec_folder)
 
-        compmusic.dunya.makam.download_mp3(self.recid, rec_folder)
+        compmusic.dunya.makam.download_mp3(self.recid, rec_folder,
+                                           slugify=True)
         pitch_data = json.loads(compmusic.dunya.docserver.file_for_document(
             self.recid, 'audioanalysis',subtype='pitch'))
         pd = json.loads(compmusic.dunya.docserver.file_for_document(self.recid,
                                'audioanalysis',subtype='pitch_distribution'))
+        self.feautures_downloaded.emit(pitch_data, pd)

@@ -45,7 +45,10 @@ class MainWindowMakam(MainWindowMakamDesign):
                 self.lineEdit_filter.text()))
         self.tableView_results.doubleClicked.connect(self.show_on_mb)
         self.tableView_results.open_dunya.triggered.connect(
-            lambda : self.open_player(self.tableView_results.index))
+            lambda:self.download_related_features(self.tableView_results.index))
+
+        self.thread_feature_downloader.feautures_downloaded.connect(
+            self.open_player)
 
     def _set_combobox_attributes(self):
         self.frame_attributes.comboBox_melodic.add_items(self.makams)
@@ -118,11 +121,14 @@ class MainWindowMakam(MainWindowMakamDesign):
 
         #webbrowser.open(url=u"https://musicbrainz.org/recording/{0}".
         #                format(self.recordings[index.row()]))
-    def open_player(self, index):
+    def download_related_features(self, index):
         source_index = self.tableView_results.model().mapToSource(index)
         recid = self.recordings[source_index.row()]
         self.thread_feature_downloader.recid = recid
         self.thread_feature_downloader.run()
+
+    def open_player(self, pitch, pd):
+        pass
 
 
 app = QtGui.QApplication(sys.argv)
