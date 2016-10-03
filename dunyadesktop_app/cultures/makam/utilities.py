@@ -1,4 +1,10 @@
+import tempfile
+import os
+import json
+
 import compmusic.dunya.makam
+from PyQt4 import QtCore
+
 from dunyadesktop_app.utilities.utilities import *
 
 
@@ -22,3 +28,23 @@ def get_attributes():
     instruments = sort_dictionary(instruments, 'name')
 
     return makams, forms, usuls, composers, performers, instruments
+
+
+class FeatureDownloaderThread(QtCore.QThread):
+    TEMP = tempfile.gettempdir()
+
+    def __init__(self):
+        QtCore.QThread.__init__(self)
+        self.recid=''
+
+    def run(self):
+        rec_folder = os.path.join(self.TEMP, self.recid)
+
+        if not os.path.exists(rec_folder):
+            os.makedirs(rec_folder)
+
+        compmusic.dunya.makam.download_mp3(self.recid, rec_folder)
+        pitch_data = json.loads(compmusic.dunya.docserver.file_for_document(
+            self.recid, 'audioanalysis',subtype='pitch'))
+        pd = json.loads(compmusic.dunya.docserver.file_for_document(self.recid,
+                               'audioanalysis',subtype='pitch_distribution'))
