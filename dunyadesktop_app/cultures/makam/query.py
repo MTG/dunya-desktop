@@ -21,6 +21,9 @@ class QueryThread(QtCore.QThread):
         self.ambid = None
         self.iid = None
 
+        self.recordings = []
+        self.works = []
+
     def check_selection(self):
         iteration = iter([self.mid, self.fid, self.uid,
                           self.cmbid, self.ambid])
