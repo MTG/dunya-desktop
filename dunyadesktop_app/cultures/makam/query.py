@@ -21,9 +21,6 @@ class QueryThread(QtCore.QThread):
         self.ambid = None
         self.iid = None
 
-        self.recordings = []
-        self.works = []
-
     def check_selection(self):
         iteration = iter([self.mid, self.fid, self.uid,
                           self.cmbid, self.ambid])
@@ -40,6 +37,8 @@ class QueryThread(QtCore.QThread):
             self.combobox_status[combobox_index] = 2
 
     def run(self):
+        self.recordings = []
+        self.works = []
         check_list = [self.mid, self.fid, self.uid, self.cmbid, self.ambid]
         self.combobox_status = [0, 0, 0, 0, 0, 0]
 
