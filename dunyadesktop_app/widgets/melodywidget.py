@@ -12,6 +12,5 @@ class MelodyWidget(GraphicsLayoutWidget):
                                        QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.graphicsView_pitch.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(sizePolicy)

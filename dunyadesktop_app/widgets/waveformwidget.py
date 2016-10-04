@@ -15,8 +15,7 @@ class WaveformWidget(GraphicsLayoutWidget):
                                        QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(100)
-        sizePolicy.setHeightForWidth(
-            self.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
 
         self.setMinimumSize(QtCore.QSize(0, 100))
         self.setMaximumSize(QtCore.QSize(16777215, 100))
