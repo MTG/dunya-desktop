@@ -4,6 +4,7 @@ from PyQt4 import QtGui, QtCore
 from pyqtgraph import GraphicsLayoutWidget
 
 from dunyadesktop_app.widgets.waveformwidget import WaveformWidget
+from dunyadesktop_app.widgets.melody_widget import MelodyWidget
 import dunyadesktop_app.ui_files.resources_rc
 
 
@@ -19,24 +20,11 @@ class PlayerDialogDesign(QtGui.QDialog):
         self.waveform_widget=WaveformWidget()
         self.verticalLayout.addWidget(self.waveform_widget)
 
-        self._set_pitch()
+        self.pitch_widget = MelodyWidget()
+        self.verticalLayout.addWidget(self.pitch_widget)
+
         self._set_frame()
-
         QtCore.QMetaObject.connectSlotsByName(self)
-
-        audio_path = '/home/hsercanatli/Desktop/meh.mp3'
-
-
-    def _set_pitch(self):
-        self.graphicsView_pitch = GraphicsLayoutWidget(self)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred,
-                                       QtGui.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.graphicsView_pitch.sizePolicy().hasHeightForWidth())
-        self.graphicsView_pitch.setSizePolicy(sizePolicy)
-        self.verticalLayout.addWidget(self.graphicsView_pitch)
 
     def _set_frame(self):
         self.frame_player = QtGui.QFrame(self)
