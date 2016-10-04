@@ -1,7 +1,4 @@
-import sys
-
 from PyQt4 import QtGui, QtCore
-from pyqtgraph import GraphicsLayoutWidget
 
 from dunyadesktop_app.widgets.waveformwidget import WaveformWidget
 from dunyadesktop_app.widgets.melodywidget import MelodyWidget
@@ -9,7 +6,7 @@ from dunyadesktop_app.widgets.playerframe import PlayerFrame
 import dunyadesktop_app.ui_files.resources_rc
 
 
-class PlayerDialogDesign(QtGui.QDialog):
+class PlayerDialog(QtGui.QDialog):
     def __init__(self):
         QtGui.QDialog.__init__(self)
 
@@ -27,9 +24,3 @@ class PlayerDialogDesign(QtGui.QDialog):
         self.frame_player = PlayerFrame(self)
         self.verticalLayout.addWidget(self.frame_player)
         QtCore.QMetaObject.connectSlotsByName(self)
-
-
-app = QtGui.QApplication(sys.argv)
-dialog = PlayerDialogDesign()
-dialog.show()
-app.exec_()
