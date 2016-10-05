@@ -2,9 +2,14 @@ from PyQt4 import QtGui, QtCore
 from pyqtgraph import GraphicsLayoutWidget
 import pyqtgraph as pg
 
+import time
+
 
 class MelodyWidget(GraphicsLayoutWidget):
+
     def __init__(self):
+        self.start = time.time()
+
         GraphicsLayoutWidget.__init__(self, parent=None)
         self.layout = pg.GraphicsLayout()
         self._set_size_policy()
@@ -23,7 +28,11 @@ class MelodyWidget(GraphicsLayoutWidget):
         self.pitch_data = pitch_data
         self.pd = pd
 
-        self.zoom_selection = self.layout.addPlot(title="Zoom selection")
+        self.y_axis = pg.AxisItem('left')
+        self.y_axis.enableAutoSIPrefix(enable=False)
+
+        self.zoom_selection = self.layout.addPlot(title="Zoom selection",
+                                              axisItems={'left': self.y_axis})
         self.zoom_selection.setMouseEnabled(x=False, y=False)
         self.zoom_selection.setMenuEnabled(False)
 
@@ -34,10 +43,10 @@ class MelodyWidget(GraphicsLayoutWidget):
             time_stamps.append(sample[0])
             pitch.append(sample[1])
             salience.append(sample[2])
-
         self.zoom_selection.plot(time_stamps, pitch, pen=None, symbol='o',
                                  symbolPen=None, symbolSize=2,
                                  symbolBrush=(30, 75, 130, 190))
+
         self.zoom_selection.setAutoVisible(y=True)
         self.zoom_selection.setLabel(axis="bottom", text="Time", units="sec")
         self.zoom_selection.setLabel(axis="left", text="Frequency", units="Hz",
@@ -50,13 +59,18 @@ class MelodyWidget(GraphicsLayoutWidget):
                                       padding=0)
         self.zoom_selection.setYRange(0, max(pitch), padding=0)
         self.add_elements_to_plot()
+        return time_stamps, pitch, salience
 
     def add_elements_to_plot(self):
         self.vline = pg.InfiniteLine(pos=0, movable=True,
                       pen=pg.mkPen((255, 40, 35, 150), width=2, cosmetic=True))
         self.zoom_selection.addItem(self.vline)
 
+        print(time.time() - self.start)
+
     def set_zoom_selection_area(self, pos_wf_x_min, pos_wf_x_max, samplerate):
         self.zoom_selection.setXRange(pos_wf_x_min / samplerate,
                                       pos_wf_x_max / samplerate, padding=0)
 
+    def set_zoom_selection_area_hor(self, min_freq, max_freq):
+        self.zoom_selection.setYRange(min_freq, max_freq, padding=0)

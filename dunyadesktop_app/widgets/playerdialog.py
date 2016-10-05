@@ -26,12 +26,15 @@ class PlayerDialog(QtGui.QDialog):
 
         self.raw_audio = MonoLoader(filename=self.audio_path)()
         self.waveform_widget.plot_waveform(self.raw_audio)
-        self.melody_widget.plot_melody(self.pitch_data, self.pd,
+        self.time_stamps, self.pitch, self.salince = \
+            self.melody_widget.plot_melody(self.pitch_data, self.pd,
                                        len(self.raw_audio), self.sample_rate)
 
         # signals
         self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
             self.wf_region_changed)
+        self.waveform_widget.region_wf_hor.sigRegionChangeFinished.connect(
+            self.wf_hor_region_changed)
 
     def _set_design(self):
         self.setWindowTitle('Player')
@@ -54,3 +57,12 @@ class PlayerDialog(QtGui.QDialog):
         pos_wf_x_min, pos_wf_x_max = self.waveform_widget.region_wf.getRegion()
         self.melody_widget.set_zoom_selection_area(pos_wf_x_min, pos_wf_x_max,
                                                    self.sample_rate)
+
+    def wf_hor_region_changed(self):
+        pos_wf_ymin, pos_wf_ymax = self.waveform_widget.region_wf_hor.getRegion()
+        step = (max(self.raw_audio) + abs(min(self.raw_audio))) / max(self.pitch)
+
+        min_freq = abs(pos_wf_ymin-min(self.raw_audio)) / step
+        max_freq = abs(pos_wf_ymax-min(self.raw_audio)) / step
+        print(min_freq, max_freq, max(self.pitch))
+        self.melody_widget.set_zoom_selection_area_hor(min_freq, max_freq)

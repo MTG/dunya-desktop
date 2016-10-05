@@ -46,12 +46,18 @@ class WaveformWidget(GraphicsLayoutWidget):
               self.pos_wf_x_max], brush=pg.mkBrush((50, 255, 255, 45)),
                                              bounds=[0, len(raw_audio)])
         self.region_wf.setZValue(10)
-        #self.region_wf.setBounds([len(raw_audio)/60., len(raw_audio) / 30.])
+
+        self.region_wf_hor = pg.LinearRegionItem(
+            brush=pg.mkBrush((50, 255, 255, 10)),
+            orientation=pg.LinearRegionItem.Horizontal, movable=True,
+            values=[min(raw_audio), max(raw_audio)],
+            bounds=[min(raw_audio), max(raw_audio)])
 
         # vline for wf
         self.vline_wf = pg.InfiniteLine(pos=0, movable=True,
                                     pen=pg.mkPen((195, 0, 50, 190), width=2))
         self.waveform.addItem(self.vline_wf)
+        self.waveform.addItem(self.region_wf_hor)
         self.waveform.addItem(self.region_wf)
         self.layout.addItem(self.waveform)
         self.addItem(self.layout)
