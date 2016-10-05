@@ -9,6 +9,7 @@ from cultures import apiconfig
 from cultures.makam import utilities
 from cultures.makam.query import QueryThread
 from mainui_design_makam import MainWindowMakamDesign
+from dunyadesktop_app.widgets.playerdialog import PlayerDialog
 
 apiconfig.set_token()
 #apiconfig.set_hostname()
@@ -123,12 +124,13 @@ class MainWindowMakam(MainWindowMakamDesign):
         #                format(self.recordings[index.row()]))
     def download_related_features(self, index):
         source_index = self.tableView_results.model().mapToSource(index)
-        recid = self.recordings[source_index.row()]
-        self.thread_feature_downloader.recid = recid
+        self.recid = self.recordings[source_index.row()]
+        self.thread_feature_downloader.recid = self.recid
         self.thread_feature_downloader.start()
 
-    def open_player(self, pitch, pd):
-        pass
+    def open_player(self, pitch_data, pd):
+        self.player = PlayerDialog(self.recid, pitch_data, pd)
+        self.player.exec_()
 
 
 app = QtGui.QApplication(sys.argv)
