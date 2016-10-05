@@ -21,3 +21,17 @@ class WaveformWidget(GraphicsLayoutWidget):
         self.setMaximumSize(QtCore.QSize(16777215, 100))
         self.setFocusPolicy(QtCore.Qt.NoFocus)
         self.setAcceptDrops(False)
+        self.layout.setContentsMargins(0, 0, 0, 0)
+        self.layout.setSpacing(0)
+
+    def plot_waveform(self, raw_audio):
+        self.waveform = self.layout.addPlot(title='Waveform')
+        self.waveform.setDownsampling(auto=True)
+
+        self.waveform.hideAxis(axis='bottom')
+        self.waveform.hideAxis(axis='left')
+
+        self.waveform.setMaximumHeight(100)
+        self.waveform.setMouseEnabled(x=False, y=False)
+
+        self.waveform.plot(y=raw_audio, pen=(20, 170, 100, 20))
