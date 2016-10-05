@@ -22,8 +22,16 @@ class PlayerDialog(QtGui.QDialog):
         self.pitch_data = pitch_data
         self.pd = pd
 
+        self.sample_rate = self.pitch_data['sampleRate']
+
         self.raw_audio = MonoLoader(filename=self.audio_path)()
         self.waveform_widget.plot_waveform(self.raw_audio)
+        self.melody_widget.plot_melody(self.pitch_data, self.pd,
+                                       len(self.raw_audio), self.sample_rate)
+
+        # signals
+        self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
+            self.wf_region_changed)
 
     def _set_design(self):
         self.setWindowTitle('Player')
@@ -35,9 +43,14 @@ class PlayerDialog(QtGui.QDialog):
         self.waveform_widget = WaveformWidget()
         self.verticalLayout.addWidget(self.waveform_widget)
 
-        self.pitch_widget = MelodyWidget()
-        self.verticalLayout.addWidget(self.pitch_widget)
+        self.melody_widget = MelodyWidget()
+        self.verticalLayout.addWidget(self.melody_widget)
 
         self.frame_player = PlayerFrame(self)
         self.verticalLayout.addWidget(self.frame_player)
         QtCore.QMetaObject.connectSlotsByName(self)
+
+    def wf_region_changed(self):
+        pos_wf_x_min, pos_wf_x_max = self.waveform_widget.region_wf.getRegion()
+        self.melody_widget.set_zoom_selection_area(pos_wf_x_min, pos_wf_x_max,
+                                                   self.sample_rate)

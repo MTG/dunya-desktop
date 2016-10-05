@@ -47,7 +47,7 @@ class FeatureDownloaderThread(QtCore.QThread):
         compmusic.dunya.makam.download_mp3(self.recid, rec_folder,
                                            slugify=True)
         pitch_data = json.loads(compmusic.dunya.docserver.file_for_document(
-            self.recid, 'audioanalysis',subtype='pitch'))
+            self.recid, 'audioanalysis', subtype='pitch'))
         pd = json.loads(compmusic.dunya.docserver.file_for_document(self.recid,
-                               'audioanalysis',subtype='pitch_distribution'))
+                               'audioanalysis', subtype='pitch_distribution'))
         self.feautures_downloaded.emit(pitch_data, pd)
