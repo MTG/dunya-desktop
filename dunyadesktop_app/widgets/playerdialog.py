@@ -64,5 +64,4 @@ class PlayerDialog(QtGui.QDialog):
 
         min_freq = abs(pos_wf_ymin-min(self.raw_audio)) / step
         max_freq = abs(pos_wf_ymax-min(self.raw_audio)) / step
-        print(min_freq, max_freq, max(self.pitch))
         self.melody_widget.set_zoom_selection_area_hor(min_freq, max_freq)

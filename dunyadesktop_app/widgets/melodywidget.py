@@ -1,4 +1,4 @@
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtGui
 from pyqtgraph import GraphicsLayoutWidget
 import pyqtgraph as pg
 
@@ -52,7 +52,7 @@ class MelodyWidget(GraphicsLayoutWidget):
         self.zoom_selection.setLabel(axis="left", text="Frequency", units="Hz",
                                      unitPrefix=False)
 
-        self.zoom_selection.setDownsampling(auto=True)
+        self.zoom_selection.setDownsampling(ds=True, auto=True, mode='peak')
 
         self.addItem(self.zoom_selection)
         self.zoom_selection.setXRange(0, len_raw_audio / (samplerate * 30.),
@@ -65,8 +65,6 @@ class MelodyWidget(GraphicsLayoutWidget):
         self.vline = pg.InfiniteLine(pos=0, movable=True,
                       pen=pg.mkPen((255, 40, 35, 150), width=2, cosmetic=True))
         self.zoom_selection.addItem(self.vline)
-
-        print(time.time() - self.start)
 
     def set_zoom_selection_area(self, pos_wf_x_min, pos_wf_x_max, samplerate):
         self.zoom_selection.setXRange(pos_wf_x_min / samplerate,

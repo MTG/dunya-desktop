@@ -26,7 +26,7 @@ class WaveformWidget(GraphicsLayoutWidget):
 
     def plot_waveform(self, raw_audio):
         self.waveform = self.layout.addPlot(title='Waveform')
-        self.waveform.setDownsampling(auto=True)
+        self.waveform.setDownsampling(ds=True, auto=True, mode='peak')
 
         self.waveform.hideAxis(axis='bottom')
         self.waveform.hideAxis(axis='left')
