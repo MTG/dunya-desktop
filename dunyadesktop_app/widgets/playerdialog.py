@@ -31,6 +31,7 @@ class PlayerDialog(QtGui.QDialog):
         self.time_stamps, self.pitch, self.salince = \
             self.melody_widget.plot_melody(self.pitch_data, self.pd,
                                        len(self.raw_audio), self.sample_rate)
+        self.melody_widget.plot_histogram(self.pd, self.pitch)
         self.playback = AudioPlayback()
         self.playback.set_source(self.audio_path)
 
@@ -40,7 +41,7 @@ class PlayerDialog(QtGui.QDialog):
         self.playback_pos_pyglet = 0
         self.frame_player.toolbutton_pause.setDisabled(True)
 
-        # signals        self.timer.timeout.connect(self.update_vlines)
+        # signals
         self.timer.timeout.connect(self._keep_position)
         self.timer.timeout.connect(self.update_vlines)
         self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
@@ -90,6 +91,7 @@ class PlayerDialog(QtGui.QDialog):
     def _keep_position(self):
         if self.playback_pos_pyglet != self.playback.get_pos_seconds():
             self.playback_pos_pyglet = self.playback.get_pos_seconds()
+            self.playback_pos = self.playback.get_pos_seconds()
 
     def update_vlines(self):
         if self.playback_pos_pyglet == self.playback.get_pos_seconds():
