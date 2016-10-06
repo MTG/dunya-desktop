@@ -1,6 +1,7 @@
 import tempfile
 import os
 import glob
+import time
 
 from PyQt4 import QtGui, QtCore
 from essentia.standard import MonoLoader
@@ -8,6 +9,7 @@ from essentia.standard import MonoLoader
 from dunyadesktop_app.widgets.waveformwidget import WaveformWidget
 from dunyadesktop_app.widgets.melodywidget import MelodyWidget
 from dunyadesktop_app.widgets.playerframe import PlayerFrame
+from dunyadesktop_app.utilities.playback import AudioPlayback
 import dunyadesktop_app.ui_files.resources_rc
 
 
@@ -29,12 +31,23 @@ class PlayerDialog(QtGui.QDialog):
         self.time_stamps, self.pitch, self.salince = \
             self.melody_widget.plot_melody(self.pitch_data, self.pd,
                                        len(self.raw_audio), self.sample_rate)
+        self.playback = AudioPlayback()
+        self.playback.set_source(self.audio_path)
 
-        # signals
+        self.timer = QtCore.QTimer()
+        self.timer.setInterval(40)
+        self.playback_pos = 0
+        self.playback_pos_pyglet = 0
+        self.frame_player.toolbutton_pause.setDisabled(True)
+
+        # signals        self.timer.timeout.connect(self.update_vlines)
+        self.timer.timeout.connect(self._keep_position)
+        self.timer.timeout.connect(self.update_vlines)
         self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
             self.wf_region_changed)
         self.waveform_widget.region_wf_hor.sigRegionChangeFinished.connect(
             self.wf_hor_region_changed)
+        self.frame_player.toolbutton_play.clicked.connect(self.playback_play)
 
     def _set_design(self):
         self.setWindowTitle('Player')
@@ -65,3 +78,24 @@ class PlayerDialog(QtGui.QDialog):
         min_freq = abs(pos_wf_ymin-min(self.raw_audio)) / step
         max_freq = abs(pos_wf_ymax-min(self.raw_audio)) / step
         self.melody_widget.set_zoom_selection_area_hor(min_freq, max_freq)
+
+    def playback_play(self):
+        self.frame_player.toolbutton_play.setDisabled(True)
+        self.frame_player.toolbutton_pause.setEnabled(True)
+        self.start = time.time()
+
+        self.timer.start()
+        self.playback.play()
+
+    def _keep_position(self):
+        if self.playback_pos_pyglet != self.playback.get_pos_seconds():
+            self.playback_pos_pyglet = self.playback.get_pos_seconds()
+
+    def update_vlines(self):
+        if self.playback_pos_pyglet == self.playback.get_pos_seconds():
+            self.playback_pos += 0.04
+        else:
+            self.playback_pos = self.playback_pos_pyglet
+
+        self.melody_widget.vline.setPos(self.playback_pos)
+        self.waveform_widget.vline_wf.setPos(self.playback_pos*44100.)

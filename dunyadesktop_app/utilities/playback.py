@@ -3,7 +3,6 @@ import pyglet.media
 
 class AudioPlayback:
     def __init__(self):
-        # fname and arraging the source
         self.player = pyglet.media.Player()
 
     def set_source(self, audio_path):
@@ -20,7 +19,6 @@ class AudioPlayback:
         return self.player.playing
 
     def play(self):
-        print("pressed play")
         self.player.play()
 
     def pause(self):
