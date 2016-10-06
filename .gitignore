@@ -13,3 +13,4 @@ pitchfilter.egg-info/
 *.mp3
 *.wav
 .ipynb_checkpoints
+.DS_Store
