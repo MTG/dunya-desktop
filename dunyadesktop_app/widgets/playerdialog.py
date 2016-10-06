@@ -25,7 +25,6 @@ class PlayerDialog(QtGui.QDialog):
         self.pd = pd
         self.hopsize = self.pitch_data['hopSize']
         self.sample_rate = self.pitch_data['sampleRate']
-
         self.raw_audio = MonoLoader(filename=self.audio_path)()
         self.waveform_widget.plot_waveform(self.raw_audio)
         self.time_stamps, self.pitch, self.salince = \
@@ -34,6 +33,7 @@ class PlayerDialog(QtGui.QDialog):
         self.melody_widget.plot_histogram(self.pd, self.pitch)
         self.playback = AudioPlayback()
         self.playback.set_source(self.audio_path)
+        self._set_slider()
 
         self.timer = QtCore.QTimer()
         self.timer.setInterval(40)
@@ -92,6 +92,12 @@ class PlayerDialog(QtGui.QDialog):
             self.playback_pos_pyglet = self.playback.get_pos_seconds()
             self.playback_pos = self.playback.get_pos_seconds()
 
+    def _set_slider(self):
+        self.frame_player.slider.setMinimum(0)
+        self.frame_player.slider.setMaximum(len(self.raw_audio))
+        self.frame_player.slider.setTickInterval(10)
+        self.frame_player.slider.setSingleStep(1)
+
     def update_vlines(self):
         if self.playback_pos_pyglet == self.playback.get_pos_seconds():
             self.playback_pos += 0.04
@@ -102,3 +108,4 @@ class PlayerDialog(QtGui.QDialog):
         self.waveform_widget.vline_wf.setPos(self.playback_pos*self.sample_rate)
         self.melody_widget.hline_histogram.setPos(self.pitch
                   [int(self.playback_pos * self.sample_rate / self.hopsize)])
+        self.frame_player.slider.setValue(self.playback_pos*self.sample_rate)
