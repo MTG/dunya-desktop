@@ -61,6 +61,34 @@ class MelodyWidget(GraphicsLayoutWidget):
         self.add_elements_to_plot()
         return time_stamps, pitch, salience
 
+    def plot_histogram(self, pd, pitch):
+        self.histogram = self.layout.addPlot(row=0, col=1, title="Histogram")
+        self.histogram.setMouseEnabled(x=False, y=False)
+        self.histogram.setMenuEnabled(False)
+        self.histogram.setDownsampling(auto=True)
+        self.histogram.setMaximumWidth(150)
+        self.histogram.setContentsMargins(0, 0, 0, 40)
+        self.histogram.setAutoVisible(y=True)
+
+        self.histogram.hideAxis(axis="left")
+        self.histogram.hideAxis(axis="bottom")
+
+        self.histogram.plot(x=pd["vals"],
+                            y=pd["bins"],
+                            pen=pg.mkPen((240, 205, 0, 100), width=2),
+                            symbol='t', symbolPen=None, fillLevel=0,
+                            symbolSize=2, symbolBrush=(255, 40, 35, 10))
+
+        self.histogram.setYRange(0, max(pitch), padding=0)
+        self.histogram.setXRange(0, max(pd["vals"]), padding=0)
+
+        self.histogram.setLabel(axis="right", text="Frequency (Hz)")
+        self.hline_histogram = pg.InfiniteLine(pos=0, angle=0, movable=False,
+                                          pen=pg.mkPen((255, 40, 35, 150),
+                                                       cosmetic=True, width=2))
+        self.histogram.addItem(self.hline_histogram)
+        self.addItem(self.histogram)
+
     def add_elements_to_plot(self):
         self.vline = pg.InfiniteLine(pos=0, movable=True,
                       pen=pg.mkPen((255, 40, 35, 150), width=2, cosmetic=True))
@@ -72,3 +100,4 @@ class MelodyWidget(GraphicsLayoutWidget):
 
     def set_zoom_selection_area_hor(self, min_freq, max_freq):
         self.zoom_selection.setYRange(min_freq, max_freq, padding=0)
+        self.histogram.setYRange(min_freq, max_freq, padding=0)

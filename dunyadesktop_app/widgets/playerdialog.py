@@ -23,7 +23,7 @@ class PlayerDialog(QtGui.QDialog):
         self.audio_path = glob.glob(self.rec_folder + '/*.mp3')[0]
         self.pitch_data = pitch_data
         self.pd = pd
-
+        self.hopsize = self.pitch_data['hopSize']
         self.sample_rate = self.pitch_data['sampleRate']
 
         self.raw_audio = MonoLoader(filename=self.audio_path)()
@@ -84,7 +84,6 @@ class PlayerDialog(QtGui.QDialog):
         self.frame_player.toolbutton_play.setDisabled(True)
         self.frame_player.toolbutton_pause.setEnabled(True)
         self.start = time.time()
-
         self.timer.start()
         self.playback.play()
 
@@ -100,4 +99,6 @@ class PlayerDialog(QtGui.QDialog):
             self.playback_pos = self.playback_pos_pyglet
 
         self.melody_widget.vline.setPos(self.playback_pos)
-        self.waveform_widget.vline_wf.setPos(self.playback_pos*44100.)
+        self.waveform_widget.vline_wf.setPos(self.playback_pos*self.sample_rate)
+        self.melody_widget.hline_histogram.setPos(self.pitch
+                  [int(self.playback_pos * self.sample_rate / self.hopsize)])
