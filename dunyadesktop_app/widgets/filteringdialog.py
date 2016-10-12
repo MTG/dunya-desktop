@@ -19,7 +19,7 @@ class FilteringDialog(QtGui.QDialog):
         self.setFixedSize(200, 300)
 
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.Popup)
-        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        #self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
         self.setWindowTitle('Attribute')
         v_layout = QtGui.QVBoxLayout(self)
