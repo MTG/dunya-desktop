@@ -36,7 +36,7 @@ class PlayerDialog(QtGui.QDialog):
         self._set_slider()
 
         self.timer = QtCore.QTimer()
-        self.timer.setInterval(40)
+        self.timer.setInterval(50)
         self.playback_pos = 0
         self.playback_pos_pyglet = 0
         self.frame_player.toolbutton_pause.setDisabled(True)
