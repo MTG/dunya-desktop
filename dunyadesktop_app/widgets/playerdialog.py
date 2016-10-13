@@ -10,6 +10,7 @@ from dunyadesktop_app.widgets.waveformwidget import WaveformWidget
 from dunyadesktop_app.widgets.melodywidget import MelodyWidget
 from dunyadesktop_app.widgets.playerframe import PlayerFrame
 from dunyadesktop_app.utilities.playback import AudioPlayback
+from dunyadesktop_app.utilities.timer import TimerThread
 import dunyadesktop_app.ui_files.resources_rc
 
 
@@ -49,6 +50,7 @@ class PlayerDialog(QtGui.QDialog):
         self.waveform_widget.region_wf_hor.sigRegionChangeFinished.connect(
             self.wf_hor_region_changed)
         self.frame_player.toolbutton_play.clicked.connect(self.playback_play)
+        self.frame_player.toolbutton_pause.clicked.connect(self.playback_pause)
 
     def _set_design(self):
         self.setWindowTitle('Player')
@@ -83,9 +85,14 @@ class PlayerDialog(QtGui.QDialog):
     def playback_play(self):
         self.frame_player.toolbutton_play.setDisabled(True)
         self.frame_player.toolbutton_pause.setEnabled(True)
-        self.start = time.time()
         self.timer.start()
         self.playback.play()
+
+    def playback_pause(self):
+        self.frame_player.toolbutton_play.setEnabled(True)
+        self.frame_player.toolbutton_pause.setDisabled(True)
+        self.playback.pause()
+        self.timer.stop()
 
     def _keep_position(self):
         if self.playback_pos_pyglet != self.playback.get_pos_seconds():
@@ -104,8 +111,8 @@ class PlayerDialog(QtGui.QDialog):
         else:
             self.playback_pos = self.playback_pos_pyglet
 
-        self.melody_widget.vline.setPos(self.playback_pos)
-        self.waveform_widget.vline_wf.setPos(self.playback_pos*self.sample_rate)
-        self.melody_widget.hline_histogram.setPos(self.pitch
-                  [int(self.playback_pos * self.sample_rate / self.hopsize)])
+        #self.melody_widget.vline.setValue(self.playback_pos)
+        #self.waveform_widget.vline_wf.setValue(self.playback_pos*self.sample_rate)
+        #self.melody_widget.hline_histogram.setValue(self.pitch
+        #          [int(self.playback_pos * self.sample_rate / self.hopsize)])
         self.frame_player.slider.setValue(self.playback_pos*self.sample_rate)
