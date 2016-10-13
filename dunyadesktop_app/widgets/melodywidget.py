@@ -1,6 +1,7 @@
 from PyQt4 import QtGui
 from pyqtgraph import GraphicsLayoutWidget
 import pyqtgraph as pg
+import numpy as np
 
 import time
 
@@ -39,27 +40,38 @@ class MelodyWidget(GraphicsLayoutWidget):
         time_stamps = []
         pitch = []
         salience = []
-        for sample in self.pitch_data['pitch']:
+
+        for sample in pitch_data['pitch']:
             time_stamps.append(sample[0])
             pitch.append(sample[1])
             salience.append(sample[2])
         self.zoom_selection.plot(time_stamps, pitch, pen=None, symbol='o',
-                                 symbolPen=None, symbolSize=2,
+                                 symbolPen=None, symbolSize=3,
                                  symbolBrush=(30, 75, 130, 190),
-                                 downsampleMethod='subsample',
-                                 clipToView=True,
-                                 antialias=True)
-
+                                 downsampleMethod='subsample', clipToView=True)
         self.zoom_selection.setAutoVisible(y=True)
         self.zoom_selection.setLabel(axis="bottom", text="Time", units="sec")
         self.zoom_selection.setLabel(axis="left", text="Frequency", units="Hz",
                                      unitPrefix=False)
+
+        salience_plot = []
+        # salience normalization
+        salience_factor = max(pitch) / max(salience)
+        [salience_plot.append(i * salience_factor) for i in salience]
+
+        # salience plot
+        self.zoom_selection.plot(time_stamps, salience_plot, pen=None,
+                                 symbol='t', symbolPen=None,
+                                 downsampleMethod='subsample',
+                                 symbolSize=4, symbolBrush=(20, 170, 100, 18),
+                                 fillLevel=0, fillBrush=(100, 100, 255, 20))
 
         self.addItem(self.zoom_selection)
         self.zoom_selection.setXRange(0, len_raw_audio / (samplerate * 30.),
                                       padding=0)
         self.zoom_selection.setYRange(0, max(pitch), padding=0)
         self.add_elements_to_plot()
+
         return time_stamps, pitch, salience
 
     def plot_histogram(self, pd, pitch):
