@@ -45,32 +45,34 @@ class MelodyWidget(GraphicsLayoutWidget):
             time_stamps.append(sample[0])
             pitch.append(sample[1])
             salience.append(sample[2])
-        self.zoom_selection.plot(time_stamps, pitch, pen=None, symbol='o',
-                                 symbolPen=None, symbolSize=3,
-                                 symbolBrush=(30, 75, 130, 190),
-                                 downsampleMethod='subsample', clipToView=True)
+        self.curve = self.zoom_selection.plot(time_stamps, pitch, pen=None,
+                                              symbol='o', symbolPen=None,
+                                              symbolSize=3,
+                                              symbolBrush=(30, 75, 130, 190),
+                                              downsampleMethod='subsample',
+                                              clipToView=True)
         self.zoom_selection.setAutoVisible(y=True)
         self.zoom_selection.setLabel(axis="bottom", text="Time", units="sec")
         self.zoom_selection.setLabel(axis="left", text="Frequency", units="Hz",
                                      unitPrefix=False)
 
-        salience_plot = []
+        #salience_plot = []
         # salience normalization
-        salience_factor = max(pitch) / max(salience)
-        [salience_plot.append(i * salience_factor) for i in salience]
+        #salience_factor = max(pitch) / max(salience)
+        #[salience_plot.append(i * salience_factor) for i in salience]
 
         # salience plot
-        self.zoom_selection.plot(time_stamps, salience_plot, pen=None,
-                                 symbol='t', symbolPen=None,
-                                 downsampleMethod='subsample',
-                                 symbolSize=4, symbolBrush=(20, 170, 100, 18),
-                                 fillLevel=0, fillBrush=(100, 100, 255, 20))
+        #self.zoom_selection.plot(time_stamps, salience_plot, pen=None,
+        #                        symbol='t', symbolPen=None,
+        #                        downsampleMethod='subsample',
+        #                        symbolSize=4, symbolBrush=(20, 170, 100, 18),
+        #                        fillLevel=0, fillBrush=(100, 100, 255, 20))
 
         self.addItem(self.zoom_selection)
         self.zoom_selection.setXRange(0, len_raw_audio / (samplerate * 30.),
                                       padding=0)
         self.zoom_selection.setYRange(0, max(pitch), padding=0)
-        self.add_elements_to_plot()
+        self.add_elements_to_plot(pitch)
 
         return time_stamps, pitch, salience
 
@@ -96,17 +98,23 @@ class MelodyWidget(GraphicsLayoutWidget):
         self.histogram.setXRange(0, max(pd["vals"]), padding=0)
 
         self.histogram.setLabel(axis="right", text="Frequency (Hz)")
-        self.hline_histogram = pg.InfiniteLine(pos=0, angle=0, movable=False,
-                                               pen=pg.mkPen((255, 40, 35, 150),
-                                                            cosmetic=True,
-                                                            width=2))
+        self.hline_histogram = pg.ROI([0, 0], [0, max(pitch)], angle=-90,
+                                      pen=pg.mkPen((255, 40, 35, 150),
+                                                   cosmetic=True, width=2))
         self.histogram.addItem(self.hline_histogram)
         self.addItem(self.histogram)
 
-    def add_elements_to_plot(self):
-        self.vline = pg.InfiniteLine(pos=0, movable=True,
-                                     pen=pg.mkPen((255, 40, 35, 150), width=2,
-                                                  cosmetic=True))
+    def add_elements_to_plot(self, pitch):
+        self.curve_point = pg.CurvePoint(self.curve)
+        self.zoom_selection.addItem(self.curve_point)
+
+        self.arrow = pg.ArrowItem(angle=90)
+        self.arrow.setParentItem(self.curve_point)
+        self.zoom_selection.addItem(self.arrow)
+
+        self.vline = pg.ROI([0, 0], [0, max(pitch)], angle=0,
+                            pen=pg.mkPen((255, 40, 35, 150), cosmetic=True,
+                                         width=2))
         self.zoom_selection.addItem(self.vline)
 
     def set_zoom_selection_area(self, pos_wf_x_min, pos_wf_x_max, samplerate):
@@ -115,7 +123,7 @@ class MelodyWidget(GraphicsLayoutWidget):
         self.zoom_selection.setXRange(x_min, x_max, padding=0)
 
         if len(self.pitch_data['pitch'][
-               int(pos_wf_x_min / 128.):int(pos_wf_x_max / 128.)]) >= 25000:
+               int(pos_wf_x_min / 128.):int(pos_wf_x_max / 128.)]) >= 10000:
             self.zoom_selection.setDownsampling(ds=True, auto=True,
                                                 mode='peak')
 

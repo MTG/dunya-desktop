@@ -25,7 +25,8 @@ class WaveformWidget(GraphicsLayoutWidget):
         self.layout.setSpacing(0)
 
     def plot_waveform(self, raw_audio):
-        self.waveform = self.layout.addPlot(title='Waveform')
+        self.waveform = self.layout.addPlot(title='Waveform',
+                                            downsampleMethod='peak')
         self.waveform.setDownsampling(ds=True, auto=True, mode='peak')
 
         self.waveform.hideAxis(axis='bottom')
@@ -54,10 +55,13 @@ class WaveformWidget(GraphicsLayoutWidget):
             bounds=[min(raw_audio), max(raw_audio)])
 
         # vline for wf
-        self.vline_wf = pg.InfiniteLine(pos=0, movable=True,
-                                    pen=pg.mkPen((195, 0, 50, 190), width=2))
+        self.vline_wf = pg.ROI([0, min(raw_audio)],
+                               [0, max(raw_audio) + abs(min(raw_audio))],
+                               angle=0,
+                               pen=pg.mkPen((255, 40, 35, 150), cosmetic=True,
+                                         width=2))
         self.waveform.addItem(self.vline_wf)
-        self.waveform.addItem(self.region_wf_hor)
+        #self.waveform.addItem(self.region_wf_hor)
         self.waveform.addItem(self.region_wf)
         self.layout.addItem(self.waveform)
         self.addItem(self.layout)

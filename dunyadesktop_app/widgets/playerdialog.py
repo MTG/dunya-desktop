@@ -37,7 +37,7 @@ class PlayerDialog(QtGui.QDialog):
         self._set_slider()
 
         self.timer = QtCore.QTimer()
-        self.timer.setInterval(50)
+        self.timer.setInterval(55)
         self.playback_pos = 0
         self.playback_pos_pyglet = 0
         self.frame_player.toolbutton_pause.setDisabled(True)
@@ -107,12 +107,16 @@ class PlayerDialog(QtGui.QDialog):
 
     def update_vlines(self):
         if self.playback_pos_pyglet == self.playback.get_pos_seconds():
-            self.playback_pos += 0.04
+            self.playback_pos += 0.02
         else:
             self.playback_pos = self.playback_pos_pyglet
 
-        #self.melody_widget.vline.setValue(self.playback_pos)
-        #self.waveform_widget.vline_wf.setValue(self.playback_pos*self.sample_rate)
-        #self.melody_widget.hline_histogram.setValue(self.pitch
-        #          [int(self.playback_pos * self.sample_rate / self.hopsize)])
+        self.melody_widget.vline.setPos([self.playback_pos, 0])
+        self.melody_widget.arrow.setPos(self.playback_pos, self.pitch
+                  [int(self.playback_pos * self.sample_rate / self.hopsize)])
+
+        self.melody_widget.hline_histogram.setPos(
+            pos=[0, self.pitch[int(self.playback_pos * self.sample_rate / self.hopsize)]])
         self.frame_player.slider.setValue(self.playback_pos*self.sample_rate)
+        # self.waveform_widget.vline_wf.setPos(
+        # [self.playback_pos * self.sample_rate, 0])
