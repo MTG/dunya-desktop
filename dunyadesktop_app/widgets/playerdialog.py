@@ -36,21 +36,25 @@ class PlayerDialog(QtGui.QDialog):
         self.playback.set_source(self.audio_path)
         self._set_slider()
 
-        self.timer = QtCore.QTimer()
-        self.timer.setInterval(55)
+        self.timers = TimerThread()
         self.playback_pos = 0
         self.playback_pos_pyglet = 0
         self.frame_player.toolbutton_pause.setDisabled(True)
 
         # signals
-        self.timer.timeout.connect(self._keep_position)
-        self.timer.timeout.connect(self.update_vlines)
+        self.timers.time_out_wf.connect(self.update_wf_pos)
+        self.timers.time_out.connect(self._keep_position)
+        self.timers.time_out.connect(self.update_vlines)
         self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
             self.wf_region_changed)
         self.waveform_widget.region_wf_hor.sigRegionChangeFinished.connect(
             self.wf_hor_region_changed)
         self.frame_player.toolbutton_play.clicked.connect(self.playback_play)
         self.frame_player.toolbutton_pause.clicked.connect(self.playback_pause)
+
+    def update_wf_pos(self):
+        self.waveform_widget.vline_wf.setPos(
+            [self.playback_pos * self.sample_rate, 0])
 
     def _set_design(self):
         self.setWindowTitle('Player')
@@ -85,14 +89,14 @@ class PlayerDialog(QtGui.QDialog):
     def playback_play(self):
         self.frame_player.toolbutton_play.setDisabled(True)
         self.frame_player.toolbutton_pause.setEnabled(True)
-        self.timer.start()
+        self.timers.start()
         self.playback.play()
 
     def playback_pause(self):
         self.frame_player.toolbutton_play.setEnabled(True)
         self.frame_player.toolbutton_pause.setDisabled(True)
         self.playback.pause()
-        self.timer.stop()
+        self.timers.stop()
 
     def _keep_position(self):
         if self.playback_pos_pyglet != self.playback.get_pos_seconds():
