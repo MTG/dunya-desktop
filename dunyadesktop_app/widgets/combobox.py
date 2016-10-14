@@ -76,7 +76,7 @@ class ComboBox(QtGui.QComboBox):
         self.dialog_filtering.filtering_model.add_items(self.attribute)
         self.dialog_filtering.move(QMouseEvent.globalPos().x(),
                                    QMouseEvent.globalPos().y())
-        self.dialog_filtering.exec_()
+        self.dialog_filtering.show()
 
     def set_placeholder_text(self, text):
         font = QtGui.QFont()

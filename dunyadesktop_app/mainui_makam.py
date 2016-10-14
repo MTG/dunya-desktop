@@ -130,7 +130,7 @@ class MainWindowMakam(MainWindowMakamDesign):
 
     def open_player(self, pitch_data, pd):
         self.player = PlayerDialog(self.recid, pitch_data, pd)
-        self.player.exec_()
+        self.player.show()
 
 
 app = QtGui.QApplication(sys.argv)
