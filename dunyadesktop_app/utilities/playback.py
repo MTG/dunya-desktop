@@ -1,3 +1,4 @@
+from PyQt4 import QtCore
 import pyglet.media
 
 
@@ -26,3 +27,15 @@ class AudioPlayback:
 
     def seek(self, time):
         self.player.seek(time=time)
+
+
+class AudioPlaybackThread(QtCore.QThread):
+    def __init__(self):
+        QtCore.QThread.__init__(self)
+        self.playback = AudioPlayback()
+
+    def run(self):
+        self.playback.play()
+
+    def stop(self):
+        self.playback.pause()

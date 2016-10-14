@@ -9,7 +9,7 @@ from essentia.standard import MonoLoader
 from dunyadesktop_app.widgets.waveformwidget import WaveformWidget
 from dunyadesktop_app.widgets.melodywidget import MelodyWidget
 from dunyadesktop_app.widgets.playerframe import PlayerFrame
-from dunyadesktop_app.utilities.playback import AudioPlayback
+from dunyadesktop_app.utilities.playback import AudioPlaybackThread
 from dunyadesktop_app.utilities.timer import TimerThread
 import dunyadesktop_app.ui_files.resources_rc
 
@@ -32,8 +32,8 @@ class PlayerDialog(QtGui.QDialog):
             self.melody_widget.plot_melody(self.pitch_data, self.pd,
                                        len(self.raw_audio), self.sample_rate)
         self.melody_widget.plot_histogram(self.pd, self.pitch)
-        self.playback = AudioPlayback()
-        self.playback.set_source(self.audio_path)
+        self.playback_thread = AudioPlaybackThread()
+        self.playback_thread.playback.set_source(self.audio_path)
         self._set_slider()
 
         self.timers = TimerThread()
@@ -42,7 +42,7 @@ class PlayerDialog(QtGui.QDialog):
         self.frame_player.toolbutton_pause.setDisabled(True)
 
         # signals
-        self.timers.time_out_wf.connect(self.update_wf_pos)
+        #self.timers.time_out_wf.connect(self.update_wf_pos)
         self.timers.time_out.connect(self._keep_position)
         self.timers.time_out.connect(self.update_vlines)
         self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
@@ -90,18 +90,18 @@ class PlayerDialog(QtGui.QDialog):
         self.frame_player.toolbutton_play.setDisabled(True)
         self.frame_player.toolbutton_pause.setEnabled(True)
         self.timers.start()
-        self.playback.play()
+        self.playback_thread.start()
 
     def playback_pause(self):
         self.frame_player.toolbutton_play.setEnabled(True)
         self.frame_player.toolbutton_pause.setDisabled(True)
-        self.playback.pause()
+        self.playback_thread.stop()
         self.timers.stop()
 
     def _keep_position(self):
-        if self.playback_pos_pyglet != self.playback.get_pos_seconds():
-            self.playback_pos_pyglet = self.playback.get_pos_seconds()
-            self.playback_pos = self.playback.get_pos_seconds()
+        if self.playback_pos_pyglet != self.playback_thread.playback.get_pos_seconds():
+            self.playback_pos_pyglet = self.playback_thread.playback.get_pos_seconds()
+            self.playback_pos = self.playback_thread.playback.get_pos_seconds()
 
     def _set_slider(self):
         self.frame_player.slider.setMinimum(0)
@@ -110,7 +110,7 @@ class PlayerDialog(QtGui.QDialog):
         self.frame_player.slider.setSingleStep(1)
 
     def update_vlines(self):
-        if self.playback_pos_pyglet == self.playback.get_pos_seconds():
+        if self.playback_pos_pyglet == self.playback_thread.playback.get_pos_seconds():
             self.playback_pos += 0.02
         else:
             self.playback_pos = self.playback_pos_pyglet
