@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 from PyQt4 import QtCore
 from compmusic.dunya import makam
 
