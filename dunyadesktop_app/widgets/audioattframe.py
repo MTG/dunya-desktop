@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 import os
 import platform
 
@@ -18,6 +17,7 @@ else:
 QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"
 CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
                         'audioattframe.css')
+
 
 class AudioAttFrame(QtGui.QFrame):
     def __init__(self):
@@ -39,9 +39,9 @@ class AudioAttFrame(QtGui.QFrame):
         self.comboBox_rhythm.currentIndexChanged.connect(self.set_toolbutton)
         self.comboBox_composer.currentIndexChanged.connect(self.set_toolbutton)
         self.comboBox_performer.currentIndexChanged.connect(
-                                                           self.set_toolbutton)
+            self.set_toolbutton)
         self.comboBox_instrument.currentIndexChanged.connect(
-                                                           self.set_toolbutton)
+            self.set_toolbutton)
 
     def _set_frame_attributes(self):
         size_policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred,
@@ -100,7 +100,8 @@ class AudioAttFrame(QtGui.QFrame):
                                          QtGui.QSizePolicy.Fixed)
 
         if platform.system() != 'Linux':
-            spacer_item3 = QtGui.QSpacerItem(SPACE, 20, QtGui.QSizePolicy.Minimum,
+            spacer_item3 = QtGui.QSpacerItem(SPACE, 20,
+                                             QtGui.QSizePolicy.Minimum,
                                              QtGui.QSizePolicy.Fixed)
             self.gridLayout_filtering.addItem(spacer_item3, 1, 5, 1, 1)
 

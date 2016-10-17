@@ -6,11 +6,11 @@ import time
 from PyQt4 import QtGui, QtCore
 from essentia.standard import MonoLoader
 
-from dunyadesktop_app.widgets.waveformwidget import WaveformWidget
-from dunyadesktop_app.widgets.melodywidget import MelodyWidget
-from dunyadesktop_app.widgets.playerframe import PlayerFrame
-from dunyadesktop_app.utilities.playback import AudioPlaybackThread
-from dunyadesktop_app.utilities.timer import TimerThread
+from ..widgets.waveformwidget import WaveformWidget
+from ..widgets.melodywidget import MelodyWidget
+from ..widgets.playerframe import PlayerFrame
+from ..utilities.playback import AudioPlaybackThread
+from ..utilities.timer import TimerThread
 import dunyadesktop_app.ui_files.resources_rc
 
 

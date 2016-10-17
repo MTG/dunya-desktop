@@ -1,9 +1,9 @@
+import time
+
 from PyQt4 import QtGui
 from pyqtgraph import GraphicsLayoutWidget
 import pyqtgraph as pg
 import numpy as np
-
-import time
 
 
 class MelodyWidget(GraphicsLayoutWidget):
