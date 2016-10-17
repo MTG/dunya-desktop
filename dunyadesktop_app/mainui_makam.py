@@ -1,18 +1,15 @@
-from __future__ import print_function
-from __future__ import absolute_import
 import sys
-import webbrowser
 
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtGui
 
-from cultures import apiconfig
-from cultures.makam import utilities
-from cultures.makam.query import QueryThread
-from mainui_design_makam import MainWindowMakamDesign
-from dunyadesktop_app.widgets.playerdialog import PlayerDialog
+from .cultures import apiconfig
+from .cultures.makam import utilities
+from .cultures.makam.query import QueryThread
+from .mainui_design_makam import MainWindowMakamDesign
+from .widgets.playerdialog import PlayerDialog
 
 apiconfig.set_token()
-#apiconfig.set_hostname()
+# apiconfig.set_hostname()
 
 
 class MainWindowMakam(MainWindowMakamDesign):
@@ -42,11 +39,12 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.recording_model.rec_fetched.connect(self.append_recording)
 
         self.lineEdit_filter.textChanged.connect(
-            lambda:self.proxy_model.filtering_the_table(
+            lambda: self.proxy_model.filtering_the_table(
                 self.lineEdit_filter.text()))
         self.tableView_results.doubleClicked.connect(self.show_on_mb)
         self.tableView_results.open_dunya.triggered.connect(
-            lambda:self.download_related_features(self.tableView_results.index))
+            lambda: self.download_related_features(
+                self.tableView_results.index))
 
         self.thread_feature_downloader.feautures_downloaded.connect(
             self.open_player)
@@ -116,12 +114,6 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.progress_bar.setFormat("")
         self.frame_attributes.toolButton_query.setEnabled(True)
 
-    def show_on_mb(self):
-        index = self.tableView_results.model().mapToSource(
-            self.tableView_results.currentIndex())
-
-        #webbrowser.open(url=u"https://musicbrainz.org/recording/{0}".
-        #                format(self.recordings[index.row()]))
     def download_related_features(self, index):
         source_index = self.tableView_results.model().mapToSource(index)
         self.recid = self.recordings[source_index.row()]

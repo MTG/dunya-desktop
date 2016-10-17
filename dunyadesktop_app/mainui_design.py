@@ -1,16 +1,14 @@
-from __future__ import absolute_import
-
 from PyQt4 import QtCore, QtGui
 
-from utilities import utilities
-from widgets.tableresults import TableViewResults
-from widgets.tabwidget import TabWidget
-from widgets.audioattframe import AudioAttFrame
-from widgets.progressbar import ProgressBar
-from models.recordingmodel import RecordingModel
-from models.proxymodel import SortFilterProxyModel
+from .utilities import utilities
+from .widgets.tableresults import TableViewResults
+from .widgets.tabwidget import TabWidget
+from .widgets.audioattframe import AudioAttFrame
+from .widgets.progressbar import ProgressBar
+from .models.recordingmodel import RecordingModel
+from .models.proxymodel import SortFilterProxyModel
 
-import dunyadesktop_app.ui_files.resources_rc
+import ui_files.resources_rc
 
 DUNYA_ICON = ":/compmusic/icons/dunya.svg"
 QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"
