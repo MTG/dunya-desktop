@@ -1,7 +1,7 @@
 from PyQt4 import QtGui
 
-from .mainui_design import MainWindowDesign
-from .utilities import utilities
+from mainui_design import MainWindowDesign
+from utilities import utilities
 
 
 class MainWindowMakamDesign(MainWindowDesign):

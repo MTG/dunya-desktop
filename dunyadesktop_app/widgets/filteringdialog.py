@@ -4,8 +4,8 @@ from PyQt4 import QtGui, QtCore
 
 from .table import TableView
 
-from ..models.filteringmodel import FilteringModel
-from ..models.proxymodel import SortFilterProxyModel
+from dunyadesktop_app.models.filteringmodel import FilteringModel
+from dunyadesktop_app.models.proxymodel import SortFilterProxyModel
 
 import dunyadesktop_app.ui_files.resources_rc
 

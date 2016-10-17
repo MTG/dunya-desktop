@@ -2,7 +2,7 @@ import os
 
 from PyQt4 import QtGui
 
-from ..utilities import utilities
+from dunyadesktop_app.utilities import utilities
 
 CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
                         'tabwidget.css')

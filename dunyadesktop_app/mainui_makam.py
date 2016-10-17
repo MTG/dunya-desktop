@@ -2,11 +2,11 @@ import sys
 
 from PyQt4 import QtGui
 
-from .cultures import apiconfig
-from .cultures.makam import utilities
-from .cultures.makam.query import QueryThread
-from .mainui_design_makam import MainWindowMakamDesign
-from .widgets.playerdialog import PlayerDialog
+from cultures import apiconfig
+from cultures.makam import utilities
+from cultures.makam.query import QueryThread
+from mainui_design_makam import MainWindowMakamDesign
+from widgets.playerdialog import PlayerDialog
 
 apiconfig.set_token()
 # apiconfig.set_hostname()
@@ -41,7 +41,6 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.lineEdit_filter.textChanged.connect(
             lambda: self.proxy_model.filtering_the_table(
                 self.lineEdit_filter.text()))
-        self.tableView_results.doubleClicked.connect(self.show_on_mb)
         self.tableView_results.open_dunya.triggered.connect(
             lambda: self.download_related_features(
                 self.tableView_results.index))
