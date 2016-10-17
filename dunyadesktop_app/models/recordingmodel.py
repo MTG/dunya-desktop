@@ -1,10 +1,10 @@
-from __future__ import absolute_import
 import os
 
 from PyQt4 import QtGui, QtCore
 
-DUNYA_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'icons',
-                        'dunya.svg')
+DUNYA_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
+                          'icons', 'dunya.svg')
+
 
 class RecordingModel(QtGui.QStandardItemModel):
     rec_fetched = QtCore.pyqtSignal(str)
