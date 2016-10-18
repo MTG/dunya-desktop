@@ -1,4 +1,5 @@
 import time
+import copy
 
 from PyQt4 import QtGui
 from pyqtgraph import GraphicsLayoutWidget
@@ -24,31 +25,36 @@ class MelodyWidget(GraphicsLayoutWidget):
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
 
-    def plot_melody(self, pitch_data, pd, len_raw_audio, samplerate):
+    def plot_melody(self, pitch_data, len_raw_audio, samplerate):
         self.pitch_data = pitch_data
-        self.pd = pd
+        pitch = np.array(pitch_data['pitch'])
 
-        self.y_axis = pg.AxisItem('left')
-        self.y_axis.enableAutoSIPrefix(enable=False)
+        y_axis = pg.AxisItem('left')
+        y_axis.enableAutoSIPrefix(enable=False)
 
         self.zoom_selection = self.layout.addPlot(title="Zoom selection",
-                                                  axisItems={
-                                                      'left': self.y_axis})
+                                                  axisItems={'left': y_axis})
         self.zoom_selection.setMouseEnabled(x=False, y=False)
         self.zoom_selection.setMenuEnabled(False)
 
-        time_stamps = []
-        pitch = []
-        salience = []
+        time_stamps = pitch[:, 0]
+        pitch_curve = pitch[:, 1]
+        pitch_plot = copy.copy(pitch_curve)
+        pitch_plot[pitch_plot < 20] = np.nan
+        salience = pitch[:, 2]
 
-        for sample in pitch_data['pitch']:
-            time_stamps.append(sample[0])
-            pitch.append(sample[1])
-            salience.append(sample[2])
-        self.curve = self.zoom_selection.plot(time_stamps, pitch, pen=None,
-                                              symbol='o', symbolPen=None,
-                                              symbolSize=3,
-                                              symbolBrush=(30, 75, 130, 190),
+        self.curve = self.zoom_selection.plot(time_stamps, pitch_plot,
+                                              connect='finite',
+                                              pen=pg.mkPen(
+                                                  color=(217, 217, 226, 180),
+                                                  width=1.5),
+                                              shadowPen=pg.mkPen((70, 70, 30),
+                                                                 width=7,
+                                                                 cosmetic=True),
+                                              #symbol='o',
+                                              #symbolSize=1,
+                                              #symbolBrush=pg.mkBrush(222, 244, 237),
+                                              #symbolPen=None,
                                               downsampleMethod='subsample',
                                               clipToView=True)
         self.zoom_selection.setAutoVisible(y=True)
@@ -69,12 +75,12 @@ class MelodyWidget(GraphicsLayoutWidget):
         #                        fillLevel=0, fillBrush=(100, 100, 255, 20))
 
         self.addItem(self.zoom_selection)
-        self.zoom_selection.setXRange(0, len_raw_audio / (samplerate * 30.),
-                                      padding=0)
-        self.zoom_selection.setYRange(0, max(pitch), padding=0)
-        self.add_elements_to_plot(pitch)
+        self.add_elements_to_plot(pitch_curve)
 
-        return time_stamps, pitch, salience
+        self.zoom_selection.setXRange(0, len_raw_audio / (samplerate * 20.))
+        self.zoom_selection.setYRange(20, max(pitch_curve), update=False)
+
+        return time_stamps, pitch_curve, salience
 
     def plot_histogram(self, pd, pitch):
         self.histogram = self.layout.addPlot(row=0, col=1, title="Histogram")

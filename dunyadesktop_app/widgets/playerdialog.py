@@ -29,8 +29,9 @@ class PlayerDialog(QtGui.QDialog):
         self.raw_audio = MonoLoader(filename=self.audio_path)()
         self.waveform_widget.plot_waveform(self.raw_audio)
         self.time_stamps, self.pitch, self.salince = \
-            self.melody_widget.plot_melody(self.pitch_data, self.pd,
-                                       len(self.raw_audio), self.sample_rate)
+            self.melody_widget.plot_melody(self.pitch_data,
+                                           len(self.raw_audio),
+                                           self.sample_rate)
         self.melody_widget.plot_histogram(self.pd, self.pitch)
         self.playback_thread = AudioPlaybackThread()
         self.playback_thread.playback.set_source(self.audio_path)
