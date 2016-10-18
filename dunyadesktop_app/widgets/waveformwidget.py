@@ -14,29 +14,28 @@ class WaveformWidget(GraphicsLayoutWidget):
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred,
                                        QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(100)
+        sizePolicy.setVerticalStretch(50)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
 
-        self.setMinimumSize(QtCore.QSize(0, 100))
-        self.setMaximumSize(QtCore.QSize(16777215, 100))
+        self.setMinimumSize(QtCore.QSize(0, 50))
+        self.setMaximumSize(QtCore.QSize(16777215, 50))
         self.setFocusPolicy(QtCore.Qt.NoFocus)
         self.setAcceptDrops(False)
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
 
     def plot_waveform(self, raw_audio):
-        self.waveform = self.layout.addPlot(title='Waveform',
-                                            downsampleMethod='peak')
-        self.waveform.setDownsampling(ds=True, auto=True, mode='peak')
-
+        self.waveform = self.layout.addPlot()
         self.waveform.hideAxis(axis='bottom')
         self.waveform.hideAxis(axis='left')
 
-        self.waveform.setMaximumHeight(100)
+        self.waveform.setMaximumHeight(50)
         self.waveform.setMouseEnabled(x=False, y=False)
         self.waveform.setMenuEnabled(False)
 
-        self.waveform.plot(y=raw_audio, pen=(20, 170, 100, 20))
+        self.waveform.plot(y=raw_audio, pen=(20, 170, 100, 30))
+        self.waveform.setDownsampling(ds=True, auto=True, mode='peak')
+
         self.add_elements_to_plot(raw_audio)
 
     def add_elements_to_plot(self, raw_audio):

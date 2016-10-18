@@ -117,8 +117,8 @@ class PlayerDialog(QtGui.QDialog):
             self.playback_pos = self.playback_pos_pyglet
 
         self.melody_widget.vline.setPos([self.playback_pos, 0])
-        self.melody_widget.arrow.setPos(self.playback_pos, self.pitch
-                  [int(self.playback_pos * self.sample_rate / self.hopsize)])
+        #self.melody_widget.arrow.setPos(self.playback_pos, self.pitch
+        #          [int(self.playback_pos * self.sample_rate / self.hopsize)])
 
         self.melody_widget.hline_histogram.setPos(
             pos=[0, self.pitch[int(self.playback_pos * self.sample_rate / self.hopsize)]])

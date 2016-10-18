@@ -1,7 +1,7 @@
 import time
 import copy
 
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 from pyqtgraph import GraphicsLayoutWidget
 import pyqtgraph as pg
 import numpy as np
@@ -44,19 +44,19 @@ class MelodyWidget(GraphicsLayoutWidget):
         salience = pitch[:, 2]
 
         self.curve = self.zoom_selection.plot(time_stamps, pitch_plot,
-                                              connect='finite',
-                                              pen=pg.mkPen(
-                                                  color=(217, 217, 226, 180),
-                                                  width=1.5),
-                                              shadowPen=pg.mkPen((70, 70, 30),
-                                                                 width=7,
-                                                                 cosmetic=True),
-                                              #symbol='o',
-                                              #symbolSize=1,
-                                              #symbolBrush=pg.mkBrush(222, 244, 237),
-                                              #symbolPen=None,
-                                              downsampleMethod='subsample',
-                                              clipToView=True)
+                                              pen=None,
+                                              #connect='finite',
+                                              #pen=pg.mkPen(
+                                              #    color=(217, 217, 226, 180),
+                                              #    width=1.5),
+                                              #shadowPen=pg.mkPen((70, 70, 30),
+                                              #                   width=7,
+                                              #                   cosmetic=True),
+                                              symbol='o',
+                                              symbolSize=1,
+                                              symbolBrush=pg.mkBrush(222, 244, 237),
+                                              symbolPen=None,
+                                              )
         self.zoom_selection.setAutoVisible(y=True)
         self.zoom_selection.setLabel(axis="bottom", text="Time", units="sec")
         self.zoom_selection.setLabel(axis="left", text="Frequency", units="Hz",
@@ -80,13 +80,17 @@ class MelodyWidget(GraphicsLayoutWidget):
         self.zoom_selection.setXRange(0, len_raw_audio / (samplerate * 20.))
         self.zoom_selection.setYRange(20, max(pitch_curve), update=False)
 
+        timer = QtCore.QTimer()
+        timer.singleShot(0,
+                         lambda: self.zoom_selection.setDownsampling(
+                             ds=True, auto=True, mode='mean'))
+
         return time_stamps, pitch_curve, salience
 
     def plot_histogram(self, pd, pitch):
         self.histogram = self.layout.addPlot(row=0, col=1, title="Histogram")
         self.histogram.setMouseEnabled(x=False, y=False)
         self.histogram.setMenuEnabled(False)
-        self.histogram.setDownsampling(auto=True)
         self.histogram.setMaximumWidth(150)
         self.histogram.setContentsMargins(0, 0, 0, 40)
         self.histogram.setAutoVisible(y=True)
@@ -108,15 +112,17 @@ class MelodyWidget(GraphicsLayoutWidget):
                                       pen=pg.mkPen((255, 40, 35, 150),
                                                    cosmetic=True, width=2))
         self.histogram.addItem(self.hline_histogram)
+
+        self.histogram.setDownsampling(ds=True, auto=True, mode='mean')
         self.addItem(self.histogram)
 
     def add_elements_to_plot(self, pitch):
         self.curve_point = pg.CurvePoint(self.curve)
         self.zoom_selection.addItem(self.curve_point)
 
-        self.arrow = pg.ArrowItem(angle=90)
-        self.arrow.setParentItem(self.curve_point)
-        self.zoom_selection.addItem(self.arrow)
+        #self.arrow = pg.ArrowItem(angle=90)
+        #self.arrow.setParentItem(self.curve_point)
+        #self.zoom_selection.addItem(self.arrow)
 
         self.vline = pg.ROI([0, 0], [0, max(pitch)], angle=0,
                             pen=pg.mkPen((255, 40, 35, 150), cosmetic=True,
@@ -128,10 +134,11 @@ class MelodyWidget(GraphicsLayoutWidget):
         x_max = pos_wf_x_max / samplerate
         self.zoom_selection.setXRange(x_min, x_max, padding=0)
 
-        if len(self.pitch_data['pitch'][
-               int(pos_wf_x_min / 128.):int(pos_wf_x_max / 128.)]) >= 10000:
-            self.zoom_selection.setDownsampling(ds=True, auto=True,
-                                                mode='peak')
+        #self.zoom_selection.setDownsampling(ds=True, auto=True, mode='mean')
+        #if len(self.pitch_data['pitch'][
+        #       int(pos_wf_x_min / 128.):int(pos_wf_x_max / 128.)]) >= 10000:
+        #    self.zoom_selection.setDownsampling(ds=True, auto=True,
+        #                                        mode='peak')
 
     def set_zoom_selection_area_hor(self, min_freq, max_freq):
         self.zoom_selection.setYRange(min_freq, max_freq, padding=0)
