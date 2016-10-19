@@ -44,23 +44,24 @@ class WaveformWidget(GraphicsLayoutWidget):
 
     def add_elements_to_plot(self, raw_audio):
         # region wf
-        self.pos_wf_x_min = 0
-        self.pos_wf_x_max = len(raw_audio) / 30.
-        self.region_wf = pg.LinearRegionItem([self.pos_wf_x_min,
-                                              self.pos_wf_x_max],
-                                             brush=pg.mkBrush(
-                                                 (50, 255, 255, 45)),
-                                             bounds=[0, len(raw_audio)])
+        min_audio = min(raw_audio)
+        max_audio = max(raw_audio)
+        len_audio = len(raw_audio)
+
+        pos_wf_x_max = len_audio / 25.
+        self.region_wf = pg.LinearRegionItem([0, pos_wf_x_max],
+                                             brush=pg.mkBrush((50, 255, 255, 45)),
+                                             bounds=[0, len_audio])
         self.region_wf.setZValue(10)
 
         self.region_wf_hor = pg.LinearRegionItem(
             brush=pg.mkBrush((50, 255, 255, 10)),
             orientation=pg.LinearRegionItem.Horizontal, movable=True,
-            values=[min(raw_audio), max(raw_audio)],
-            bounds=[min(raw_audio), max(raw_audio)])
+            values=[min_audio, max_audio],
+            bounds=[min_audio, max_audio])
 
         # vline for wf
-        self.vline_wf = pg.ROI([0, 0], [0, max(raw_audio)], angle=0,
+        self.vline_wf = pg.ROI([0, 0], [0, max_audio], angle=0,
                                pen=pg.mkPen((255, 40, 35, 150), cosmetic=True,
                                             width=1))
         self.waveform.addItem(self.vline_wf)

@@ -57,13 +57,15 @@ class PlayerDialog(QtGui.QDialog):
         self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
             lambda: self.wf_region_changed(samplerate))
         self.waveform_widget.region_wf_hor.sigRegionChangeFinished.connect(
-            lambda: self.wf_hor_region_changed(max_audio, min_audio, max_pitch))
+            lambda: self.wf_hor_region_changed(max_audio, min_audio,
+                                               max_pitch))
 
         self.frame_player.toolbutton_play.clicked.connect(self.playback_play)
         self.frame_player.toolbutton_pause.clicked.connect(self.playback_pause)
 
     def update_wf_pos(self, samplerate):
-        self.waveform_widget.vline_wf.setPos([self.playback_pos * samplerate, 0])
+        self.waveform_widget.vline_wf.setPos(
+            [self.playback_pos * samplerate, 0])
 
     def _set_design(self):
         self.setWindowTitle('Player')
@@ -91,8 +93,8 @@ class PlayerDialog(QtGui.QDialog):
         pos_wf_ymin, pos_wf_ymax = self.waveform_widget.region_wf_hor.getRegion()
         step = (max_audio + abs(min_audio) / max_pitch)
 
-        min_freq = abs(pos_wf_ymin-min_audio) / step
-        max_freq = abs(pos_wf_ymax-min_audio) / step
+        min_freq = abs(pos_wf_ymin - min_audio) / step
+        max_freq = abs(pos_wf_ymax - min_audio) / step
         self.melody_widget.set_zoom_selection_area_hor(min_freq, max_freq)
 
     def playback_play(self):
@@ -130,6 +132,6 @@ class PlayerDialog(QtGui.QDialog):
 
         self.melody_widget.hline_histogram.setPos(
             pos=[0, pitch[int(self.playback_pos * samplerate / hopsize)]])
-        self.frame_player.slider.setValue(self.playback_pos*samplerate)
+        self.frame_player.slider.setValue(self.playback_pos * samplerate)
         # self.waveform_widget.vline_wf.setPos(
         # [self.playback_pos * self.sample_rate, 0])
