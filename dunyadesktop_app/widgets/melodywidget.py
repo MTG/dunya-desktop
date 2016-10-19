@@ -1,4 +1,3 @@
-import time
 import copy
 
 from PyQt4 import QtGui, QtCore
@@ -9,8 +8,6 @@ import numpy as np
 
 class MelodyWidget(GraphicsLayoutWidget):
     def __init__(self):
-        self.start = time.time()
-
         GraphicsLayoutWidget.__init__(self, parent=None)
         self.layout = pg.GraphicsLayout()
         self._set_size_policy()
@@ -26,9 +23,6 @@ class MelodyWidget(GraphicsLayoutWidget):
         self.layout.setSpacing(0)
 
     def plot_melody(self, pitch_data, len_raw_audio, samplerate):
-        self.pitch_data = pitch_data
-        pitch = np.array(pitch_data['pitch'])
-
         y_axis = pg.AxisItem('left')
         y_axis.enableAutoSIPrefix(enable=False)
 
@@ -37,6 +31,7 @@ class MelodyWidget(GraphicsLayoutWidget):
         self.zoom_selection.setMouseEnabled(x=False, y=False)
         self.zoom_selection.setMenuEnabled(False)
 
+        pitch = np.array(pitch_data['pitch'])
         time_stamps = pitch[:, 0]
         pitch_curve = pitch[:, 1]
         pitch_plot = copy.copy(pitch_curve)
@@ -62,17 +57,16 @@ class MelodyWidget(GraphicsLayoutWidget):
         self.zoom_selection.setLabel(axis="left", text="Frequency", units="Hz",
                                      unitPrefix=False)
 
-        #salience_plot = []
         # salience normalization
-        #salience_factor = max(pitch) / max(salience)
-        #[salience_plot.append(i * salience_factor) for i in salience]
+        # salience_factor = max(pitch_curve) / max(salience)
+        # salience *= salience_factor
 
         # salience plot
-        #self.zoom_selection.plot(time_stamps, salience_plot, pen=None,
-        #                        symbol='t', symbolPen=None,
-        #                        downsampleMethod='subsample',
-        #                        symbolSize=4, symbolBrush=(20, 170, 100, 18),
-        #                        fillLevel=0, fillBrush=(100, 100, 255, 20))
+        # self.zoom_selection.plot(time_stamps, salience, pen=None,
+        #                         symbol='t', symbolPen=None,
+        #                         downsampleMethod='subsample',
+        #                         symbolSize=4, symbolBrush=(20, 170, 100, 18),
+        #                         fillLevel=0, fillBrush=(100, 100, 255, 20))
 
         self.addItem(self.zoom_selection)
         self.add_elements_to_plot(pitch_curve)
