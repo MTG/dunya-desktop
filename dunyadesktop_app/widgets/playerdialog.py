@@ -19,43 +19,51 @@ class PlayerDialog(QtGui.QDialog):
         QtGui.QDialog.__init__(self)
         self._set_design()
 
-        self.recid = recid
-        self.rec_folder = os.path.join(tempfile.gettempdir(), self.recid)
-        self.audio_path = glob.glob(self.rec_folder + '/*.mp3')[0]
-        self.pitch_data = pitch_data
-        self.pd = pd
-        self.hopsize = self.pitch_data['hopSize']
-        self.sample_rate = self.pitch_data['sampleRate']
-        self.raw_audio = MonoLoader(filename=self.audio_path)()
-        self.waveform_widget.plot_waveform(self.raw_audio)
-        self.time_stamps, self.pitch, self.salince = \
-            self.melody_widget.plot_melody(self.pitch_data,
-                                           len(self.raw_audio),
-                                           self.sample_rate)
-        self.melody_widget.plot_histogram(self.pd, self.pitch)
-        self.playback_thread = AudioPlaybackThread()
-        self.playback_thread.playback.set_source(self.audio_path)
-        self._set_slider()
+        rec_folder = os.path.join(tempfile.gettempdir(), recid)
+        audio_path = glob.glob(rec_folder + '/*.mp3')[0]
 
-        self.timers = TimerThread()
+        hopsize = pitch_data['hopSize']
+        samplerate = pitch_data['sampleRate']
+
+        raw_audio = MonoLoader(filename=audio_path)()
+        len_audio = len(raw_audio)
+        min_audio = min(raw_audio)
+        max_audio = max(raw_audio)
+
+        pitch = self.melody_widget.plot_melody(pitch_data, len_audio,
+                                               samplerate)
+        max_pitch = max(pitch)
+
+        self.waveform_widget.plot_waveform(raw_audio)
+        self.melody_widget.plot_histogram(pd, pitch)
+
+        self.playback_thread = AudioPlaybackThread()
+        self.playback_thread.playback.set_source(audio_path)
+        self._set_slider(len_audio)
+
+        self.timers = TimerThread(interval=60)
         self.playback_pos = 0
         self.playback_pos_pyglet = 0
+
         self.frame_player.toolbutton_pause.setDisabled(True)
 
         # signals
-        #self.timers.time_out_wf.connect(self.update_wf_pos)
+        self.timers.time_out_wf.connect(lambda: self.update_wf_pos(samplerate))
         self.timers.time_out.connect(self._keep_position)
-        self.timers.time_out.connect(self.update_vlines)
+        self.timers.time_out.connect(lambda: self.update_vlines(hopsize,
+                                                                samplerate,
+                                                                pitch))
+
         self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
-            self.wf_region_changed)
+            lambda: self.wf_region_changed(samplerate))
         self.waveform_widget.region_wf_hor.sigRegionChangeFinished.connect(
-            self.wf_hor_region_changed)
+            lambda: self.wf_hor_region_changed(max_audio, min_audio, max_pitch))
+
         self.frame_player.toolbutton_play.clicked.connect(self.playback_play)
         self.frame_player.toolbutton_pause.clicked.connect(self.playback_pause)
 
-    def update_wf_pos(self):
-        self.waveform_widget.vline_wf.setPos(
-            [self.playback_pos * self.sample_rate, 0])
+    def update_wf_pos(self, samplerate):
+        self.waveform_widget.vline_wf.setPos([self.playback_pos * samplerate, 0])
 
     def _set_design(self):
         self.setWindowTitle('Player')
@@ -74,17 +82,17 @@ class PlayerDialog(QtGui.QDialog):
         self.verticalLayout.addWidget(self.frame_player)
         QtCore.QMetaObject.connectSlotsByName(self)
 
-    def wf_region_changed(self):
+    def wf_region_changed(self, samplerate):
         pos_wf_x_min, pos_wf_x_max = self.waveform_widget.region_wf.getRegion()
         self.melody_widget.set_zoom_selection_area(pos_wf_x_min, pos_wf_x_max,
-                                                   self.sample_rate)
+                                                   samplerate)
 
-    def wf_hor_region_changed(self):
+    def wf_hor_region_changed(self, max_audio, min_audio, max_pitch):
         pos_wf_ymin, pos_wf_ymax = self.waveform_widget.region_wf_hor.getRegion()
-        step = (max(self.raw_audio) + abs(min(self.raw_audio))) / max(self.pitch)
+        step = (max_audio + abs(min_audio) / max_pitch)
 
-        min_freq = abs(pos_wf_ymin-min(self.raw_audio)) / step
-        max_freq = abs(pos_wf_ymax-min(self.raw_audio)) / step
+        min_freq = abs(pos_wf_ymin-min_audio) / step
+        max_freq = abs(pos_wf_ymax-min_audio) / step
         self.melody_widget.set_zoom_selection_area_hor(min_freq, max_freq)
 
     def playback_play(self):
@@ -104,24 +112,24 @@ class PlayerDialog(QtGui.QDialog):
             self.playback_pos_pyglet = self.playback_thread.playback.get_pos_seconds()
             self.playback_pos = self.playback_thread.playback.get_pos_seconds()
 
-    def _set_slider(self):
+    def _set_slider(self, len_audio):
         self.frame_player.slider.setMinimum(0)
-        self.frame_player.slider.setMaximum(len(self.raw_audio))
+        self.frame_player.slider.setMaximum(len_audio)
         self.frame_player.slider.setTickInterval(10)
         self.frame_player.slider.setSingleStep(1)
 
-    def update_vlines(self):
-        if self.playback_pos_pyglet == self.playback_thread.playback.get_pos_seconds():
-            self.playback_pos += 0.02
+    def update_vlines(self, hopsize, samplerate, pitch):
+        if self.playback_pos_pyglet <= self.playback_thread.playback.get_pos_seconds():
+            self.playback_pos += 0.05
         else:
             self.playback_pos = self.playback_pos_pyglet
 
         self.melody_widget.vline.setPos([self.playback_pos, 0])
-        #self.melody_widget.arrow.setPos(self.playback_pos, self.pitch
+        # self.melody_widget.arrow.setPos(self.playback_pos, self.pitch
         #          [int(self.playback_pos * self.sample_rate / self.hopsize)])
 
         self.melody_widget.hline_histogram.setPos(
-            pos=[0, self.pitch[int(self.playback_pos * self.sample_rate / self.hopsize)]])
-        self.frame_player.slider.setValue(self.playback_pos*self.sample_rate)
+            pos=[0, pitch[int(self.playback_pos * samplerate / hopsize)]])
+        self.frame_player.slider.setValue(self.playback_pos*samplerate)
         # self.waveform_widget.vline_wf.setPos(
         # [self.playback_pos * self.sample_rate, 0])

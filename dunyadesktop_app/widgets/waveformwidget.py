@@ -1,6 +1,7 @@
 from PyQt4 import QtGui, QtCore
 from pyqtgraph import GraphicsLayoutWidget
 import pyqtgraph as pg
+import numpy as np
 
 
 class WaveformWidget(GraphicsLayoutWidget):
@@ -33,6 +34,9 @@ class WaveformWidget(GraphicsLayoutWidget):
         self.waveform.setMouseEnabled(x=False, y=False)
         self.waveform.setMenuEnabled(False)
 
+        raw_audio = np.array(raw_audio)
+        raw_audio += abs(min(raw_audio))
+
         self.waveform.plot(y=raw_audio, pen=(20, 170, 100, 30))
         self.waveform.setDownsampling(ds=True, auto=True, mode='peak')
 
@@ -43,7 +47,9 @@ class WaveformWidget(GraphicsLayoutWidget):
         self.pos_wf_x_min = 0
         self.pos_wf_x_max = len(raw_audio) / 30.
         self.region_wf = pg.LinearRegionItem([self.pos_wf_x_min,
-              self.pos_wf_x_max], brush=pg.mkBrush((50, 255, 255, 45)),
+                                              self.pos_wf_x_max],
+                                             brush=pg.mkBrush(
+                                                 (50, 255, 255, 45)),
                                              bounds=[0, len(raw_audio)])
         self.region_wf.setZValue(10)
 
@@ -54,13 +60,11 @@ class WaveformWidget(GraphicsLayoutWidget):
             bounds=[min(raw_audio), max(raw_audio)])
 
         # vline for wf
-        self.vline_wf = pg.ROI([0, min(raw_audio)],
-                               [0, max(raw_audio) + abs(min(raw_audio))],
-                               angle=0,
+        self.vline_wf = pg.ROI([0, 0], [0, max(raw_audio)], angle=0,
                                pen=pg.mkPen((255, 40, 35, 150), cosmetic=True,
-                                         width=2))
+                                            width=1))
         self.waveform.addItem(self.vline_wf)
-        #self.waveform.addItem(self.region_wf_hor)
+        # self.waveform.addItem(self.region_wf_hor)
         self.waveform.addItem(self.region_wf)
         self.layout.addItem(self.waveform)
         self.addItem(self.layout)

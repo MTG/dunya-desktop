@@ -12,7 +12,7 @@ class TimerThread(QtCore.QThread):
         self.timer.setInterval(interval)
 
         self.timer_wf = QtCore.QTimer()
-        self.timer_wf.setInterval(250)
+        self.timer_wf.setInterval(300)
 
         self.timer.timeout.connect(self.send_signal)
         self.timer_wf.timeout.connect(self.send_signal_wf)
