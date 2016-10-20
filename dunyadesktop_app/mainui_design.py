@@ -139,9 +139,10 @@ class MainWindowDesign(QtGui.QMainWindow):
         self.setWindowTitle(
             utilities._translate("MainWindow", "Dunya Desktop", None))
 
-        self.label_filtering.setText(utilities._translate("MainWindow",
-                                                          "<html><head/><body><p><span style=\" font-weight:600;\">Filtering</span></p></body></html>",
-                                                          None))
+        self.label_filtering.setText(utilities._translate(
+            "MainWindow",
+            "<html><head/><body><p><span style=\" font-weight:600;\">Filtering</span></p></body></html>",
+            None))
 
         self.lineEdit_filter.setPlaceholderText(
             utilities._translate("MainWindow",

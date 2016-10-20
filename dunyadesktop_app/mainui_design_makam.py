@@ -17,7 +17,7 @@ class MainWindowMakamDesign(MainWindowDesign):
         font = QtGui.QFont()
         font.setPointSize(15)
         font.setBold(True)
-        self.label_main.setText("Turkish Makam Music Corpora")
+        self.label_main.setText("Ottoman-Turkish Makam Music Corpus")
         self.label_main.setFont(font)
 
     def _set_score_tab(self):
