@@ -10,7 +10,6 @@ from dunyadesktop_app.widgets.waveformwidget import WaveformWidget
 from dunyadesktop_app.widgets.melodywidget import MelodyWidget
 from dunyadesktop_app.widgets.playerframe import PlayerFrame
 from dunyadesktop_app.utilities.playback import AudioPlaybackThread
-from dunyadesktop_app.utilities.timer import TimerThread
 import dunyadesktop_app.ui_files.resources_rc
 
 
@@ -37,22 +36,24 @@ class PlayerDialog(QtGui.QDialog):
         self.waveform_widget.plot_waveform(raw_audio)
         self.melody_widget.plot_histogram(pd, pitch)
 
-        self.playback_thread = AudioPlaybackThread()
+        self.playback_thread = AudioPlaybackThread(timer_pitch=60,
+                                                   timer_wf=300)
         self.playback_thread.playback.set_source(audio_path)
         self._set_slider(len_audio)
 
-        self.timers = TimerThread(interval=60)
         self.playback_pos = 0
         self.playback_pos_pyglet = 0
 
         self.frame_player.toolbutton_pause.setDisabled(True)
 
         # signals
-        self.timers.time_out_wf.connect(lambda: self.update_wf_pos(samplerate))
-        self.timers.time_out.connect(self._keep_position)
-        self.timers.time_out.connect(lambda: self.update_vlines(hopsize,
-                                                                samplerate,
-                                                                pitch))
+        self.playback_thread.time_out_wf.connect(lambda:
+                                                 self.update_wf_pos(samplerate))
+        self.playback_thread.time_out.connect(self._keep_position)
+        self.playback_thread.time_out.connect(lambda:
+                                              self.update_vlines(hopsize,
+                                                                 samplerate,
+                                                                 pitch))
 
         self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
             lambda: self.wf_region_changed(samplerate, hopsize))
@@ -69,7 +70,7 @@ class PlayerDialog(QtGui.QDialog):
 
     def _set_design(self):
         self.setWindowTitle('Player')
-        self.resize(850, 550)
+        self.resize(1050, 550)
         self.setMinimumSize(QtCore.QSize(850, 500))
         self.setStyleSheet("background-color: rgb(30, 30, 30);")
         self.verticalLayout = QtGui.QVBoxLayout(self)
@@ -100,14 +101,12 @@ class PlayerDialog(QtGui.QDialog):
     def playback_play(self):
         self.frame_player.toolbutton_play.setDisabled(True)
         self.frame_player.toolbutton_pause.setEnabled(True)
-        self.timers.start()
         self.playback_thread.start()
 
     def playback_pause(self):
         self.frame_player.toolbutton_play.setEnabled(True)
         self.frame_player.toolbutton_pause.setDisabled(True)
-        self.playback_thread.stop()
-        self.timers.stop()
+        self.playback_thread.pause()
 
     def _keep_position(self):
         if self.playback_pos_pyglet != self.playback_thread.playback.get_pos_seconds():
@@ -121,9 +120,9 @@ class PlayerDialog(QtGui.QDialog):
         self.frame_player.slider.setSingleStep(1)
 
     def update_vlines(self, hopsize, samplerate, pitch):
-
         if self.playback_thread.playback.is_playing():
-            if self.playback_pos_pyglet <= self.playback_thread.playback.get_pos_seconds():
+            if self.playback_pos_pyglet <= \
+                    self.playback_thread.playback.get_pos_seconds():
                 self.playback_pos += 0.05
             else:
                 self.playback_pos = self.playback_pos_pyglet
@@ -140,8 +139,8 @@ class PlayerDialog(QtGui.QDialog):
             if pos_xmin <= pos_vline < pos_xmax:
                 pass
             elif pos_xmax * 0.99 <= pos_vline <= pos_xmax * 1.01:
-                self.waveform_widget.region_wf.setRegion([pos_xmax*samplerate+1,
-                                                          (pos_xmax+dist)*samplerate])
+                self.waveform_widget.region_wf.setRegion(
+                    [pos_xmax*samplerate+1,(pos_xmax+dist)*samplerate])
                 self.melody_widget.zoom_selection.setXRange(pos_xmax+1,
                                                             pos_xmax+dist,
                                                             padding=0)

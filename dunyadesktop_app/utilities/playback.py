@@ -30,12 +30,34 @@ class AudioPlayback:
 
 
 class AudioPlaybackThread(QtCore.QThread):
-    def __init__(self):
+    time_out = QtCore.pyqtSignal()
+    time_out_wf = QtCore.pyqtSignal()
+
+    def __init__(self, timer_pitch=50, timer_wf=300):
         QtCore.QThread.__init__(self)
         self.playback = AudioPlayback()
 
+        self.timer = QtCore.QTimer()
+        self.timer.setInterval(timer_pitch)
+
+        self.timer_wf = QtCore.QTimer()
+        self.timer_wf.setInterval(timer_wf)
+
+        self.timer.timeout.connect(self.send_signal)
+        self.timer_wf.timeout.connect(self.send_signal_wf)
+
     def run(self):
+        self.timer.start()
+        self.timer_wf.start()
         self.playback.play()
 
-    def stop(self):
+    def pause(self):
+        self.timer.stop()
+        self.timer_wf.stop()
         self.playback.pause()
+
+    def send_signal(self):
+        self.time_out.emit()
+
+    def send_signal_wf(self):
+        self.time_out_wf.emit()
