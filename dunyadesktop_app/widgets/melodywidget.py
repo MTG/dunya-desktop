@@ -132,16 +132,17 @@ class MelodyWidget(GraphicsLayoutWidget):
                                          width=1))
         self.zoom_selection.addItem(self.vline)
 
-    def set_zoom_selection_area(self, pos_wf_x_min, pos_wf_x_max, samplerate):
+    def set_zoom_selection_area(self, pos_wf_x_min, pos_wf_x_max, samplerate, hopsize):
         x_min = pos_wf_x_min / samplerate
         x_max = pos_wf_x_max / samplerate
         self.zoom_selection.setXRange(x_min, x_max, padding=0)
 
-        #self.zoom_selection.setDownsampling(ds=True, auto=True, mode='mean')
-        #if len(self.pitch_data['pitch'][
-        #       int(pos_wf_x_min / 128.):int(pos_wf_x_max / 128.)]) >= 10000:
-        #    self.zoom_selection.setDownsampling(ds=True, auto=True,
-        #                                        mode='peak')
+        if (x_max-x_min)*samplerate/hopsize >= 8000:
+            self.zoom_selection.setDownsampling(ds=True, auto=True,
+                                                mode='mean')
+        else:
+            self.zoom_selection.setDownsampling(ds=True, auto=True,
+                                                mode='subsample')
 
     def set_zoom_selection_area_hor(self, min_freq, max_freq):
         self.zoom_selection.setYRange(min_freq, max_freq, padding=0)
