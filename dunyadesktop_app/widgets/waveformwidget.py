@@ -2,6 +2,7 @@ from PyQt4 import QtGui, QtCore
 from pyqtgraph import GraphicsLayoutWidget
 import pyqtgraph as pg
 import numpy as np
+import time
 
 
 class WaveformWidget(GraphicsLayoutWidget):
@@ -37,7 +38,8 @@ class WaveformWidget(GraphicsLayoutWidget):
         raw_audio = np.array(raw_audio)
         raw_audio += abs(min(raw_audio))
 
-        self.waveform.plot(y=raw_audio, pen=(20, 170, 100, 30))
+        self.waveform.plot(y=raw_audio, pen=(20, 170, 100, 30),
+                           clipToView=True)
         self.waveform.setDownsampling(ds=True, auto=True, mode='peak')
 
         self.add_elements_to_plot(raw_audio)

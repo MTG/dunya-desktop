@@ -23,11 +23,11 @@ class MelodyWidget(GraphicsLayoutWidget):
         self.layout.setSpacing(0)
 
     def plot_melody(self, pitch_data, len_raw_audio, samplerate):
-        y_axis = pg.AxisItem('left')
-        y_axis.enableAutoSIPrefix(enable=False)
+        #y_axis = pg.AxisItem('left')
+        #y_axis.enableAutoSIPrefix(enable=False)
 
-        self.zoom_selection = self.layout.addPlot(title="Zoom selection",
-                                                  axisItems={'left': y_axis})
+        self.zoom_selection = self.layout.addPlot(title="Zoom selection")
+        #                                          axisItems={'left': y_axis})
         self.zoom_selection.setMouseEnabled(x=False, y=False)
         self.zoom_selection.setMenuEnabled(False)
 
@@ -41,10 +41,12 @@ class MelodyWidget(GraphicsLayoutWidget):
                                               pen=None,
                                               symbol='o',
                                               symbolSize=1.5,
-                                              symbolBrush=pg.mkBrush(222, 244, 237),
+                                              symbolBrush=
+                                              pg.mkBrush(222, 244, 237),
                                               symbolPen=None,
-                                              clipToView=True,
-                                              autoDownsample=True)
+                                              clipToView=True)
+                                              #autoDownsample=True)
+        self.zoom_selection.setDownsampling(ds=True, auto=True, mode='peak')
 
         self.zoom_selection.setAutoVisible(y=True)
         self.zoom_selection.setLabel(axis="bottom", text="Time", units="sec")
