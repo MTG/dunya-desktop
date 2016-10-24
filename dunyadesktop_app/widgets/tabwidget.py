@@ -2,10 +2,10 @@ import os
 
 from PyQt4 import QtGui
 
-from dunyadesktop_app.utilities import utilities
 
 CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
                         'tabwidget.css')
+
 
 class TabWidget(QtGui.QTabWidget):
     def __init__(self, parent=None):
@@ -15,7 +15,7 @@ class TabWidget(QtGui.QTabWidget):
 
         # audio tab
         self.tab_audio = QtGui.QWidget()
-        self.addTab(self.tab_audio, utilities._fromUtf8(""))
+        self.addTab(self.tab_audio, "")
 
         self._retranslate_status_tips()
 
