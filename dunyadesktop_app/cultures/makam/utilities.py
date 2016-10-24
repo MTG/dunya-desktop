@@ -5,7 +5,7 @@ import json
 import compmusic.dunya.makam
 from PyQt4 import QtCore
 
-from dunyadesktop_app.utilities.utilities import *
+from dunyadesktop_app.utilities.utilities import sort_dictionary
 
 
 def get_attributes():
@@ -36,7 +36,7 @@ class FeatureDownloaderThread(QtCore.QThread):
 
     def __init__(self):
         QtCore.QThread.__init__(self)
-        self.recid=''
+        self.recid = ''
 
     def run(self):
         rec_folder = os.path.join(self.TEMP, self.recid)
@@ -48,6 +48,6 @@ class FeatureDownloaderThread(QtCore.QThread):
                                            slugify=True)
         pitch_data = json.loads(compmusic.dunya.docserver.file_for_document(
             self.recid, 'audioanalysis', subtype='pitch_filtered'))
-        pd = json.loads(compmusic.dunya.docserver.file_for_document(self.recid,
-                               'audioanalysis', subtype='pitch_distribution'))
+        pd = json.loads(compmusic.dunya.docserver.file_for_document(
+            self.recid, 'audioanalysis', subtype='pitch_distribution'))
         self.feautures_downloaded.emit(pitch_data, pd)
