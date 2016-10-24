@@ -1,7 +1,7 @@
 import os.path
 import ConfigParser
 
-import compmusic.dunya.makam
+import compmusic.dunya.conn
 
 
 def set_token():
