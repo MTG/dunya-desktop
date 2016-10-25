@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1000</width>
-    <height>600</height>
+    <height>683</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -26,17 +26,26 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QMainWindow{ background-color: #1E2828;
+   <string notr="true">QMainWindow#MainWindow{ background-color: #1E2828;
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
+    <property name="spacing">
+     <number>15</number>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
     <item>
-     <layout class="QGridLayout" name="gridLayout_table">
-      <property name="spacing">
-       <number>0</number>
+     <widget class="QFrame" name="frame">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
       </property>
-     </layout>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -50,7 +59,16 @@
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="styleSheet">
+    <string notr="true">QStatusBar#statusbar {background-color: #2E3235;
+													 border-top-color: 1.5px solid black; }
+
+/*border: 1.5px solid black;
+					 										   border-right-color: transparent;
+					 										   border-left-color: transparent; */</string>
+   </property>
+  </widget>
   <widget class="QDockWidget" name="dockWidget_collections">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
@@ -60,7 +78,7 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>271</width>
+     <width>275</width>
      <height>437</height>
     </size>
    </property>
@@ -69,6 +87,9 @@
      <width>400</width>
      <height>524287</height>
     </size>
+   </property>
+   <property name="contextMenuPolicy">
+    <enum>Qt::DefaultContextMenu</enum>
    </property>
    <property name="styleSheet">
     <string notr="true"/>
@@ -80,7 +101,7 @@
     <set>Qt::NoDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string/>
+    <string notr="true"/>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
@@ -99,14 +120,18 @@
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">QWidget#dockWidgetContents { background-color: #2B2A2D; }</string>
+     <string notr="true">QWidget#dockWidgetContents { background-color: #232628; 
+																		  }</string>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="spacing">
+      <number>17</number>
+     </property>
      <property name="margin">
       <number>0</number>
      </property>
      <item>
-      <widget class="QFrame" name="frame">
+      <widget class="QFrame" name="frame_collection">
        <property name="sizePolicy">
         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
          <horstretch>0</horstretch>
@@ -126,9 +151,10 @@
         </size>
        </property>
        <property name="styleSheet">
-        <string notr="true">QFrame#frame {border: 2px solid black;
-					 border-right-color: transparent;
-					 border-left-color: transparent;}</string>
+        <string notr="true">QFrame#frame_collection { border: 1.5px solid black;
+					 										   border-right-color: transparent;
+					 										   border-left-color: transparent;
+															  }</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
@@ -153,7 +179,7 @@
          <number>2</number>
         </property>
         <item>
-         <widget class="QLabel" name="label">
+         <widget class="QLabel" name="label_collections">
           <property name="text">
            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -172,7 +198,9 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QListView" name="listView_collections">
           <property name="styleSheet">
-           <string notr="true">QListView#listView_collections {border: transparent;}</string>
+           <string notr="true">QListView#listView_collections {border: transparent;
+																		  background-color: #232628; 
+																		  }</string>
           </property>
           <property name="viewMode">
            <enum>QListView::ListMode</enum>
@@ -183,7 +211,32 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item>
-      <widget class="QFrame" name="frame_2">
+      <widget class="QToolButton" name="toolButton_collection">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>New Collection</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="frame_downloaded">
        <property name="sizePolicy">
         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
          <horstretch>0</horstretch>
@@ -203,9 +256,11 @@ p, li { white-space: pre-wrap; }
         </size>
        </property>
        <property name="styleSheet">
-        <string notr="true">QFrame#frame_2 {border: 2px solid black;
-					 border-right-color: transparent;
-					 border-left-color: transparent;}</string>
+        <string notr="true">QFrame#frame_downloaded {border: 1px solid black;
+										   							border-right-color: transparent;
+					 												border-left-color: transparent;
+																	border-top-color: transparent;
+																	}</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
@@ -227,9 +282,14 @@ p, li { white-space: pre-wrap; }
          <number>2</number>
         </property>
         <item>
-         <widget class="QLabel" name="label_2">
+         <widget class="QLabel" name="label_downloaded">
+          <property name="font">
+           <font>
+            <family>Garuda</family>
+           </font>
+          </property>
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#9c9c9c;&quot;&gt;DOWNLOADED FEATURES&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#878787;&quot;&gt;DOWNLOADED FEATURES&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="indent">
            <number>15</number>
@@ -237,7 +297,13 @@ p, li { white-space: pre-wrap; }
          </widget>
         </item>
         <item>
-         <widget class="QTableView" name="tableView_downloaded"/>
+         <widget class="QTableView" name="tableView_downloaded">
+          <property name="styleSheet">
+           <string notr="true">QTableView#tableView_downloaded {border: transparent;
+																					  background-color: #232628; 
+																					  }</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -245,16 +311,93 @@ p, li { white-space: pre-wrap; }
     </layout>
    </widget>
   </widget>
-  <widget class="QToolBar" name="toolBar">
-   <property name="windowTitle">
-    <string>toolBar</string>
+  <widget class="QDockWidget" name="dockWidget_top">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
    </property>
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
+   <property name="minimumSize">
+    <size>
+     <width>459</width>
+     <height>65</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>524287</width>
+     <height>65</height>
+    </size>
+   </property>
+   <property name="features">
+    <set>QDockWidget::NoDockWidgetFeatures</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::NoDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string notr="true"/>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
    </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLineEdit" name="lineEdit_search">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>275</width>
+         <height>10</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>150</width>
+         <height>30</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_username">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600; color:#7c7c7c;&quot;&gt;user.name&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line">
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_status">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#73ff7c;&quot;&gt;online&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
  </widget>
  <resources/>
