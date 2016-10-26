@@ -47,9 +47,10 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QFrame" name="frame">
+     <widget class="QFrame" name="frame_query">
       <property name="styleSheet">
-       <string notr="true"/>
+       <string notr="true">QFrame#frame_query {border: transparent
+													}</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -118,7 +119,7 @@
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents">
+   <widget class="QWidget" name="dockWidgetContents_left">
     <property name="sizePolicy">
      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
       <horstretch>0</horstretch>
@@ -398,7 +399,7 @@ QToolButton#toolButton_collection:hover {color: white;}
    <attribute name="dockWidgetArea">
     <number>4</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_3">
+   <widget class="QWidget" name="dockWidgetContents_top">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <property name="spacing">
       <number>5</number>
