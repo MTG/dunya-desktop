@@ -1,5 +1,5 @@
 QTabWidget::pane { /* The tab widget frame */
-    border-top: 2px solid #C2C7CB;
+    border-top: 1px solid gray;
     position: absolute;
     top: -0.5em;
 }
@@ -35,5 +35,5 @@ QTabBar::tab:selected, QTabBar::tab:hover {
 
 QTabBar::tab:selected {
     border-color: #9B9B9B;
-    border-bottom-color: #85C1E9; /* same as pane color */
+    border-bottom-color: #5CB0E8; /* same as pane color */
 }
