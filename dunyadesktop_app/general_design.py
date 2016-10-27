@@ -5,6 +5,7 @@ from PyQt4 import QtGui, QtCore
 
 from widgets.dockwidget import DockWidget, DockWidgetContentsLeft, \
     DockWidgetContentsTop
+from widgets.queryframe import QueryFrame
 
 
 CSS_MAIN = os.path.join(os.path.dirname(__file__), 'ui_files', 'css',
@@ -28,7 +29,7 @@ class GeneralMainDesign(QtGui.QMainWindow):
         self.vertical_layout_2.setSpacing(0)
 
         # query frame
-        self.frame_query = QtGui.QFrame(self.centralwidget)
+        self.frame_query = QueryFrame()
         self._set_css(self.frame_query, CSS_FRAME_QUERY)
         self._set_frame()
         self.vertical_layout_2.addWidget(self.frame_query)
@@ -47,7 +48,7 @@ class GeneralMainDesign(QtGui.QMainWindow):
         self.addDockWidget(QtCore.Qt.DockWidgetArea(1),
                            self.dw_collections)
 
-        self.dw_top = DockWidget(460, 65, 20000, 65)
+        self.dw_top = DockWidget(460, 25, 20000, 25)
         self.dwc_top = DockWidgetContentsTop()
         self.dw_top.setWidget(self.dwc_top)
         self.addDockWidget(QtCore.Qt.DockWidgetArea(4), self.dw_top)
