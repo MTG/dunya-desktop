@@ -20,7 +20,7 @@ class MainWindowMakam(MainWindowMakamDesign):
          self.performers, self.instruments) = utilities.get_attributes()
         self._set_combobox_attributes()
 
-        self.frame_attributes.comboBox_instrument.setDisabled(True)
+        self.frame_query.frame_attributes.comboBox_instrument.setDisabled(True)
         self.recordings = []
         self.work_count = 0
         self.progress_number = 0
@@ -28,7 +28,7 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.thread_feature_downloader = utilities.FeatureDownloaderThread()
 
         # signals
-        self.frame_attributes.toolButton_query.clicked.connect(self.query)
+        self.frame_query.frame_attributes.toolButton_query.clicked.connect(self.query)
 
         self.thread_query.combobox_results.connect(
             self.change_combobox_backgrounds)
@@ -36,40 +36,40 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.thread_query.query_completed.connect(self.query_finished)
         self.thread_query.fetching_completed.connect(self.work_received)
 
-        self.recording_model.rec_fetched.connect(self.append_recording)
+        self.frame_query.recording_model.rec_fetched.connect(self.append_recording)
 
-        self.lineEdit_filter.textChanged.connect(
+        self.frame_query.lineEdit_filter.textChanged.connect(
             lambda: self.proxy_model.filtering_the_table(
-                self.lineEdit_filter.text()))
-        self.tableView_results.open_dunya.triggered.connect(
+                self.frame_query.lineEdit_filter.text()))
+        self.frame_query.tableView_results.open_dunya.triggered.connect(
             lambda: self.download_related_features(
-                self.tableView_results.index))
+                self.frame_query.tableView_results.index))
 
         self.thread_feature_downloader.feautures_downloaded.connect(
             self.open_player)
 
     def _set_combobox_attributes(self):
-        self.frame_attributes.comboBox_melodic.add_items(self.makams)
-        self.frame_attributes.comboBox_form.add_items(self.forms)
-        self.frame_attributes.comboBox_rhythm.add_items(self.usuls)
-        self.frame_attributes.comboBox_composer.add_items(self.composers)
-        self.frame_attributes.comboBox_performer.add_items(self.performers)
-        self.frame_attributes.comboBox_instrument.add_items(self.instruments)
+        self.frame_query.frame_attributes.comboBox_melodic.add_items(self.makams)
+        self.frame_query.frame_attributes.comboBox_form.add_items(self.forms)
+        self.frame_query.frame_attributes.comboBox_rhythm.add_items(self.usuls)
+        self.frame_query.frame_attributes.comboBox_composer.add_items(self.composers)
+        self.frame_query.frame_attributes.comboBox_performer.add_items(self.performers)
+        self.frame_query.frame_attributes.comboBox_instrument.add_items(self.instruments)
 
     def query(self):
         self.recordings = []
         self.work_count = 0
-        self.recording_model.clear_items()
-        self.frame_attributes.toolButton_query.setEnabled(False)
-        self.lineEdit_filter.setEnabled(True)
-        self.tableView_results.setEnabled(True)
-        self.tableView_results.horizontal_header.show()
+        self.frame_query.recording_model.clear_items()
+        self.frame_query.frame_attributes.toolButton_query.setEnabled(False)
+        self.frame_query.lineEdit_filter.setEnabled(True)
+        self.frame_query.tableView_results.setEnabled(True)
+        self.frame_query.tableView_results.horizontal_header.show()
 
-        mid = self.frame_attributes.comboBox_melodic.get_attribute_id()
-        fid = self.frame_attributes.comboBox_form.get_attribute_id()
-        uid = self.frame_attributes.comboBox_rhythm.get_attribute_id()
-        cmbid = self.frame_attributes.comboBox_composer.get_attribute_id()
-        ambid = self.frame_attributes.comboBox_performer.get_attribute_id()
+        mid = self.frame_query.frame_attributes.comboBox_melodic.get_attribute_id()
+        fid = self.frame_query.frame_attributes.comboBox_form.get_attribute_id()
+        uid = self.frame_query.frame_attributes.comboBox_rhythm.get_attribute_id()
+        cmbid = self.frame_query.frame_attributes.comboBox_composer.get_attribute_id()
+        ambid = self.frame_query.frame_attributes.comboBox_performer.get_attribute_id()
 
         self.thread_query.mid = mid
         self.thread_query.fid = fid
@@ -90,31 +90,31 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.work_count += 1
         self.progress_bar.update_progress_bar(self.work_count,
                                               self.progress_number)
-        self.recording_model.add_recording(work)
-        self.tableView_results.resizeColumnToContents(1)
-        self.tableView_results.setColumnWidth(0, 28)
+        self.frame_query.recording_model.add_recording(work)
+        self.frame_query.tableView_results.resizeColumnToContents(1)
+        self.frame_query.tableView_results.setColumnWidth(0, 28)
 
     def change_combobox_backgrounds(self, combobox_status):
         color_palette = {0: '', 1: '#D9F4DD', 2: '#F4D1D0'}
-        self.frame_attributes.comboBox_melodic.change_background(
+        self.frame_query.frame_attributes.comboBox_melodic.change_background(
             color=color_palette[combobox_status[0]])
-        self.frame_attributes.comboBox_form.change_background(
+        self.frame_query.frame_attributes.comboBox_form.change_background(
             color=color_palette[combobox_status[1]])
-        self.frame_attributes.comboBox_rhythm.change_background(
+        self.frame_query.frame_attributes.comboBox_rhythm.change_background(
             color=color_palette[combobox_status[2]])
-        self.frame_attributes.comboBox_composer.change_background(
+        self.frame_query.frame_attributes.comboBox_composer.change_background(
             color=color_palette[combobox_status[3]])
-        self.frame_attributes.comboBox_performer.change_background(
+        self.frame_query.frame_attributes.comboBox_performer.change_background(
             color=color_palette[combobox_status[4]])
 
     def query_finished(self):
         self.progress_bar.setVisible(False)
         self.progress_bar.setValue(0)
         self.progress_bar.setFormat("")
-        self.frame_attributes.toolButton_query.setEnabled(True)
+        self.frame_query.frame_attributes.toolButton_query.setEnabled(True)
 
     def download_related_features(self, index):
-        source_index = self.tableView_results.model().mapToSource(index)
+        source_index = self.frame_query.tableView_results.model().mapToSource(index)
         self.recid = self.recordings[source_index.row()]
         self.thread_feature_downloader.recid = self.recid
         self.thread_feature_downloader.start()

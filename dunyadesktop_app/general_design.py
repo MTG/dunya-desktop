@@ -6,6 +6,7 @@ from PyQt4 import QtGui, QtCore
 from widgets.dockwidget import DockWidget, DockWidgetContentsLeft, \
     DockWidgetContentsTop
 from widgets.queryframe import QueryFrame
+from widgets.progressbar import ProgressBar
 
 
 CSS_MAIN = os.path.join(os.path.dirname(__file__), 'ui_files', 'css',
@@ -14,6 +15,9 @@ CSS_FRAME_QUERY = os.path.join(os.path.dirname(__file__), 'ui_files', 'css',
                                'frame_query.css')
 CSS_STATUSBAR = os.path.join(os.path.dirname(__file__), 'ui_files', 'css',
                              'statusbar.css')
+
+DUNYA_ICON = ":/compmusic/icons/dunya.svg"
+QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"
 
 
 class GeneralMainDesign(QtGui.QMainWindow):
@@ -39,7 +43,12 @@ class GeneralMainDesign(QtGui.QMainWindow):
         # status bar
         self.statusbar = QtGui.QStatusBar(self)
         self._set_css(self.statusbar, CSS_STATUSBAR)
+        self._set_status_bar()
         self.setStatusBar(self.statusbar)
+
+        self.progress_bar = ProgressBar(self)
+        self.statusbar.addPermanentWidget(self.progress_bar)
+        self.progress_bar.setVisible(False)
 
         # dockwidget collection (left side)
         self.dw_collections = DockWidget(270, 440, 400, 20000)
@@ -65,6 +74,12 @@ class GeneralMainDesign(QtGui.QMainWindow):
         self.setSizePolicy(size_policy)
         self.setMinimumSize(QtCore.QSize(1000, 600))
 
+        # main window icon
+        icon_dunya = QtGui.QIcon()
+        icon_dunya.addPixmap(QtGui.QPixmap(DUNYA_ICON),
+                             QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.setWindowIcon(icon_dunya)
+
     @staticmethod
     def _set_css(obj, css_path):
         with open(css_path) as f:
@@ -74,3 +89,9 @@ class GeneralMainDesign(QtGui.QMainWindow):
     def _set_frame(self):
         self.frame_query.setFrameShape(QtGui.QFrame.StyledPanel)
         self.frame_query.setFrameShadow(QtGui.QFrame.Raised)
+
+    def _set_status_bar(self):
+        self.statusbar.setMinimumSize(QtCore.QSize(0, 18))
+        font = QtGui.QFont()
+        font.setPointSize(9)
+        self.statusbar.setFont(font)

@@ -30,8 +30,10 @@ class MainWindowMakamDesign(GeneralMainDesign):
         self.frame_query.frame_attributes.comboBox_rhythm.set_placeholder_text('Usul')
 
 # uncomment to test the interface
+'''
 import sys
 app = QtGui.QApplication(sys.argv)
 dialog = MainWindowMakamDesign()
 dialog.show()
 app.exec_()
+'''

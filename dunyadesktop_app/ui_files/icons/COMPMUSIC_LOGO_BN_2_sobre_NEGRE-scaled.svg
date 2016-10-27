@@ -25,7 +25,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -43,6 +43,17 @@
          y="0"
          clip-path="none" />
     </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4137">
+      <rect
+         style="opacity:0.06499999;fill:#00000e;fill-opacity:1;stroke-width:7;stroke-miterlimit:10;stroke-dasharray:none"
+         id="rect4139"
+         width="615.6286"
+         height="428.36514"
+         x="-25.748724"
+         y="-40.659016" />
+    </clipPath>
   </defs>
   <sodipodi:namedview
      pagecolor="#ffffff"
@@ -54,16 +65,16 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1881"
-     inkscape:window-height="1056"
+     inkscape:window-height="1176"
      id="namedview4"
      showgrid="false"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:zoom="1.20832"
-     inkscape:cx="332.65368"
-     inkscape:cy="206.11585"
+     inkscape:zoom="0.85441127"
+     inkscape:cx="391.91822"
+     inkscape:cy="69.839707"
      inkscape:window-x="39"
      inkscape:window-y="24"
      inkscape:window-maximized="1"
@@ -76,6 +87,6 @@
      id="image10"
      x="0"
      y="0"
-     style="opacity:0.8"
-     clip-path="url(#clipPath4139)" />
+     style="opacity:0.08"
+     clip-path="url(#clipPath4137)" />
 </svg>

@@ -1,11 +1,12 @@
 QTableView {
     /*background-image: url(:/compmusic/icons/compmusic-logo-opac.svg); */
-    background-image: url(:/compmusic/icons/compmusic-logo-opac.svg);
+    background-image: url(:/compmusic/icons/COMPMUSIC_LOGO_BN_2_sobre_NEGRE-scaled.svg);
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    /*background-attachment: fixed;*/
     background-position: center;
     /*background-repeat: no-repeat;*/
-    background-color: rgb(228, 228, 228)
+    /*background-color: rgb(228, 228, 228)*/
+    background-color: #232628;
 }
 
 QTableView::item:hover {
