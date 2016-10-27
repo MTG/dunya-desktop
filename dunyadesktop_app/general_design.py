@@ -48,7 +48,7 @@ class GeneralMainDesign(QtGui.QMainWindow):
         self.addDockWidget(QtCore.Qt.DockWidgetArea(1),
                            self.dw_collections)
 
-        self.dw_top = DockWidget(460, 25, 20000, 25)
+        self.dw_top = DockWidget(460, 50, 20000, 50)
         self.dwc_top = DockWidgetContentsTop()
         self.dw_top.setWidget(self.dwc_top)
         self.addDockWidget(QtCore.Qt.DockWidgetArea(4), self.dw_top)

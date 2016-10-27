@@ -187,9 +187,18 @@ class DockWidgetContentsTop(QtGui.QWidget):
         self.horizontal_layout.setContentsMargins(2, 0, 4, 0)
         self.horizontal_layout.setSpacing(5)  # check it
 
-        #self.lineedit_search = QtGui.QLineEdit(self)
-        #self._set_lineedit()
-        #self.horizontal_layout.addWidget(self.lineedit_search)
+        spacer = QtGui.QSpacerItem(20, 0, QtGui.QSizePolicy.Expanding,
+                                   QtGui.QSizePolicy.Fixed)
+
+        self.horizontal_layout.addItem(spacer)
+
+        self.label_corpus = QtGui.QLabel(self)
+        self._set_label_corpus()
+        self.horizontal_layout.addWidget(self.label_corpus)
+
+        spacer2 = QtGui.QSpacerItem(20, 0, QtGui.QSizePolicy.Expanding,
+                                    QtGui.QSizePolicy.Fixed)
+        self.horizontal_layout.addItem(spacer2)
 
         self.label_username = QtGui.QLabel(self)
         self.label_username.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
@@ -204,16 +213,19 @@ class DockWidgetContentsTop(QtGui.QWidget):
         self.horizontal_layout.addWidget(self.label_status)
         self.retranslateUi()
 
-    def _set_lineedit(self):
-        sizepolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,
-                                       QtGui.QSizePolicy.Fixed)
-        sizepolicy.setHorizontalStretch(0)
-        sizepolicy.setVerticalStretch(0)
+    def _set_label_corpus(self):
+        font = QtGui.QFont()
+        font.setFamily("Garuda")
+        self.label_corpus.setFont(font)
+        sizepolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding,
+                                       QtGui.QSizePolicy.Expanding)
+        #sizepolicy.setHorizontalStretch(0)
+        #sizepolicy.setVerticalStretch(0)
         sizepolicy.setHeightForWidth(
-            self.lineedit_search.sizePolicy().hasHeightForWidth())
-        self.lineedit_search.setSizePolicy(sizepolicy)
-        self.lineedit_search.setMinimumSize(QtCore.QSize(270, 10))
-        self.lineedit_search.setMaximumSize(QtCore.QSize(150, 25))
+            self.label_corpus.sizePolicy().hasHeightForWidth())
+        self.label_corpus.setSizePolicy(sizepolicy)
+        self.label_corpus.setMinimumSize(QtCore.QSize(300, 30))
+        self.label_corpus.setMaximumSize(QtCore.QSize(700, 30))
 
     def _set_line(self):
         sizepolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,
@@ -240,3 +252,4 @@ class DockWidgetContentsTop(QtGui.QWidget):
     def retranslateUi(self):
         self.label_username.setText("<html><head/><body><p align=\"right\"><span style=\" font-weight:600; color:#7c7c7c;\">user.name</span></p></body></html>")
         self.label_status.setText('<html><head/><body><p><span style=" font-size:10pt; color:#73ff7c;">online</span></p></body></html>')
+        self.label_corpus.setText('<html><head/><body><p align="center"><span style=" font-size:15pt; color:#C1C1C1;">Ottoman-Turkish Makam Music Corpus</span></p></body></html>')
