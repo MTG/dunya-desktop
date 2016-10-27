@@ -44,9 +44,9 @@ class MelodyWidget(GraphicsLayoutWidget):
                                               symbolBrush=
                                               pg.mkBrush(222, 244, 237),
                                               symbolPen=None,
-                                              clipToView=True)
-                                              #autoDownsample=True)
-        self.zoom_selection.setDownsampling(ds=True, auto=True, mode='peak')
+                                              clipToView=True,
+                                              autoDownsample=True)
+        #self.zoom_selection.setDownsampling(ds=True, auto=True, mode='peak')
 
         self.zoom_selection.setAutoVisible(y=True)
         self.zoom_selection.setLabel(axis="bottom", text="Time", units="sec")

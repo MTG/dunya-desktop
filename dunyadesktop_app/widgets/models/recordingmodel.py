@@ -2,7 +2,7 @@ import os
 
 from PyQt4 import QtGui, QtCore
 
-DUNYA_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
+DUNYA_ICON = os.path.join(os.path.dirname(__file__), '..', '..', 'ui_files',
                           'icons', 'dunya.svg')
 
 
