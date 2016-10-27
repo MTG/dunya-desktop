@@ -3,7 +3,7 @@ import platform
 
 from PyQt4 import QtGui, QtCore
 
-from .combobox import ComboBox
+from combobox import ComboBox
 
 if platform.system() == 'Linux':
     MARGIN = 2

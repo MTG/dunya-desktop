@@ -2,7 +2,7 @@ import os
 
 from PyQt4 import QtGui
 
-from .table import TableView
+from table import TableView
 
 dunya_icon = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                           'icons', 'dunya.svg')

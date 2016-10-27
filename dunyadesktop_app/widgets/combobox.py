@@ -3,7 +3,7 @@ import platform
 
 from PyQt4 import QtGui
 
-from .filteringdialog import FilteringDialog
+from filteringdialog import FilteringDialog
 
 if platform.system() == 'Linux':
     BUTTON_POS = 9

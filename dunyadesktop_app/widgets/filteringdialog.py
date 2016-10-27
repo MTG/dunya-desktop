@@ -1,6 +1,6 @@
 from PyQt4 import QtGui, QtCore
 
-from .table import TableView
+from table import TableView
 
 from models.filteringmodel import FilteringModel
 from models.proxymodel import SortFilterProxyModel

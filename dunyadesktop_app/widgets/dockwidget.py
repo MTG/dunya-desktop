@@ -63,7 +63,7 @@ class DockWidgetContentsLeft(QtGui.QWidget):
 
         self.vertical_layout3 = QtGui.QVBoxLayout(self.frame_collection)
         self.vertical_layout3.setContentsMargins(2, 5, 3, 2)
-        self.vertical_layout3.setSpacing(5)  # check it
+        self.vertical_layout3.setSpacing(7)  # check it
 
         self.label_collections = QtGui.QLabel(self.frame_collection)
         self.label_collections.setIndent(15)  # check it
@@ -187,9 +187,9 @@ class DockWidgetContentsTop(QtGui.QWidget):
         self.horizontal_layout.setContentsMargins(2, 0, 4, 0)
         self.horizontal_layout.setSpacing(5)  # check it
 
-        self.lineedit_search = QtGui.QLineEdit(self)
-        self._set_lineedit()
-        self.horizontal_layout.addWidget(self.lineedit_search)
+        #self.lineedit_search = QtGui.QLineEdit(self)
+        #self._set_lineedit()
+        #self.horizontal_layout.addWidget(self.lineedit_search)
 
         self.label_username = QtGui.QLabel(self)
         self.label_username.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
@@ -239,4 +239,4 @@ class DockWidgetContentsTop(QtGui.QWidget):
 
     def retranslateUi(self):
         self.label_username.setText("<html><head/><body><p align=\"right\"><span style=\" font-weight:600; color:#7c7c7c;\">user.name</span></p></body></html>")
-        self.label_status.setText("<html><head/><body><p><span style=\" font-weight:600; color:#73ff7c;\">online</span></p></body></html>")
+        self.label_status.setText('<html><head/><body><p><span style=" font-size:10pt; color:#73ff7c;">online</span></p></body></html>')
