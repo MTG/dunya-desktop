@@ -252,4 +252,4 @@ class DockWidgetContentsTop(QtGui.QWidget):
     def retranslateUi(self):
         self.label_username.setText("<html><head/><body><p align=\"right\"><span style=\" font-weight:600; color:#7c7c7c;\">user.name</span></p></body></html>")
         self.label_status.setText('<html><head/><body><p><span style=" font-size:10pt; color:#73ff7c;">online</span></p></body></html>')
-        self.label_corpus.setText('<html><head/><body><p align="center"><span style=" font-size:15pt; color:#C1C1C1;">Ottoman-Turkish Makam Music Corpus</span></p></body></html>')
+        self.label_corpus.setText('<html><head/><body><p align="center"><span style=" font-size:15pt; color:#C1C1C1;">CORPUS</span></p></body></html>')

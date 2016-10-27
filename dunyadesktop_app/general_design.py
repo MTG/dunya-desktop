@@ -74,9 +74,3 @@ class GeneralMainDesign(QtGui.QMainWindow):
     def _set_frame(self):
         self.frame_query.setFrameShape(QtGui.QFrame.StyledPanel)
         self.frame_query.setFrameShadow(QtGui.QFrame.Raised)
-
-
-app = QtGui.QApplication(sys.argv)
-mainwindow_makam = GeneralMainDesign()
-mainwindow_makam.show()
-app.exec_()
