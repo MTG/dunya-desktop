@@ -1,7 +1,65 @@
-QToolButton {/*border: 1px solid black;*/
-             background-color: #232628;
+/*
+QToolButton {background-color: #232628;
              color: #878787;
              border-left-color: transparent;
              border-right-color: transparent;}
 
 QToolButton:hover {color: white;}
+*/
+QToolButton {
+    color: #9FA09F;
+    border: 1px solid #76797C;
+    border-radius: 2px;
+    margin: 3px;
+    padding: 5px;
+    background-color: #31363b;
+}
+
+QToolButton[popupMode="1"] { /* only for MenuButtonPopup */
+ padding-right: 20px; /* make way for the popup button */
+ border: 1px #76797C;
+ border-radius: 5px;
+}
+
+QToolButton[popupMode="2"] { /* only for InstantPopup */
+ padding-right: 10px; /* make way for the popup button */
+ border: 1px #76797C;
+}
+
+
+QToolButton:hover, QToolButton::menu-button:hover {
+    background-color: #232629;
+    border: 1px solid #3daee9;
+    padding: 5px;
+}
+
+QToolButton:checked, QToolButton:pressed,
+        QToolButton::menu-button:pressed {
+    background-color: #3daee9;
+    border: 1px solid #3daee9;
+    padding: 5px;
+}
+
+/* the subcontrol below is used only in the InstantPopup or DelayedPopup mode */
+QToolButton::menu-indicator {
+    image: url(:/qss_icons/rc/down_arrow.png);
+    top: -7px; left: -2px; /* shift it a bit */
+}
+
+/* the subcontrols below are used only in the MenuButtonPopup mode */
+QToolButton::menu-button {
+    border: 1px transparent #76797C;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    /* 16px width + 4px for border = 20px allocated above */
+    width: 16px;
+    outline: none;
+}
+
+QToolButton::menu-arrow {
+    image: url(:/qss_icons/rc/down_arrow.png);
+}
+
+QToolButton::menu-arrow:open {
+    border: 1px solid #76797C;
+}

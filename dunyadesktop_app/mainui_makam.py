@@ -1,6 +1,7 @@
 import sys
 
 from PyQt4 import QtGui
+import qdarkstyle
 
 from cultures import apiconfig
 from cultures.makam import utilities

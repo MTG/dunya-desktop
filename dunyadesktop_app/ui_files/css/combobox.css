@@ -3,6 +3,7 @@ QComboBox {
     border-radius: 3px;
     /*padding: 1px 18px 1px 3px;*/
     min-width: 6em;
+    background-color: #31363b;
 }
 
 QComboBox:editable {
@@ -47,4 +48,14 @@ QComboBox::down-arrow {
 QComboBox::down-arrow:on { /* shift the arrow when popup is open */
     top: 1px;
     left: 1px;
+}
+
+QLineEdit
+{
+    background-color: #232629;
+    padding: 3px;
+    border-style: solid;
+    border: 1px solid #76797C;
+    border-radius: 2px;
+    color: #eff0f1;
 }

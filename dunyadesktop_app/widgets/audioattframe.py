@@ -17,6 +17,8 @@ else:
 QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"
 CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
                         'audioattframe.css')
+CSS_BUTTON = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
+                        'toolbutton.css')
 
 
 class AudioAttFrame(QtGui.QFrame):
@@ -31,6 +33,7 @@ class AudioAttFrame(QtGui.QFrame):
         if platform.system() != 'Linux':
             self._set_css()
 
+        self._set_css(self.toolButton_query, CSS_BUTTON)
         self.toolButton_query.setDisabled(True)
 
         # signals
@@ -152,3 +155,9 @@ class AudioAttFrame(QtGui.QFrame):
             self.toolButton_query.setDisabled(True)
         else:
             self.toolButton_query.setEnabled(True)
+
+    @staticmethod
+    def _set_css(obj, css_path):
+        with open(css_path) as f:
+            css = f.read()
+        obj.setStyleSheet(css)
