@@ -5,6 +5,7 @@ from general_design import GeneralMainDesign
 
 
 class MainWindowMakamDesign(GeneralMainDesign):
+    """The specific main window design of makam culture"""
     def __init__(self):
         # setting the interface
         GeneralMainDesign.__init__(self)
@@ -17,6 +18,7 @@ class MainWindowMakamDesign(GeneralMainDesign):
         self.dwc_top.label_corpus.setText('<html><head/><body><p align="center"><span style=" font-size:15pt; color:#C1C1C1;">Ottoman-Turkish Makam Music Corpus</span></p></body></html>')
 
     def _set_score_tab(self):
+        """Adds a score tab for score collection"""
         self.tab_score = QtGui.QWidget()
         self.frame_query.tabWidget.addTab(self.tab_score, "")
 
