@@ -5,34 +5,39 @@ from PyQt4 import QtGui, QtCore
 
 from combobox import ComboBox
 
+# platform dependent margins/spacings
 if platform.system() == 'Linux':
     MARGIN = 2
     SPACING = 3
     SPACE = 3
-else:
+else:  # now, only for mac
     MARGIN = 5
     SPACING = 5
     SPACE = 7
 
+# css paths
 QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"
 CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
                         'audioattframe.css')
 CSS_BUTTON = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
-                        'toolbutton.css')
+                          'toolbutton.css')
 
 
 class AudioAttFrame(QtGui.QFrame):
+    """Frame contains the comboboxes of attributes (such as makams, forms,
+    etc) and query button"""
+
     def __init__(self):
         QtGui.QFrame.__init__(self)
 
-        self._set_frame_attributes()
+        self._set_size_attributes()
 
         self.gridLayout_filtering = QtGui.QGridLayout(self)
-        self._set_gridlayout_filtering()
+        self._set_layout()
         self._retranslate_status_tips()
-        if platform.system() != 'Linux':
-            self._set_css()
 
+        if platform.system() != 'Linux':
+            self._set_css(self, CSS_PATH)
         self._set_css(self.toolButton_query, CSS_BUTTON)
         self.toolButton_query.setDisabled(True)
 
@@ -46,21 +51,22 @@ class AudioAttFrame(QtGui.QFrame):
         self.comboBox_instrument.currentIndexChanged.connect(
             self.set_toolbutton)
 
-    def _set_frame_attributes(self):
+    def _set_size_attributes(self):
+        """Sets the size policies of frame"""
         size_policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred,
                                         QtGui.QSizePolicy.Fixed)
         size_policy.setHorizontalStretch(0)
         size_policy.setVerticalStretch(0)
-        size_policy.setHeightForWidth(
-            self.sizePolicy().hasHeightForWidth())
+        size_policy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(size_policy)
-        self.setCursor(
-            QtGui.QCursor(QtCore.Qt.ArrowCursor))
+        self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.setFrameShape(QtGui.QFrame.StyledPanel)
         self.setFrameShadow(QtGui.QFrame.Raised)
         self.setLineWidth(1)
 
-    def _set_gridlayout_filtering(self):
+    def _set_layout(self):
+        """Sets the size policies of layout and initializes the comoboxes and
+        query button."""
         self.gridLayout_filtering.setSizeConstraint(
             QtGui.QLayout.SetNoConstraint)
         self.gridLayout_filtering.setMargin(MARGIN)
@@ -96,6 +102,7 @@ class AudioAttFrame(QtGui.QFrame):
                                             1, 4, 1, 1)
         self.comboBox_instrument.set_placeholder_text('Instrument')
 
+        # spacers between the comboboxes
         spacer_item1 = QtGui.QSpacerItem(SPACE, 20, QtGui.QSizePolicy.Minimum,
                                          QtGui.QSizePolicy.Fixed)
 
@@ -127,6 +134,7 @@ class AudioAttFrame(QtGui.QFrame):
                                             2, 1)
 
     def _retranslate_status_tips(self):
+        """Sets the status tips of comboboxes and query button"""
         self.comboBox_melodic.setStatusTip("Select melodic attribute")
         self.comboBox_form.setStatusTip("Select form attribute")
         self.comboBox_rhythm.setStatusTip("Select rhythm attribute")
@@ -136,12 +144,8 @@ class AudioAttFrame(QtGui.QFrame):
 
         self.toolButton_query.setStatusTip("Query your selection")
 
-    def _set_css(self):
-        with open(CSS_PATH) as f:
-            css = f.read()
-        self.setStyleSheet(css)
-
     def set_toolbutton(self):
+        """Checks the comboboxes and enables/disables the query button"""
         index_melodic = self.comboBox_melodic.currentIndex()
         index_form = self.comboBox_form.currentIndex()
         index_rhythm = self.comboBox_rhythm.currentIndex()
@@ -158,6 +162,7 @@ class AudioAttFrame(QtGui.QFrame):
 
     @staticmethod
     def _set_css(obj, css_path):
+        """Sets the css"""
         with open(css_path) as f:
             css = f.read()
         obj.setStyleSheet(css)
