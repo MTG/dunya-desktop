@@ -26,6 +26,7 @@ CSS_BUTTON = '''QToolButton {border: 0px;
 
 
 class ComboBox(QtGui.QComboBox):
+    """Combobox of the attributes."""
     def __init__(self, parent):
         QtGui.QComboBox.__init__(self, parent)
         self.setEditable(True)
@@ -57,6 +58,7 @@ class ComboBox(QtGui.QComboBox):
         self.setStyleSheet(css)
 
     def resizeEvent(self, QResizeEvent):
+        """Sets the position of cancel button."""
         button_size = self.cancel_button.sizeHint()
         frame_width = self.lineEdit().style().pixelMetric(
             QtGui.QStyle.PM_DefaultFrameWidth)
@@ -66,9 +68,11 @@ class ComboBox(QtGui.QComboBox):
         super(ComboBox, self).resizeEvent(QResizeEvent)
 
     def wheelEvent(self, QWheelEvent):
+        """Wheel event of mouse is disabled."""
         pass
 
     def mousePressEvent(self, QMouseEvent):
+        """Popups the filtering dialog when the combobox is clicked."""
         self.dialog_filtering.attribute = self.attribute
         self.dialog_filtering.setWindowTitle("")
         self.dialog_filtering.filtering_model.add_items(self.attribute)
@@ -84,12 +88,14 @@ class ComboBox(QtGui.QComboBox):
         self.lineEdit().setFont(font)
 
     def add_items(self, attribute):
+        """Adds the items of given attribute to the combobox"""
         self.attribute = attribute
         for att in self.attribute:
             self.addItem(att['name'])
         self.setCurrentIndex(-1)
 
     def get_attribute_id(self):
+        """Returns the id of selected item"""
         index = self.currentIndex()
         if index is not -1:
             try:
@@ -100,6 +106,7 @@ class ComboBox(QtGui.QComboBox):
             return ''
 
     def set_selection(self, index):
+        """Sets the selected item on the combobox."""
         try:
             index_row = index.row()
         except:
@@ -109,11 +116,14 @@ class ComboBox(QtGui.QComboBox):
         self.cancel_button.setVisible(True)
 
     def reset_attribute_selection(self):
+        """Resets the selection."""
         self.lineEdit().setText('')
         self.setCurrentIndex(-1)
         self.cancel_button.setVisible(False)
 
     def change_lineedit_status(self):
+        """Changes the background color of the combobox according to the user
+        """
         if self.currentIndex() is not -1:
             self.lineEdit().setReadOnly(True)
             self.change_background("#F3F4E3;")
@@ -122,8 +132,12 @@ class ComboBox(QtGui.QComboBox):
             self.change_background()
 
     def change_background(self, color=''):
+        """Changes the background color of the combobox according to the query
+        results of """
         self.lineEdit().setStyleSheet("background-color: {0};".format(color))
 
     def check_lineedit_status(self):
+        """Checks the lineedit widget and set the cancel button as
+        visible/invisible"""
         if str(self.lineEdit().text().toUtf8()) == '':
             self.cancel_button.setVisible(False)
