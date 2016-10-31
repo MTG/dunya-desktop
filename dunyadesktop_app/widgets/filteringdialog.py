@@ -9,6 +9,7 @@ import dunyadesktop_app.ui_files.resources_rc
 
 
 class FilteringDialog(QtGui.QDialog):
+    """The dialog which pops up when the user clicks the combobox"""
     ok_button_clicked = QtCore.pyqtSignal()
 
     def __init__(self):
@@ -17,19 +18,14 @@ class FilteringDialog(QtGui.QDialog):
         self.setFixedSize(200, 300)
 
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.Popup)
-        #self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
-        self.setWindowTitle('Attribute')
         v_layout = QtGui.QVBoxLayout(self)
-
         self.filtering_edit = QtGui.QLineEdit()
         self.table_attribute = TableView()
 
         self.button_box = QtGui.QDialogButtonBox()
-        self.button_box.addButton('OK',
-                                  QtGui.QDialogButtonBox.AcceptRole)
-        self.button_box.addButton('Cancel',
-                                  QtGui.QDialogButtonBox.RejectRole)
+        self.button_box.addButton('OK', QtGui.QDialogButtonBox.AcceptRole)
+        self.button_box.addButton('Cancel', QtGui.QDialogButtonBox.RejectRole)
 
         v_layout.addWidget(self.filtering_edit)
         v_layout.addWidget(self.table_attribute)
@@ -50,29 +46,23 @@ class FilteringDialog(QtGui.QDialog):
         self.filtering_edit.setPlaceholderText('Type here to filter...')
         self.selection = -1
 
-        self.filtering_edit.textChanged.connect(lambda:
-                                                self.proxy_model.filtering_the_table(
-                                                    self.filtering_edit.text()))
+        self.filtering_edit.textChanged.connect(
+            lambda: self.proxy_model.filter_table(self.filtering_edit.text()))
 
-        self.button_box.rejected.connect(self.pressed_rejected)
+        self.button_box.rejected.connect(self.clicked_cancel)
         self.table_attribute.doubleClicked.connect(
             self.get_selected_item_index)
         self.button_box.accepted.connect(self.get_selected_item_index)
 
-    def item_entered(self, item):
-        self.table_attribute.model().sourceModel().item(item.row(),
-                        item.column()).setBackground(QtGui.QColor('moccasin'))
-
-    def item_exited(self, item):
-        self.table_attribute.model().sourceModel().item(item.row(),
-            item.column()).setBackground(QtGui.QTableWidgetItem().background())
-
     def get_selected_item_index(self):
+        """Stores the index of the selected item and emits the clicked
+        signal."""
         self.filtering_edit.setText('')
         self.selection = self.table_attribute.model().mapToSource(
             self.table_attribute.currentIndex())
         self.close()
         self.ok_button_clicked.emit()
 
-    def pressed_rejected(self):
+    def clicked_cancel(self):
+        """Closes the window"""
         self.close()
