@@ -7,6 +7,7 @@ DUNYA_ICON = os.path.join(os.path.dirname(__file__), '..', '..', 'ui_files',
 
 
 class RecordingModel(QtGui.QStandardItemModel):
+    """Recording model is for the results of queries."""
     rec_fetched = QtCore.pyqtSignal(str)
 
     def __init__(self):
