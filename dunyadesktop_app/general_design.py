@@ -21,6 +21,7 @@ QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"
 
 
 class GeneralMainDesign(QtGui.QMainWindow):
+    """General design of the main window"""
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
         self._set_main_window()
@@ -28,15 +29,15 @@ class GeneralMainDesign(QtGui.QMainWindow):
 
         self.centralwidget = QtGui.QWidget(self)
 
-        self.vertical_layout_2 = QtGui.QVBoxLayout(self.centralwidget)
-        self.vertical_layout_2.setContentsMargins(0, 0, 2, 0)
-        self.vertical_layout_2.setSpacing(0)
+        layout = QtGui.QVBoxLayout(self.centralwidget)
+        layout.setContentsMargins(0, 0, 2, 0)
+        layout.setSpacing(0)
 
         # query frame
         self.frame_query = QueryFrame()
         self._set_css(self.frame_query, CSS_FRAME_QUERY)
         self._set_frame()
-        self.vertical_layout_2.addWidget(self.frame_query)
+        layout.addWidget(self.frame_query)
 
         self.setCentralWidget(self.centralwidget)
 
@@ -65,6 +66,7 @@ class GeneralMainDesign(QtGui.QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(self)
 
     def _set_main_window(self):
+        """Sets the size policies of the main window"""
         self.resize(1000, 600)
         size_policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum,
                                         QtGui.QSizePolicy.Minimum)
