@@ -32,8 +32,8 @@ class AudioAttFrame(QtGui.QFrame):
 
         self._set_size_attributes()
 
-        self.gridLayout_filtering = QtGui.QGridLayout(self)
-        self._set_layout()
+        layout = QtGui.QGridLayout(self)
+        self._set_layout(layout)
         self._retranslate_status_tips()
 
         if platform.system() != 'Linux':
@@ -64,42 +64,39 @@ class AudioAttFrame(QtGui.QFrame):
         self.setFrameShadow(QtGui.QFrame.Raised)
         self.setLineWidth(1)
 
-    def _set_layout(self):
+    def _set_layout(self, layout):
         """Sets the size policies of layout and initializes the comoboxes and
         query button."""
-        self.gridLayout_filtering.setSizeConstraint(
-            QtGui.QLayout.SetNoConstraint)
-        self.gridLayout_filtering.setMargin(MARGIN)
-        self.gridLayout_filtering.setSpacing(SPACING)
+        layout.setSizeConstraint(QtGui.QLayout.SetNoConstraint)
+        layout.setMargin(MARGIN)
+        layout.setSpacing(SPACING)
 
         # combo boxes
         # melodic structure
         self.comboBox_melodic = ComboBox(self)
-        self.gridLayout_filtering.addWidget(self.comboBox_melodic, 0, 0, 1, 1)
+        layout.addWidget(self.comboBox_melodic, 0, 0, 1, 1)
 
         # form structure
         self.comboBox_form = ComboBox(self)
-        self.gridLayout_filtering.addWidget(self.comboBox_form, 0, 2, 1, 1)
+        layout.addWidget(self.comboBox_form, 0, 2, 1, 1)
 
         # rhythmic structure
         self.comboBox_rhythm = ComboBox(self)
-        self.gridLayout_filtering.addWidget(self.comboBox_rhythm, 0, 4, 1, 1)
+        layout.addWidget(self.comboBox_rhythm, 0, 4, 1, 1)
 
         # composer
         self.comboBox_composer = ComboBox(self)
-        self.gridLayout_filtering.addWidget(self.comboBox_composer, 1, 0, 1, 1)
+        layout.addWidget(self.comboBox_composer, 1, 0, 1, 1)
         self.comboBox_composer.set_placeholder_text('Composer')
 
         # performer
         self.comboBox_performer = ComboBox(self)
-        self.gridLayout_filtering.addWidget(self.comboBox_performer,
-                                            1, 2, 1, 1)
+        layout.addWidget(self.comboBox_performer, 1, 2, 1, 1)
         self.comboBox_performer.set_placeholder_text('Performer')
 
         # instrument
         self.comboBox_instrument = ComboBox(self)
-        self.gridLayout_filtering.addWidget(self.comboBox_instrument,
-                                            1, 4, 1, 1)
+        layout.addWidget(self.comboBox_instrument, 1, 4, 1, 1)
         self.comboBox_instrument.set_placeholder_text('Instrument')
 
         # spacers between the comboboxes
@@ -113,10 +110,10 @@ class AudioAttFrame(QtGui.QFrame):
             spacer_item3 = QtGui.QSpacerItem(SPACE, 20,
                                              QtGui.QSizePolicy.Minimum,
                                              QtGui.QSizePolicy.Fixed)
-            self.gridLayout_filtering.addItem(spacer_item3, 1, 5, 1, 1)
+            layout.addItem(spacer_item3, 1, 5, 1, 1)
 
-        self.gridLayout_filtering.addItem(spacer_item1, 1, 1, 1, 1)
-        self.gridLayout_filtering.addItem(spacer_item2, 1, 3, 1, 1)
+        layout.addItem(spacer_item1, 1, 1, 1, 1)
+        layout.addItem(spacer_item2, 1, 3, 1, 1)
 
         # query button and layout
         self.horizontalLayout_query = QtGui.QHBoxLayout()
@@ -130,8 +127,7 @@ class AudioAttFrame(QtGui.QFrame):
         self.toolButton_query.setIcon(icon_query)
         self.toolButton_query.setIconSize(QtCore.QSize(25, 25))
         self.horizontalLayout_query.addWidget(self.toolButton_query)
-        self.gridLayout_filtering.addLayout(self.horizontalLayout_query, 0, 6,
-                                            2, 1)
+        layout.addLayout(self.horizontalLayout_query, 0, 6, 2, 1)
 
     def _retranslate_status_tips(self):
         """Sets the status tips of comboboxes and query button"""
