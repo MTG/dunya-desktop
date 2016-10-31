@@ -5,8 +5,10 @@ import json
 import compmusic.dunya.makam
 from PyQt4 import QtCore
 
-from dunyadesktop_app.utilities.utilities import sort_dictionary
 
+def sort_dictionary(dictionary, key):
+    """sorts the given dictionary according to the keys"""
+    return sorted(dictionary, key=lambda k: k[key])
 
 def get_attributes():
     makams = compmusic.dunya.makam.get_makams()
