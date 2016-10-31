@@ -3,7 +3,6 @@ from PyQt4 import QtCore, QtGui
 from tableresults import TableViewResults
 from tabwidget import TabWidget
 from audioattframe import AudioAttFrame
-from progressbar import ProgressBar
 from models.recordingmodel import RecordingModel
 from models.proxymodel import SortFilterProxyModel
 
@@ -14,40 +13,38 @@ QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"
 
 
 class QueryFrame(QtGui.QFrame):
+    """Query frame of the main window. Contains the results table, attribute
+    frame, line edits for filtering and labels."""
     def __init__(self):
         QtGui.QFrame.__init__(self)
 
-        #self._set_mainwindow()
-
         # grid layout for main window
-        self.gridLayout_mainwindow = QtGui.QGridLayout(self)
-        self.gridLayout_mainwindow.setContentsMargins(5, 19, 5, 3)
-        self.gridLayout_mainwindow.setHorizontalSpacing(0)
-        self.gridLayout_mainwindow.setVerticalSpacing(8)
-
-        # label for central widget
-        #self.label_main = QtGui.QLabel(self)
-        #self._set_label_main()
+        layout_main = QtGui.QGridLayout(self)
+        layout_main.setContentsMargins(5, 19, 5, 3)
+        layout_main.setHorizontalSpacing(0)
+        layout_main.setVerticalSpacing(8)
 
         self.tabWidget = TabWidget(self)
 
-        self.verticalLayout = QtGui.QVBoxLayout(self.tabWidget.tab_audio)
-        self.verticalLayout.setContentsMargins(5, 5, 5, 2)
-        self.verticalLayout.setSpacing(5)
+        layout_v = QtGui.QVBoxLayout(self.tabWidget.tab_audio)
+        layout_v.setContentsMargins(5, 5, 5, 2)
+        layout_v.setSpacing(5)
 
         self.label_filtering = QtGui.QLabel(self.tabWidget.tab_audio)
         self._set_label_filtering()
+        layout_v.addWidget(self.label_filtering)
 
         self.frame_attributes = AudioAttFrame()
-        self.verticalLayout.addWidget(self.frame_attributes)
+        layout_v.addWidget(self.frame_attributes)
 
         self.lineEdit_filter = QtGui.QLineEdit(self.tabWidget.tab_audio)
         self._set_line_edit_filter()
-
+        layout_v.addWidget(self.lineEdit_filter)
+        
         self.tableView_results = TableViewResults(self.tabWidget.tab_audio)
-        self.verticalLayout.addWidget(self.tableView_results)
+        layout_v.addWidget(self.tableView_results)
 
-        self.recording_model= RecordingModel()
+        self.recording_model = RecordingModel()
 
         self.proxy_model = SortFilterProxyModel()
         self.proxy_model.setSourceModel(self.recording_model)
@@ -55,7 +52,7 @@ class QueryFrame(QtGui.QFrame):
 
         self.tableView_results.setModel(self.proxy_model)
 
-        self.gridLayout_mainwindow.addWidget(self.tabWidget, 1, 0, 1, 1)
+        layout_main.addWidget(self.tabWidget, 1, 0, 1, 1)
 
         self._retranslate_ui()
         self.tabWidget.setCurrentIndex(1)
@@ -66,17 +63,8 @@ class QueryFrame(QtGui.QFrame):
         self.tableView_results.setGridStyle(QtCore.Qt.DotLine)
         self.tableView_results.setDisabled(True)
 
-    def _set_label_main(self):
-        # 11 point font
-        font = QtGui.QFont()
-        font.setFamily("Ubuntu")
-        font.setPointSize(11)
-        self.label_main.setFont(font)
-        self.label_main.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_main.setWordWrap(False)
-        self.gridLayout_mainwindow.addWidget(self.label_main, 0, 0, 1, 1)
-
     def _set_label_filtering(self):
+        """Sets the size policies of filtering label"""
         size_policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,
                                         QtGui.QSizePolicy.Fixed)
         size_policy.setHorizontalStretch(0)
@@ -89,20 +77,20 @@ class QueryFrame(QtGui.QFrame):
         font = QtGui.QFont()
         font.setPointSize(11)
         self.label_filtering.setFont(font)
-        self.verticalLayout.addWidget(self.label_filtering)
 
     def _set_line_edit_filter(self):
+        """Sets the size policies of line edit filter"""
         font = QtGui.QFont()
         font.setPointSize(10)
         self.lineEdit_filter.setFont(font)
-        self.verticalLayout.addWidget(self.lineEdit_filter)
 
     def _retranslate_ui(self):
         self.setWindowTitle("Dunya Desktop")
 
         self.label_filtering.setText("<html><head/><body><p><span style=\" font-size:10pt; color:#878787;\">FILTERING</span></p></body></html>")
 
-        self.lineEdit_filter.setPlaceholderText("Type here to filter the results...")
+        self.lineEdit_filter.setPlaceholderText(
+            "Type here to filter the results...")
 
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.tabWidget.tab_audio),
