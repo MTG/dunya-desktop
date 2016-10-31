@@ -9,6 +9,7 @@ dunya_icon = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
 
 
 class TableViewResults(TableView):
+    """Table view widget of query results."""
     def __init__(self, parent=None):
         TableView.__init__(self)
         self.setSortingEnabled(True)
@@ -26,6 +27,7 @@ class TableViewResults(TableView):
         self.horizontal_header.hide()
 
     def contextMenuEvent(self, event):
+        """Pops up the context menu when the right button is clicked."""
         if self.selectionModel().selection().indexes():
             for index in self.selectionModel().selection().indexes():
                 row, column = index.row(), index.column()
