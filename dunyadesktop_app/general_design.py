@@ -79,6 +79,7 @@ class GeneralMainDesign(QtGui.QMainWindow):
         icon_dunya.addPixmap(QtGui.QPixmap(DUNYA_ICON),
                              QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.setWindowIcon(icon_dunya)
+        self.setWindowTitle('Dunya Desktop')
 
     @staticmethod
     def _set_css(obj, css_path):

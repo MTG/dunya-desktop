@@ -40,7 +40,7 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.frame_query.recording_model.rec_fetched.connect(self.append_recording)
 
         self.frame_query.lineEdit_filter.textChanged.connect(
-            lambda: self.proxy_model.filtering_the_table(
+            lambda: self.frame_query.proxy_model.filtering_the_table(
                 self.frame_query.lineEdit_filter.text()))
         self.frame_query.tableView_results.open_dunya.triggered.connect(
             lambda: self.download_related_features(
