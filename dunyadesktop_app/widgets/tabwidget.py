@@ -8,6 +8,7 @@ CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
 
 
 class TabWidget(QtGui.QTabWidget):
+    """Tab widget of related collection/s"""
     def __init__(self, parent=None):
         super(TabWidget, self).__init__(parent)
         self._set_font()
