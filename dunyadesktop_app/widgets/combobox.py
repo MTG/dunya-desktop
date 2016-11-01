@@ -13,7 +13,7 @@ if platform.system() == 'Linux':
 else:
     CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
                             'combobox_mac.css')
-    BUTTON_POS = 18
+    BUTTON_POS = 20
     FONT_SIZE = 11
 
 ICON_PATH_CANCEL = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
@@ -34,6 +34,8 @@ class ComboBox(QtGui.QComboBox):
 
         if platform.system() == 'Linux':
             self.setFixedHeight(23)
+        else:
+            self.setFixedHeight(25)
 
         self._set_css()
 
@@ -134,7 +136,8 @@ class ComboBox(QtGui.QComboBox):
     def change_background(self, color=''):
         """Changes the background color of the combobox according to the query
         results of """
-        self.lineEdit().setStyleSheet("background-color: {0};".format(color))
+        self.lineEdit().setStyleSheet("background-color: {0};"
+                                      "color: black;".format(color))
 
     def check_lineedit_status(self):
         """Checks the lineedit widget and set the cancel button as
