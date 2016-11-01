@@ -1,7 +1,6 @@
 import sys
 
 from PyQt4 import QtGui
-import qdarkstyle
 
 from cultures import apiconfig
 from cultures.makam import utilities
@@ -123,8 +122,8 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.thread_feature_downloader.start()
 
     def open_player(self, pitch_data, pd):
-        self.player = PlayerDialog(self.recid, pitch_data, pd)
-        self.player.show()
+        player = PlayerDialog(self.recid, pitch_data, pd)
+        player.exec_()
 
 
 app = QtGui.QApplication(sys.argv)
