@@ -118,7 +118,7 @@ class MainWindowMakam(MainWindowMakamDesign):
     def download_related_features(self, index):
         source_index = self.frame_query.tableView_results.model().mapToSource(index)
         self.recid = self.recordings[source_index.row()]
-        self.thread_feature_downloader.recid = self.recid
+        self.thread_feature_downloader.docid = self.recid
         self.thread_feature_downloader.start()
 
     def open_player(self, pitch_data, pd):
