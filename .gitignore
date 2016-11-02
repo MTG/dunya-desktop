@@ -14,3 +14,4 @@ pitchfilter.egg-info/
 *.wav
 .ipynb_checkpoints
 .DS_Store
+dunyadesktop_app/cultures/documents
