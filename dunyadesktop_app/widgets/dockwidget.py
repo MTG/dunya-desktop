@@ -2,6 +2,8 @@ import os
 
 from PyQt4 import QtGui, QtCore
 
+from listview import CollectionsView
+
 CSS_DOCKWIDGET = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                               'css', 'dockwidget.css')
 
@@ -76,9 +78,7 @@ class DockWidgetContentsLeft(QtGui.QWidget):
         layout_3.addWidget(self.label_collections)
 
         # listview (seperate it)
-        self.listView_collections = QtGui.QListView(self.frame_collection)
-        self._set_css(self.listView_collections, CSS_LISTVIEW)
-        self.listView_collections.setViewMode(QtGui.QListView.ListMode)
+        self.listView_collections = CollectionsView()
         layout_3.addWidget(self.listView_collections)
         layout.addWidget(self.frame_collection)
 
