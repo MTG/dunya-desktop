@@ -27,7 +27,7 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.work_count = 0
         self.progress_number = 0
         self.thread_query = QueryThread()
-        self.thread_feature_downloader = utilities.FeatureDownloaderThread()
+        self.thread_feature_downloader = utilities.DocThread()
 
         # signals
         self.frame_query.frame_attributes.toolButton_query.clicked.connect(self.query)
