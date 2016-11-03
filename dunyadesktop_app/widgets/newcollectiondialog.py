@@ -3,6 +3,8 @@ import os
 
 from PyQt4 import QtGui, QtCore
 
+import dunyadesktop_app.utilities.database as database
+
 CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
                         'newcollectiondialog.css')
 
@@ -44,6 +46,7 @@ class NewCollectionDialog(QtGui.QDialog):
         self._set_css(self, CSS_PATH)
 
         self.buttonBox.rejected.connect(self.clicked_cancel)
+        self.buttonBox.accepted.connect(self.clicked_ok)
 
     def _set_dialog(self):
         self.setWindowTitle('New Collection')
@@ -64,7 +67,7 @@ class NewCollectionDialog(QtGui.QDialog):
         sizePolicy.setHeightForWidth(
             self.desc_edit.sizePolicy().hasHeightForWidth())
         self.desc_edit.setSizePolicy(sizePolicy)
-        self.desc_edit.setMinimumSize(QtCore.QSize(0, 150))
+        self.desc_edit.setMinimumSize(QtCore.QSize(0, 140))
         self.desc_edit.setMaximumSize(QtCore.QSize(16777215, 150))
 
     @staticmethod
@@ -77,7 +80,16 @@ class NewCollectionDialog(QtGui.QDialog):
         """Closes the window"""
         self.close()
 
+    def clicked_ok(self):
+        conn, c = database.connect()
+        user_input = str(self.coll_edit.text())
+        print(type(user_input), user_input)
+
+        if user_input:
+            database.add_collection(conn, c, user_input)
+'''
 app = QtGui.QApplication(sys.argv)
 mainwindow_makam = NewCollectionDialog()
 mainwindow_makam.show()
 app.exec_()
+'''

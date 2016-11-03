@@ -4,7 +4,7 @@ import json
 
 from compmusic.dunya.makam import (get_makams, get_forms, get_usuls,
                                    get_composers, get_artists, get_instruments)
-from compmusic.dunya.docserver import (document, get_document_as_json)
+from compmusic.dunya.docserver import (document, get_document_as_json, get_mp3)
 from PyQt4 import QtCore
 
 
@@ -41,7 +41,9 @@ class DocThread(QtCore.QThread):
     given docid"""
 
     FOLDER = os.path.join(os.path.dirname(__file__), '..', 'documents')
-    feautures_downloaded = QtCore.pyqtSignal(dict, dict)
+    steps = QtCore.pyqtSignal(int)
+    step_completed = QtCore.pyqtSignal()
+    feautures_downloaded = QtCore.pyqtSignal()
 
     # checking existance of documents folder in culture
     if not os.path.exists(FOLDER):
@@ -59,7 +61,20 @@ class DocThread(QtCore.QThread):
 
             # feature list
             features = document(self.docid)['derivedfiles']
-            for thetype in features:
+            try:
+                m_path = os.path.join(DOC_FOLDER, self.docid + '.mp3')
+                if not os.path.exists(m_path):
+                    # for now, all tokens have permission to download
+                    # audio files
+                    mp3 = get_mp3(self.docid)
+                    open(m_path, 'w').write(mp3)
+            except:
+                pass
+
+            num_f = (sum([len(features[key]) for key in features]))
+            self.steps.emit(num_f)
+
+            for thetype in ['audioanalysis', 'jointanalysis']:
                 for subtype in features[thetype]:
                     f_path = os.path.join(DOC_FOLDER, thetype + '--' + subtype
                                           + '.json')
@@ -71,3 +86,5 @@ class DocThread(QtCore.QThread):
                                 json.dump(feature, open(f_path, 'w'))
                         except:
                             pass
+                    self.step_completed.emit()
+            self.feautures_downloaded.emit()
