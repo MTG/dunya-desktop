@@ -43,6 +43,8 @@ class NewCollectionDialog(QtGui.QDialog):
 
         self._set_css(self, CSS_PATH)
 
+        self.buttonBox.rejected.connect(self.clicked_cancel)
+
     def _set_dialog(self):
         self.setWindowTitle('New Collection')
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,
@@ -71,9 +73,11 @@ class NewCollectionDialog(QtGui.QDialog):
             css = f.read()
         obj.setStyleSheet(css)
 
-'''
+    def clicked_cancel(self):
+        """Closes the window"""
+        self.close()
+
 app = QtGui.QApplication(sys.argv)
 mainwindow_makam = NewCollectionDialog()
 mainwindow_makam.show()
 app.exec_()
-'''
