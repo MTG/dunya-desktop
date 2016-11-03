@@ -191,7 +191,6 @@ class DockWidgetContentsLeft(QtGui.QWidget):
         self.label_downloaded.setText("<html><head/><body><p><span style=\" font-size:10pt; color:#878787;\">DOWNLOADED FEATURES</span></p></body></html>")
 
     def new_collection(self):
-        print("clicked")
         n_coll = NewCollectionDialog()
         n_coll.exec_()
 
