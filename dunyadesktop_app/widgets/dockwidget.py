@@ -3,6 +3,7 @@ import os
 from PyQt4 import QtGui, QtCore
 
 from listview import CollectionsView
+from newcollectiondialog import NewCollectionDialog
 
 CSS_DOCKWIDGET = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                               'css', 'dockwidget.css')
@@ -102,6 +103,9 @@ class DockWidgetContentsLeft(QtGui.QWidget):
         layout.addWidget(self.frame_downloaded)
         self.retranslateUi()
 
+        # signals
+        self.toolButton_collection.clicked.connect(self.new_collection)
+
     def _set_widget(self):
         """Sets the size policies."""
         sizepolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding,
@@ -185,6 +189,11 @@ class DockWidgetContentsLeft(QtGui.QWidget):
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; color:#878787;\">COLLECTIONS</span></p></body></html>")
         self.toolButton_collection.setText("New Collection")
         self.label_downloaded.setText("<html><head/><body><p><span style=\" font-size:10pt; color:#878787;\">DOWNLOADED FEATURES</span></p></body></html>")
+
+    def new_collection(self):
+        print("clicked")
+        n_coll = NewCollectionDialog()
+        n_coll.exec_()
 
 
 class DockWidgetContentsTop(QtGui.QWidget):

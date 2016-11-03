@@ -39,7 +39,6 @@ class NewCollectionDialog(QtGui.QDialog):
 
     def _set_dialog(self):
         self.setWindowTitle('New Collection')
-        self.resize(350, 250)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,
                                        QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -60,7 +59,9 @@ class NewCollectionDialog(QtGui.QDialog):
         self.desc_edit.setMinimumSize(QtCore.QSize(0, 150))
         self.desc_edit.setMaximumSize(QtCore.QSize(16777215, 150))
 
+'''
 app = QtGui.QApplication(sys.argv)
 mainwindow_makam = NewCollectionDialog()
 mainwindow_makam.show()
 app.exec_()
+'''
