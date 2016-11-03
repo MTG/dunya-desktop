@@ -47,9 +47,6 @@ class MainWindowMakam(MainWindowMakamDesign):
             lambda: self.download_related_features(
                 self.frame_query.tableView_results.index))
 
-        self.thread_feature_downloader.feautures_downloaded.connect(
-            self.open_player)
-
     def _set_combobox_attributes(self):
         self.frame_query.frame_attributes.comboBox_melodic.add_items(self.makams)
         self.frame_query.frame_attributes.comboBox_form.add_items(self.forms)
