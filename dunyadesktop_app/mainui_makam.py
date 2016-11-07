@@ -48,7 +48,7 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.frame_query.lineEdit_filter.textChanged.connect(
             lambda: self.frame_query.proxy_model.filter_table(
                 self.frame_query.lineEdit_filter.text()))
-        self.frame_query.tableView_results.open_dunya.triggered.connect(
+        self.frame_query.tableView_results.add_maincoll.triggered.connect(
             lambda: self.download_related_features(
                 self.frame_query.tableView_results.index))
 
@@ -128,7 +128,7 @@ class MainWindowMakam(MainWindowMakamDesign):
         player.exec_()
 
     def _set_collections(self):
-        conn, c = database.connect()
+        conn, c = database.connect(add_main=True)
         colls = database.get_collections(c)
         self.dwc_left.listView_collections.add_collections(
             [coll[0] for coll in colls])

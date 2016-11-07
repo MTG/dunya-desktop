@@ -18,8 +18,12 @@ class TableViewResults(TableView):
         self._set_horizontal_header()
 
         self.menu = QtGui.QMenu(self)
+        self.add_maincoll = QtGui.QAction("Add to main collection", self)
+
         self.open_dunya = QtGui.QAction("Open on Player", self)
         self.open_dunya.setIcon(QtGui.QIcon(dunya_icon))
+
+        self.menu.addAction(self.add_maincoll)
         self.menu.addAction(self.open_dunya)
 
     def _set_horizontal_header(self):
