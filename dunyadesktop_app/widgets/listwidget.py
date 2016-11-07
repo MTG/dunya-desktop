@@ -3,10 +3,10 @@ import os
 from PyQt4 import QtGui, QtCore
 
 CSS_LISTVIEW = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
-                            'css', 'listview.css')
+                            'css', 'listwidget.css')
 
 
-class CollectionsView(QtGui.QListWidget):
+class CollectionsWidget(QtGui.QListWidget):
     def __init__(self):
         QtGui.QListView.__init__(self)
 
@@ -23,3 +23,8 @@ class CollectionsView(QtGui.QListWidget):
         with open(css_path) as f:
             css = f.read()
         obj.setStyleSheet(css)
+
+    def add_collections(self, colls):
+        for coll in colls:
+            item = QtGui.QListWidgetItem(coll)
+            self.addItem(item)
