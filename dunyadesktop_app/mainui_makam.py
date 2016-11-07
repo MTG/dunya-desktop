@@ -7,6 +7,7 @@ from cultures.makam import utilities
 from cultures.makam.query import QueryThread
 from mainui_design_makam import MainWindowMakamDesign
 from widgets.playerdialog import PlayerDialog
+from utilities.database import connect
 
 apiconfig.set_token()
 # apiconfig.set_hostname()
@@ -28,6 +29,9 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.progress_number = 0
         self.thread_query = QueryThread()
         self.thread_feature_downloader = utilities.DocThread()
+
+        # creating db
+        connect()
 
         # signals
         self.frame_query.frame_attributes.toolButton_query.clicked.connect(self.query)
