@@ -12,7 +12,6 @@ def add_collection(conn, c, list_name):
         # creating the collections table
         c.execute('''CREATE TABLE {tn} (DOCID TEXT)'''.format(tn=list_name))
         conn.commit()
-        conn.close()
         return True
     except:
         return False
@@ -38,10 +37,9 @@ def get_collections(c):
     return c.fetchall()
 
 
-def _add_docs_to_maincoll():
+def _add_docs_to_maincoll(conn, c):
     docs = [d for d in os.listdir(DOCS_PATH) if
             os.path.isdir(os.path.join(DOCS_PATH, d))]
-    conn, c = connect()
 
     for doc in docs:
         print(doc, len(doc))

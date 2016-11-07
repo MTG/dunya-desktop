@@ -129,9 +129,12 @@ class MainWindowMakam(MainWindowMakamDesign):
 
     def _set_collections(self):
         conn, c = database.connect(add_main=True)
+        database._add_docs_to_maincoll(conn, c)
+
         colls = database.get_collections(c)
         self.dwc_left.listView_collections.add_collections(
             [coll[0] for coll in colls])
+        conn.close()
 
 
 app = QtGui.QApplication(sys.argv)
