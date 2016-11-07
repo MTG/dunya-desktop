@@ -83,10 +83,20 @@ class NewCollectionDialog(QtGui.QDialog):
     def clicked_ok(self):
         conn, c = database.connect()
         user_input = str(self.coll_edit.text())
-        print(type(user_input), user_input)
 
+        status = False
         if user_input:
-            database.add_collection(conn, c, user_input)
+            status = database.add_collection(conn, c, user_input)
+
+        if status:
+            self.close()
+        else:
+            msg_box = QtGui.QMessageBox()
+            msg_box.setText('Given collection name is not valid!')
+            msg_box.setWindowTitle('')
+            self._set_css(msg_box, CSS_PATH)
+            msg_box.exec_()
+
 '''
 app = QtGui.QApplication(sys.argv)
 mainwindow_makam = NewCollectionDialog()
