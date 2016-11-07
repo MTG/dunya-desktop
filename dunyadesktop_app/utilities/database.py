@@ -42,7 +42,6 @@ def _add_docs_to_maincoll(conn, c):
             os.path.isdir(os.path.join(DOCS_PATH, d))]
 
     for doc in docs:
-        print(doc, len(doc))
         c.execute('''INSERT OR IGNORE INTO MainCollection(DOCID) VALUES (?)''',
                   (doc,))
         conn.commit()

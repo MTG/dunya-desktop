@@ -7,6 +7,8 @@ CSS_LISTVIEW = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
 
 
 class CollectionsWidget(QtGui.QListWidget):
+    index_changed = QtCore.pyqtSignal(str)
+
     def __init__(self):
         QtGui.QListView.__init__(self)
 
@@ -18,6 +20,10 @@ class CollectionsWidget(QtGui.QListWidget):
         self.setAcceptDrops(True)
         self.setDragEnabled(True)
 
+        # signals
+        self.index = self.currentIndex().row()
+        self.itemClicked.connect(self.item_clicked)
+
     @staticmethod
     def _set_css(obj, css_path):
         with open(css_path) as f:
@@ -28,3 +34,8 @@ class CollectionsWidget(QtGui.QListWidget):
         for coll in colls:
             item = QtGui.QListWidgetItem(coll)
             self.addItem(item)
+
+    def item_clicked(self):
+        if not self.currentIndex().row() is self.index:
+            self.index = self.currentIndex().row()
+            self.index_changed.emit(self.item(self.index).text())
