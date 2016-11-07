@@ -2,7 +2,7 @@ import os
 
 from PyQt4 import QtGui, QtCore
 
-from listview import CollectionsView
+from listwidget import CollectionsWidget
 from newcollectiondialog import NewCollectionDialog
 
 CSS_DOCKWIDGET = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
@@ -21,7 +21,7 @@ CSS_FRAME_COLLECTION = os.path.join(os.path.dirname(__file__), '..',
                                     'ui_files', 'css', 'frame_collection.css')
 
 CSS_LISTVIEW = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
-                            'css', 'listview.css')
+                            'css', 'listwidget.css')
 
 CSS_TOOLBUTTON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                               'css', 'toolbutton_collection.css')
@@ -79,7 +79,7 @@ class DockWidgetContentsLeft(QtGui.QWidget):
         layout_3.addWidget(self.label_collections)
 
         # listview (seperate it)
-        self.listView_collections = CollectionsView()
+        self.listView_collections = CollectionsWidget()
         layout_3.addWidget(self.listView_collections)
         layout.addWidget(self.frame_collection)
 

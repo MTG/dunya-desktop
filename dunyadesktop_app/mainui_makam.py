@@ -7,7 +7,7 @@ from cultures.makam import utilities
 from cultures.makam.query import QueryThread
 from mainui_design_makam import MainWindowMakamDesign
 from widgets.playerdialog import PlayerDialog
-from utilities.database import connect
+from utilities import database
 
 apiconfig.set_token()
 # apiconfig.set_hostname()
@@ -31,7 +31,8 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.thread_feature_downloader = utilities.DocThread()
 
         # creating db
-        connect()
+        database.connect()
+        self._set_collections()
 
         # signals
         self.frame_query.frame_attributes.toolButton_query.clicked.connect(self.query)
@@ -125,6 +126,12 @@ class MainWindowMakam(MainWindowMakamDesign):
     def open_player(self, pitch_data, pd):
         player = PlayerDialog(self.recid, pitch_data, pd)
         player.exec_()
+
+    def _set_collections(self):
+        conn, c = database.connect()
+        colls = database.get_collections(c)
+        self.dwc_left.listView_collections.add_collections(
+            [coll[0] for coll in colls])
 
 
 app = QtGui.QApplication(sys.argv)
