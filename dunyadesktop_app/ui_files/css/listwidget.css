@@ -1,0 +1,14 @@
+QListWidget {border: 1px solid gray;
+	border-right-color: transparent;
+	border-left-color: transparent;
+	/*border-bottom-color: transparent;*/
+	background-color: #232628;
+}
+
+QListWidget::item {color: #C3C4C9;}
+
+QListWidget::item:hover {background-color: #8F94AA;
+						 color: black}
+
+QListWidget::item:selected {color: black;
+							background-color: #30B4CC;}
