@@ -48,4 +48,3 @@ def _add_docs_to_maincoll():
         c.execute('''INSERT OR IGNORE INTO MainCollection(DOCID) VALUES (?)''',
                   (doc,))
         conn.commit()
-    conn.close()
