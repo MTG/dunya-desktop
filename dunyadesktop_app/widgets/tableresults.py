@@ -13,6 +13,7 @@ class TableViewResults(TableView):
     def __init__(self, parent=None):
         TableView.__init__(self)
         self.setSortingEnabled(True)
+        self.setDragDropMode(QtGui.QAbstractItemView.DragOnly)
 
         self.horizontal_header = self.horizontalHeader()
         self._set_horizontal_header()
