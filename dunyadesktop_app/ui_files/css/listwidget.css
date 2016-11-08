@@ -5,10 +5,17 @@ QListWidget {border: 1px solid gray;
 	background-color: #232628;
 }
 
-QListWidget::item {color: #C3C4C9;}
+QListWidget::item {color: #C3C4C9;
+                   margin-left: 7px;
+                   margin-top: 3px;
+                   border: 1 dotted gray;
+                   border-right-color: transparent;
+                   border-left-color: transparent;
+                   border-top-color: transparent}
+
 
 QListWidget::item:hover {background-color: #8F94AA;
-						 color: black}
+						 color: black;}
 
 QListWidget::item:selected {color: black;
 							background-color: #30B4CC;}
