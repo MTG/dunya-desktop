@@ -52,6 +52,9 @@ class MainWindowMakam(MainWindowMakamDesign):
             lambda: self.download_related_features(
                 self.frame_query.tableView_results.index))
 
+        self.dwc_left.listView_collections.index_changed.connect(
+            self.update_coll_list)
+
     def _set_combobox_attributes(self):
         self.frame_query.frame_attributes.comboBox_melodic.add_items(self.makams)
         self.frame_query.frame_attributes.comboBox_form.add_items(self.forms)
@@ -59,6 +62,15 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.frame_query.frame_attributes.comboBox_composer.add_items(self.composers)
         self.frame_query.frame_attributes.comboBox_performer.add_items(self.performers)
         self.frame_query.frame_attributes.comboBox_instrument.add_items(self.instruments)
+
+    def _set_collections(self):
+        conn, c = database.connect(add_main=True)
+        database._add_docs_to_maincoll(conn, c)
+
+        colls = database.get_collections(c)
+        self.dwc_left.listView_collections.add_collections(
+            [coll[0] for coll in colls])
+        conn.close()
 
     def query(self):
         self.recordings = []
@@ -127,15 +139,10 @@ class MainWindowMakam(MainWindowMakamDesign):
         player = PlayerDialog(self.recid, pitch_data, pd)
         player.exec_()
 
-    def _set_collections(self):
-        conn, c = database.connect(add_main=True)
-        database._add_docs_to_maincoll(conn, c)
-
-        colls = database.get_collections(c)
-        self.dwc_left.listView_collections.add_collections(
-            [coll[0] for coll in colls])
-        conn.close()
-
+    def update_coll_list(self, coll):
+        conn, c = database.connect()
+        raw = database.fetch_collection(c, coll)
+        self.dwc_left.tableView_downloaded.add_items([item[0] for item in raw])
 
 app = QtGui.QApplication(sys.argv)
 mainwindow_makam = MainWindowMakam()
