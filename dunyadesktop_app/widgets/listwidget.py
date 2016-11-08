@@ -17,11 +17,6 @@ class DockListWidget(QtGui.QListWidget):
         self._set_css(self, CSS_LISTVIEW)
 
         self.setViewMode(QtGui.QListView.ListMode)
-        self.setDragDropMode(QtGui.QAbstractItemView.DropOnly)
-        self.startDrag(QtCore.Qt.CopyAction)
-        self.setAcceptDrops(True)
-        self.setDragEnabled(True)
-
 
     @staticmethod
     def _set_css(obj, css_path):
@@ -53,6 +48,8 @@ class CollectionsWidget(DockListWidget):
 class CollectionList(DockListWidget):
     def __init__(self):
         DockListWidget.__init__(self)
+        self.setDragDropMode(QtGui.QAbstractItemView.DropOnly)
+        self.setAcceptDrops(True)
 
     def add_items(self, coll):
         # first cleans all the items on the list
