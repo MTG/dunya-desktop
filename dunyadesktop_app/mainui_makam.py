@@ -143,6 +143,8 @@ class MainWindowMakam(MainWindowMakamDesign):
         conn, c = database.connect()
         raw = database.fetch_collection(c, coll)
         self.dwc_left.tableView_downloaded.add_items([item[0] for item in raw])
+        self.dwc_left.change_downloaded_text(coll)
+
 
 app = QtGui.QApplication(sys.argv)
 mainwindow_makam = MainWindowMakam()

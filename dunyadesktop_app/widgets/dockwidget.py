@@ -78,7 +78,6 @@ class DockWidgetContentsLeft(QtGui.QWidget):
         self._set_css(self.label_collections, CSS_LABEL_COLLECTION)
         layout_3.addWidget(self.label_collections)
 
-        # listview (seperate it)
         self.listView_collections = CollectionsWidget()
         layout_3.addWidget(self.listView_collections)
         layout.addWidget(self.frame_collection)
@@ -193,6 +192,13 @@ class DockWidgetContentsLeft(QtGui.QWidget):
     def new_collection(self):
         n_coll = NewCollectionDialog()
         n_coll.exec_()
+
+    def change_downloaded_text(self, name):
+        self.label_downloaded.setText("<html><head/><body><p><span style=\" font-size:10pt; color:#878787;\">{0}</span></p></body></html>".format(name))
+        self.label_collections.setIndent(15)  # check it
+        self.label_collections.setTextInteractionFlags(
+            QtCore.Qt.NoTextInteraction)
+        self._set_css(self.label_collections, CSS_LABEL_COLLECTION)
 
 
 class DockWidgetContentsTop(QtGui.QWidget):

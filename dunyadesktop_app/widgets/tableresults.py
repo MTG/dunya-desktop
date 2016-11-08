@@ -38,3 +38,7 @@ class TableViewResults(TableView):
                 row, column = index.row(), index.column()
         self.index = index
         self.menu.popup(QtGui.QCursor.pos())
+
+    #def startDrag(self, Qt_DropActions):
+    #    source_index = self.model().mapToSource(self.currentIndex())
+    #    title = self.

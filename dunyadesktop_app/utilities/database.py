@@ -10,7 +10,7 @@ def add_collection(conn, c, list_name):
     """Adds collection to the db"""
     try:
         # creating the collections table
-        c.execute('''CREATE TABLE {tn} (DOCID TEXT)'''.format(tn=list_name))
+        c.execute('''CREATE TABLE {0}(DOCID TEXT, UNIQUE(DOCID));'''.format(list_name))
         conn.commit()
         return True
     except:
@@ -45,3 +45,8 @@ def _add_docs_to_maincoll(conn, c):
         c.execute('''INSERT OR IGNORE INTO MainCollection(DOCID) VALUES (?)''',
                   (doc,))
         conn.commit()
+
+
+def fetch_collection(c, coll):
+    c.execute('''SELECT DOCID FROM {0}'''.format(coll))
+    return c.fetchall()
