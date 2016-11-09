@@ -2,7 +2,8 @@ import os
 
 from PyQt4 import QtGui, QtCore
 
-from listwidget import CollectionsWidget, CollectionList
+from table import TableWidget
+from listwidget import CollectionsWidget
 from newcollectiondialog import NewCollectionDialog
 
 CSS_DOCKWIDGET = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
@@ -96,8 +97,7 @@ class DockWidgetContentsLeft(QtGui.QWidget):
         self._set_label_downloaded()
         layout_4.addWidget(self.label_downloaded)
 
-        self.tableView_downloaded = CollectionList()
-        #self._set_css(self.tableView_downloaded, CSS_TABLEVIEW_DOWNLOADED)
+        self.tableView_downloaded = TableWidget()
         layout_4.addWidget(self.tableView_downloaded)
         layout.addWidget(self.frame_downloaded)
         self.retranslateUi()
