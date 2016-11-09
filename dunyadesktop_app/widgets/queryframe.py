@@ -1,6 +1,6 @@
 from PyQt4 import QtCore, QtGui
 
-from tableresults import TableViewResults
+from table import TableViewResults
 from tabwidget import TabWidget
 from audioattframe import AudioAttFrame
 from models.recordingmodel import RecordingModel
