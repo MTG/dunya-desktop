@@ -22,7 +22,7 @@ class TableView(QtGui.QTableView):
         # setting the table for no edit and row selection
         self.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
         self.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
-        self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
+        #self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
         self.setMouseTracking(True)
 
         # hiding the vertical headers
@@ -92,17 +92,64 @@ class TableViewResults(TableView):
         self.index = index
         self.menu.popup(QtGui.QCursor.pos())
 
+    def get_selected_rows(self):
+        selectedRows = []
+        for item in self.selectionModel().selectedRows():
+            if item.row() not in selectedRows:
+                selectedRows.append(item.row())
+        selectedRows.sort()
+        return selectedRows
+
 
 class TableWidget(QtGui.QTableWidget, TableView):
     def __init__(self):
-        #TableView.__init__(self)
         QtGui.QTableWidget.__init__(self)
         TableView.__init__(self)
-        # setting the table for no edit and row selection
-        self.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
-        self.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
-        self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
-        self.setMouseTracking(True)
-
-        self.setDragDropMode(QtGui.QAbstractItemView.DragDrop)
+        self.setDragDropMode(QtGui.QAbstractItemView.DropOnly)
         self.setAcceptDrops(True)
+        self.setDragDropOverwriteMode(False)
+
+        self.setColumnCount(3)
+
+        self.last_drop_row = None
+
+    def dropMimeData(self, row, col, mimeData, action):
+        self.last_drop_row = row
+        return True
+
+    def dropEvent(self, event):
+        # The QTableWidget from which selected rows will be moved
+        sender = event.source()
+
+        # Default dropEvent method fires dropMimeData with appropriate
+        # parameters (we're interested in the row index).
+        super(QtGui.QTableWidget, self).dropEvent(event)
+        # Now we know where to insert selected row(s)
+        drop_row = self.last_drop_row
+        selected_rows = sender.get_selected_rows()
+
+        # Allocate space for transfer
+        for _ in selected_rows:
+            self.insertRow(drop_row)
+
+        # if sender == receiver (self), after creating new empty rows selected
+        # rows might change their locations
+        sel_rows_offsets = [0 if self != sender or srow < drop_row
+                            else len(selected_rows) for srow in selected_rows]
+        selected_rows = [row + offset for row, offset in zip(selected_rows,
+                                                             sel_rows_offsets)]
+
+        # copy content of selected rows into empty ones
+        for i, srow in enumerate(selected_rows):
+            for j in range(self.columnCount()):
+                item = sender.model().sourceModel().item(srow, j)
+                if item:
+                    source = QtGui.QTableWidgetItem(item.text())
+                    self.setItem(drop_row + i, j, source)
+
+        # delete selected rows
+        for srow in reversed(selected_rows):
+            sender.model().removeRow(srow)
+
+        event.accept()
+
