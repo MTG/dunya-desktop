@@ -91,3 +91,18 @@ class TableViewResults(TableView):
                 row, column = index.row(), index.column()
         self.index = index
         self.menu.popup(QtGui.QCursor.pos())
+
+
+class TableWidget(QtGui.QTableWidget, TableView):
+    def __init__(self):
+        #TableView.__init__(self)
+        QtGui.QTableWidget.__init__(self)
+        TableView.__init__(self)
+        # setting the table for no edit and row selection
+        self.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+        self.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
+        self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
+        self.setMouseTracking(True)
+
+        self.setDragDropMode(QtGui.QAbstractItemView.DragDrop)
+        self.setAcceptDrops(True)
