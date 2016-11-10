@@ -1,4 +1,5 @@
 import sys
+import os
 
 from PyQt4 import QtGui
 
@@ -11,6 +12,9 @@ from utilities import database
 
 apiconfig.set_token()
 # apiconfig.set_hostname()
+
+DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
+                         'documents')
 
 
 class MainWindowMakam(MainWindowMakamDesign):
@@ -33,9 +37,9 @@ class MainWindowMakam(MainWindowMakamDesign):
         # creating db
         self._set_collections()
 
+        self.download_queue = []
         # signals
         self.frame_query.frame_attributes.toolButton_query.clicked.connect(self.query)
-
         self.thread_query.combobox_results.connect(
             self.change_combobox_backgrounds)
         self.thread_query.progress_number.connect(self.set_progress_number)
@@ -53,6 +57,8 @@ class MainWindowMakam(MainWindowMakamDesign):
 
         self.dwc_left.listView_collections.index_changed.connect(
             self.update_coll_list)
+        self.dwc_left.tableView_downloaded.added_new_doc.connect(
+            self.check_new_doc)
 
     def _set_combobox_attributes(self):
         self.frame_query.frame_attributes.comboBox_melodic.add_items(self.makams)
@@ -127,6 +133,7 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.progress_bar.setValue(0)
         self.progress_bar.setFormat("")
         self.frame_query.frame_attributes.toolButton_query.setEnabled(True)
+        self.dwc_left.tableView_downloaded.recordings = self.recordings
 
     def download_related_features(self, index):
         source_index = self.frame_query.tableView_results.model().mapToSource(index)
@@ -141,8 +148,13 @@ class MainWindowMakam(MainWindowMakamDesign):
     def update_coll_list(self, coll):
         conn, c = database.connect()
         raw = database.fetch_collection(c, coll)
+        self.dwc_left.tableView_downloaded.coll = coll
         self.dwc_left.tableView_downloaded.create_table([item[0] for item in raw])
         self.dwc_left.change_downloaded_text(coll)
+
+    def check_new_doc(self, docid):
+        if not os.path.isdir(os.path.join(DOCS_PATH, docid)):
+            self.download_queue.append(docid)
 
 
 app = QtGui.QApplication(sys.argv)

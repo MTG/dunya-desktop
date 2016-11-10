@@ -103,12 +103,13 @@ class TableViewResults(TableView):
         selected_rows = []
         for item in self.selectionModel().selectedRows():
             if item.row() not in selected_rows:
-                selected_rows.append(item.row())
-        selected_rows.sort()
+                selected_rows.append(item)
         return selected_rows
 
 
 class TableWidget(QtGui.QTableWidget, TableView):
+    added_new_doc = QtCore.pyqtSignal(str)
+
     def __init__(self):
         QtGui.QTableWidget.__init__(self)
         TableView.__init__(self)
@@ -125,7 +126,6 @@ class TableWidget(QtGui.QTableWidget, TableView):
     def _set_columns(self):
         self.setColumnCount(2)
         self.setHorizontalHeaderLabels(['Status', 'Title'])
-        #self.hideColumn(1)
 
     def dropMimeData(self, row, col, mimeData, action):
         self.last_drop_row = row
@@ -142,29 +142,31 @@ class TableWidget(QtGui.QTableWidget, TableView):
         drop_row = self.last_drop_row
         selected_rows = sender.get_selected_rows()
 
+        selected_rows_index = [item.row() for item in selected_rows]
         # Allocate space for transfer
-        for _ in selected_rows:
+        for _ in selected_rows_index:
             self.insertRow(drop_row)
 
         # if sender == receiver (self), after creating new empty rows selected
         # rows might change their locations
         sel_rows_offsets = [0 if self != sender or srow < drop_row
-                            else len(selected_rows) for srow in selected_rows]
-        selected_rows = [row + offset for row, offset in zip(selected_rows,
-                                                             sel_rows_offsets)]
+                            else len(selected_rows_index) for srow in
+                            selected_rows_index]
+        selected_rows_index = [row + offset for row, offset
+                               in zip(selected_rows_index, sel_rows_offsets)]
 
         # copy content of selected rows into empty ones
         conn, c = database.connect()
         for i, srow in enumerate(selected_rows):
-            source_row = sender.model().mapToSource(
-                QtCore.QModelIndex().child(srow, 1))
+            source_index = sender.model().mapToSource(srow)
             if database.add_doc_to_coll(conn, c,
-                                        self.recordings[source_row.row()],
+                                        self.recordings[source_index.row()],
                                         self.coll):
-                item = sender.model().sourceModel().item(srow, 1)
+                item = sender.model().sourceModel().item(selected_rows_index[i], 1)
                 if item:
                     source = QtGui.QTableWidgetItem(item.text())
-                    self.setItem(drop_row + i, 0, source)
+                    self.setItem(drop_row + i, 1, source)
+                    self.added_new_doc.emit(self.recordings[source_index.row()])
         event.accept()
 
     def create_table(self, coll):
