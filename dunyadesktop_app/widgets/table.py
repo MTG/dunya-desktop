@@ -161,7 +161,8 @@ class TableWidget(QtGui.QTableWidget, TableView):
 
     def create_table(self, coll):
         # first cleans the table, sets the columns and enables the widget
-        self.clear()
+        self.setRowCount(0)
+
         self._set_columns()
         self.setEnabled(True)
 
