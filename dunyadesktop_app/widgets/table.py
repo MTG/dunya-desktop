@@ -116,12 +116,13 @@ class TableWidget(QtGui.QTableWidget, TableView):
         self.setAcceptDrops(True)
         self.setDragDropOverwriteMode(False)
 
-        self.setColumnCount(2)
-        self.setHorizontalHeaderLabels(['Title', 'Status'])
-        #self.hideColumn(1)
-        self.last_drop_row = self.rowCount()
-
+        self._set_columns()
         self.setDisabled(True)
+
+    def _set_columns(self):
+        self.setColumnCount(2)
+        self.setHorizontalHeaderLabels(['Status', 'Title'])
+        #self.hideColumn(1)
 
     def dropMimeData(self, row, col, mimeData, action):
         self.last_drop_row = row
@@ -159,15 +160,21 @@ class TableWidget(QtGui.QTableWidget, TableView):
         event.accept()
 
     def create_table(self, coll):
-        # first cleans all the items on the list
+        # first cleans the table, sets the columns and enables the widget
+        self.clear()
+        self._set_columns()
         self.setEnabled(True)
+
         for i, item in enumerate(coll):
             path = os.path.join(DOCS_PATH, item,
                                 'audioanalysis--metadata.json')
-            metadata = json.load(open(path))
+            try:
+                metadata = json.load(open(path))
 
-            cell = QtGui.QTableWidgetItem(metadata['title'])
-            self.insertRow(self.rowCount())
-            self.setItem(i, 0, cell)
-            self.setColumnWidth(1, 20)
+                cell = QtGui.QTableWidgetItem(metadata['title'])
+                self.insertRow(self.rowCount())
+                self.setItem(i, 1, cell)
+                self.setColumnWidth(0, 60)
+            except IOError:
+                print("Wrong file or file path")
 
