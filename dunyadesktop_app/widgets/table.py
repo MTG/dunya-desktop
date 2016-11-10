@@ -119,6 +119,9 @@ class TableWidget(QtGui.QTableWidget, TableView):
         self._set_columns()
         self.setDisabled(True)
 
+        self.recordings = []
+        self.coll = ''
+
     def _set_columns(self):
         self.setColumnCount(2)
         self.setHorizontalHeaderLabels(['Status', 'Title'])
@@ -151,12 +154,17 @@ class TableWidget(QtGui.QTableWidget, TableView):
                                                              sel_rows_offsets)]
 
         # copy content of selected rows into empty ones
+        conn, c = database.connect()
         for i, srow in enumerate(selected_rows):
-            item = sender.model().sourceModel().item(srow, 1)
-            if item:
-                source = QtGui.QTableWidgetItem(item.text())
-                self.setItem(drop_row + i, 0, source)
-
+            source_row = sender.model().mapToSource(
+                QtCore.QModelIndex().child(srow, 1))
+            if database.add_doc_to_coll(conn, c,
+                                        self.recordings[source_row.row()],
+                                        self.coll):
+                item = sender.model().sourceModel().item(srow, 1)
+                if item:
+                    source = QtGui.QTableWidgetItem(item.text())
+                    self.setItem(drop_row + i, 0, source)
         event.accept()
 
     def create_table(self, coll):

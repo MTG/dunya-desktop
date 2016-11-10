@@ -47,6 +47,16 @@ def _add_docs_to_maincoll(conn, c):
         conn.commit()
 
 
+def add_doc_to_coll(conn, c, doc, coll):
+    try:
+        c.execute('''INSERT OR IGNORE INTO {0}(DOCID) VALUES (?)'''.format(coll),
+                  (doc,))
+        conn.commit()
+        return True
+    except:
+        return False
+
+
 def fetch_collection(c, coll):
     c.execute('''SELECT DOCID FROM {0}'''.format(coll))
     return c.fetchall()
