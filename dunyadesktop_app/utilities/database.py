@@ -26,7 +26,7 @@ def connect(add_main=False):
 
     if add_main:
         # adding the main collection
-        add_collection(conn, c, 'MainCollection')
+        _add_docs_to_maincoll(conn, c)
 
     return conn, c
 

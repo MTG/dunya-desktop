@@ -31,7 +31,6 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.thread_feature_downloader = utilities.DocThread()
 
         # creating db
-        database.connect()
         self._set_collections()
 
         # signals
@@ -142,7 +141,7 @@ class MainWindowMakam(MainWindowMakamDesign):
     def update_coll_list(self, coll):
         conn, c = database.connect()
         raw = database.fetch_collection(c, coll)
-        self.dwc_left.tableView_downloaded.add_items([item[0] for item in raw])
+        self.dwc_left.tableView_downloaded.create_table([item[0] for item in raw])
         self.dwc_left.change_downloaded_text(coll)
 
 

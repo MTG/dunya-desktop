@@ -195,6 +195,7 @@ class DockWidgetContentsLeft(QtGui.QWidget):
 
     def change_downloaded_text(self, name):
         self.label_downloaded.setText("<html><head/><body><p><span style=\" font-size:10pt; color:#878787;\">{0}</span></p></body></html>".format(name))
+        self._set_label_downloaded()
         self.label_collections.setIndent(15)  # check it
         self.label_collections.setTextInteractionFlags(
             QtCore.Qt.NoTextInteraction)
