@@ -1,7 +1,10 @@
 import os
 import platform
+import json
 
 from PyQt4 import QtGui, QtCore
+
+from dunyadesktop_app.utilities import database
 
 if platform.system() == 'Linux':
     FONT_SIZE = 9
@@ -10,6 +13,10 @@ else:
 
 CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
                         'tableview.css')
+
+DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
+                         'documents')
+
 
 dunya_icon = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                           'icons', 'dunya.svg')
@@ -24,6 +31,7 @@ class TableView(QtGui.QTableView):
         self.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
         #self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
         self.setMouseTracking(True)
+        self.horizontalHeader().setStretchLastSection(True)
 
         # hiding the vertical headers
         self.verticalHeader().hide()
@@ -31,9 +39,6 @@ class TableView(QtGui.QTableView):
         # arranging the artist column for being multi-line
         self.setWordWrap(True)
         self.setTextElideMode(QtCore.Qt.ElideMiddle)
-
-        self.horizontalHeader().setStretchLastSection(True)
-        self.setColumnWidth(0, 10)
 
         self._last_index = QtCore.QPersistentModelIndex()
         self.viewport().installEventFilter(self)
@@ -66,6 +71,8 @@ class TableViewResults(TableView):
         self._set_menu()
         self.add_maincoll = QtGui.QAction("Add to main collection", self)
 
+        self.setColumnWidth(0, 10)
+
         self.open_dunya = QtGui.QAction("Open on Player", self)
         self.open_dunya.setIcon(QtGui.QIcon(dunya_icon))
 
@@ -93,12 +100,12 @@ class TableViewResults(TableView):
         self.menu.popup(QtGui.QCursor.pos())
 
     def get_selected_rows(self):
-        selectedRows = []
+        selected_rows = []
         for item in self.selectionModel().selectedRows():
-            if item.row() not in selectedRows:
-                selectedRows.append(item.row())
-        selectedRows.sort()
-        return selectedRows
+            if item.row() not in selected_rows:
+                selected_rows.append(item.row())
+        selected_rows.sort()
+        return selected_rows
 
 
 class TableWidget(QtGui.QTableWidget, TableView):
@@ -109,9 +116,12 @@ class TableWidget(QtGui.QTableWidget, TableView):
         self.setAcceptDrops(True)
         self.setDragDropOverwriteMode(False)
 
-        self.setColumnCount(3)
+        self.setColumnCount(2)
+        self.setHorizontalHeaderLabels(['Title', 'Status'])
+        #self.hideColumn(1)
+        self.last_drop_row = self.rowCount()
 
-        self.last_drop_row = None
+        self.setDisabled(True)
 
     def dropMimeData(self, row, col, mimeData, action):
         self.last_drop_row = row
@@ -141,15 +151,23 @@ class TableWidget(QtGui.QTableWidget, TableView):
 
         # copy content of selected rows into empty ones
         for i, srow in enumerate(selected_rows):
-            for j in range(self.columnCount()):
-                item = sender.model().sourceModel().item(srow, j)
-                if item:
-                    source = QtGui.QTableWidgetItem(item.text())
-                    self.setItem(drop_row + i, j, source)
-
-        # delete selected rows
-        for srow in reversed(selected_rows):
-            sender.model().removeRow(srow)
+            item = sender.model().sourceModel().item(srow, 1)
+            if item:
+                source = QtGui.QTableWidgetItem(item.text())
+                self.setItem(drop_row + i, 0, source)
 
         event.accept()
+
+    def create_table(self, coll):
+        # first cleans all the items on the list
+        self.setEnabled(True)
+        for i, item in enumerate(coll):
+            path = os.path.join(DOCS_PATH, item,
+                                'audioanalysis--metadata.json')
+            metadata = json.load(open(path))
+
+            cell = QtGui.QTableWidgetItem(metadata['title'])
+            self.insertRow(self.rowCount())
+            self.setItem(i, 0, cell)
+            self.setColumnWidth(1, 20)
 
