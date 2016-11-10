@@ -1,0 +1,69 @@
+QDialog {background-color: #232629;}
+
+QDialogButtonBox {
+    color: #9FA09F;
+    border: 1px solid #76797C;
+    border-radius: 2px;
+    margin: 3px;
+    padding: 5px;
+    background-color: #31363b;
+}
+
+QDialogButtonBox[popupMode="1"] { /* only for MenuButtonPopup */
+ padding-right: 20px; /* make way for the popup button */
+ border: 1px #76797C;
+ border-radius: 5px;
+}
+
+QDialogButtonBox[popupMode="2"] { /* only for InstantPopup */
+ padding-right: 10px; /* make way for the popup button */
+ border: 1px #76797C;
+}
+
+
+QDialogButtonBox:hover, QDialogButtonBox::menu-button:hover {
+    background-color: #232629;
+    border: 1px solid #3daee9;
+    padding: 5px;
+}
+
+QDialogButtonBox:checked, QDialogButtonBox:pressed,
+        QDialogButtonBox::menu-button:pressed {
+    background-color: #3daee9;
+    border: 1px solid #3daee9;
+    padding: 5px;
+}
+
+/* the subcontrol below is used only in the InstantPopup or DelayedPopup mode */
+QDialogButtonBox::menu-indicator {
+    image: url(:/qss_icons/rc/down_arrow.png);
+    top: -7px; left: -2px; /* shift it a bit */
+}
+
+/* the subcontrols below are used only in the MenuButtonPopup mode */
+QDialogButtonBox::menu-button {
+    border: 1px transparent #76797C;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    /* 16px width + 4px for border = 20px allocated above */
+    width: 16px;
+    outline: none;
+}
+
+QDialogButtonBox::menu-arrow {
+    image: url(:/qss_icons/rc/down_arrow.png);
+}
+
+QDialogButtonBox::menu-arrow:open {
+    border: 1px solid #76797C;
+}
+
+QLineEdit
+{
+    background-color: #232629;
+    padding: 5px;
+    border-style: solid;
+    border: 1px solid #76797C;
+    border-radius: 2px;
+    color: #eff0f1;
+}
