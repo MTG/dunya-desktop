@@ -139,7 +139,7 @@ class TableWidget(QtGui.QTableWidget, TableView):
         # parameters (we're interested in the row index).
         super(QtGui.QTableWidget, self).dropEvent(event)
         # Now we know where to insert selected row(s)
-        drop_row = self.rowCount()
+        drop_row = self.last_drop_row
         selected_rows = sender.get_selected_rows()
 
         selected_rows_index = [item.row() for item in selected_rows]
@@ -152,18 +152,19 @@ class TableWidget(QtGui.QTableWidget, TableView):
         selected_rows_index = [row + offset for row, offset
                                in zip(selected_rows_index, sel_rows_offsets)]
 
+        # Allocate space for transfer
+        for _ in selected_rows_index:
+            self.insertRow(drop_row)
+
         # copy content of selected rows into empty ones
         conn, c = database.connect()
         for i, srow in enumerate(selected_rows):
             source_index = sender.model().mapToSource(srow)
             if database.add_doc_to_coll(
                     conn, c, self.recordings[source_index.row()], self.coll):
-                # Allocate space for transfer
-                self.insertRow(drop_row)
 
                 item = sender.model().sourceModel().item(selected_rows_index[i], 1)
                 if item:
-                    print("adding item")
                     source = QtGui.QTableWidgetItem(item.text())
                     self.setItem(drop_row + i, 1, source)
                     self.added_new_doc.emit(self.recordings[source_index.row()])
@@ -181,10 +182,10 @@ class TableWidget(QtGui.QTableWidget, TableView):
                                 'audioanalysis--metadata.json')
             try:
                 metadata = json.load(open(path))
-
                 cell = QtGui.QTableWidgetItem(metadata['title'])
-                self.insertRow(self.rowCount())
-                self.setItem(i, 1, cell)
-                self.setColumnWidth(0, 60)
             except IOError:
-                print("Wrong file or file path")
+                print("Needs to download {0}".format(item))
+                cell = QtGui.QTableWidgetItem(item)
+            self.insertRow(self.rowCount())
+            self.setItem(i, 1, cell)
+            self.setColumnWidth(0, 60)
