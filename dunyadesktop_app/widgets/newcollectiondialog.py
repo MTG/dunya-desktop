@@ -13,8 +13,8 @@ class NewCollectionDialog(QtGui.QDialog):
     """The dialog which pops up when the user clicks the combobox"""
     new_collection_added = QtCore.pyqtSignal()
 
-    def __init__(self):
-        QtGui.QDialog.__init__(self)
+    def __init__(self, parent):
+        QtGui.QDialog.__init__(self, parent)
         self._set_dialog()
 
         layout = QtGui.QGridLayout(self)
@@ -91,6 +91,7 @@ class NewCollectionDialog(QtGui.QDialog):
         if status:
             self.close()
             self.new_collection_added.emit()
+            self.parent().update_collection_widget()
         else:
             msg_box = QtGui.QMessageBox()
             msg_box.setText('Given collection name is not valid!')

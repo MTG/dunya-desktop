@@ -44,6 +44,10 @@ class CollectionsWidget(DockListWidget):
             self.index = self.currentIndex().row()
             self.index_changed.emit(self.item(self.index).text())
 
+    def update_list(self, colls):
+        self.clear()
+        self.add_collections(colls)
+
 
 class CollectionList(DockListWidget):
     def __init__(self, parent=None):

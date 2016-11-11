@@ -5,6 +5,7 @@ from PyQt4 import QtGui, QtCore
 from table import TableWidget
 from listwidget import CollectionsWidget
 from newcollectiondialog import NewCollectionDialog
+from dunyadesktop_app.utilities import database
 
 CSS_DOCKWIDGET = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                               'css', 'dockwidget.css')
@@ -190,9 +191,9 @@ class DockWidgetContentsLeft(QtGui.QWidget):
         self.label_downloaded.setText("<html><head/><body><p><span style=\" font-size:10pt; color:#878787;\">DOWNLOADED FEATURES</span></p></body></html>")
 
     def new_collection(self):
-        n_coll = NewCollectionDialog()
+        n_coll = NewCollectionDialog(self)
         n_coll.exec_()
-        n_coll.new_collection_added.connect()
+        #n_coll.new_collection_added.connect()
 
     def change_downloaded_text(self, name):
         self.label_downloaded.setText("<html><head/><body><p><span style=\" font-size:10pt; color:#878787;\">{0}</span></p></body></html>".format(name))
@@ -201,6 +202,14 @@ class DockWidgetContentsLeft(QtGui.QWidget):
         self.label_collections.setTextInteractionFlags(
             QtCore.Qt.NoTextInteraction)
         self._set_css(self.label_collections, CSS_LABEL_COLLECTION)
+
+    def update_collection_widget(self):
+        conn, c = database.connect(add_main=True)
+        database._add_docs_to_maincoll(conn, c)
+
+        colls = database.get_collections(c)
+        self.listView_collections.update_list([coll[0] for coll in colls])
+        conn.close()
 
 
 class DockWidgetContentsTop(QtGui.QWidget):
