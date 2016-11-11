@@ -106,6 +106,7 @@ class MainWindowMakam(MainWindowMakamDesign):
 
     def append_recording(self, rec_mbid):
         self.recordings.append(str(rec_mbid.toUtf8()))
+        self.dwc_left.tableView_downloaded.recordings = self.recordings
 
     def work_received(self, work):
         self.work_count += 1
@@ -133,7 +134,6 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.progress_bar.setValue(0)
         self.progress_bar.setFormat("")
         self.frame_query.frame_attributes.toolButton_query.setEnabled(True)
-        self.dwc_left.tableView_downloaded.recordings = self.recordings
 
     def download_related_features(self, index):
         source_index = self.frame_query.tableView_results.model().mapToSource(index)
@@ -153,8 +153,9 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.dwc_left.change_downloaded_text(coll)
 
     def check_new_doc(self, docid):
-        if not os.path.isdir(os.path.join(DOCS_PATH, docid)):
-            self.download_queue.append(docid)
+        if not os.path.isdir(os.path.join(DOCS_PATH, str(docid))) and \
+                not str(docid) in self.download_queue:
+            self.download_queue.append(str(docid))
 
 
 app = QtGui.QApplication(sys.argv)

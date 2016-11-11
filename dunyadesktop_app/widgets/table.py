@@ -127,8 +127,8 @@ class TableWidget(QtGui.QTableWidget, TableView):
         self.setColumnCount(2)
         self.setHorizontalHeaderLabels(['Status', 'Title'])
 
-    def dropMimeData(self, row, col, mimeData, action):
-        self.last_drop_row = row
+    def dropMimeData(self, p_int, p_int_1, QMimeData, Qt_DropAction):
+        self.last_drop_row = p_int
         return True
 
     def dropEvent(self, event):
@@ -139,13 +139,10 @@ class TableWidget(QtGui.QTableWidget, TableView):
         # parameters (we're interested in the row index).
         super(QtGui.QTableWidget, self).dropEvent(event)
         # Now we know where to insert selected row(s)
-        drop_row = self.last_drop_row
+        drop_row = self.rowCount()
         selected_rows = sender.get_selected_rows()
 
         selected_rows_index = [item.row() for item in selected_rows]
-        # Allocate space for transfer
-        for _ in selected_rows_index:
-            self.insertRow(drop_row)
 
         # if sender == receiver (self), after creating new empty rows selected
         # rows might change their locations
@@ -159,11 +156,14 @@ class TableWidget(QtGui.QTableWidget, TableView):
         conn, c = database.connect()
         for i, srow in enumerate(selected_rows):
             source_index = sender.model().mapToSource(srow)
-            if database.add_doc_to_coll(conn, c,
-                                        self.recordings[source_index.row()],
-                                        self.coll):
+            if database.add_doc_to_coll(
+                    conn, c, self.recordings[source_index.row()], self.coll):
+                # Allocate space for transfer
+                self.insertRow(drop_row)
+
                 item = sender.model().sourceModel().item(selected_rows_index[i], 1)
                 if item:
+                    print("adding item")
                     source = QtGui.QTableWidgetItem(item.text())
                     self.setItem(drop_row + i, 1, source)
                     self.added_new_doc.emit(self.recordings[source_index.row()])
