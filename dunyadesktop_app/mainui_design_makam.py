@@ -19,7 +19,7 @@ class MainWindowMakamDesign(GeneralMainDesign):
 
     def _set_score_tab(self):
         """Adds a score tab for score collection"""
-        self.tab_score = QtGui.QWidget()
+        self.tab_score = QtGui.QWidget(self)
         self.frame_query.tabWidget.addTab(self.tab_score, "")
 
     def _retranslate_ui_elements(self):

@@ -16,8 +16,8 @@ class FilteringDialog(QtGui.QDialog):
     """The dialog which pops up when the user clicks the combobox"""
     ok_button_clicked = QtCore.pyqtSignal()
 
-    def __init__(self):
-        QtGui.QDialog.__init__(self)
+    def __init__(self, parent=None):
+        QtGui.QDialog.__init__(self, parent)
         self.attribute = None
         self.setFixedSize(200, 300)
         self._set_css()
@@ -28,7 +28,7 @@ class FilteringDialog(QtGui.QDialog):
         self.filtering_edit = QtGui.QLineEdit()
         self.table_attribute = TableView()
 
-        self.button_box = QtGui.QDialogButtonBox()
+        self.button_box = QtGui.QDialogButtonBox(self)
         self.button_box.addButton('OK', QtGui.QDialogButtonBox.AcceptRole)
         self.button_box.addButton('Cancel', QtGui.QDialogButtonBox.RejectRole)
 
@@ -38,9 +38,9 @@ class FilteringDialog(QtGui.QDialog):
 
         self.setLayout(v_layout)
 
-        self.filtering_model = FilteringModel()
+        self.filtering_model = FilteringModel(self)
 
-        self.proxy_model = SortFilterProxyModel()
+        self.proxy_model = SortFilterProxyModel(self)
         self.proxy_model.setSourceModel(self.filtering_model)
         self.proxy_model.setFilterKeyColumn(-1)
 

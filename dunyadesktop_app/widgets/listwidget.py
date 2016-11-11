@@ -11,8 +11,8 @@ DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
 
 
 class DockListWidget(QtGui.QListWidget):
-    def __init__(self):
-        QtGui.QListView.__init__(self)
+    def __init__(self, parent=None):
+        QtGui.QListView.__init__(self, parent)
 
         self._set_css(self, CSS_LISTVIEW)
 
@@ -28,8 +28,8 @@ class DockListWidget(QtGui.QListWidget):
 class CollectionsWidget(DockListWidget):
     index_changed = QtCore.pyqtSignal(str)
 
-    def __init__(self):
-        DockListWidget.__init__(self)
+    def __init__(self, parent=None):
+        DockListWidget.__init__(self, parent)
         # signals
         self.index = self.currentIndex().row()
         self.itemClicked.connect(self.item_clicked)
@@ -46,8 +46,8 @@ class CollectionsWidget(DockListWidget):
 
 
 class CollectionList(DockListWidget):
-    def __init__(self):
-        DockListWidget.__init__(self)
+    def __init__(self, parent=None):
+        DockListWidget.__init__(self, parent)
         self.setDragDropMode(QtGui.QAbstractItemView.DropOnly)
         self.setAcceptDrops(True)
 

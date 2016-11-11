@@ -57,8 +57,8 @@ class DockWidget(QtGui.QDockWidget):
 class DockWidgetContentsLeft(QtGui.QWidget):
     """Contains the contents of the dock widget on the left side of the main
     window"""
-    def __init__(self):
-        QtGui.QWidget.__init__(self)
+    def __init__(self, parent=None):
+        QtGui.QWidget.__init__(self, parent)
         self._set_widget()
 
         layout = QtGui.QVBoxLayout(self)
@@ -192,6 +192,7 @@ class DockWidgetContentsLeft(QtGui.QWidget):
     def new_collection(self):
         n_coll = NewCollectionDialog()
         n_coll.exec_()
+        n_coll.new_collection_added.connect()
 
     def change_downloaded_text(self, name):
         self.label_downloaded.setText("<html><head/><body><p><span style=\" font-size:10pt; color:#878787;\">{0}</span></p></body></html>".format(name))
@@ -205,8 +206,8 @@ class DockWidgetContentsLeft(QtGui.QWidget):
 class DockWidgetContentsTop(QtGui.QWidget):
     """Contains the contents of the dock widget on the top side of the main
         window"""
-    def __init__(self):
-        QtGui.QWidget.__init__(self)
+    def __init__(self, parent=None):
+        QtGui.QWidget.__init__(self, parent)
 
         layout = QtGui.QHBoxLayout(self)
         layout.setContentsMargins(2, 0, 4, 0)

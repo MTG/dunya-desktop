@@ -15,8 +15,8 @@ QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"
 class QueryFrame(QtGui.QFrame):
     """Query frame of the main window. Contains the results table, attribute
     frame, line edits for filtering and labels."""
-    def __init__(self):
-        QtGui.QFrame.__init__(self)
+    def __init__(self, parent=None):
+        QtGui.QFrame.__init__(self, parent)
 
         # grid layout for main window
         layout_main = QtGui.QGridLayout(self)

@@ -10,8 +10,8 @@ class RecordingModel(QtGui.QStandardItemModel):
     """Recording model is for the results of queries."""
     rec_fetched = QtCore.pyqtSignal(str)
 
-    def __init__(self):
-        QtGui.QStandardItemModel.__init__(self)
+    def __init__(self, parent=None):
+        QtGui.QStandardItemModel.__init__(self, parent)
         self.set_columns()
 
     def set_columns(self):

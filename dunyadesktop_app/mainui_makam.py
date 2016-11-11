@@ -31,7 +31,7 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.recordings = []
         self.work_count = 0
         self.progress_number = 0
-        self.thread_query = QueryThread()
+        self.thread_query = QueryThread(self)
         self.thread_feature_downloader = utilities.DocThread()
 
         # creating db

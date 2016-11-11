@@ -8,8 +8,8 @@ class QueryThread(QtCore.QThread):
     query_completed = QtCore.pyqtSignal()
     combobox_results = QtCore.pyqtSignal(list)
 
-    def __init__(self):
-        QtCore.QThread.__init__(self)
+    def __init__(self, parent=None):
+        QtCore.QThread.__init__(self, parent)
         self.stopped = False
 
         self.mid = None

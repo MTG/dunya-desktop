@@ -51,7 +51,6 @@ def _add_docs_to_maincoll(conn, c):
 def add_doc_to_coll(conn, c, doc, coll):
     c.execute("SELECT * FROM {0} WHERE DOCID=?".format(coll), (doc,))
     data = c.fetchone()
-    print(data)
     if data is None:
         c.execute('''INSERT OR IGNORE INTO {0}(DOCID) VALUES (?)'''.format(coll), (doc,))
         conn.commit()

@@ -27,8 +27,8 @@ class AudioAttFrame(QtGui.QFrame):
     """Frame contains the comboboxes of attributes (such as makams, forms,
     etc) and query button"""
 
-    def __init__(self):
-        QtGui.QFrame.__init__(self)
+    def __init__(self, QWidget_parent=None):
+        QtGui.QFrame.__init__(self, QWidget_parent)
 
         self._set_size_attributes()
 

@@ -49,8 +49,8 @@ class DocThread(QtCore.QThread):
     if not os.path.exists(FOLDER):
         os.makedirs(FOLDER)
 
-    def __init__(self):
-        QtCore.QThread.__init__(self)
+    def __init__(self, parent=None):
+        QtCore.QThread.__init__(self, parent)
         self.docid = ''
 
     def run(self):

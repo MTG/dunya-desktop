@@ -11,7 +11,7 @@ CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
 
 class NewCollectionDialog(QtGui.QDialog):
     """The dialog which pops up when the user clicks the combobox"""
-    ok_button_clicked = QtCore.pyqtSignal()
+    new_collection_added = QtCore.pyqtSignal()
 
     def __init__(self):
         QtGui.QDialog.__init__(self)
@@ -90,6 +90,7 @@ class NewCollectionDialog(QtGui.QDialog):
 
         if status:
             self.close()
+            self.new_collection_added.emit()
         else:
             msg_box = QtGui.QMessageBox()
             msg_box.setText('Given collection name is not valid!')

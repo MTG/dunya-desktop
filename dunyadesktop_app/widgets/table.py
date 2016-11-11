@@ -188,4 +188,3 @@ class TableWidget(QtGui.QTableWidget, TableView):
                 self.setColumnWidth(0, 60)
             except IOError:
                 print("Wrong file or file path")
-
