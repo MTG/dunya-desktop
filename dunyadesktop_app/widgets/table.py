@@ -32,6 +32,9 @@ class TableView(QtGui.QTableView):
         #self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
         self.setMouseTracking(True)
         self.horizontalHeader().setStretchLastSection(True)
+        font = QtGui.QFont()
+        font.setPointSize(13)
+        self.horizontalHeader().setFont(font)
 
         # hiding the vertical headers
         self.verticalHeader().hide()
