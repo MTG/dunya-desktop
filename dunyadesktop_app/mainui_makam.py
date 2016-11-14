@@ -162,20 +162,14 @@ class MainWindowMakam(MainWindowMakamDesign):
             if not os.path.isdir(os.path.join(DOCS_PATH, str(docid))):
                 downlaod.append(str(docid))
         print(downlaod, 'will be downloaded')
-        d_thread = utilities.DocThread(self.queue, self.update_downloaded_progress_bar,
-                                       parent=self.dwc_left.tableView_downloaded)
+        d_thread = utilities.DocThread(self.queue,
+                                       self.dwc_left.tableView_downloaded.set_progress_bar)
         self.threads.append(d_thread)
         d_thread.start()
 
         for doc in downlaod:
             self.queue.put(doc)
         self.queue.put(None)  # tells the workers to shut down
-
-    def update_downloaded_progress_bar(self, result):
-        docid = result.docid
-        step = result.step
-        n_progress = result.n_progress
-        self.dwc_left.tableView_downloaded.set_progress_bar(docid, step, n_progress)
 
 
 app = QtGui.QApplication(sys.argv)
