@@ -160,6 +160,7 @@ class MainWindowMakam(MainWindowMakamDesign):
         downlaod = []
         for docid in docs:
             if not os.path.isdir(os.path.join(DOCS_PATH, str(docid))):
+                print(os.path.join(DOCS_PATH, str(docid)))
                 downlaod.append(str(docid))
         print(downlaod, 'will be downloaded')
         d_thread = utilities.DocThread(self.queue,
@@ -173,7 +174,6 @@ class MainWindowMakam(MainWindowMakamDesign):
 
 
 app = QtGui.QApplication(sys.argv)
-#app.setAttribute(QtCore.Qt.AA_X11InitThreads)
 mainwindow_makam = MainWindowMakam()
 mainwindow_makam.show()
 app.exec_()

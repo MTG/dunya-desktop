@@ -19,8 +19,10 @@ DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
                          'documents')
 
 
-dunya_icon = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
+DUNYA_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                           'icons', 'dunya.svg')
+CHECK_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
+                          'icons', 'tick-inside-circle.svg')
 
 
 class TableView(QtGui.QTableView):
@@ -78,7 +80,7 @@ class TableViewResults(TableView):
         self.setColumnWidth(0, 10)
 
         self.open_dunya = QtGui.QAction("Open on Player", self)
-        self.open_dunya.setIcon(QtGui.QIcon(dunya_icon))
+        self.open_dunya.setIcon(QtGui.QIcon(DUNYA_ICON))
 
         self.menu.addAction(self.add_maincoll)
         self.menu.addAction(self.open_dunya)
@@ -89,7 +91,7 @@ class TableViewResults(TableView):
         self.menu.addSeparator()
 
         self.open_dunya = QtGui.QAction("Open on Player", self)
-        self.open_dunya.setIcon(QtGui.QIcon(dunya_icon))
+        self.open_dunya.setIcon(QtGui.QIcon(DUNYA_ICON))
 
     def _set_horizontal_header(self):
         self.horizontal_header.setStretchLastSection(True)
@@ -184,17 +186,21 @@ class TableWidget(QtGui.QTableWidget, TableView):
         self.setEnabled(True)
 
         for i, item in enumerate(coll):
+            set_check = False
             path = os.path.join(DOCS_PATH, item,
                                 'audioanalysis--metadata.json')
             try:
                 metadata = json.load(open(path))
                 cell = QtGui.QTableWidgetItem(metadata['title'])
+                set_check = True
             except IOError:
                 print("Needs to be downloaded {0}".format(item))
                 cell = QtGui.QTableWidgetItem(item)
             self.insertRow(self.rowCount())
             self.setItem(i, 1, cell)
             self.setColumnWidth(0, 60)
+            if set_check:
+                self.set_checked(self.rowCount()-1)
 
     def set_progress_bar(self, status):
         docid = status.docid
@@ -205,4 +211,18 @@ class TableWidget(QtGui.QTableWidget, TableView):
         if not progress_bar:
             self.setCellWidget(self.indexes[docid], 0, ProgressBar(self))
             progress_bar = self.cellWidget(self.indexes[docid], 0)
-        progress_bar.update_progress_bar(step, n_progress)
+
+        if not step == n_progress:
+            progress_bar.update_progress_bar(step, n_progress)
+        else:
+            print('checked')
+            self.set_checked(self.indexes[docid])
+
+    def set_checked(self, raw):
+        item = QtGui.QLabel()
+        item.setAlignment(QtCore.Qt.AlignCenter)
+        item.setScaledContents(True)
+        icon = QtGui.QPixmap(CHECK_ICON)
+        item.setPixmap(icon)
+
+        self.setCellWidget(raw, 0, item)

@@ -105,4 +105,3 @@ class DocThread(QtCore.QThread):
                             pass
                     count += 1
                     self.step_completed.emit(ResultObj(docid, count, num_f))
-                    #self.step_completed(docid, count, num_f)
