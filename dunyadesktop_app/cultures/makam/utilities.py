@@ -36,22 +36,30 @@ def get_attributes():
     return makams, forms, usuls, composers, performers, instruments
 
 
+class ResultObj(QtCore.QObject):
+    def __init__(self, docid, step, n_progress):
+        QtCore.QObject.__init__(self)
+
+        self.docid = docid
+        self.step = step
+        self.n_progress = n_progress
+
+
 class DocThread(QtCore.QThread):
     """Downloads the available features from Dunya-backend related with the
     given docid"""
 
     FOLDER = os.path.join(os.path.dirname(__file__), '..', 'documents')
-    steps = QtCore.pyqtSignal(int)
-    step_completed = QtCore.pyqtSignal()
-    feautures_downloaded = QtCore.pyqtSignal()
+    step_completed = QtCore.pyqtSignal(object)
 
     # checking existance of documents folder in culture
     if not os.path.exists(FOLDER):
         os.makedirs(FOLDER)
 
-    def __init__(self, queue, parent=None):
+    def __init__(self, queue, callback, parent=None):
         QtCore.QThread.__init__(self, parent)
         self.queue = queue
+        self.step_completed.connect(callback)
         
     def run(self):
         while True:
@@ -79,9 +87,10 @@ class DocThread(QtCore.QThread):
             except:
                 pass
 
-            num_f = (sum([len(features[key]) for key in features]))
-            self.steps.emit(num_f)
+            num_f = (sum([len(features[key]) for key in ['audioanalysis',
+                                                         'jointanalysis']]))
 
+            count = 0
             for thetype in ['audioanalysis', 'jointanalysis']:
                 for subtype in features[thetype]:
                     f_path = os.path.join(DOC_FOLDER, thetype + '--' + subtype
@@ -94,5 +103,6 @@ class DocThread(QtCore.QThread):
                                 json.dump(feature, open(f_path, 'w'))
                         except:
                             pass
-                    self.step_completed.emit()
-            self.feautures_downloaded.emit()
+                    count += 1
+                    self.step_completed.emit(ResultObj(docid, count, num_f))
+                    #self.step_completed(docid, count, num_f)

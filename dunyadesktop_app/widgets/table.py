@@ -5,6 +5,7 @@ import json
 from PyQt4 import QtGui, QtCore
 
 from dunyadesktop_app.utilities import database
+from progressbar import ProgressBar
 
 if platform.system() == 'Linux':
     FONT_SIZE = 9
@@ -124,6 +125,7 @@ class TableWidget(QtGui.QTableWidget, TableView):
         self.setDisabled(True)
 
         self.recordings = []
+        self.indexes = {}
         self.coll = ''
 
     def _set_columns(self):
@@ -169,6 +171,10 @@ class TableWidget(QtGui.QTableWidget, TableView):
                     self.insertRow(drop_row + i)
                     self.setItem(drop_row + i, 1, source)
                     docs.append(self.recordings[source_index.row()])
+                    self.indexes[self.recordings[source_index.row()]] = \
+                        self.rowCount()-1
+                    progress_bar = ProgressBar()
+                    self.setCellWidget(self.rowCount()-1, 0, progress_bar)
 
         self.added_new_doc.emit(docs)
         event.accept()
@@ -192,3 +198,8 @@ class TableWidget(QtGui.QTableWidget, TableView):
             self.insertRow(self.rowCount())
             self.setItem(i, 1, cell)
             self.setColumnWidth(0, 60)
+
+    def set_progress_bar(self, docid, step, n_process):
+        #print(docid, step, n_process)
+        progress_bar = self.cellWidget(self.indexes[docid], 0)
+        progress_bar.update_progress_bar(step, n_process)
