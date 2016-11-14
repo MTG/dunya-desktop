@@ -173,7 +173,7 @@ class MainWindowMakam(MainWindowMakamDesign):
 
 
 app = QtGui.QApplication(sys.argv)
-app.setAttribute(QtCore.Qt.AA_X11InitThreads)
+#app.setAttribute(QtCore.Qt.AA_X11InitThreads)
 mainwindow_makam = MainWindowMakam()
 mainwindow_makam.show()
 app.exec_()

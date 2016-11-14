@@ -171,12 +171,9 @@ class TableWidget(QtGui.QTableWidget, TableView):
                     self.insertRow(drop_row + i)
                     self.setItem(drop_row + i, 1, source)
                     docs.append(self.recordings[source_index.row()])
-                    self.indexes[self.recordings[source_index.row()]] = \
-                        self.rowCount()-1
-                    progress_bar = ProgressBar()
-                    self.setCellWidget(self.rowCount()-1, 0, progress_bar)
-
-        self.added_new_doc.emit(docs)
+                    self.indexes[self.recordings[source_index.row()]] = drop_row + i
+        if docs:
+            self.added_new_doc.emit(docs)
         event.accept()
 
     def create_table(self, coll):
@@ -199,7 +196,13 @@ class TableWidget(QtGui.QTableWidget, TableView):
             self.setItem(i, 1, cell)
             self.setColumnWidth(0, 60)
 
-    def set_progress_bar(self, docid, step, n_process):
-        #print(docid, step, n_process)
+    def set_progress_bar(self, status):
+        docid = status.docid
+        step = status.step
+        n_progress = status.n_progress
+
         progress_bar = self.cellWidget(self.indexes[docid], 0)
-        progress_bar.update_progress_bar(step, n_process)
+        if not progress_bar:
+            self.setCellWidget(self.indexes[docid], 0, ProgressBar(self))
+            progress_bar = self.cellWidget(self.indexes[docid], 0)
+        progress_bar.update_progress_bar(step, n_progress)
