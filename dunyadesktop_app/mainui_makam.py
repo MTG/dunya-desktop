@@ -1,5 +1,6 @@
 import sys
 import os
+import Queue
 
 from PyQt4 import QtGui
 
@@ -32,7 +33,9 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.work_count = 0
         self.progress_number = 0
         self.thread_query = QueryThread(self)
-        self.thread_feature_downloader = utilities.DocThread()
+        #self.thread_feature_downloader = utilities.DocThread()
+        self.threads = []
+        self.queue = Queue.Queue()
 
         # creating db
         self._set_collections()
@@ -138,8 +141,8 @@ class MainWindowMakam(MainWindowMakamDesign):
     def download_related_features(self, index):
         source_index = self.frame_query.tableView_results.model().mapToSource(index)
         self.recid = self.recordings[source_index.row()]
-        self.thread_feature_downloader.docid = self.recid
-        self.thread_feature_downloader.start()
+        #self.thread_feature_downloader.docid = self.recid
+        #self.thread_feature_downloader.start()
 
     def open_player(self, pitch_data, pd):
         player = PlayerDialog(self.recid, pitch_data, pd)
@@ -152,10 +155,21 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.dwc_left.tableView_downloaded.create_table([item[0] for item in raw])
         self.dwc_left.change_downloaded_text(coll)
 
-    def check_new_doc(self, docid):
-        if not os.path.isdir(os.path.join(DOCS_PATH, str(docid))) and \
-                not str(docid) in self.download_queue:
-            self.download_queue.append(str(docid))
+    def check_new_doc(self, docs):
+        print(docs, 'is sent')
+        downlaod = []
+        for docid in docs:
+            if not os.path.isdir(os.path.join(DOCS_PATH, str(docid))):
+                downlaod.append(str(docid))
+        print(downlaod, 'will be downloaded')
+        d_thread = utilities.DocThread(self.queue)
+        self.threads.append(d_thread)
+        d_thread.start()
+
+        for doc in downlaod:
+            self.queue.put(doc)
+        self.queue.put(None)  # tells the workers to shut down
+
 
 
 app = QtGui.QApplication(sys.argv)

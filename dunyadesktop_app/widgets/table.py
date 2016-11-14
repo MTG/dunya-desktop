@@ -111,7 +111,7 @@ class TableViewResults(TableView):
 
 
 class TableWidget(QtGui.QTableWidget, TableView):
-    added_new_doc = QtCore.pyqtSignal(str)
+    added_new_doc = QtCore.pyqtSignal(list)
 
     def __init__(self):
         QtGui.QTableWidget.__init__(self)
@@ -155,11 +155,8 @@ class TableWidget(QtGui.QTableWidget, TableView):
         selected_rows_index = [row + offset for row, offset
                                in zip(selected_rows_index, sel_rows_offsets)]
 
-        # Allocate space for transfer
-        #for _ in selected_rows_index:
-        #    self.insertRow(drop_row)
-
         # copy content of selected rows into empty ones
+        docs = []
         conn, c = database.connect()
         for i, srow in enumerate(selected_rows):
             source_index = sender.model().mapToSource(srow)
@@ -171,7 +168,9 @@ class TableWidget(QtGui.QTableWidget, TableView):
                     source = QtGui.QTableWidgetItem(item.text())
                     self.insertRow(drop_row + i)
                     self.setItem(drop_row + i, 1, source)
-                    self.added_new_doc.emit(self.recordings[source_index.row()])
+                    docs.append(self.recordings[source_index.row()])
+
+        self.added_new_doc.emit(docs)
         event.accept()
 
     def create_table(self, coll):
@@ -188,7 +187,7 @@ class TableWidget(QtGui.QTableWidget, TableView):
                 metadata = json.load(open(path))
                 cell = QtGui.QTableWidgetItem(metadata['title'])
             except IOError:
-                print("Needs to download {0}".format(item))
+                print("Needs to be downloaded {0}".format(item))
                 cell = QtGui.QTableWidgetItem(item)
             self.insertRow(self.rowCount())
             self.setItem(i, 1, cell)

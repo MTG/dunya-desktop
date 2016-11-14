@@ -49,24 +49,32 @@ class DocThread(QtCore.QThread):
     if not os.path.exists(FOLDER):
         os.makedirs(FOLDER)
 
-    def __init__(self, parent=None):
+    def __init__(self, queue, parent=None):
         QtCore.QThread.__init__(self, parent)
-        self.docid = ''
-
+        self.queue = queue
+        
     def run(self):
-        if self.docid:
-            DOC_FOLDER = os.path.join(self.FOLDER, self.docid)
+        while True:
+            arg = self.queue.get()
+            if arg is None:
+                print('Shutting down')
+                return 
+            self.download(arg)
+    
+    def download(self, docid):
+        if docid:
+            DOC_FOLDER = os.path.join(self.FOLDER, docid)
             if not os.path.exists(DOC_FOLDER):
                 os.makedirs(DOC_FOLDER)
 
             # feature list
-            features = document(self.docid)['derivedfiles']
+            features = document(docid)['derivedfiles']
             try:
-                m_path = os.path.join(DOC_FOLDER, self.docid + '.mp3')
+                m_path = os.path.join(DOC_FOLDER, docid + '.mp3')
                 if not os.path.exists(m_path):
                     # for now, all tokens have permission to download
                     # audio files
-                    mp3 = get_mp3(self.docid)
+                    mp3 = get_mp3(docid)
                     open(m_path, 'w').write(mp3)
             except:
                 pass
@@ -80,7 +88,7 @@ class DocThread(QtCore.QThread):
                                           + '.json')
                     if not os.path.exists(f_path):
                         try:
-                            feature = get_document_as_json(self.docid, thetype,
+                            feature = get_document_as_json(docid, thetype,
                                                            subtype)
                             if feature:
                                 json.dump(feature, open(f_path, 'w'))
