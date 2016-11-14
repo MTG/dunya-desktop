@@ -156,8 +156,8 @@ class TableWidget(QtGui.QTableWidget, TableView):
                                in zip(selected_rows_index, sel_rows_offsets)]
 
         # Allocate space for transfer
-        for _ in selected_rows_index:
-            self.insertRow(drop_row)
+        #for _ in selected_rows_index:
+        #    self.insertRow(drop_row)
 
         # copy content of selected rows into empty ones
         conn, c = database.connect()
@@ -169,6 +169,7 @@ class TableWidget(QtGui.QTableWidget, TableView):
                 item = sender.model().sourceModel().item(selected_rows_index[i], 1)
                 if item:
                     source = QtGui.QTableWidgetItem(item.text())
+                    self.insertRow(drop_row + i)
                     self.setItem(drop_row + i, 1, source)
                     self.added_new_doc.emit(self.recordings[source_index.row()])
         event.accept()
