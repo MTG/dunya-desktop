@@ -223,8 +223,8 @@ class TableWidget(QtGui.QTableWidget, TableView):
     def set_checked(self, raw):
         item = QtGui.QLabel()
         item.setAlignment(QtCore.Qt.AlignCenter)
-        item.setScaledContents(True)
-        icon = QtGui.QPixmap(CHECK_ICON)
+        icon = QtGui.QPixmap(CHECK_ICON).scaled(20, 20,
+                                                QtCore.Qt.KeepAspectRatio,
+                                                QtCore.Qt.SmoothTransformation)
         item.setPixmap(icon)
-
         self.setCellWidget(raw, 0, item)
