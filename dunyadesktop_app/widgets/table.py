@@ -23,6 +23,8 @@ DUNYA_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                           'icons', 'dunya.svg')
 CHECK_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                           'icons', 'tick-inside-circle.svg')
+QUEUE_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
+                          'icons', 'add-to-queue-button.svg')
 
 
 class TableView(QtGui.QTableView):
@@ -202,7 +204,9 @@ class TableWidget(QtGui.QTableWidget, TableView):
             self.setItem(i, 1, cell)
             self.setColumnWidth(0, 60)
             if set_check:
-                self.set_checked(self.rowCount()-1)
+                self.set_status(self.rowCount()-1, True)
+            else:
+                self.set_status(self.rowCount()-1, False)
 
     def set_progress_bar(self, status):
         docid = status.docid
@@ -218,13 +222,25 @@ class TableWidget(QtGui.QTableWidget, TableView):
             progress_bar.update_progress_bar(step, n_progress)
         else:
             print('checked')
-            self.set_checked(self.indexes[docid])
+            self.set_status(self.indexes[docid], True)
 
-    def set_checked(self, raw):
+    def set_status(self, raw, exist=None):
         item = QtGui.QLabel()
         item.setAlignment(QtCore.Qt.AlignCenter)
-        icon = QtGui.QPixmap(CHECK_ICON).scaled(20, 20,
-                                                QtCore.Qt.KeepAspectRatio,
-                                                QtCore.Qt.SmoothTransformation)
-        item.setPixmap(icon)
+
+        if exist:
+            icon = QtGui.QPixmap(CHECK_ICON).scaled(20, 20,
+                                                    QtCore.Qt.KeepAspectRatio,
+                                                    QtCore.Qt.SmoothTransformation)
+            item.setPixmap(icon)
+
+        elif not exist:
+            icon = QtGui.QPixmap(QUEUE_ICON).scaled(20, 20,
+                                                    QtCore.Qt.KeepAspectRatio,
+                                                    QtCore.Qt.SmoothTransformation)
+            item.setPixmap(icon)
+        else:
+            print("Not exist!")
+
         self.setCellWidget(raw, 0, item)
+
