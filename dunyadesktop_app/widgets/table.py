@@ -96,6 +96,7 @@ class TableViewResults(TableView):
     def _set_horizontal_header(self):
         self.horizontal_header.setStretchLastSection(True)
         self.horizontal_header.hide()
+        self.horizontal_header.setResizeMode(QtGui.QHeaderView.Fixed)
 
     def contextMenuEvent(self, event):
         """Pops up the context menu when the right button is clicked."""
@@ -133,6 +134,7 @@ class TableWidget(QtGui.QTableWidget, TableView):
     def _set_columns(self):
         self.setColumnCount(2)
         self.setHorizontalHeaderLabels(['Status', 'Title'])
+        self.horizontalHeader().setResizeMode(QtGui.QHeaderView.Fixed)
 
     def dropMimeData(self, p_int, p_int_1, QMimeData, Qt_DropAction):
         self.last_drop_row = p_int
