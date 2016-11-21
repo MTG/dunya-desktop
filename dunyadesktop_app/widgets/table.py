@@ -170,11 +170,15 @@ class TableWidget(QtGui.QTableWidget, TableView):
             source_index = sender.model().mapToSource(srow)
             if database.add_doc_to_coll(
                     conn, c, self.recordings[source_index.row()], self.coll):
+                # index in the source model
+                index = sender.model().mapToSource(selected_rows[i])
+                # item in the source model
+                item = sender.model().sourceModel().item(index.row(), 1)
 
-                item = sender.model().sourceModel().item(selected_rows_index[i], 1)
                 if item:
                     source = QtGui.QTableWidgetItem(item.text())
                     self.insertRow(drop_row + i)
+                    self.set_status(drop_row + i, 0)
                     self.setItem(drop_row + i, 1, source)
                     docs.append(self.recordings[source_index.row()])
                     self.indexes[self.recordings[source_index.row()]] = drop_row + i
@@ -204,43 +208,41 @@ class TableWidget(QtGui.QTableWidget, TableView):
             self.setItem(i, 1, cell)
             self.setColumnWidth(0, 60)
             if set_check:
-                self.set_status(self.rowCount()-1, True)
+                self.set_status(self.rowCount()-1, 1)
             else:
-                self.set_status(self.rowCount()-1, False)
+                self.set_status(self.rowCount()-1, 0)
 
     def set_progress_bar(self, status):
         docid = status.docid
         step = status.step
         n_progress = status.n_progress
 
+        self.setCellWidget(self.indexes[docid], 0, ProgressBar(self))
         progress_bar = self.cellWidget(self.indexes[docid], 0)
-        if not progress_bar:
-            self.setCellWidget(self.indexes[docid], 0, ProgressBar(self))
-            progress_bar = self.cellWidget(self.indexes[docid], 0)
 
         if not step == n_progress:
             progress_bar.update_progress_bar(step, n_progress)
         else:
-            print('checked')
-            self.set_status(self.indexes[docid], True)
+            self.set_status(self.indexes[docid], 1)
 
     def set_status(self, raw, exist=None):
         item = QtGui.QLabel()
         item.setAlignment(QtCore.Qt.AlignCenter)
 
-        if exist:
+        if exist is 0:
+            icon = QtGui.QPixmap(QUEUE_ICON).scaled(20, 20,
+                                                    QtCore.Qt.KeepAspectRatio,
+                                                    QtCore.Qt.SmoothTransformation)
+            item.setPixmap(icon)
+
+        if exist is 1:
             icon = QtGui.QPixmap(CHECK_ICON).scaled(20, 20,
                                                     QtCore.Qt.KeepAspectRatio,
                                                     QtCore.Qt.SmoothTransformation)
             item.setPixmap(icon)
 
-        elif not exist:
-            icon = QtGui.QPixmap(QUEUE_ICON).scaled(20, 20,
-                                                    QtCore.Qt.KeepAspectRatio,
-                                                    QtCore.Qt.SmoothTransformation)
-            item.setPixmap(icon)
-        else:
-            print("Not exist!")
+        #else:
+        #    print("Not exist!")
 
         self.setCellWidget(raw, 0, item)
 

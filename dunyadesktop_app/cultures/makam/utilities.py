@@ -65,7 +65,6 @@ class DocThread(QtCore.QThread):
         while True:
             arg = self.queue.get()
             if arg is None:
-                print('Shutting down')
                 return 
             self.download(arg)
     

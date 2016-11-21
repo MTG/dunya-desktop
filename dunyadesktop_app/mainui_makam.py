@@ -156,21 +156,19 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.dwc_left.change_downloaded_text(coll)
 
     def check_new_doc(self, docs):
-        print(docs, 'is sent')
-        downlaod = []
+        download = []
         for docid in docs:
             if not os.path.isdir(os.path.join(DOCS_PATH, str(docid))):
-                print(os.path.join(DOCS_PATH, str(docid)))
-                downlaod.append(str(docid))
-        print(downlaod, 'will be downloaded')
+                download.append(str(docid))
         d_thread = utilities.DocThread(self.queue,
                                        self.dwc_left.tableView_downloaded.set_progress_bar)
-        self.threads.append(d_thread)
-        d_thread.start()
+        if download:
+            self.threads.append(d_thread)
+            d_thread.start()
 
-        for doc in downlaod:
-            self.queue.put(doc)
-        self.queue.put(None)  # tells the workers to shut down
+            for doc in download:
+                self.queue.put(doc)
+            self.queue.put(None)  # tells the workers to shut down
 
 
 app = QtGui.QApplication(sys.argv)
