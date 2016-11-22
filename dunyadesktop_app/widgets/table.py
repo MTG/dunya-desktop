@@ -182,6 +182,7 @@ class TableWidget(QtGui.QTableWidget, TableView):
                     self.setItem(drop_row + i, 1, source)
                     docs.append(self.recordings[source_index.row()])
                     self.indexes[self.recordings[source_index.row()]] = drop_row + i
+                    sender.model().sourceModel().set_checked([selected_rows_index[i]])
         if docs:
             self.added_new_doc.emit(docs)
         event.accept()
@@ -220,10 +221,11 @@ class TableWidget(QtGui.QTableWidget, TableView):
         self.setCellWidget(self.indexes[docid], 0, ProgressBar(self))
         progress_bar = self.cellWidget(self.indexes[docid], 0)
 
-        if not step == n_progress:
-            progress_bar.update_progress_bar(step, n_progress)
-        else:
-            self.set_status(self.indexes[docid], 1)
+        if progress_bar:
+            if not step == n_progress:
+                progress_bar.update_progress_bar(step, n_progress)
+            else:
+                self.set_status(self.indexes[docid], 1)
 
     def set_status(self, raw, exist=None):
         item = QtGui.QLabel()

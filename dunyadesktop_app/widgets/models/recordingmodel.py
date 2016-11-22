@@ -4,6 +4,8 @@ from PyQt4 import QtGui, QtCore
 
 DUNYA_ICON = os.path.join(os.path.dirname(__file__), '..', '..', 'ui_files',
                           'icons', 'dunya.svg')
+DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', '..', 'cultures',
+                         'documents')
 
 
 class RecordingModel(QtGui.QStandardItemModel):
@@ -25,7 +27,6 @@ class RecordingModel(QtGui.QStandardItemModel):
         for rec in work['recordings']:
             check_item = QtGui.QStandardItem()
             check_item.setCheckable(True)
-
             title = QtGui.QStandardItem(rec['title'])
 
             artists = ''
@@ -45,7 +46,26 @@ class RecordingModel(QtGui.QStandardItemModel):
             mbid = rec['mbid']
             self.rec_fetched.emit(mbid)
 
+            if os.path.isdir(os.path.join(DOCS_PATH, str(rec['mbid']))):
+                check_item.setCheckState(QtCore.Qt.Checked)
+                check_item.setEnabled(False)
+
+                # brush = QtGui.QBrush(QtGui.QColor(210, 220, 210))
+                # check_item.setBackground(brush)
+                # check_item.setEnabled(False)
+                # title.setBackground(brush)
+                # title.setEnabled(False)
+                # artist_item.setBackground(brush)
+                # artist_item.setEnabled(False)
+
             self.insertRow(self.rowCount())
             self.setItem(self.rowCount() - 1, 0, check_item)
             self.setItem(self.rowCount() - 1, 1, title)
             self.setItem(self.rowCount() - 1, 2, artist_item)
+
+    def set_checked(self, rows):
+        for row in rows:
+            check_item = QtGui.QStandardItem()
+            check_item.setCheckState(QtCore.Qt.Checked)
+            check_item.setEnabled(False)
+            self.setItem(row, 0, check_item)
