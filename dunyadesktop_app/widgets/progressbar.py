@@ -11,6 +11,7 @@ class ProgressBar(QtGui.QProgressBar):
         QtGui.QProgressBar.__init__(self, parent)
         self.setGeometry(30, 40, 200, 25)
         self._set_css(self, CSS_PROGRESS)
+        self.setToolTip('Downloading...')
 
     def update_progress_bar(self, index, work_number):
         """Updates the progressbar while querying"""

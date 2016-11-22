@@ -236,12 +236,14 @@ class TableWidget(QtGui.QTableWidget, TableView):
                                                     QtCore.Qt.KeepAspectRatio,
                                                     QtCore.Qt.SmoothTransformation)
             item.setPixmap(icon)
+            item.setToolTip('Waiting in the download queue...')
 
         if exist is 1:
             icon = QtGui.QPixmap(CHECK_ICON).scaled(20, 20,
                                                     QtCore.Qt.KeepAspectRatio,
                                                     QtCore.Qt.SmoothTransformation)
             item.setPixmap(icon)
+            item.setToolTip('All the features are downloaded...')
 
         #else:
         #    print("Not exist!")

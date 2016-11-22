@@ -68,4 +68,5 @@ class RecordingModel(QtGui.QStandardItemModel):
             check_item = QtGui.QStandardItem()
             check_item.setCheckState(QtCore.Qt.Checked)
             check_item.setEnabled(False)
+            check_item.setToolTip('Already added to main collection...')
             self.setItem(row, 0, check_item)
