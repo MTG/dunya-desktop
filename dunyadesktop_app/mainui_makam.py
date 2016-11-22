@@ -63,6 +63,9 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.dwc_left.tableView_downloaded.added_new_doc.connect(
             self.check_new_doc)
 
+        self.frame_query.tableView_results.open_dunya_triggered.connect(
+            self.open_player)
+
     def _set_combobox_attributes(self):
         self.frame_query.frame_attributes.comboBox_melodic.add_items(self.makams)
         self.frame_query.frame_attributes.comboBox_form.add_items(self.forms)
@@ -144,8 +147,11 @@ class MainWindowMakam(MainWindowMakamDesign):
         #self.thread_feature_downloader.docid = self.recid
         #self.thread_feature_downloader.start()
 
-    def open_player(self, pitch_data, pd):
-        player = PlayerDialog(self.recid, pitch_data, pd)
+    def open_player(self, index):
+        model_index = self.frame_query.tableView_results.model().mapToSource(index)
+        recid = self.recordings[model_index.row()]
+
+        player = PlayerDialog(recid)
         player.exec_()
 
     def update_coll_list(self, coll):

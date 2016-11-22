@@ -21,10 +21,11 @@ class CollectionAction(QtGui.QAction):
 
 class RCMenu(QtGui.QMenu):
     def __init__(self, parent=None):
-        self.parent = parent
-        QtGui.QMenu.__init__(self, self.parent)
+        QtGui.QMenu.__init__(self, parent)
         #self._set_css()
         self._add_actions()
+
+        self.open_dunya.triggered.connect(self._send_player_request)
 
     def _set_css(self):
         with open(CSS_PATH) as f:
@@ -49,3 +50,6 @@ class RCMenu(QtGui.QMenu):
 
     def _come_signal(self, coll):
         print(coll)
+
+    def _send_player_request(self):
+        self.parent().send_rec()

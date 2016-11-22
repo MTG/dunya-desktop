@@ -14,7 +14,7 @@ import dunyadesktop_app.ui_files.resources_rc
 
 
 class PlayerDialog(QtGui.QDialog):
-    def __init__(self, recid, pitch_data, pd):
+    def __init__(self, recid):
         QtGui.QDialog.__init__(self)
         self._set_design()
 

@@ -68,6 +68,8 @@ class TableView(QtGui.QTableView):
 
 class TableViewResults(TableView):
     """Table view widget of query results."""
+    open_dunya_triggered = QtCore.pyqtSignal(object)
+
     def __init__(self, parent=None):
         TableView.__init__(self)
         self.setSortingEnabled(True)
@@ -81,12 +83,6 @@ class TableViewResults(TableView):
 
         self.add_maincoll = QtGui.QAction("Add to main collection", self)
         self.setColumnWidth(0, 10)
-
-        #self.open_dunya = QtGui.QAction("Open on Player", self)
-        #self.open_dunya.setIcon(QtGui.QIcon(DUNYA_ICON))
-
-        #self.menu.addAction(self.add_maincoll)
-        #self.menu.addAction(self.open_dunya)
 
     def _set_menu(self):
         self.add_maincoll = QtGui.QAction("Add to main collection", self)
@@ -118,6 +114,10 @@ class TableViewResults(TableView):
             if item.row() not in selected_rows:
                 selected_rows.append(item)
         return selected_rows
+
+    def send_rec(self):
+        if self.index:
+            self.open_dunya_triggered.emit(self.index)
 
 
 class TableWidget(QtGui.QTableWidget, TableView):
