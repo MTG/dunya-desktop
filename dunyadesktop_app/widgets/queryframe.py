@@ -1,6 +1,6 @@
 from PyQt4 import QtCore, QtGui
 
-from tableresults import TableViewResults
+from table import TableViewResults
 from tabwidget import TabWidget
 from audioattframe import AudioAttFrame
 from models.recordingmodel import RecordingModel
@@ -15,8 +15,8 @@ QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"
 class QueryFrame(QtGui.QFrame):
     """Query frame of the main window. Contains the results table, attribute
     frame, line edits for filtering and labels."""
-    def __init__(self):
-        QtGui.QFrame.__init__(self)
+    def __init__(self, parent=None):
+        QtGui.QFrame.__init__(self, parent)
 
         # grid layout for main window
         layout_main = QtGui.QGridLayout(self)

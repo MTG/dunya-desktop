@@ -3,8 +3,8 @@ from PyQt4 import QtGui
 
 class FilteringModel(QtGui.QStandardItemModel):
     """This model is contains the attributes"""
-    def __init__(self):
-        QtGui.QStandardItemModel.__init__(self)
+    def __init__(self, parent=None):
+        QtGui.QStandardItemModel.__init__(self, parent)
 
     def add_items(self, attribute):
         self.setRowCount(len(attribute))

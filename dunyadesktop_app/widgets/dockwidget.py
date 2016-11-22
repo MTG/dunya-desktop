@@ -2,7 +2,10 @@ import os
 
 from PyQt4 import QtGui, QtCore
 
-from listview import CollectionsView
+from table import TableWidget
+from listwidget import CollectionsWidget
+from newcollectiondialog import NewCollectionDialog
+from dunyadesktop_app.utilities import database
 
 CSS_DOCKWIDGET = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                               'css', 'dockwidget.css')
@@ -20,7 +23,7 @@ CSS_FRAME_COLLECTION = os.path.join(os.path.dirname(__file__), '..',
                                     'ui_files', 'css', 'frame_collection.css')
 
 CSS_LISTVIEW = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
-                            'css', 'listview.css')
+                            'css', 'listwidget.css')
 
 CSS_TOOLBUTTON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                               'css', 'toolbutton_collection.css')
@@ -55,8 +58,8 @@ class DockWidget(QtGui.QDockWidget):
 class DockWidgetContentsLeft(QtGui.QWidget):
     """Contains the contents of the dock widget on the left side of the main
     window"""
-    def __init__(self):
-        QtGui.QWidget.__init__(self)
+    def __init__(self, parent=None):
+        QtGui.QWidget.__init__(self, parent)
         self._set_widget()
 
         layout = QtGui.QVBoxLayout(self)
@@ -77,8 +80,7 @@ class DockWidgetContentsLeft(QtGui.QWidget):
         self._set_css(self.label_collections, CSS_LABEL_COLLECTION)
         layout_3.addWidget(self.label_collections)
 
-        # listview (seperate it)
-        self.listView_collections = CollectionsView()
+        self.listView_collections = CollectionsWidget()
         layout_3.addWidget(self.listView_collections)
         layout.addWidget(self.frame_collection)
 
@@ -96,11 +98,13 @@ class DockWidgetContentsLeft(QtGui.QWidget):
         self._set_label_downloaded()
         layout_4.addWidget(self.label_downloaded)
 
-        self.tableView_downloaded = QtGui.QTableView(self.frame_downloaded)
-        self._set_css(self.tableView_downloaded, CSS_TABLEVIEW_DOWNLOADED)
+        self.tableView_downloaded = TableWidget()
         layout_4.addWidget(self.tableView_downloaded)
         layout.addWidget(self.frame_downloaded)
         self.retranslateUi()
+
+        # signals
+        self.toolButton_collection.clicked.connect(self.new_collection)
 
     def _set_widget(self):
         """Sets the size policies."""
@@ -186,12 +190,33 @@ class DockWidgetContentsLeft(QtGui.QWidget):
         self.toolButton_collection.setText("New Collection")
         self.label_downloaded.setText("<html><head/><body><p><span style=\" font-size:10pt; color:#878787;\">DOWNLOADED FEATURES</span></p></body></html>")
 
+    def new_collection(self):
+        n_coll = NewCollectionDialog(self)
+        n_coll.exec_()
+        #n_coll.new_collection_added.connect()
+
+    def change_downloaded_text(self, name):
+        self.label_downloaded.setText("<html><head/><body><p><span style=\" font-size:10pt; color:#878787;\">{0}</span></p></body></html>".format(name))
+        self._set_label_downloaded()
+        self.label_collections.setIndent(15)  # check it
+        self.label_collections.setTextInteractionFlags(
+            QtCore.Qt.NoTextInteraction)
+        self._set_css(self.label_collections, CSS_LABEL_COLLECTION)
+
+    def update_collection_widget(self):
+        conn, c = database.connect(add_main=True)
+        database._add_docs_to_maincoll(conn, c)
+
+        colls = database.get_collections(c)
+        self.listView_collections.update_list([coll[0] for coll in colls])
+        conn.close()
+
 
 class DockWidgetContentsTop(QtGui.QWidget):
     """Contains the contents of the dock widget on the top side of the main
         window"""
-    def __init__(self):
-        QtGui.QWidget.__init__(self)
+    def __init__(self, parent=None):
+        QtGui.QWidget.__init__(self, parent)
 
         layout = QtGui.QHBoxLayout(self)
         layout.setContentsMargins(2, 0, 4, 0)

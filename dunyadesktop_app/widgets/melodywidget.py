@@ -7,8 +7,8 @@ import numpy as np
 
 
 class MelodyWidget(GraphicsLayoutWidget):
-    def __init__(self):
-        GraphicsLayoutWidget.__init__(self, parent=None)
+    def __init__(self, parent=None):
+        GraphicsLayoutWidget.__init__(self, parent)
         self.layout = pg.GraphicsLayout()
         self._set_size_policy()
 

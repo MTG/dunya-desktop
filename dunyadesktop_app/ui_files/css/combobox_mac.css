@@ -1,7 +1,7 @@
 QComboBox {
     border: 2px groove #8F94AA;
     border-radius: 3px;
-    padding: 3px 10px 1px 3px;
+    /*padding: 3px 10px 1px 3px;*/
     /*min-width: 6em;*/
 }
 

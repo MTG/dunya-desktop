@@ -1,8 +1,10 @@
-import tempfile
 import os
+import os.path
 import json
 
-import compmusic.dunya.makam
+from compmusic.dunya.makam import (get_makams, get_forms, get_usuls,
+                                   get_composers, get_artists, get_instruments)
+from compmusic.dunya.docserver import (document, get_document_as_json, get_mp3)
 from PyQt4 import QtCore
 
 
@@ -10,46 +12,95 @@ def sort_dictionary(dictionary, key):
     """sorts the given dictionary according to the keys"""
     return sorted(dictionary, key=lambda k: k[key])
 
+
 def get_attributes():
-    makams = compmusic.dunya.makam.get_makams()
+    """Downloads the attributes"""
+    makams = get_makams()
     makams = sort_dictionary(makams, 'name')
 
-    forms = compmusic.dunya.makam.get_forms()
+    forms = get_forms()
     forms = sort_dictionary(forms, 'name')
 
-    usuls = compmusic.dunya.makam.get_usuls()
+    usuls = get_usuls()
     usuls = sort_dictionary(usuls, 'name')
 
-    composers = compmusic.dunya.makam.get_composers()
+    composers = get_composers()
     composers = sort_dictionary(composers, 'name')
 
-    performers = compmusic.dunya.makam.get_artists()
+    performers = get_artists()
     performers = sort_dictionary(performers, 'name')
 
-    instruments = compmusic.dunya.makam.get_instruments()
+    instruments = get_instruments()
     instruments = sort_dictionary(instruments, 'name')
 
     return makams, forms, usuls, composers, performers, instruments
 
 
-class FeatureDownloaderThread(QtCore.QThread):
-    TEMP = tempfile.gettempdir()
-    feautures_downloaded = QtCore.pyqtSignal(dict, dict)
+class ResultObj(QtCore.QObject):
+    def __init__(self, docid, step, n_progress):
+        QtCore.QObject.__init__(self)
 
-    def __init__(self):
-        QtCore.QThread.__init__(self)
-        self.recid = ''
+        self.docid = docid
+        self.step = step
+        self.n_progress = n_progress
 
+
+class DocThread(QtCore.QThread):
+    """Downloads the available features from Dunya-backend related with the
+    given docid"""
+
+    FOLDER = os.path.join(os.path.dirname(__file__), '..', 'documents')
+    step_completed = QtCore.pyqtSignal(object)
+
+    # checking existance of documents folder in culture
+    if not os.path.exists(FOLDER):
+        os.makedirs(FOLDER)
+
+    def __init__(self, queue, callback, parent=None):
+        QtCore.QThread.__init__(self, parent)
+        self.queue = queue
+        self.step_completed.connect(callback)
+        
     def run(self):
-        rec_folder = os.path.join(self.TEMP, self.recid)
+        while True:
+            arg = self.queue.get()
+            if arg is None:
+                return 
+            self.download(arg)
+    
+    def download(self, docid):
+        if docid:
+            DOC_FOLDER = os.path.join(self.FOLDER, docid)
+            if not os.path.exists(DOC_FOLDER):
+                os.makedirs(DOC_FOLDER)
 
-        if not os.path.exists(rec_folder):
-            os.makedirs(rec_folder)
+            # feature list
+            features = document(docid)['derivedfiles']
+            try:
+                m_path = os.path.join(DOC_FOLDER, docid + '.mp3')
+                if not os.path.exists(m_path):
+                    # for now, all tokens have permission to download
+                    # audio files
+                    mp3 = get_mp3(docid)
+                    open(m_path, 'w').write(mp3)
+            except:
+                pass
 
-        compmusic.dunya.makam.download_mp3(self.recid, rec_folder,
-                                           slugify=True)
-        pitch_data = json.loads(compmusic.dunya.docserver.file_for_document(
-            self.recid, 'audioanalysis', subtype='pitch_filtered'))
-        pd = json.loads(compmusic.dunya.docserver.file_for_document(
-            self.recid, 'audioanalysis', subtype='pitch_distribution'))
-        self.feautures_downloaded.emit(pitch_data, pd)
+            num_f = (sum([len(features[key]) for key in ['audioanalysis',
+                                                         'jointanalysis']]))
+
+            count = 0
+            for thetype in ['audioanalysis', 'jointanalysis']:
+                for subtype in features[thetype]:
+                    f_path = os.path.join(DOC_FOLDER, thetype + '--' + subtype
+                                          + '.json')
+                    if not os.path.exists(f_path):
+                        try:
+                            feature = get_document_as_json(docid, thetype,
+                                                           subtype)
+                            if feature:
+                                json.dump(feature, open(f_path, 'w'))
+                        except:
+                            pass
+                    count += 1
+                    self.step_completed.emit(ResultObj(docid, count, num_f))

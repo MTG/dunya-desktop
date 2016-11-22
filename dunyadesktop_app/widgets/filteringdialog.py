@@ -1,21 +1,26 @@
+import os
+
 from PyQt4 import QtGui, QtCore
 
 from table import TableView
-
 from models.filteringmodel import FilteringModel
 from models.proxymodel import SortFilterProxyModel
 
 import dunyadesktop_app.ui_files.resources_rc
+
+CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
+                        'filteringdialog.css')
 
 
 class FilteringDialog(QtGui.QDialog):
     """The dialog which pops up when the user clicks the combobox"""
     ok_button_clicked = QtCore.pyqtSignal()
 
-    def __init__(self):
-        QtGui.QDialog.__init__(self)
+    def __init__(self, parent=None):
+        QtGui.QDialog.__init__(self, parent)
         self.attribute = None
         self.setFixedSize(200, 300)
+        self._set_css()
 
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.Popup)
 
@@ -23,7 +28,7 @@ class FilteringDialog(QtGui.QDialog):
         self.filtering_edit = QtGui.QLineEdit()
         self.table_attribute = TableView()
 
-        self.button_box = QtGui.QDialogButtonBox()
+        self.button_box = QtGui.QDialogButtonBox(self)
         self.button_box.addButton('OK', QtGui.QDialogButtonBox.AcceptRole)
         self.button_box.addButton('Cancel', QtGui.QDialogButtonBox.RejectRole)
 
@@ -33,9 +38,9 @@ class FilteringDialog(QtGui.QDialog):
 
         self.setLayout(v_layout)
 
-        self.filtering_model = FilteringModel()
+        self.filtering_model = FilteringModel(self)
 
-        self.proxy_model = SortFilterProxyModel()
+        self.proxy_model = SortFilterProxyModel(self)
         self.proxy_model.setSourceModel(self.filtering_model)
         self.proxy_model.setFilterKeyColumn(-1)
 
@@ -53,6 +58,11 @@ class FilteringDialog(QtGui.QDialog):
         self.table_attribute.doubleClicked.connect(
             self.get_selected_item_index)
         self.button_box.accepted.connect(self.get_selected_item_index)
+
+    def _set_css(self):
+        with open(CSS_PATH) as f:
+            css = f.read()
+        self.setStyleSheet(css)
 
     def get_selected_item_index(self):
         """Stores the index of the selected item and emits the clicked

@@ -22,8 +22,8 @@ QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"
 
 class GeneralMainDesign(QtGui.QMainWindow):
     """General design of the main window"""
-    def __init__(self):
-        QtGui.QMainWindow.__init__(self)
+    def __init__(self, QWidgetParent=None):
+        QtGui.QMainWindow.__init__(self, QWidgetParent)
         self._set_main_window()
         self._set_css(self, CSS_MAIN)
 
@@ -52,8 +52,8 @@ class GeneralMainDesign(QtGui.QMainWindow):
         self.progress_bar.setVisible(False)
 
         # dockwidget collection (left side)
-        self.dw_collections = DockWidget(270, 440, 400, 20000)
-        self.dwc_left = DockWidgetContentsLeft()
+        self.dw_collections = DockWidget(300, 600, 400, 20000)
+        self.dwc_left = DockWidgetContentsLeft(self)
         self.dw_collections.setWidget(self.dwc_left)
         self.addDockWidget(QtCore.Qt.DockWidgetArea(1),
                            self.dw_collections)
@@ -67,7 +67,7 @@ class GeneralMainDesign(QtGui.QMainWindow):
 
     def _set_main_window(self):
         """Sets the size policies of the main window"""
-        self.resize(1000, 600)
+        self.resize(1000, 750)
         size_policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum,
                                         QtGui.QSizePolicy.Minimum)
         size_policy.setHorizontalStretch(0)
