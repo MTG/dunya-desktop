@@ -240,3 +240,6 @@ QTableView::item:hover {
     border-color: #30B4CC;
     background-color: #50575E;
     }
+
+QTableView::item:disabled {color: #0A7E8C;
+                           background-color: #A7D6C9;}

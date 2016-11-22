@@ -2,6 +2,7 @@ import tempfile
 import os
 import glob
 import time
+import json
 
 from PyQt4 import QtGui, QtCore
 from essentia.standard import MonoLoader
@@ -13,13 +14,20 @@ from dunyadesktop_app.utilities.playback import AudioPlaybackThread
 import dunyadesktop_app.ui_files.resources_rc
 
 
+DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
+                         'documents')
+
+
 class PlayerDialog(QtGui.QDialog):
     def __init__(self, recid):
         QtGui.QDialog.__init__(self)
         self._set_design()
 
-        rec_folder = os.path.join(tempfile.gettempdir(), recid)
-        audio_path = glob.glob(rec_folder + '/*.mp3')[0]
+        doc_folder = os.path.join(DOCS_PATH, recid)
+        audio_path = os.path.join(doc_folder, recid + '.mp3')
+
+        pitch_data = json.load(open(os.path.join(doc_folder,
+                                                 'audioanalysis--pitch_filtered.json')))
 
         hopsize = pitch_data['hopSize']
         samplerate = pitch_data['sampleRate']
@@ -34,6 +42,9 @@ class PlayerDialog(QtGui.QDialog):
         max_pitch = max(pitch)
 
         self.waveform_widget.plot_waveform(raw_audio)
+
+        pd = json.load(open(os.path.join(doc_folder,
+                                         'audioanalysis--pitch_distribution.json')))
         self.melody_widget.plot_histogram(pd, pitch)
 
         self.playback_thread = AudioPlaybackThread(timer_pitch=60,
