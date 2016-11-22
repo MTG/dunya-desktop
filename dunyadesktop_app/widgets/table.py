@@ -6,6 +6,7 @@ from PyQt4 import QtGui, QtCore
 
 from dunyadesktop_app.utilities import database
 from progressbar import ProgressBar
+from menu import RCMenu
 
 if platform.system() == 'Linux':
     FONT_SIZE = 9
@@ -75,17 +76,17 @@ class TableViewResults(TableView):
         self.horizontal_header = self.horizontalHeader()
         self._set_horizontal_header()
 
-        self.menu = QtGui.QMenu(self)
-        self._set_menu()
-        self.add_maincoll = QtGui.QAction("Add to main collection", self)
+        #self.menu = QtGui.QMenu(self)
+        #self._set_menu()
 
+        self.add_maincoll = QtGui.QAction("Add to main collection", self)
         self.setColumnWidth(0, 10)
 
-        self.open_dunya = QtGui.QAction("Open on Player", self)
-        self.open_dunya.setIcon(QtGui.QIcon(DUNYA_ICON))
+        #self.open_dunya = QtGui.QAction("Open on Player", self)
+        #self.open_dunya.setIcon(QtGui.QIcon(DUNYA_ICON))
 
-        self.menu.addAction(self.add_maincoll)
-        self.menu.addAction(self.open_dunya)
+        #self.menu.addAction(self.add_maincoll)
+        #self.menu.addAction(self.open_dunya)
 
     def _set_menu(self):
         self.add_maincoll = QtGui.QAction("Add to main collection", self)
@@ -106,7 +107,10 @@ class TableViewResults(TableView):
             for index in self.selectionModel().selection().indexes():
                 row, column = index.row(), index.column()
         self.index = index
-        self.menu.popup(QtGui.QCursor.pos())
+
+        menu = RCMenu(self)
+        menu.popup(QtGui.QCursor.pos())
+        #self.menu.popup(QtGui.QCursor.pos())
 
     def get_selected_rows(self):
         selected_rows = []
