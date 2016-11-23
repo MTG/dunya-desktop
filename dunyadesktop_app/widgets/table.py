@@ -26,6 +26,20 @@ CHECK_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                           'icons', 'tick-inside-circle.svg')
 QUEUE_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                           'icons', 'add-to-queue-button.svg')
+DOWNLOAD_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
+                             'icons', 'download.svg')
+
+
+class DownloadButton(QtGui.QToolButton):
+    def __init__(self, parent=None):
+        QtGui.QToolButton.__init__(self, parent)
+        #self.clicked.connect(self.download_clicked)
+
+    def download_clicked(self):
+        pass
+        #print('clicked')
+        #print(self.parent())
+        #print(self.parent().pos())
 
 
 class TableView(QtGui.QTableView):
@@ -205,17 +219,19 @@ class TableWidget(QtGui.QTableWidget, TableView):
             try:
                 metadata = json.load(open(path))
                 cell = QtGui.QTableWidgetItem(metadata['title'])
-                set_check = True
+                set_check = 1
             except IOError:
                 print("Needs to be downloaded {0}".format(item))
                 cell = QtGui.QTableWidgetItem(item)
+
             self.insertRow(self.rowCount())
             self.setItem(i, 1, cell)
             self.setColumnWidth(0, 60)
-            if set_check:
+
+            if set_check is 1:
                 self.set_status(self.rowCount()-1, 1)
             else:
-                self.set_status(self.rowCount()-1, 0)
+                self.set_status(self.rowCount()-1, 2)
 
     def set_progress_bar(self, status):
         docid = status.docid
@@ -249,8 +265,21 @@ class TableWidget(QtGui.QTableWidget, TableView):
             item.setPixmap(icon)
             item.setToolTip('All the features are downloaded...')
 
-        #else:
-        #    print("Not exist!")
+        if exist is 2:
+            item = QtGui.QPushButton(self)
+            item.setToolTip('Download')
+            item.setIcon(QtGui.QIcon(DOWNLOAD_ICON))
+            item.clicked.connect(self.download_clicked)
 
         self.setCellWidget(raw, 0, item)
 
+    def download_clicked(self):
+        click_me = QtGui.qApp.focusWidget()
+        index = self.indexAt(click_me.pos())
+        if index.isValid():
+            row = index.row()
+            docid = str(self.item(row, 1).text().toUtf8())
+
+            self.set_status(row, 0)
+            self.indexes[docid] = row
+            self.added_new_doc.emit([docid])
