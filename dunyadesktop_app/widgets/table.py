@@ -43,6 +43,8 @@ class DownloadButton(QtGui.QToolButton):
 
 
 class TableView(QtGui.QTableView):
+    open_dunya_triggered = QtCore.pyqtSignal(object)
+
     def __init__(self, *__args):
         QtGui.QTableView.__init__(self, *__args)
 
@@ -79,10 +81,31 @@ class TableView(QtGui.QTableView):
             css = f.read()
         self.setStyleSheet(css)
 
+    def contextMenuEvent(self, event):
+        """Pops up the context menu when the right button is clicked."""
+        if self.selectionModel().selection().indexes():
+            for index in self.selectionModel().selection().indexes():
+                row, column = index.row(), index.column()
+        self.index = index
+
+        menu = RCMenu(self)
+        menu.popup(QtGui.QCursor.pos())
+        #self.menu.popup(QtGui.QCursor.pos())
+
+    def send_rec(self):
+        if self.index:
+            self.open_dunya_triggered.emit(self.index)
+
+    def get_selected_rows(self):
+        selected_rows = []
+        for item in self.selectionModel().selectedRows():
+            if item.row() not in selected_rows:
+                selected_rows.append(item)
+        return selected_rows
+
 
 class TableViewResults(TableView):
     """Table view widget of query results."""
-    open_dunya_triggered = QtCore.pyqtSignal(object)
 
     def __init__(self, parent=None):
         TableView.__init__(self)
@@ -91,9 +114,6 @@ class TableViewResults(TableView):
 
         self.horizontal_header = self.horizontalHeader()
         self._set_horizontal_header()
-
-        #self.menu = QtGui.QMenu(self)
-        #self._set_menu()
 
         self.add_maincoll = QtGui.QAction("Add to main collection", self)
         self.setColumnWidth(0, 10)
@@ -111,31 +131,10 @@ class TableViewResults(TableView):
         self.horizontal_header.hide()
         self.horizontal_header.setResizeMode(QtGui.QHeaderView.Fixed)
 
-    def contextMenuEvent(self, event):
-        """Pops up the context menu when the right button is clicked."""
-        if self.selectionModel().selection().indexes():
-            for index in self.selectionModel().selection().indexes():
-                row, column = index.row(), index.column()
-        self.index = index
-
-        menu = RCMenu(self)
-        menu.popup(QtGui.QCursor.pos())
-        #self.menu.popup(QtGui.QCursor.pos())
-
-    def get_selected_rows(self):
-        selected_rows = []
-        for item in self.selectionModel().selectedRows():
-            if item.row() not in selected_rows:
-                selected_rows.append(item)
-        return selected_rows
-
-    def send_rec(self):
-        if self.index:
-            self.open_dunya_triggered.emit(self.index)
-
 
 class TableWidget(QtGui.QTableWidget, TableView):
     added_new_doc = QtCore.pyqtSignal(list)
+    open_dunya_triggered = QtCore.pyqtSignal(object)
 
     def __init__(self):
         QtGui.QTableWidget.__init__(self)

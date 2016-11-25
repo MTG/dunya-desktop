@@ -33,7 +33,6 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.work_count = 0
         self.progress_number = 0
         self.thread_query = QueryThread(self)
-        #self.thread_feature_downloader = utilities.DocThread()
         self.threads = []
         self.queue = Queue.Queue()
 
@@ -65,6 +64,8 @@ class MainWindowMakam(MainWindowMakamDesign):
 
         self.frame_query.tableView_results.open_dunya_triggered.connect(
             self.open_player)
+        self.dwc_left.tableView_downloaded.open_dunya_triggered.connect(
+            self.open_player_collection)
 
     def _set_combobox_attributes(self):
         self.frame_query.frame_attributes.comboBox_melodic.add_items(self.makams)
@@ -146,6 +147,9 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.recid = self.recordings[source_index.row()]
         #self.thread_feature_downloader.docid = self.recid
         #self.thread_feature_downloader.start()
+
+    def open_player_collection(self, index):
+        print(index.row())
 
     def open_player(self, index):
         model_index = self.frame_query.tableView_results.model().mapToSource(index)
