@@ -158,6 +158,8 @@ class TableWidget(QtGui.QTableWidget, TableView):
     def dropMimeData(self, p_int, p_int_1, QMimeData, Qt_DropAction):
         self.last_drop_row = p_int
         return True
+        #self.last_drop_row = self.rowCount()
+        #return True
 
     def dropEvent(self, event):
         # The QTableWidget from which selected rows will be moved
@@ -194,11 +196,19 @@ class TableWidget(QtGui.QTableWidget, TableView):
 
                 if item:
                     source = QtGui.QTableWidgetItem(item.text())
-                    self.insertRow(drop_row + i)
-                    self.set_status(drop_row + i, 0)
-                    self.setItem(drop_row + i, 1, source)
+                    # self.insertRow(drop_row + i)
+                    # self.set_status(drop_row + i, 0)
+                    # self.setItem(drop_row + i, 1, source)
+                    # docs.append(self.recordings[source_index.row()])
+                    # self.indexes[self.recordings[source_index.row()]] =
+                    # drop_row + i
+
+                    self.insertRow(self.rowCount())
+                    self.set_status(self.rowCount() - 1, 0)
+                    self.setItem(self.rowCount() - 1, 1, source)
                     docs.append(self.recordings[source_index.row()])
-                    self.indexes[self.recordings[source_index.row()]] = drop_row + i
+                    self.indexes[self.recordings[source_index.row()]] = self.rowCount() - 1
+
                     sender.model().sourceModel().set_checked([selected_rows_index[i]])
         if docs:
             self.added_new_doc.emit(docs)
