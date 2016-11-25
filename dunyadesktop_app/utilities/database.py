@@ -65,5 +65,5 @@ def fetch_collection(c, coll):
 
 
 def get_nth_row(c, coll, row):
-    c.execute('''SELECT DOCID FROM {0} ORDER BY DOCID LIMIT 1 OFFSET ?;'''.format(coll), (row,))
+    c.execute('''SELECT DOCID FROM {0} LIMIT ?, 1;'''.format(coll), (row,))
     return c.fetchone()
