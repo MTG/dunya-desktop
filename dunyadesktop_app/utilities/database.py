@@ -62,3 +62,8 @@ def add_doc_to_coll(conn, c, doc, coll):
 def fetch_collection(c, coll):
     c.execute('''SELECT DOCID FROM {0}'''.format(coll))
     return c.fetchall()
+
+
+def get_nth_row(c, coll, row):
+    c.execute('''SELECT DOCID FROM {0} ORDER BY DOCID LIMIT 1 OFFSET ?;'''.format(coll), (row,))
+    return c.fetchone()

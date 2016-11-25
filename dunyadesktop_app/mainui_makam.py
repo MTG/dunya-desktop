@@ -149,7 +149,15 @@ class MainWindowMakam(MainWindowMakamDesign):
         #self.thread_feature_downloader.start()
 
     def open_player_collection(self, index):
-        print(index.row())
+        coll = str(self.dwc_left.listView_collections.currentItem().text())
+        conn, c = database.connect()
+        try:
+            docid = database.get_nth_row(c, coll, index.row())[0]
+            conn.close()
+            player = PlayerDialog(docid)
+            player.exec_()
+        except:
+            print('problem')
 
     def open_player(self, index):
         model_index = self.frame_query.tableView_results.model().mapToSource(index)
