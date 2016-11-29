@@ -68,6 +68,8 @@ class MainWindowMakam(MainWindowMakamDesign):
             self.open_player_collection)
         self.frame_query.tableView_results.add_to_collection.connect(
             self.add_received_doc)
+        self.dwc_left.tableView_downloaded.set_result_checked.connect(
+            self.check_query_table)
 
     def _set_combobox_attributes(self):
         self.frame_query.frame_attributes.comboBox_melodic.add_items(self.makams)
@@ -200,6 +202,9 @@ class MainWindowMakam(MainWindowMakamDesign):
                 self.queue.put(doc)
             self.queue.put(None)  # tells the workers to shut down
 
+    def check_query_table(self, docid):
+        row = self.recordings.index(docid)
+        self.frame_query.tableView_results.model().sourceModel().set_checked([row])
 
 app = QtGui.QApplication(sys.argv)
 mainwindow_makam = MainWindowMakam()

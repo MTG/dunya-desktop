@@ -5,6 +5,7 @@ import json
 from PyQt4 import QtGui, QtCore
 
 from dunyadesktop_app.utilities import database
+from dunyadesktop_app.cultures.makam import utilities as makamutilities
 from progressbar import ProgressBar
 from menu import RCMenu
 
@@ -142,6 +143,7 @@ class TableViewResults(TableView):
 class TableWidget(QtGui.QTableWidget, TableView):
     added_new_doc = QtCore.pyqtSignal(list)
     open_dunya_triggered = QtCore.pyqtSignal(object)
+    set_result_checked = QtCore.pyqtSignal(str)
 
     def __init__(self):
         QtGui.QTableWidget.__init__(self)
@@ -229,11 +231,12 @@ class TableWidget(QtGui.QTableWidget, TableView):
             set_check = False
             path = os.path.join(DOCS_PATH, item,
                                 'audioanalysis--metadata.json')
-            try:
+
+            if makamutilities.check_doc(item):
                 metadata = json.load(open(path))
                 cell = QtGui.QTableWidgetItem(metadata['title'])
                 set_check = 1
-            except IOError:
+            else:
                 print("Needs to be downloaded {0}".format(item))
                 cell = QtGui.QTableWidgetItem(item)
 
@@ -259,6 +262,7 @@ class TableWidget(QtGui.QTableWidget, TableView):
                 progress_bar.update_progress_bar(step, n_progress)
             else:
                 self.set_status(self.indexes[docid], 1)
+                self.refresh_row(self.indexes[docid])
 
     def set_status(self, raw, exist=None):
         item = QtGui.QLabel()
@@ -296,3 +300,19 @@ class TableWidget(QtGui.QTableWidget, TableView):
             self.set_status(row, 0)
             self.indexes[docid] = row
             self.added_new_doc.emit([docid])
+
+    def refresh_row(self, row):
+        """checks the status and the title columns of given row"""
+        if self.item(row, 1):
+            docid = str(self.item(row, 1).text().toUtf8())
+            if makamutilities.check_doc(docid):
+                self.set_status(row, exist=1)
+
+                title = json.load(open(os.path.join(
+                    DOCS_PATH, docid,
+                    'audioanalysis--metadata.json')))['title']
+                item = QtGui.QTableWidgetItem(title)
+                self.setItem(row, 1, item)
+                self.set_result_checked.emit(docid)
+            else:
+                self.set_status(row, 2)

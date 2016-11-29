@@ -1,12 +1,55 @@
 import os
 import os.path
 import json
+import fnmatch
 
 from compmusic.dunya.makam import (get_makams, get_forms, get_usuls,
                                    get_composers, get_artists, get_instruments)
 from compmusic.dunya.docserver import (document, get_document_as_json, get_mp3)
 from compmusic.dunya.conn import HTTPError
 from PyQt4 import QtCore
+
+FOLDER = os.path.join(os.path.dirname(__file__), '..', 'documents')
+
+
+def get_filenames_in_dir(dir_name, keyword='*.mp3', skip_foldername='',
+                         match_case=True, verbose=None):
+    names = []
+    folders = []
+    fullnames = []
+
+    if verbose:
+        print dir_name
+
+    # check if the folder exists
+    if not os.path.isdir(dir_name):
+        if verbose:
+            print "> Directory doesn't exist!"
+        return [], [], []
+
+    # if the dir_name finishes with the file separator,
+    # remove it so os.walk works properly
+    dir_name = dir_name[:-1] if dir_name[-1] == os.sep else dir_name
+
+    # walk all the subdirectories
+    for (path, dirs, files) in os.walk(dir_name):
+        for f in files:
+            hasKey = (fnmatch.fnmatch(f, keyword) if match_case else
+                      fnmatch.fnmatch(f.lower(), keyword.lower()))
+            if hasKey and skip_foldername not in path.split(os.sep)[1:]:
+                try:
+                    folders.append(unicode(path, 'utf-8'))
+                except TypeError:  # already unicode
+                    folders.append(path)
+                try:
+                    names.append(unicode(f, 'utf-8'))
+                except TypeError:  # already unicode
+                    names.append(path)
+                fullnames.append(os.path.join(path, f))
+
+    if verbose:
+        print "> Found " + str(len(names)) + " files."
+    return fullnames, folders, names
 
 
 def sort_dictionary(dictionary, key):
@@ -110,3 +153,32 @@ class DocThread(QtCore.QThread):
                             pass
                     count += 1
                     self.step_completed.emit(ResultObj(docid, count, num_f))
+
+
+def check_doc(docid):
+    """Checks if all the features are downloaded correctly or not"""
+    if os.path.exists(os.path.join(FOLDER, docid)):
+        docid = str(docid)
+        fullnames, folders, names = \
+            get_filenames_in_dir(os.path.join(FOLDER, docid), '*.json')
+
+        features = {}
+        for name in names:
+            try:
+                features[name.split('--')[0]].append(name.split('--')[1])
+            except KeyError:
+                features[name.split('--')[0]] = []
+                features[name.split('--')[0]].append(name.split('--')[1])
+            #finally:
+            #    return False
+
+        try:
+            num_features = sum([len(features[key]) for key in features])
+            if num_features == 10 or num_features == 22:
+                return True
+            else:
+                return False
+        except:
+            return False
+    else:
+        return False
