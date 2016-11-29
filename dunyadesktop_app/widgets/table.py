@@ -262,7 +262,6 @@ class TableWidget(QtGui.QTableWidget, TableView):
                 progress_bar.update_progress_bar(step, n_progress)
             else:
                 self.set_status(self.indexes[docid], 1)
-                self.refresh_row(self.indexes[docid])
 
     def set_status(self, raw, exist=None):
         item = QtGui.QLabel()
@@ -315,4 +314,5 @@ class TableWidget(QtGui.QTableWidget, TableView):
                 self.setItem(row, 1, item)
                 self.set_result_checked.emit(docid)
             else:
+                print("else")
                 self.set_status(row, 2)

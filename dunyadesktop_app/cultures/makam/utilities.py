@@ -157,6 +157,7 @@ class DocThread(QtCore.QThread):
 
 def check_doc(docid):
     """Checks if all the features are downloaded correctly or not"""
+    docid = str(docid)
     if os.path.exists(os.path.join(FOLDER, docid)):
         docid = str(docid)
         fullnames, folders, names = \
