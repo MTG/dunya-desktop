@@ -44,6 +44,7 @@ class DownloadButton(QtGui.QToolButton):
 
 class TableView(QtGui.QTableView):
     open_dunya_triggered = QtCore.pyqtSignal(object)
+    add_to_collection = QtCore.pyqtSignal(str, object)
 
     def __init__(self, *__args):
         QtGui.QTableView.__init__(self, *__args)
@@ -95,6 +96,7 @@ class TableView(QtGui.QTableView):
     def send_rec(self):
         if self.index:
             self.open_dunya_triggered.emit(self.index)
+            self.index = None
 
     def get_selected_rows(self):
         selected_rows = []
@@ -102,6 +104,11 @@ class TableView(QtGui.QTableView):
             if item.row() not in selected_rows:
                 selected_rows.append(item)
         return selected_rows
+
+    def send_to_db(self, coll):
+        if self.index:
+            self.add_to_collection.emit(coll, self.index)
+            self.index = None
 
 
 class TableViewResults(TableView):
@@ -195,17 +202,8 @@ class TableWidget(QtGui.QTableWidget, TableView):
                 item = sender.model().sourceModel().item(index.row(), 1)
 
                 if item:
-                    source = QtGui.QTableWidgetItem(item.text())
-                    # self.insertRow(drop_row + i)
-                    # self.set_status(drop_row + i, 0)
-                    # self.setItem(drop_row + i, 1, source)
-                    # docs.append(self.recordings[source_index.row()])
-                    # self.indexes[self.recordings[source_index.row()]] =
-                    # drop_row + i
+                    self.add_item(item.text())
 
-                    self.insertRow(self.rowCount())
-                    self.set_status(self.rowCount() - 1, 0)
-                    self.setItem(self.rowCount() - 1, 1, source)
                     docs.append(self.recordings[source_index.row()])
                     self.indexes[self.recordings[source_index.row()]] = self.rowCount() - 1
 
@@ -213,6 +211,12 @@ class TableWidget(QtGui.QTableWidget, TableView):
         if docs:
             self.added_new_doc.emit(docs)
         event.accept()
+
+    def add_item(self, text):
+        self.insertRow(self.rowCount())
+        self.set_status(self.rowCount() - 1, 0)
+        source = QtGui.QTableWidgetItem(text)
+        self.setItem(self.rowCount() - 1, 1, source)
 
     def create_table(self, coll):
         # first cleans the table, sets the columns and enables the widget

@@ -13,10 +13,10 @@ DUNYA_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
 class CollectionAction(QtGui.QAction):
     def __init__(self, name, parent=None):
         QtGui.QAction.__init__(self, name, parent)
-        self.triggered.connect(self.send_coll)
+        self.triggered.connect(self._send_coll)
 
-    def send_coll(self):
-        self.parent()._come_signal(self.text())
+    def _send_coll(self):
+        self.parent()._send_request_to_parent(self.text())
 
 
 class RCMenu(QtGui.QMenu):
@@ -48,8 +48,8 @@ class RCMenu(QtGui.QMenu):
             collections_menu.addAction(act)
         conn.close()
 
-    def _come_signal(self, coll):
-        print(coll)
+    def _send_request_to_parent(self, coll):
+        self.parent().send_to_db(str(coll.toUtf8()))
 
     def _send_player_request(self):
         self.parent().send_rec()

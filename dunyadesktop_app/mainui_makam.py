@@ -66,6 +66,8 @@ class MainWindowMakam(MainWindowMakamDesign):
             self.open_player)
         self.dwc_left.tableView_downloaded.open_dunya_triggered.connect(
             self.open_player_collection)
+        self.frame_query.tableView_results.add_to_collection.connect(
+            self.add_received_doc)
 
     def _set_combobox_attributes(self):
         self.frame_query.frame_attributes.comboBox_melodic.add_items(self.makams)
@@ -172,6 +174,16 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.dwc_left.tableView_downloaded.coll = coll
         self.dwc_left.tableView_downloaded.create_table([item[0] for item in raw])
         self.dwc_left.change_downloaded_text(coll)
+
+    def add_received_doc(self, coll, index):
+        conn, c = database.connect()
+        source_index = self.frame_query.tableView_results.model().mapToSource(index)
+        docid = self.recordings[source_index.row()]
+        if database.add_doc_to_coll(conn, c, docid, coll):
+            self.dwc_left.tableView_downloaded.add_item(docid)
+            self.dwc_left.tableView_downloaded.indexes[self.recordings[source_index.row()]] = \
+                self.dwc_left.tableView_downloaded.rowCount() - 1
+            self.check_new_doc([docid])
 
     def check_new_doc(self, docs):
         download = []

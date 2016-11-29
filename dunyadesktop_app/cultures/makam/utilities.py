@@ -5,6 +5,7 @@ import json
 from compmusic.dunya.makam import (get_makams, get_forms, get_usuls,
                                    get_composers, get_artists, get_instruments)
 from compmusic.dunya.docserver import (document, get_document_as_json, get_mp3)
+from compmusic.dunya.conn import HTTPError
 from PyQt4 import QtCore
 
 
@@ -75,7 +76,12 @@ class DocThread(QtCore.QThread):
                 os.makedirs(DOC_FOLDER)
 
             # feature list
-            features = document(docid)['derivedfiles']
+            try:
+                features = document(docid)['derivedfiles']
+            except HTTPError:
+                print(docid, 'is not found')
+                return
+
             try:
                 m_path = os.path.join(DOC_FOLDER, docid + '.mp3')
                 if not os.path.exists(m_path):
