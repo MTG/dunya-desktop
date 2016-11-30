@@ -262,6 +262,7 @@ class TableWidget(QtGui.QTableWidget, TableView):
                 progress_bar.update_progress_bar(step, n_progress)
             else:
                 self.set_status(self.indexes[docid], 1)
+                self.refresh_row(docid)
 
     def set_status(self, raw, exist=None):
         item = QtGui.QLabel()
@@ -300,10 +301,10 @@ class TableWidget(QtGui.QTableWidget, TableView):
             self.indexes[docid] = row
             self.added_new_doc.emit([docid])
 
-    def refresh_row(self, row):
+    def refresh_row(self, docid):
         """checks the status and the title columns of given row"""
+        row = self.indexes[docid]
         if self.item(row, 1):
-            docid = str(self.item(row, 1).text().toUtf8())
             if makamutilities.check_doc(docid):
                 self.set_status(row, exist=1)
 
@@ -314,5 +315,4 @@ class TableWidget(QtGui.QTableWidget, TableView):
                 self.setItem(row, 1, item)
                 self.set_result_checked.emit(docid)
             else:
-                print("else")
                 self.set_status(row, 2)
