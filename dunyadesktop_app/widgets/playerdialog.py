@@ -6,6 +6,7 @@ import json
 
 from PyQt4 import QtGui, QtCore
 from essentia.standard import MonoLoader
+import numpy as np
 
 from dunyadesktop_app.widgets.waveformwidget import WaveformWidget
 from dunyadesktop_app.widgets.melodywidget import MelodyWidget
@@ -20,59 +21,76 @@ DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
 
 class PlayerDialog(QtGui.QDialog):
     def __init__(self, recid):
+        now = time.time()
         QtGui.QDialog.__init__(self)
         self._set_design()
 
         doc_folder = os.path.join(DOCS_PATH, recid)
+
         audio_path = os.path.join(doc_folder, recid + '.mp3')
+        raw_audio, len_audio, min_audio, max_audio = self.load_audio(audio_path)
 
-        pitch_data = json.load(open(os.path.join(doc_folder,
-                                                 'audioanalysis--pitch_filtered.json')))
+        pitch_path = os.path.join(doc_folder, 'audioanalysis--pitch_filtered.json')
+        pitch = self.load_pitch(pitch_path)
 
-        hopsize = pitch_data['hopSize']
-        samplerate = pitch_data['sampleRate']
+        #pitch = self.melody_widget.plot_melody(pitch_data, len_audio,
+        #                                       samplerate)
+        self.waveform_widget.plot_waveform(raw_audio, len_audio, min_audio,
+                                           max_audio)
+        print time.time()-now
 
-        raw_audio = MonoLoader(filename=audio_path)()
-        len_audio = len(raw_audio)
-        min_audio = min(raw_audio)
-        max_audio = max(raw_audio)
+        #pd = json.load(open(os.path.join(doc_folder,
+        #                                 'audioanalysis--pitch_distribution.json')))
+        #self.melody_widget.plot_histogram(pd, pitch)
 
-        pitch = self.melody_widget.plot_melody(pitch_data, len_audio,
-                                               samplerate)
-        max_pitch = max(pitch)
+        #self.playback_thread = AudioPlaybackThread(timer_pitch=60,
+        #                                           timer_wf=250)
+        #self.playback_thread.playback.set_source(audio_path)
+        #self._set_slider(len_audio)
 
-        self.waveform_widget.plot_waveform(raw_audio)
+        #self.playback_pos = 0
+        #self.playback_pos_pyglet = 0
 
-        pd = json.load(open(os.path.join(doc_folder,
-                                         'audioanalysis--pitch_distribution.json')))
-        self.melody_widget.plot_histogram(pd, pitch)
-
-        self.playback_thread = AudioPlaybackThread(timer_pitch=60,
-                                                   timer_wf=250)
-        self.playback_thread.playback.set_source(audio_path)
-        self._set_slider(len_audio)
-
-        self.playback_pos = 0
-        self.playback_pos_pyglet = 0
-
-        self.frame_player.toolbutton_pause.setDisabled(True)
+        #self.frame_player.toolbutton_pause.setDisabled(True)
 
         # signals
-        self.playback_thread.time_out_wf.connect(
-            lambda: self.update_wf_pos(samplerate))
-        self.playback_thread.time_out.connect(lambda:
-                                              self.update_vlines(hopsize,
-                                                                 samplerate,
-                                                                 pitch))
+        #self.playback_thread.time_out_wf.connect(
+        #    lambda: self.update_wf_pos(samplerate))
+        #self.playback_thread.time_out.connect(lambda:
+        #                                      self.update_vlines(hopsize,
+        #                                                         samplerate,
+        #                                                         pitch))
 
-        self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
-            lambda: self.wf_region_changed(samplerate, hopsize))
-        self.waveform_widget.region_wf_hor.sigRegionChangeFinished.connect(
-            lambda: self.wf_hor_region_changed(max_audio, min_audio,
-                                               max_pitch))
+        #self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
+        #    lambda: self.wf_region_changed(samplerate, hopsize))
+        #self.waveform_widget.region_wf_hor.sigRegionChangeFinished.connect(
+        #    lambda: self.wf_hor_region_changed(max_audio, min_audio,
+        #                                       max_pitch))
 
-        self.frame_player.toolbutton_play.clicked.connect(self.playback_play)
-        self.frame_player.toolbutton_pause.clicked.connect(self.playback_pause)
+        #self.frame_player.toolbutton_play.clicked.connect(self.playback_play)
+        #self.frame_player.toolbutton_pause.clicked.connect(self.playback_pause)
+
+    def load_audio(self, audio_path):
+        raw_audio = np.array(MonoLoader(filename=audio_path)())
+        len_audio = len(raw_audio)
+        min_audio = np.min(raw_audio)
+        max_audio = np.min(raw_audio)
+        return raw_audio, len_audio, min_audio, max_audio
+
+    def load_pitch(self, pitch_path):
+        pitch_data = json.load(open(pitch_path))
+
+        pitch = np.array(pitch_data['pitch'])
+        return pitch
+        #time_stamps = pitch[:, 0]
+        #pitch_curve = pitch[:, 1]
+        #pitch_plot = copy.copy(pitch_curve)
+        #pitch_plot[pitch_plot < 20] = np.nan
+
+        #self.hopsize = pitch_data['hopSize']
+        #self.samplerate = pitch_data['sampleRate']
+        #self.max_pitch = np.max(pitch)
+
 
     def update_wf_pos(self, samplerate):
         self.waveform_widget.vline_wf.setPos(
