@@ -61,12 +61,12 @@ class PlayerDialog(QtGui.QDialog):
 
         self.waveform_widget.plot_waveform(raw_audio, len_audio, min_audio,
                                            max_audio)
-        pitch = self.melody_widget.plot_melody(pitch, len_audio, samplerate)
-        print(time.time()-now)
-        #pd = json.load(open(os.path.join(doc_folder,
-        #                                 'audioanalysis--pitch_distribution.json')))
-        #self.melody_widget.plot_histogram(pd, pitch)
+        self.melody_widget.plot_melody(pitch, len_audio, samplerate)
 
+        pd = json.load(open(os.path.join(doc_folder,
+                                         'audioanalysis--pitch_distribution.json')))
+        self.melody_widget.plot_histogram(pd, pitch)
+        print(time.time()-now)
         #self.playback_thread = AudioPlaybackThread(timer_pitch=60,
         #                                           timer_wf=250)
         #self.playback_thread.playback.set_source(audio_path)
@@ -93,6 +93,10 @@ class PlayerDialog(QtGui.QDialog):
 
         #self.frame_player.toolbutton_play.clicked.connect(self.playback_play)
         #self.frame_player.toolbutton_pause.clicked.connect(self.playback_pause)
+
+    def closeEvent(self, QCloseEvent):
+        self.waveform_widget.clear()
+        self.melody_widget.clear()
 
     def update_wf_pos(self, samplerate):
         self.waveform_widget.vline_wf.setPos(

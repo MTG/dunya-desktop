@@ -38,10 +38,10 @@ class MelodyWidget(GraphicsLayoutWidget):
         pitch_plot = copy.copy(pitch_curve)
         pitch_plot[pitch_plot < 20] = np.nan
 
-        pg.setConfigOption('background', 'r')
-        pen = pg.mkPen(#cosmetic=False,
-                       #width=1,
-                       color='c')
+        #pg.setConfigOption('background', 'w')
+        pen = pg.mkPen(cosmetic=True,
+                       width=1.5,
+                       color='w')
         self.curve = self.zoom_selection.plot(time_stamps, pitch_plot,
                                               connect='finite',
                                               pen=pen,
@@ -67,34 +67,36 @@ class MelodyWidget(GraphicsLayoutWidget):
         self.histogram = self.layout.addPlot(row=0, col=1, title="Histogram")
         self.histogram.setMouseEnabled(x=False, y=False)
         self.histogram.setMenuEnabled(False)
-        self.histogram.setMaximumWidth(150)
+        self.histogram.setMaximumWidth(300)
         self.histogram.setContentsMargins(0, 0, 0, 40)
         self.histogram.setAutoVisible(y=True)
 
         self.histogram.hideAxis(axis="left")
         self.histogram.hideAxis(axis="bottom")
 
+        self.histogram.setDownsampling(auto=True, mode='subsample')
+
         y = np.array(pd['bins'])
-        y[y <= 0.02] = np.nan
+        y[y <= 0.05] = np.nan
 
         self.histogram.plot(x=pd["vals"],
                             y=pd["bins"],
                             shadowPen=pg.mkPen((70, 70, 30),
                                                width=5,
-                                               cosmetic=True))
-
-        self.histogram.setYRange(0, max(pitch), padding=0)
-        self.histogram.setXRange(0, max(pd["vals"]), padding=0)
+                                               cosmetic=True),
+                            )
+        self.histogram.setYRange(0, np.max(pitch[:, 1]), padding=0)
+        self.histogram.setXRange(0, np.max(pd["vals"]), padding=0)
 
         self.histogram.setLabel(axis="right", text="Frequency (Hz)")
         self.hline_histogram = pg.ROI([0, 0], [0, max(pd['bins'])],
                                       angle=-90,
                                       pen=pg.mkPen((255, 40, 35, 150),
                                                    cosmetic=True,
-                                                   width=1))
+                                                   width=1.5))
         self.histogram.addItem(self.hline_histogram)
 
-        self.histogram.setDownsampling(ds=True, auto=True, mode='mean')
+        self.histogram.setDownsampling(auto=True, mode='subsample')
         self.addItem(self.histogram)
 
     def add_elements_to_plot(self, pitch):
