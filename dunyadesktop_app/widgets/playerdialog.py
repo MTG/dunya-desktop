@@ -19,6 +19,32 @@ DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
                          'documents')
 
 
+def load_audio(audio_path):
+    raw_audio = np.array(MonoLoader(filename=audio_path)())
+    len_audio = len(raw_audio)
+    min_audio = np.min(raw_audio)
+    max_audio = np.min(raw_audio)
+    return raw_audio, len_audio, min_audio, max_audio
+
+
+def load_pitch(pitch_path):
+    pitch_data = json.load(open(pitch_path))
+
+    pitch = np.array(pitch_data['pitch'])
+    samplerate = pitch_data['sampleRate']
+    hopsize = pitch_data['hopSize']
+
+    return pitch, samplerate, hopsize
+    #time_stamps = pitch[:, 0]
+    #pitch_curve = pitch[:, 1]
+    #pitch_plot = copy.copy(pitch_curve)
+    #pitch_plot[pitch_plot < 20] = np.nan
+
+    #self.hopsize = pitch_data['hopSize']
+    #self.samplerate = pitch_data['sampleRate']
+    #self.max_pitch = np.max(pitch)
+
+
 class PlayerDialog(QtGui.QDialog):
     def __init__(self, recid):
         now = time.time()
@@ -28,17 +54,15 @@ class PlayerDialog(QtGui.QDialog):
         doc_folder = os.path.join(DOCS_PATH, recid)
 
         audio_path = os.path.join(doc_folder, recid + '.mp3')
-        raw_audio, len_audio, min_audio, max_audio = self.load_audio(audio_path)
+        raw_audio, len_audio, min_audio, max_audio = load_audio(audio_path)
 
         pitch_path = os.path.join(doc_folder, 'audioanalysis--pitch_filtered.json')
-        pitch = self.load_pitch(pitch_path)
+        pitch, samplerate, hopsize = load_pitch(pitch_path)
 
-        #pitch = self.melody_widget.plot_melody(pitch_data, len_audio,
-        #                                       samplerate)
         self.waveform_widget.plot_waveform(raw_audio, len_audio, min_audio,
                                            max_audio)
-        print time.time()-now
-
+        pitch = self.melody_widget.plot_melody(pitch, len_audio, samplerate)
+        print(time.time()-now)
         #pd = json.load(open(os.path.join(doc_folder,
         #                                 'audioanalysis--pitch_distribution.json')))
         #self.melody_widget.plot_histogram(pd, pitch)
@@ -61,36 +85,14 @@ class PlayerDialog(QtGui.QDialog):
         #                                                         samplerate,
         #                                                         pitch))
 
-        #self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
-        #    lambda: self.wf_region_changed(samplerate, hopsize))
+        self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
+            lambda: self.wf_region_changed(samplerate, hopsize))
         #self.waveform_widget.region_wf_hor.sigRegionChangeFinished.connect(
         #    lambda: self.wf_hor_region_changed(max_audio, min_audio,
         #                                       max_pitch))
 
         #self.frame_player.toolbutton_play.clicked.connect(self.playback_play)
         #self.frame_player.toolbutton_pause.clicked.connect(self.playback_pause)
-
-    def load_audio(self, audio_path):
-        raw_audio = np.array(MonoLoader(filename=audio_path)())
-        len_audio = len(raw_audio)
-        min_audio = np.min(raw_audio)
-        max_audio = np.min(raw_audio)
-        return raw_audio, len_audio, min_audio, max_audio
-
-    def load_pitch(self, pitch_path):
-        pitch_data = json.load(open(pitch_path))
-
-        pitch = np.array(pitch_data['pitch'])
-        return pitch
-        #time_stamps = pitch[:, 0]
-        #pitch_curve = pitch[:, 1]
-        #pitch_plot = copy.copy(pitch_curve)
-        #pitch_plot[pitch_plot < 20] = np.nan
-
-        #self.hopsize = pitch_data['hopSize']
-        #self.samplerate = pitch_data['sampleRate']
-        #self.max_pitch = np.max(pitch)
-
 
     def update_wf_pos(self, samplerate):
         self.waveform_widget.vline_wf.setPos(

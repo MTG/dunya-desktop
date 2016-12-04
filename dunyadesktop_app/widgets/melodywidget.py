@@ -31,23 +31,27 @@ class MelodyWidget(GraphicsLayoutWidget):
         self.zoom_selection.setMouseEnabled(x=False, y=False)
         self.zoom_selection.setMenuEnabled(False)
 
-        pitch = np.array(pitch_data['pitch'])
-        time_stamps = pitch[:, 0]
-        pitch_curve = pitch[:, 1]
+        self.zoom_selection.setDownsampling(auto=True, mode='mean')
+
+        time_stamps = pitch_data[:, 0]
+        pitch_curve = pitch_data[:, 1]
         pitch_plot = copy.copy(pitch_curve)
         pitch_plot[pitch_plot < 20] = np.nan
 
+        pg.setConfigOption('background', 'r')
+        pen = pg.mkPen(#cosmetic=False,
+                       #width=1,
+                       color='c')
         self.curve = self.zoom_selection.plot(time_stamps, pitch_plot,
-                                              pen=None,
-                                              symbol='o',
-                                              symbolSize=1.5,
-                                              symbolBrush=
-                                              pg.mkBrush(222, 244, 237),
-                                              symbolPen=None,
+                                              connect='finite',
+                                              pen=pen,
+                                              #pen=None,
+                                              #symbolBrush=pg.mkBrush(222, 244, 237),
+                                              #symbolPen=None,
                                               clipToView=True,
-                                              autoDownsample=True)
-        #self.zoom_selection.setDownsampling(ds=True, auto=True, mode='peak')
-
+                                              autoDownsample=True,
+                                              downsampleMethod='subsample',
+                                              antialias=False)
         self.zoom_selection.setAutoVisible(y=True)
         self.zoom_selection.setLabel(axis="bottom", text="Time", units="sec")
         self.zoom_selection.setLabel(axis="left", text="Frequency", units="Hz",
@@ -58,8 +62,6 @@ class MelodyWidget(GraphicsLayoutWidget):
 
         self.zoom_selection.setXRange(0, len_raw_audio / (samplerate * 25.))
         self.zoom_selection.setYRange(20, max(pitch_curve), update=False)
-
-        return pitch_curve
 
     def plot_histogram(self, pd, pitch):
         self.histogram = self.layout.addPlot(row=0, col=1, title="Histogram")

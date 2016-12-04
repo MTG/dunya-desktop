@@ -37,8 +37,10 @@ class WaveformWidget(GraphicsLayoutWidget):
 
         raw_audio += np.abs(np.min(raw_audio))
 
-        self.waveform.setDownsampling(auto=True)
-        self.waveform.plot(y=raw_audio, pen=(20, 170, 100, 30), clipToView=True)
+        self.waveform.setDownsampling(auto=True, mode='peak')
+        self.waveform.plot(y=raw_audio, connect='finite',
+                           pen=(20, 170, 100, 30),
+                           clipToView=True)
         self.layout.addItem(self.waveform)
         self._add_elements_to_plot(len_audio, max_audio)
 
