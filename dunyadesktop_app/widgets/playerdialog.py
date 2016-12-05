@@ -81,30 +81,19 @@ class PlayerDialog(QtGui.QDialog):
                                            max_audio)
         self.melody_widget.plot_melody(time_stamps, self.pitch_plot, len_audio,
                                        self.samplerate, max_pitch)
-
         self.melody_widget.plot_histogram(vals, bins, max_pitch)
-        print(time.time()-now)
 
+        # slider and playback thread
         self.playback_thread = AudioPlaybackThread(timer_pitch=50)
         self.playback_thread.playback.set_source(audio_path)
-
         self._set_slider(len_audio)
-        #self.playback_pos = 0
-        #self.playback_pos_pyglet = 0
 
-        #self.frame_player.toolbutton_pause.setDisabled(True)
+        self.frame_player.toolbutton_pause.setDisabled(True)
 
         # signals
-        #self.playback_thread.time_out_wf.connect(
-        #    lambda: self.update_wf_pos(samplerate))
         self.playback_thread.time_out.connect(self.update_vlines)
-
         self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
             lambda: self.wf_region_changed(self.samplerate, self.hopsize))
-        #self.waveform_widget.region_wf_hor.sigRegionChangeFinished.connect(
-        #    lambda: self.wf_hor_region_changed(max_audio, min_audio,
-        #                                       max_pitch))
-
         self.frame_player.toolbutton_play.clicked.connect(self.playback_play)
         self.frame_player.toolbutton_pause.clicked.connect(self.playback_pause)
 
@@ -136,20 +125,6 @@ class PlayerDialog(QtGui.QDialog):
         self.frame_player = PlayerFrame(self)
         self.verticalLayout.addWidget(self.frame_player)
         QtCore.QMetaObject.connectSlotsByName(self)
-
-    def wf_region_changed(self, samplerate, hopsize):
-        pos_wf_x_min, pos_wf_x_max = self.waveform_widget.region_wf.getRegion()
-        self.melody_widget.set_zoom_selection_area(pos_wf_x_min, pos_wf_x_max,
-                                                   samplerate, hopsize)
-
-    def wf_hor_region_changed(self, max_audio, min_audio, max_pitch):
-        pos_wf_ymin, pos_wf_ymax = \
-            self.waveform_widget.region_wf_hor.getRegion()
-        step = (max_audio + abs(min_audio) / max_pitch)
-
-        min_freq = abs(pos_wf_ymin - min_audio) / step
-        max_freq = abs(pos_wf_ymax - min_audio) / step
-        self.melody_widget.set_zoom_selection_area_hor(min_freq, max_freq)
 
     def playback_play(self):
         self.frame_player.toolbutton_play.setDisabled(True)

@@ -2,7 +2,6 @@ from PyQt4 import QtGui, QtCore
 from pyqtgraph import GraphicsLayoutWidget
 import pyqtgraph as pg
 import numpy as np
-import time
 
 
 class WaveformWidget(GraphicsLayoutWidget):
@@ -51,7 +50,6 @@ class WaveformWidget(GraphicsLayoutWidget):
         self.region_wf = pg.LinearRegionItem([0, pos_wf_x_max],
                                              brush=pg.mkBrush((50, 255, 255, 45)),
                                              bounds=[0., len_audio])
-        # vline for wf
         self.vline_wf = pg.ROI([0, 0], [0, max_audio], angle=0,
                                pen=pg.mkPen((255, 40, 35, 150), cosmetic=True,
                                             width=1))

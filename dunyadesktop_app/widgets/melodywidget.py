@@ -1,11 +1,8 @@
-import copy
-
 from PyQt4 import QtGui, QtCore
 from pyqtgraph import GraphicsLayoutWidget
 import pyqtgraph as pg
 import numpy as np
 
-#pg.setConfigOption('background', pg.mkColor((45, 48, 45,)))
 
 class MelodyWidget(GraphicsLayoutWidget):
     def __init__(self, parent=None):
@@ -42,7 +39,6 @@ class MelodyWidget(GraphicsLayoutWidget):
         self.curve = self.zoom_selection.plot(time_stamps, pitch_plot,
                                               connect='finite',
                                               pen=pen,
-                                              #pen=None,
                                               clipToView=True,
                                               autoDownsample=True,
                                               downsampleMethod='subsample',
@@ -69,7 +65,6 @@ class MelodyWidget(GraphicsLayoutWidget):
         self.histogram.hideAxis(axis="left")
         self.histogram.hideAxis(axis="bottom")
 
-        # bins[bins <= 0.05] = np.nan
         shadow_pen = pg.mkPen((70, 70, 30), width=5, cosmetic=True)
         self.histogram.plot(x=vals, y=bins, downsampleMethod='subsample',
                             shadowPen=shadow_pen)
