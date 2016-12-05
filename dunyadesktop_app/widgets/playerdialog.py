@@ -1,6 +1,4 @@
-import tempfile
 import os
-import glob
 import time
 import json
 import copy
@@ -74,24 +72,23 @@ class PlayerDialog(QtGui.QDialog):
 
         # loading features and audio
         raw_audio, len_audio, min_audio, max_audio = load_audio(audio_path)
-        time_stamps, pitch_plot, max_pitch, min_pitch, samplerate, hopsize = \
-            load_pitch(pitch_path)
+        (time_stamps, self.pitch_plot, max_pitch, min_pitch,
+         self.samplerate, self.hopsize) = load_pitch(pitch_path)
         vals, bins = load_pd(pd_path)
 
         # plotting features
         self.waveform_widget.plot_waveform(raw_audio, len_audio, min_audio,
                                            max_audio)
-        self.melody_widget.plot_melody(time_stamps, pitch_plot, len_audio,
-                                       samplerate, max_pitch)
+        self.melody_widget.plot_melody(time_stamps, self.pitch_plot, len_audio,
+                                       self.samplerate, max_pitch)
 
         self.melody_widget.plot_histogram(vals, bins, max_pitch)
         print(time.time()-now)
 
-        self.playback_thread = AudioPlaybackThread(timer_pitch=60,
-                                                   timer_wf=250)
+        self.playback_thread = AudioPlaybackThread(timer_pitch=60, timer_wf=250)
         self.playback_thread.playback.set_source(audio_path)
-        #self._set_slider(len_audio)
 
+        self._set_slider(len_audio)
         #self.playback_pos = 0
         #self.playback_pos_pyglet = 0
 
@@ -100,13 +97,10 @@ class PlayerDialog(QtGui.QDialog):
         # signals
         #self.playback_thread.time_out_wf.connect(
         #    lambda: self.update_wf_pos(samplerate))
-        self.playback_thread.time_out.connect(lambda:
-                                              self.update_vlines(hopsize,
-                                                                 samplerate,
-                                                                 pitch_plot))
+        self.playback_thread.time_out.connect(self.update_vlines)
 
         self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
-            lambda: self.wf_region_changed(samplerate, hopsize))
+            lambda: self.wf_region_changed(self.samplerate, self.hopsize))
         #self.waveform_widget.region_wf_hor.sigRegionChangeFinished.connect(
         #    lambda: self.wf_hor_region_changed(max_audio, min_audio,
         #                                       max_pitch))
@@ -169,7 +163,7 @@ class PlayerDialog(QtGui.QDialog):
         self.frame_player.slider.setTickInterval(10)
         self.frame_player.slider.setSingleStep(1)
 
-    def update_vlines(self, hopsize, samplerate, pitch):
+    def update_vlines(self, playback_pos):
         #if self.playback_thread.playback.is_playing():
             #if self.playback_pos_pyglet == \
             #        self.playback_thread.playback.get_pos_seconds():
@@ -180,11 +174,13 @@ class PlayerDialog(QtGui.QDialog):
             #    self.playback_pos_pyglet = \
             #        self.playback_thread.playback.get_pos_seconds()
 
-        self.playback_pos = self.playback_thread.playback.get_pos_seconds()
-        self.melody_widget.vline.setPos([self.playback_pos, 0])
+        #self.playback_pos = self.playback_thread.playback.get_pos_seconds()
+        playback_pos_sample = playback_pos*self.samplerate
+        self.melody_widget.vline.setPos([playback_pos, 0])
         self.melody_widget.hline_histogram.setPos(
-                pos=[0, pitch[np.int(self.playback_thread.playback.get_pos_sample()/ hopsize)]])
-        #self.frame_player.slider.setValue(self.playback_pos * samplerate)
+                pos=[0, self.pitch_plot[np.int(playback_pos_sample/ self.hopsize)]])
+        self.frame_player.slider.setValue(playback_pos_sample)
+        self.waveform_widget.vline_wf.setPos([playback_pos_sample, 0])
 
             #pos_vline = self.melody_widget.vline.pos()[0]
             #pos_xmin, pos_xmax = \
