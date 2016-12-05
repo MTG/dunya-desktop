@@ -3,6 +3,7 @@ import os
 import glob
 import time
 import json
+import copy
 
 from PyQt4 import QtGui, QtCore
 from essentia.standard import MonoLoader
@@ -29,20 +30,37 @@ def load_audio(audio_path):
 
 def load_pitch(pitch_path):
     pitch_data = json.load(open(pitch_path))
+    pp = np.array(pitch_data['pitch'])
 
-    pitch = np.array(pitch_data['pitch'])
+    time_stamps = pp[:, 0]
+    pitch_curve = pp[:, 1]
+    pitch_plot = copy.copy(pitch_curve)
+    pitch_plot[pitch_plot < 20] = np.nan
+
     samplerate = pitch_data['sampleRate']
     hopsize = pitch_data['hopSize']
 
-    return pitch, samplerate, hopsize
-    #time_stamps = pitch[:, 0]
-    #pitch_curve = pitch[:, 1]
-    #pitch_plot = copy.copy(pitch_curve)
-    #pitch_plot[pitch_plot < 20] = np.nan
+    max_pitch = np.max(pitch_curve)
+    min_pitch = np.min(pitch_curve)
 
-    #self.hopsize = pitch_data['hopSize']
-    #self.samplerate = pitch_data['sampleRate']
-    #self.max_pitch = np.max(pitch)
+    return time_stamps, pitch_plot, max_pitch, min_pitch, samplerate, hopsize
+
+
+def load_pd(pd_path):
+    pd = json.load(open(pd_path))
+    vals = pd["vals"]
+    bins = pd["bins"]
+    return vals, bins
+
+
+def get_paths(recid):
+    doc_folder = os.path.join(DOCS_PATH, recid)
+    audio_path = os.path.join(doc_folder, recid + '.mp3')
+    pitch_path = os.path.join(doc_folder,
+                              'audioanalysis--pitch_filtered.json')
+    pd_path = os.path.join(doc_folder,
+                           'audioanalysis--pitch_distribution.json')
+    return doc_folder, audio_path, pitch_path, pd_path
 
 
 class PlayerDialog(QtGui.QDialog):
@@ -51,21 +69,22 @@ class PlayerDialog(QtGui.QDialog):
         QtGui.QDialog.__init__(self)
         self._set_design()
 
-        doc_folder = os.path.join(DOCS_PATH, recid)
+        # paths
+        doc_folder, audio_path, pitch_path, pd_path = get_paths(recid)
 
-        audio_path = os.path.join(doc_folder, recid + '.mp3')
+        # loading features and audio
         raw_audio, len_audio, min_audio, max_audio = load_audio(audio_path)
+        time_stamps, pitch_plot, max_pitch, min_pitch, samplerate, hopsize = \
+            load_pitch(pitch_path)
+        vals, bins = load_pd(pd_path)
 
-        pitch_path = os.path.join(doc_folder, 'audioanalysis--pitch_filtered.json')
-        pitch, samplerate, hopsize = load_pitch(pitch_path)
-
+        # plotting features
         self.waveform_widget.plot_waveform(raw_audio, len_audio, min_audio,
                                            max_audio)
-        self.melody_widget.plot_melody(pitch, len_audio, samplerate)
+        self.melody_widget.plot_melody(time_stamps, pitch_plot, len_audio,
+                                       samplerate, max_pitch)
 
-        pd = json.load(open(os.path.join(doc_folder,
-                                         'audioanalysis--pitch_distribution.json')))
-        self.melody_widget.plot_histogram(pd, pitch)
+        self.melody_widget.plot_histogram(vals, bins, max_pitch)
         print(time.time()-now)
 
         self.playback_thread = AudioPlaybackThread(timer_pitch=60,
@@ -84,7 +103,7 @@ class PlayerDialog(QtGui.QDialog):
         self.playback_thread.time_out.connect(lambda:
                                               self.update_vlines(hopsize,
                                                                  samplerate,
-                                                                 pitch))
+                                                                 pitch_plot))
 
         self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
             lambda: self.wf_region_changed(samplerate, hopsize))
@@ -164,7 +183,7 @@ class PlayerDialog(QtGui.QDialog):
         self.playback_pos = self.playback_thread.playback.get_pos_seconds()
         self.melody_widget.vline.setPos([self.playback_pos, 0])
         self.melody_widget.hline_histogram.setPos(
-                pos=[0, pitch[:, 1][int(self.playback_pos * samplerate / hopsize)]])
+                pos=[0, pitch[np.int(self.playback_thread.playback.get_pos_sample()/ hopsize)]])
         #self.frame_player.slider.setValue(self.playback_pos * samplerate)
 
             #pos_vline = self.melody_widget.vline.pos()[0]

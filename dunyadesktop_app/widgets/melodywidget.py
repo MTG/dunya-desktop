@@ -22,7 +22,8 @@ class MelodyWidget(GraphicsLayoutWidget):
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
 
-    def plot_melody(self, pitch_data, len_raw_audio, samplerate):
+    def plot_melody(self, time_stamps, pitch_plot, len_raw_audio, samplerate,
+                    max_pitch):
         #y_axis = pg.AxisItem('left')
         #y_axis.enableAutoSIPrefix(enable=False)
 
@@ -30,18 +31,9 @@ class MelodyWidget(GraphicsLayoutWidget):
         #                                          axisItems={'left': y_axis})
         self.zoom_selection.setMouseEnabled(x=False, y=False)
         self.zoom_selection.setMenuEnabled(False)
-
         self.zoom_selection.setDownsampling(auto=True, mode='mean')
 
-        time_stamps = pitch_data[:, 0]
-        pitch_curve = pitch_data[:, 1]
-        pitch_plot = copy.copy(pitch_curve)
-        pitch_plot[pitch_plot < 20] = np.nan
-
-        #pg.setConfigOption('background', 'w')
-        pen = pg.mkPen(cosmetic=True,
-                       width=1.5,
-                       color='w')
+        pen = pg.mkPen(cosmetic=True, width=1.5, color='w')
         self.curve = self.zoom_selection.plot(time_stamps, pitch_plot,
                                               connect='finite',
                                               pen=pen,
@@ -52,19 +44,20 @@ class MelodyWidget(GraphicsLayoutWidget):
                                               autoDownsample=True,
                                               downsampleMethod='subsample',
                                               antialias=False)
-        self.zoom_selection.setAutoVisible(y=True)
+        #self.zoom_selection.setAutoVisible(y=True)
         self.zoom_selection.setLabel(axis="bottom", text="Time", units="sec")
         self.zoom_selection.setLabel(axis="left", text="Frequency", units="Hz",
                                      unitPrefix=False)
 
+        self.zoom_selection.setXRange(0, len_raw_audio / samplerate * 25.,
+                                      padding=0)
+        self.zoom_selection.setYRange(20, max_pitch, padding=0)
+        self.add_elements_to_plot(max_pitch)
         self.addItem(self.zoom_selection)
-        self.add_elements_to_plot(pitch_curve)
 
-        self.zoom_selection.setXRange(0, len_raw_audio / (samplerate * 25.))
-        self.zoom_selection.setYRange(20, max(pitch_curve), update=False)
-
-    def plot_histogram(self, pd, pitch):
+    def plot_histogram(self, vals, bins, max_pitch):
         self.histogram = self.layout.addPlot(row=0, col=1, title="Histogram")
+        #self.histogram.setYLink(self.zoom_selection)
         self.histogram.setMouseEnabled(x=False, y=False)
         self.histogram.setMenuEnabled(False)
         self.histogram.setMaximumWidth(300)
@@ -76,34 +69,29 @@ class MelodyWidget(GraphicsLayoutWidget):
 
         self.histogram.setDownsampling(auto=True, mode='subsample')
 
-        y = np.array(pd['bins'])
-        y[y <= 0.05] = np.nan
-
-        self.histogram.plot(x=pd["vals"],
-                            y=pd["bins"],
+        #bins[bins <= 0.05] = np.nan
+        self.histogram.plot(x=vals,
+                            y=bins,
                             shadowPen=pg.mkPen((70, 70, 30),
                                                width=5,
                                                cosmetic=True),
-                            )
-        self.histogram.setYRange(0, np.max(pitch[:, 1]), padding=0)
-        self.histogram.setXRange(0, np.max(pd["vals"]), padding=0)
+                            downsampleMethod='subsample')
+
+        self.histogram.setYRange(20, max_pitch, padding=0)
+        self.histogram.setXRange(0, np.max(vals), padding=0)
 
         self.histogram.setLabel(axis="right", text="Frequency (Hz)")
-        self.hline_histogram = pg.ROI([0, 0], [0, max(pd['bins'])],
+        self.hline_histogram = pg.ROI([0, 0], [0, np.max(bins)],
                                       angle=-90,
                                       pen=pg.mkPen((255, 40, 35, 150),
                                                    cosmetic=True,
-                                                   width=1.5))
+                                                   width=1.5)
+                                      )
         self.histogram.addItem(self.hline_histogram)
-
-        self.histogram.setDownsampling(auto=True, mode='subsample')
         self.addItem(self.histogram)
 
-    def add_elements_to_plot(self, pitch):
-        self.curve_point = pg.CurvePoint(self.curve)
-        self.zoom_selection.addItem(self.curve_point)
-
-        self.vline = pg.ROI([0, 0], [0, max(pitch)], angle=0,
+    def add_elements_to_plot(self, max_pitch):
+        self.vline = pg.ROI([0, 0], [0, max_pitch], angle=0,
                             pen=pg.mkPen((255, 40, 35, 150), cosmetic=True,
                                          width=1))
         self.zoom_selection.addItem(self.vline)
