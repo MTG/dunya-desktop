@@ -31,7 +31,7 @@ class WaveformWidget(GraphicsLayoutWidget):
         self.waveform.hideAxis(axis='bottom')
         self.waveform.hideAxis(axis='left')
 
-        self.waveform.setMaximumHeight(80)
+        self.waveform.setMaximumHeight(200)
         self.waveform.setMouseEnabled(x=False, y=False)
         self.waveform.setMenuEnabled(False)
 
@@ -42,7 +42,7 @@ class WaveformWidget(GraphicsLayoutWidget):
                            pen=(20, 170, 100, 30),
                            clipToView=True)
         self.layout.addItem(self.waveform)
-        self._add_elements_to_plot(len_audio, max_audio)
+        self._add_elements_to_plot(len_audio, np.max(raw_audio))
 
         self.addItem(self.layout)
 

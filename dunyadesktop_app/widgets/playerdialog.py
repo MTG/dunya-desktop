@@ -85,7 +85,7 @@ class PlayerDialog(QtGui.QDialog):
         self.melody_widget.plot_histogram(vals, bins, max_pitch)
         print(time.time()-now)
 
-        self.playback_thread = AudioPlaybackThread(timer_pitch=60, timer_wf=250)
+        self.playback_thread = AudioPlaybackThread(timer_pitch=50)
         self.playback_thread.playback.set_source(audio_path)
 
         self._set_slider(len_audio)
@@ -111,6 +111,10 @@ class PlayerDialog(QtGui.QDialog):
     def closeEvent(self, QCloseEvent):
         self.waveform_widget.clear()
         self.melody_widget.clear()
+
+        if self.playback_thread.playback.is_playing():
+            self.playback_thread.playback.pause()
+        self.playback_thread.exit()
 
     def update_wf_pos(self, samplerate):
         self.waveform_widget.vline_wf.setPos(
