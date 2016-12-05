@@ -93,7 +93,7 @@ class PlayerDialog(QtGui.QDialog):
         # signals
         self.playback_thread.time_out.connect(self.update_vlines)
         self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
-            lambda: self.wf_region_changed(self.samplerate, self.hopsize))
+            self.wf_region_changed)
         self.frame_player.toolbutton_play.clicked.connect(self.playback_play)
         self.frame_player.toolbutton_pause.clicked.connect(self.playback_pause)
 
@@ -141,6 +141,11 @@ class PlayerDialog(QtGui.QDialog):
         self.frame_player.slider.setMaximum(len_audio)
         self.frame_player.slider.setTickInterval(10)
         self.frame_player.slider.setSingleStep(1)
+
+    def wf_region_changed(self):
+        pos_wf_x_min, pos_wf_x_max = self.waveform_widget.region_wf.getRegion()
+        self.melody_widget.set_zoom_selection_area(pos_wf_x_min, pos_wf_x_max,
+                                                   self.samplerate, self.hopsize)
 
     def update_vlines(self, playback_pos):
         #if self.playback_thread.playback.is_playing():
