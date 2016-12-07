@@ -41,7 +41,6 @@ class AudioPlaybackThread(QtCore.QThread):
 
         self.timer = QtCore.QTimer()
         self.timer.setInterval(timer_pitch)
-
         self.timer.timeout.connect(self.send_signal)
 
     def run(self):
@@ -53,19 +52,17 @@ class AudioPlaybackThread(QtCore.QThread):
         self.playback.pause()
 
     def send_signal(self):
+        self.playback_pos += self.timer_pitch / 1000.
         if self.playback.is_playing():
             if self.playback_pos < self.playback.get_pos_seconds():
                 self.playback_pos = self.playback.get_pos_seconds()
                 self.time_out.emit(self.playback_pos)
+
             elif self.playback_pos >= self.playback.duration:
                 self.timer.stop()
                 self.playback.pause()
             else:
-                self.playback_pos += self.timer_pitch / (2 * 1000.)
                 self.time_out.emit(self.playback_pos)
         else:
             self.timer.stop()
             self.playback.pause()
-
-    def send_signal_wf(self):
-        self.time_out_wf.emit()
