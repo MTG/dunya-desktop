@@ -5,6 +5,7 @@ import copy
 
 from PyQt4 import QtGui, QtCore
 from essentia.standard import MonoLoader
+import pyqtgraph.dockarea as pgdock
 import numpy as np
 
 from dunyadesktop_app.widgets.waveformwidget import WaveformWidget
@@ -116,14 +117,26 @@ class PlayerDialog(QtGui.QDialog):
         self.setStyleSheet("background-color: rgb(30, 30, 30);")
         self.verticalLayout = QtGui.QVBoxLayout(self)
 
+        area = pgdock.DockArea()
+        d1 = pgdock.Dock("Waveform", area='Top', autoOrientation=False, closable=True)
+        #d1.allowedAreas = ['top']
         self.waveform_widget = WaveformWidget()
-        self.verticalLayout.addWidget(self.waveform_widget)
+        d1.addWidget(self.waveform_widget)
+        area.addDock(d1, 'top')
 
+        d2 = pgdock.Dock('Pitch')
         self.melody_widget = MelodyWidget()
-        self.verticalLayout.addWidget(self.melody_widget)
+        d2.addWidget(self.melody_widget)
+        area.addDock(d2, 'bottom')
+
+        #self.verticalLayout.addWidget(self.waveform_widget)
+
+        #self.melody_widget = MelodyWidget()
+        #self.verticalLayout.addWidget(self.melody_widget)
 
         self.frame_player = PlayerFrame(self)
         self.verticalLayout.addWidget(self.frame_player)
+        self.verticalLayout.addWidget(area)
         QtCore.QMetaObject.connectSlotsByName(self)
 
     def playback_play(self):
