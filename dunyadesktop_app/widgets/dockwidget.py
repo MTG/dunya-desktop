@@ -1,6 +1,13 @@
 import os
 
-from PyQt4 import QtGui, QtCore
+#from PyQt4 import QtGui, QtCore
+from PyQt5.QtWidgets import QDockWidget, QSizePolicy, QWidget, QVBoxLayout, \
+    QFrame, QLabel, QToolButton, QHBoxLayout, QSpacerItem
+from PyQt5.QtGui import QFont
+from PyQt5.QtCore import QSize, Qt
+
+#from PyQt5.QtGui import
+
 
 from table import TableWidget
 from listwidget import CollectionsWidget
@@ -33,50 +40,48 @@ CSS_TABLEVIEW_DOWNLOADED = os.path.join(os.path.dirname(__file__), '..',
                                         'tableview_downloaded.css')
 
 
-class DockWidget(QtGui.QDockWidget):
+class DockWidget(QDockWidget):
     """Dockwidget for the main window"""
     def __init__(self, min_width, min_height, max_width, max_height):
-        QtGui.QDockWidget.__init__(self)
+        QDockWidget.__init__(self)
         self._set_dockwidget(min_width, min_height, max_width, max_height)
 
     def _set_dockwidget(self, min_width, min_height, max_width, max_height):
         """Sets the size policies of the dock widget"""
-        sizepolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred,
-                                       QtGui.QSizePolicy.Minimum)
+        sizepolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Minimum)
         sizepolicy.setHorizontalStretch(0)
         sizepolicy.setVerticalStretch(0)
         sizepolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(sizepolicy)
-        self.setMinimumSize(QtCore.QSize(min_width, min_height))
-        self.setMaximumSize(QtCore.QSize(max_width, max_height))
-        self.setContextMenuPolicy(QtCore.Qt.PreventContextMenu)
-        self.setFeatures(QtGui.QDockWidget.NoDockWidgetFeatures)
-        self.setAllowedAreas(QtCore.Qt.NoDockWidgetArea)
-        self.setTitleBarWidget(QtGui.QWidget(None))
+        self.setMinimumSize(QSize(min_width, min_height))
+        self.setMaximumSize(QSize(max_width, max_height))
+        self.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.setFeatures(QDockWidget.NoDockWidgetFeatures)
+        self.setAllowedAreas(Qt.NoDockWidgetArea)
+        self.setTitleBarWidget(QWidget(None))
 
 
-class DockWidgetContentsLeft(QtGui.QWidget):
+class DockWidgetContentsLeft(QWidget):
     """Contains the contents of the dock widget on the left side of the main
     window"""
     def __init__(self, parent=None):
-        QtGui.QWidget.__init__(self, parent)
+        QWidget.__init__(self, parent)
         self._set_widget()
 
-        layout = QtGui.QVBoxLayout(self)
+        layout = QVBoxLayout(self)
         layout.setContentsMargins(4, 0, 0, 0)
         layout.setSpacing(0)  # check it
 
-        self.frame_collection = QtGui.QFrame(self)
+        self.frame_collection = QFrame(self)
         self._set_frame()
 
-        layout_3 = QtGui.QVBoxLayout(self.frame_collection)
+        layout_3 = QVBoxLayout(self.frame_collection)
         layout_3.setContentsMargins(2, 5, 3, 2)
         layout_3.setSpacing(7)  # check it
 
-        self.label_collections = QtGui.QLabel(self.frame_collection)
+        self.label_collections = QLabel(self.frame_collection)
         self.label_collections.setIndent(15)  # check it
-        self.label_collections.setTextInteractionFlags(
-            QtCore.Qt.NoTextInteraction)
+        self.label_collections.setTextInteractionFlags(Qt.NoTextInteraction)
         self._set_css(self.label_collections, CSS_LABEL_COLLECTION)
         layout_3.addWidget(self.label_collections)
 
@@ -85,16 +90,16 @@ class DockWidgetContentsLeft(QtGui.QWidget):
         layout.addWidget(self.frame_collection)
 
         # toolbutton
-        self.toolButton_collection = QtGui.QToolButton(self)
+        self.toolButton_collection = QToolButton(self)
         self._set_toolbutton()
         layout.addWidget(self.toolButton_collection)
 
-        self.frame_downloaded = QtGui.QFrame(self)
+        self.frame_downloaded = QFrame(self)
         self._set_frame_downloaded()
 
-        layout_4 = QtGui.QVBoxLayout(self.frame_downloaded)
+        layout_4 = QVBoxLayout(self.frame_downloaded)
         layout_4.setContentsMargins(3, 5, 3, 2)
-        self.label_downloaded = QtGui.QLabel(self.frame_downloaded)
+        self.label_downloaded = QLabel(self.frame_downloaded)
         self._set_label_downloaded()
         layout_4.addWidget(self.label_downloaded)
 
@@ -108,13 +113,13 @@ class DockWidgetContentsLeft(QtGui.QWidget):
 
     def _set_widget(self):
         """Sets the size policies."""
-        sizepolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding,
-                                       QtGui.QSizePolicy.Preferred)
+        sizepolicy = QSizePolicy(QSizePolicy.MinimumExpanding,
+                                 QSizePolicy.Preferred)
         sizepolicy.setHorizontalStretch(0)
         sizepolicy.setVerticalStretch(0)
         sizepolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(sizepolicy)
-        self.setMaximumSize(QtCore.QSize(500, 16777215))
+        self.setMaximumSize(QSize(500, 16777215))
 
     @staticmethod
     def _set_css(obj, css_path):
@@ -124,58 +129,57 @@ class DockWidgetContentsLeft(QtGui.QWidget):
 
     def _set_frame(self):
         """Sets the size policies of the frame."""
-        sizepolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding,
-                                       QtGui.QSizePolicy.Preferred)
+        sizepolicy = QSizePolicy(QSizePolicy.MinimumExpanding,
+                                 QSizePolicy.Preferred)
         sizepolicy.setHorizontalStretch(0)
         sizepolicy.setVerticalStretch(0)
         sizepolicy.setHeightForWidth(
             self.frame_collection.sizePolicy().hasHeightForWidth())
         self.frame_collection.setSizePolicy(sizepolicy)
-        self.frame_collection.setMinimumSize(QtCore.QSize(0, 200))
-        self.frame_collection.setMaximumSize(QtCore.QSize(16777215, 200))
-        self.frame_collection.setBaseSize(QtCore.QSize(0, 0))
+        self.frame_collection.setMinimumSize(QSize(0, 200))
+        self.frame_collection.setMaximumSize(QSize(16777215, 200))
+        self.frame_collection.setBaseSize(QSize(0, 0))
         self._set_css(self.frame_collection, CSS_FRAME_COLLECTION)
 
-        self.frame_collection.setFrameShape(QtGui.QFrame.StyledPanel)
-        self.frame_collection.setFrameShadow(QtGui.QFrame.Raised)
+        self.frame_collection.setFrameShape(QFrame.StyledPanel)
+        self.frame_collection.setFrameShadow(QFrame.Raised)
 
     def _set_toolbutton(self):
         """Sets the size policies of the new collection button."""
-        sizepolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred,
-                                       QtGui.QSizePolicy.Fixed)
+        sizepolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
         sizepolicy.setHorizontalStretch(0)
         sizepolicy.setVerticalStretch(0)
         sizepolicy.setHeightForWidth(
             self.toolButton_collection.sizePolicy().hasHeightForWidth())
         self.toolButton_collection.setSizePolicy(sizepolicy)
-        self.toolButton_collection.setMinimumSize(QtCore.QSize(0, 30))
-        self.toolButton_collection.setMaximumSize(QtCore.QSize(16777215, 30))
+        self.toolButton_collection.setMinimumSize(QSize(0, 30))
+        self.toolButton_collection.setMaximumSize(QSize(16777215, 30))
         self._set_css(self.toolButton_collection, CSS_TOOLBUTTON)
 
         self.toolButton_collection.setToolButtonStyle(
-            QtCore.Qt.ToolButtonTextBesideIcon)
+            Qt.ToolButtonTextBesideIcon)
         self.toolButton_collection.setAutoRaise(True)
-        self.toolButton_collection.setArrowType(QtCore.Qt.NoArrow)
+        self.toolButton_collection.setArrowType(Qt.NoArrow)
 
     def _set_frame_downloaded(self):
         """Sets the size policies of the downloaded features frame."""
-        self.frame_downloaded = QtGui.QFrame(self)
-        sizepolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding,
-                                       QtGui.QSizePolicy.Preferred)
+        self.frame_downloaded = QFrame(self)
+        sizepolicy = QSizePolicy(QSizePolicy.MinimumExpanding,
+                                 QSizePolicy.Preferred)
         sizepolicy.setHorizontalStretch(0)
         sizepolicy.setVerticalStretch(0)
         sizepolicy.setHeightForWidth(
             self.frame_downloaded.sizePolicy().hasHeightForWidth())
         self.frame_downloaded.setSizePolicy(sizepolicy)
-        self.frame_downloaded.setMinimumSize(QtCore.QSize(0, 150))
-        self.frame_downloaded.setBaseSize(QtCore.QSize(0, 100))
+        self.frame_downloaded.setMinimumSize(QSize(0, 150))
+        self.frame_downloaded.setBaseSize(QSize(0, 100))
         self._set_css(self.frame_downloaded, CSS_FRAME_DOWNLOADED)
-        self.frame_downloaded.setFrameShape(QtGui.QFrame.StyledPanel)
-        self.frame_downloaded.setFrameShadow(QtGui.QFrame.Raised)
+        self.frame_downloaded.setFrameShape(QFrame.StyledPanel)
+        self.frame_downloaded.setFrameShadow(QFrame.Raised)
 
     def _set_label_downloaded(self):
         """Sets the label 'Downloaded'."""
-        font = QtGui.QFont()
+        font = QFont()
         font.setFamily("Garuda")
         self.label_downloaded.setFont(font)
         self.label_downloaded.setIndent(15)
@@ -199,8 +203,7 @@ class DockWidgetContentsLeft(QtGui.QWidget):
         self.label_downloaded.setText("<html><head/><body><p><span style=\" font-size:10pt; color:#878787;\">{0}</span></p></body></html>".format(name))
         self._set_label_downloaded()
         self.label_collections.setIndent(15)  # check it
-        self.label_collections.setTextInteractionFlags(
-            QtCore.Qt.NoTextInteraction)
+        self.label_collections.setTextInteractionFlags(Qt.NoTextInteraction)
         self._set_css(self.label_collections, CSS_LABEL_COLLECTION)
 
     def update_collection_widget(self):
@@ -212,74 +215,69 @@ class DockWidgetContentsLeft(QtGui.QWidget):
         conn.close()
 
 
-class DockWidgetContentsTop(QtGui.QWidget):
+class DockWidgetContentsTop(QWidget):
     """Contains the contents of the dock widget on the top side of the main
         window"""
     def __init__(self, parent=None):
-        QtGui.QWidget.__init__(self, parent)
+        QWidget.__init__(self, parent)
 
-        layout = QtGui.QHBoxLayout(self)
+        layout = QHBoxLayout(self)
         layout.setContentsMargins(2, 0, 4, 0)
         layout.setSpacing(5)  # check it
 
-        spacer = QtGui.QSpacerItem(20, 0, QtGui.QSizePolicy.Expanding,
-                                   QtGui.QSizePolicy.Fixed)
+        spacer = QSpacerItem(20, 0, QSizePolicy.Expanding, QSizePolicy.Fixed)
         layout.addItem(spacer)
 
-        self.label_corpus = QtGui.QLabel(self)
+        self.label_corpus = QLabel(self)
         self._set_label_corpus()
         layout.addWidget(self.label_corpus)
 
-        spacer2 = QtGui.QSpacerItem(20, 0, QtGui.QSizePolicy.Expanding,
-                                    QtGui.QSizePolicy.Fixed)
+        spacer2 = QSpacerItem(20, 0, QSizePolicy.Expanding, QSizePolicy.Fixed)
         layout.addItem(spacer2)
 
-        self.label_username = QtGui.QLabel(self)
-        self.label_username.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
+        self.label_username = QLabel(self)
+        self.label_username.setContextMenuPolicy(Qt.NoContextMenu)
         layout.addWidget(self.label_username)
 
-        self.line = QtGui.QFrame(self)
+        self.line = QFrame(self)
         self._set_line()
         layout.addWidget(self.line)
 
-        self.label_status = QtGui.QLabel(self)
+        self.label_status = QLabel(self)
         self._set_labelstatus()
         layout.addWidget(self.label_status)
         self.retranslate_ui()
 
     def _set_label_corpus(self):
         """Sets the label"""
-        font = QtGui.QFont()
+        font = QFont()
         font.setFamily("Garuda")
         self.label_corpus.setFont(font)
-        sizepolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding,
-                                       QtGui.QSizePolicy.Expanding)
+        sizepolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         #sizepolicy.setHorizontalStretch(0)
         #sizepolicy.setVerticalStretch(0)
         sizepolicy.setHeightForWidth(
             self.label_corpus.sizePolicy().hasHeightForWidth())
         self.label_corpus.setSizePolicy(sizepolicy)
-        self.label_corpus.setMinimumSize(QtCore.QSize(300, 30))
-        self.label_corpus.setMaximumSize(QtCore.QSize(700, 30))
+        self.label_corpus.setMinimumSize(QSize(300, 30))
+        self.label_corpus.setMaximumSize(QSize(700, 30))
 
     def _set_line(self):
         """Vertical line between the status and username"""
-        sizepolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,
-                                       QtGui.QSizePolicy.Fixed)
+        sizepolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizepolicy.setHorizontalStretch(0)
         sizepolicy.setVerticalStretch(0)
         sizepolicy.setHeightForWidth(
             self.line.sizePolicy().hasHeightForWidth())
         self.line.setSizePolicy(sizepolicy)
-        self.line.setMinimumSize(QtCore.QSize(0, 20))
+        self.line.setMinimumSize(QSize(0, 20))
         self.line.setLineWidth(1)
-        self.line.setFrameShape(QtGui.QFrame.VLine)
-        self.line.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line.setFrameShape(QFrame.VLine)
+        self.line.setFrameShadow(QFrame.Sunken)
 
     def _set_labelstatus(self):
         """Sets the size policy of label status"""
-        sizepolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,
-                                       QtGui.QSizePolicy.Fixed)
+        sizepolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizepolicy.setHorizontalStretch(0)
         sizepolicy.setVerticalStretch(0)
         sizepolicy.setHeightForWidth(

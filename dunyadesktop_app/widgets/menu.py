@@ -1,6 +1,7 @@
 import os
 
-from PyQt4 import QtGui, QtCore
+from PyQt5.QtWidgets import QAction, QMenu
+from PyQt5.QtGui import QIcon
 from dunyadesktop_app.utilities import database
 
 
@@ -10,18 +11,18 @@ DUNYA_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                           'icons', 'dunya.svg')
 
 
-class CollectionAction(QtGui.QAction):
+class CollectionAction(QAction):
     def __init__(self, name, parent=None):
-        QtGui.QAction.__init__(self, name, parent)
+        QAction.__init__(self, name, parent)
         self.triggered.connect(self._send_coll)
 
     def _send_coll(self):
         self.parent()._send_request_to_parent(self.text())
 
 
-class RCMenu(QtGui.QMenu):
+class RCMenu(QMenu):
     def __init__(self, parent=None):
-        QtGui.QMenu.__init__(self, parent)
+        QMenu.__init__(self, parent)
         #self._set_css()
         self._add_actions()
 
@@ -33,8 +34,8 @@ class RCMenu(QtGui.QMenu):
         self.setStyleSheet(css)
 
     def _add_actions(self):
-        self.open_dunya = QtGui.QAction("Open on Player", self)
-        self.open_dunya.setIcon(QtGui.QIcon(DUNYA_ICON))
+        self.open_dunya = QAction("Open on Player", self)
+        self.open_dunya.setIcon(QIcon(DUNYA_ICON))
         self.addAction(self.open_dunya)
 
         self.addSeparator()
@@ -49,7 +50,7 @@ class RCMenu(QtGui.QMenu):
         conn.close()
 
     def _send_request_to_parent(self, coll):
-        self.parent().send_to_db(str(coll.toUtf8()))
+        self.parent().send_to_db(str(coll))
 
     def _send_player_request(self):
         self.parent().send_rec()

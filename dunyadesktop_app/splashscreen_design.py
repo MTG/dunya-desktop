@@ -1,7 +1,10 @@
 import sys
 import os.path
 
-from PyQt4 import QtGui, QtCore
+#from PyQt4 import QtGui, QtCore
+
+from PyQt5.QtWidgets import QDialog, QApplication
+from PyQt5 import QtCore
 
 import ui_files.resources_rc
 
@@ -11,10 +14,10 @@ CSS_PATH = os.path.join(os.path.dirname(__file__), 'ui_files', 'css',
                         'splashscreen.css')
 
 
-class SplashScreen(QtGui.QDialog):
+class SplashScreen(QDialog):
 
     def __init__(self):
-        QtGui.QDialog.__init__(self)
+        QDialog.__init__(self)
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint |
                             QtCore.Qt.SplashScreen)
 
@@ -28,7 +31,7 @@ class SplashScreen(QtGui.QDialog):
         self.setStyleSheet(css)
 
 
-app = QtGui.QApplication(sys.argv)
+app = QApplication(sys.argv)
 dialog = SplashScreen()
 dialog.show()
 app.exec_()

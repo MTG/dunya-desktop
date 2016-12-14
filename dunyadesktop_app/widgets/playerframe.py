@@ -1,26 +1,28 @@
-from PyQt4 import QtGui, QtCore
+from PyQt5.QtWidgets import QFrame, QHBoxLayout, QToolButton, QSlider, \
+    QSizePolicy
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtCore import QSize, Qt
 
 
-class PlayerFrame(QtGui.QFrame):
+class PlayerFrame(QFrame):
     def __init__(self, parent=None):
-        QtGui.QFrame.__init__(self, parent=parent)
+        QFrame.__init__(self, parent=parent)
 
         self._set_size_policy()
         self._set_visualization()
 
-        self.horizontalLayout = QtGui.QHBoxLayout(self)
+        self.horizontalLayout = QHBoxLayout(self)
         self.setMaximumHeight(40)
 
-        self.toolbutton_play = QtGui.QToolButton(self)
-        self.toolbutton_pause = QtGui.QToolButton(self)
+        self.toolbutton_play = QToolButton(self)
+        self.toolbutton_pause = QToolButton(self)
         self._set_buttons()
 
-        self.slider = QtGui.QSlider(self)
+        self.slider = QSlider(self)
         self._set_slider()
 
     def _set_size_policy(self):
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum,
-                                       QtGui.QSizePolicy.Fixed)
+        sizePolicy = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(
@@ -35,37 +37,37 @@ class PlayerFrame(QtGui.QFrame):
                                         "background-color: rgb(25, 25,25);\n"
                                         "}")
 
-        self.setFrameShape(QtGui.QFrame.StyledPanel)
-        self.setFrameShadow(QtGui.QFrame.Raised)
+        self.setFrameShape(QFrame.StyledPanel)
+        self.setFrameShadow(QFrame.Raised)
 
     def _set_buttons(self):
-        self.toolbutton_play.setMinimumSize(QtCore.QSize(50, 15))
+        self.toolbutton_play.setMinimumSize(QSize(50, 15))
         self.toolbutton_play.setStyleSheet("QToolButton {\n"
                                            "border: none;\n"
                                            "background: transparent;\n"
                                            "}\n"
                                            "\n"
                                            "")
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/compmusic/icons/play.png"),
-                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon = QIcon()
+        icon.addPixmap(QPixmap(":/compmusic/icons/play.png"),
+                       QIcon.Normal, QIcon.Off)
         self.toolbutton_play.setIcon(icon)
-        self.toolbutton_play.setIconSize(QtCore.QSize(20, 20))
+        self.toolbutton_play.setIconSize(QSize(20, 20))
         self.toolbutton_play.setObjectName("toolButton_play")
         self.horizontalLayout.addWidget(self.toolbutton_play)
 
-        self.toolbutton_pause.setMinimumSize(QtCore.QSize(50, 15))
+        self.toolbutton_pause.setMinimumSize(QSize(50, 15))
         self.toolbutton_pause.setStyleSheet("QToolButton {\n"
                                             "border: none;\n"
                                             "background: transparent;\n"
                                             "}\n"
                                             "")
 
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/compmusic/icons/pause.png"),
-                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1 = QIcon()
+        icon1.addPixmap(QPixmap(":/compmusic/icons/pause.png"),
+                        QIcon.Normal, QIcon.Off)
         self.toolbutton_pause.setIcon(icon1)
-        self.toolbutton_pause.setIconSize(QtCore.QSize(20, 20))
+        self.toolbutton_pause.setIconSize(QSize(20, 20))
         self.horizontalLayout.addWidget(self.toolbutton_pause)
 
     def _set_slider(self):
@@ -85,5 +87,5 @@ class PlayerFrame(QtGui.QFrame):
             "border-radius: 3px;\n"
             "}")
 
-        self.slider.setOrientation(QtCore.Qt.Horizontal)
+        self.slider.setOrientation(Qt.Horizontal)
         self.horizontalLayout.addWidget(self.slider)

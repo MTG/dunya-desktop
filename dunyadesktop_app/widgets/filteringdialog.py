@@ -1,6 +1,8 @@
 import os
 
-from PyQt4 import QtGui, QtCore
+#from PyQt4 import QtGui, QtCore
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLineEdit, QDialogButtonBox
+from PyQt5.QtCore import pyqtSignal, Qt
 
 from table import TableView
 from models.filteringmodel import FilteringModel
@@ -12,25 +14,25 @@ CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
                         'filteringdialog.css')
 
 
-class FilteringDialog(QtGui.QDialog):
+class FilteringDialog(QDialog):
     """The dialog which pops up when the user clicks the combobox"""
-    ok_button_clicked = QtCore.pyqtSignal()
+    ok_button_clicked = pyqtSignal()
 
     def __init__(self, parent=None):
-        QtGui.QDialog.__init__(self, parent)
+        QDialog.__init__(self, parent)
         self.attribute = None
         self.setFixedSize(200, 300)
         self._set_css()
 
-        self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.Popup)
+        self.setWindowFlags(Qt.FramelessWindowHint | Qt.Popup)
 
-        v_layout = QtGui.QVBoxLayout(self)
-        self.filtering_edit = QtGui.QLineEdit()
+        v_layout = QVBoxLayout(self)
+        self.filtering_edit = QLineEdit()
         self.table_attribute = TableView()
 
-        self.button_box = QtGui.QDialogButtonBox(self)
-        self.button_box.addButton('OK', QtGui.QDialogButtonBox.AcceptRole)
-        self.button_box.addButton('Cancel', QtGui.QDialogButtonBox.RejectRole)
+        self.button_box = QDialogButtonBox(self)
+        self.button_box.addButton('OK', QDialogButtonBox.AcceptRole)
+        self.button_box.addButton('Cancel', QDialogButtonBox.RejectRole)
 
         v_layout.addWidget(self.filtering_edit)
         v_layout.addWidget(self.table_attribute)

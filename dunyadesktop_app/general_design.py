@@ -1,8 +1,9 @@
-import sys
 import os
 
-from PyQt4 import QtGui, QtCore
-
+from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QStatusBar, \
+    QSizePolicy, QFrame
+from PyQt5.QtGui import QPixmap, QFont, QIcon
+from PyQt5 import QtCore
 from widgets.dockwidget import DockWidget, DockWidgetContentsLeft, \
     DockWidgetContentsTop
 from widgets.queryframe import QueryFrame
@@ -20,16 +21,16 @@ DUNYA_ICON = ":/compmusic/icons/dunya.svg"
 QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"
 
 
-class GeneralMainDesign(QtGui.QMainWindow):
+class GeneralMainDesign(QMainWindow):
     """General design of the main window"""
     def __init__(self, QWidgetParent=None):
-        QtGui.QMainWindow.__init__(self, QWidgetParent)
+        QMainWindow.__init__(self, QWidgetParent)
         self._set_main_window()
         self._set_css(self, CSS_MAIN)
 
-        self.centralwidget = QtGui.QWidget(self)
+        self.centralwidget = QWidget(self)
 
-        layout = QtGui.QVBoxLayout(self.centralwidget)
+        layout = QVBoxLayout(self.centralwidget)
         layout.setContentsMargins(0, 0, 2, 0)
         layout.setSpacing(0)
 
@@ -42,7 +43,7 @@ class GeneralMainDesign(QtGui.QMainWindow):
         self.setCentralWidget(self.centralwidget)
 
         # status bar
-        self.statusbar = QtGui.QStatusBar(self)
+        self.statusbar = QStatusBar(self)
         self._set_css(self.statusbar, CSS_STATUSBAR)
         self._set_status_bar()
         self.setStatusBar(self.statusbar)
@@ -68,8 +69,7 @@ class GeneralMainDesign(QtGui.QMainWindow):
     def _set_main_window(self):
         """Sets the size policies of the main window"""
         self.resize(1000, 750)
-        size_policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum,
-                                        QtGui.QSizePolicy.Minimum)
+        size_policy = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
         size_policy.setHorizontalStretch(0)
         size_policy.setVerticalStretch(0)
         size_policy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
@@ -77,9 +77,8 @@ class GeneralMainDesign(QtGui.QMainWindow):
         self.setMinimumSize(QtCore.QSize(1000, 600))
 
         # main window icon
-        icon_dunya = QtGui.QIcon()
-        icon_dunya.addPixmap(QtGui.QPixmap(DUNYA_ICON),
-                             QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon_dunya = QIcon()
+        icon_dunya.addPixmap(QPixmap(DUNYA_ICON), QIcon.Normal, QIcon.Off)
         self.setWindowIcon(icon_dunya)
         self.setWindowTitle('Dunya Desktop')
 
@@ -90,11 +89,11 @@ class GeneralMainDesign(QtGui.QMainWindow):
         obj.setStyleSheet(css)
 
     def _set_frame(self):
-        self.frame_query.setFrameShape(QtGui.QFrame.StyledPanel)
-        self.frame_query.setFrameShadow(QtGui.QFrame.Raised)
+        self.frame_query.setFrameShape(QFrame.StyledPanel)
+        self.frame_query.setFrameShadow(QFrame.Raised)
 
     def _set_status_bar(self):
         self.statusbar.setMinimumSize(QtCore.QSize(0, 18))
-        font = QtGui.QFont()
+        font = QFont()
         font.setPointSize(9)
         self.statusbar.setFont(font)

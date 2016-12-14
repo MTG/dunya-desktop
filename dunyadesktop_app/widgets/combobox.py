@@ -1,7 +1,9 @@
 import os
 import platform
 
-from PyQt4 import QtGui
+#from PyQt4 import QtGui
+from PyQt5.QtWidgets import QComboBox, QToolButton, QStyle
+from PyQt5.QtGui import QIcon, QFont
 
 from filteringdialog import FilteringDialog
 
@@ -25,12 +27,12 @@ CSS_BUTTON = '''QToolButton {border: 0px;
                                   border-radius: 5px;}'''
 
 
-class ComboBox(QtGui.QComboBox):
+class ComboBox(QComboBox):
     """Combobox of the attributes."""
     def __init__(self, parent):
-        QtGui.QComboBox.__init__(self, parent)
+        QComboBox.__init__(self, parent)
         self.setEditable(True)
-        self.setInsertPolicy(QtGui.QComboBox.NoInsert)
+        self.setInsertPolicy(QComboBox.NoInsert)
 
         if platform.system() == 'Linux':
             self.setFixedHeight(23)
@@ -39,9 +41,9 @@ class ComboBox(QtGui.QComboBox):
 
         self._set_css()
 
-        self.cancel_button = QtGui.QToolButton(self)
+        self.cancel_button = QToolButton(self)
         self.cancel_button.setStyleSheet(CSS_BUTTON)
-        self.cancel_button.setIcon(QtGui.QIcon(ICON_PATH_CANCEL))
+        self.cancel_button.setIcon(QIcon(ICON_PATH_CANCEL))
         self.cancel_button.setVisible(False)
 
         # signals
@@ -63,7 +65,7 @@ class ComboBox(QtGui.QComboBox):
         """Sets the position of cancel button."""
         button_size = self.cancel_button.sizeHint()
         frame_width = self.lineEdit().style().pixelMetric(
-            QtGui.QStyle.PM_DefaultFrameWidth)
+            QStyle.PM_DefaultFrameWidth)
         self.cancel_button.move(
             self.rect().right() - BUTTON_POS * frame_width-button_size.width(),
             (self.rect().bottom() - button_size.height() + 1) / 2)
@@ -83,7 +85,7 @@ class ComboBox(QtGui.QComboBox):
         self.dialog_filtering.show()
 
     def set_placeholder_text(self, text):
-        font = QtGui.QFont()
+        font = QFont()
         font.setPointSize(FONT_SIZE)
 
         self.lineEdit().setPlaceholderText(text)
@@ -142,5 +144,5 @@ class ComboBox(QtGui.QComboBox):
     def check_lineedit_status(self):
         """Checks the lineedit widget and set the cancel button as
         visible/invisible"""
-        if str(self.lineEdit().text().toUtf8()) == '':
+        if str(self.lineEdit().text()) == '':
             self.cancel_button.setVisible(False)

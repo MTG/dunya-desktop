@@ -1,7 +1,9 @@
-from PyQt4 import QtGui, QtCore
+#from PyQt4 import QtGui, QtCore
 from pyqtgraph import GraphicsLayoutWidget
 import pyqtgraph as pg
 import numpy as np
+
+from PyQt5.QtWidgets import QSizePolicy
 
 
 class MelodyWidget(GraphicsLayoutWidget):
@@ -11,8 +13,7 @@ class MelodyWidget(GraphicsLayoutWidget):
         self._set_size_policy()
 
     def _set_size_policy(self):
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred,
-                                       QtGui.QSizePolicy.Preferred)
+        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())

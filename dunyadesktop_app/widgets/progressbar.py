@@ -1,14 +1,14 @@
 import os
 
-from PyQt4 import QtGui
+from PyQt5.QtWidgets import QProgressBar
 
 CSS_PROGRESS = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                             'css', 'progressbar.css')
 
 
-class ProgressBar(QtGui.QProgressBar):
+class ProgressBar(QProgressBar):
     def __init__(self, parent=None):
-        QtGui.QProgressBar.__init__(self, parent)
+        QProgressBar.__init__(self, parent)
         self.setGeometry(30, 40, 200, 25)
         self._set_css(self, CSS_PROGRESS)
         self.setToolTip('Downloading...')

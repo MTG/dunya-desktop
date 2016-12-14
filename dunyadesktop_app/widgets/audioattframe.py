@@ -1,7 +1,11 @@
 import os
 import platform
 
-from PyQt4 import QtGui, QtCore
+#from PyQt4 import QtGui, QtCore
+from PyQt5.QtWidgets import QFrame, QGridLayout, QSizePolicy, QLayout, \
+    QHBoxLayout, QToolButton, QSpacerItem
+from PyQt5.QtGui import QCursor, QIcon, QPixmap
+from PyQt5.QtCore import Qt, QSize
 
 from combobox import ComboBox
 
@@ -23,16 +27,16 @@ CSS_BUTTON = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
                           'toolbutton.css')
 
 
-class AudioAttFrame(QtGui.QFrame):
+class AudioAttFrame(QFrame):
     """Frame contains the comboboxes of attributes (such as makams, forms,
     etc) and query button"""
 
     def __init__(self, QWidget_parent=None):
-        QtGui.QFrame.__init__(self, QWidget_parent)
+        QFrame.__init__(self, QWidget_parent)
 
         self._set_size_attributes()
 
-        layout = QtGui.QGridLayout(self)
+        layout = QGridLayout(self)
         self._set_layout(layout)
         self._retranslate_status_tips()
 
@@ -53,21 +57,20 @@ class AudioAttFrame(QtGui.QFrame):
 
     def _set_size_attributes(self):
         """Sets the size policies of frame"""
-        size_policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred,
-                                        QtGui.QSizePolicy.Fixed)
+        size_policy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
         size_policy.setHorizontalStretch(0)
         size_policy.setVerticalStretch(0)
         size_policy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(size_policy)
-        self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
-        self.setFrameShape(QtGui.QFrame.StyledPanel)
-        self.setFrameShadow(QtGui.QFrame.Raised)
+        self.setCursor(QCursor(Qt.ArrowCursor))
+        self.setFrameShape(QFrame.StyledPanel)
+        self.setFrameShadow(QFrame.Raised)
         self.setLineWidth(1)
 
     def _set_layout(self, layout):
         """Sets the size policies of layout and initializes the comoboxes and
         query button."""
-        layout.setSizeConstraint(QtGui.QLayout.SetNoConstraint)
+        layout.setSizeConstraint(QLayout.SetNoConstraint)
         layout.setMargin(MARGIN)
         layout.setSpacing(SPACING)
 
@@ -100,32 +103,30 @@ class AudioAttFrame(QtGui.QFrame):
         self.comboBox_instrument.set_placeholder_text('Instrument')
 
         # spacers between the comboboxes
-        spacer_item1 = QtGui.QSpacerItem(SPACE, 20, QtGui.QSizePolicy.Minimum,
-                                         QtGui.QSizePolicy.Fixed)
+        spacer_item1 = QSpacerItem(SPACE, 20, QSizePolicy.Minimum,
+                                   QSizePolicy.Fixed)
 
-        spacer_item2 = QtGui.QSpacerItem(SPACE, 20, QtGui.QSizePolicy.Minimum,
-                                         QtGui.QSizePolicy.Fixed)
+        spacer_item2 = QSpacerItem(SPACE, 20, QSizePolicy.Minimum,
+                                   QSizePolicy.Fixed)
 
         if platform.system() != 'Linux':
-            spacer_item3 = QtGui.QSpacerItem(SPACE, 20,
-                                             QtGui.QSizePolicy.Minimum,
-                                             QtGui.QSizePolicy.Fixed)
+            spacer_item3 = QSpacerItem(SPACE, 20, QSizePolicy.Minimum,
+                                       QSizePolicy.Fixed)
             layout.addItem(spacer_item3, 1, 5, 1, 1)
 
         layout.addItem(spacer_item1, 1, 1, 1, 1)
         layout.addItem(spacer_item2, 1, 3, 1, 1)
 
         # query button and layout
-        self.horizontalLayout_query = QtGui.QHBoxLayout()
+        self.horizontalLayout_query = QHBoxLayout()
         self.horizontalLayout_query.setSpacing(0)
 
-        self.toolButton_query = QtGui.QToolButton(self)
-        self.toolButton_query.setFixedSize(QtCore.QSize(50, 50))
-        icon_query = QtGui.QIcon()
-        icon_query.addPixmap(QtGui.QPixmap(QUERY_ICON),
-                             QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.toolButton_query = QToolButton(self)
+        self.toolButton_query.setFixedSize(QSize(50, 50))
+        icon_query = QIcon()
+        icon_query.addPixmap(QPixmap(QUERY_ICON), QIcon.Normal, QIcon.Off)
         self.toolButton_query.setIcon(icon_query)
-        self.toolButton_query.setIconSize(QtCore.QSize(25, 25))
+        self.toolButton_query.setIconSize(QSize(25, 25))
         self.horizontalLayout_query.addWidget(self.toolButton_query)
         layout.addLayout(self.horizontalLayout_query, 0, 6, 2, 1)
 

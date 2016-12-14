@@ -1,6 +1,4 @@
-from PyQt4 import QtGui
-
-#from mainui_design import MainWindowDesign
+from PyQt5.QtWidgets import QWidget
 from general_design import GeneralMainDesign
 
 
@@ -19,7 +17,7 @@ class MainWindowMakamDesign(GeneralMainDesign):
 
     def _set_score_tab(self):
         """Adds a score tab for score collection"""
-        self.tab_score = QtGui.QWidget(self)
+        self.tab_score = QWidget(self)
         self.frame_query.tabWidget.addTab(self.tab_score, "")
 
     def _retranslate_ui_elements(self):
@@ -30,12 +28,3 @@ class MainWindowMakamDesign(GeneralMainDesign):
         self.frame_query.frame_attributes.comboBox_melodic.set_placeholder_text('Makam')
         self.frame_query.frame_attributes.comboBox_form.set_placeholder_text('Form')
         self.frame_query.frame_attributes.comboBox_rhythm.set_placeholder_text('Usul')
-
-# uncomment to test the interface
-'''
-import sys
-app = QtGui.QApplication(sys.argv)
-dialog = MainWindowMakamDesign()
-dialog.show()
-app.exec_()
-'''

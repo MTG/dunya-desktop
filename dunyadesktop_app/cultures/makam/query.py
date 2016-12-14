@@ -1,15 +1,14 @@
-from PyQt4 import QtCore
 from compmusic.dunya import makam
+from PyQt5.QtCore import QThread, pyqtSignal
 
-
-class QueryThread(QtCore.QThread):
-    fetching_completed = QtCore.pyqtSignal(dict)
-    progress_number = QtCore.pyqtSignal(int)
-    query_completed = QtCore.pyqtSignal()
-    combobox_results = QtCore.pyqtSignal(list)
+class QueryThread(QThread):
+    fetching_completed = pyqtSignal(dict)
+    progress_number = pyqtSignal(int)
+    query_completed = pyqtSignal()
+    combobox_results = pyqtSignal(list)
 
     def __init__(self, parent=None):
-        QtCore.QThread.__init__(self, parent)
+        QThread.__init__(self, parent)
         self.stopped = False
 
         self.mid = None

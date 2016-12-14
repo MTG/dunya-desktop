@@ -1,4 +1,5 @@
-from PyQt4 import QtCore
+#from PyQt4 import QtCore
+from PyQt5.QtCore import QThread, pyqtSignal
 import pyglet.media
 
 
@@ -30,39 +31,24 @@ class AudioPlayback:
         self.player.seek(time=time)
 
 
-class AudioPlaybackThread(QtCore.QThread):
-    time_out = QtCore.pyqtSignal(float)
+class AudioPlaybackThread(QThread):
+    play_clicked = pyqtSignal()
+    pause_clicked = pyqtSignal()
 
     def __init__(self, timer_pitch=50):
-        QtCore.QThread.__init__(self)
-        self.timer_pitch = timer_pitch
+        QThread.__init__(self)
+        #self.timer_pitch = timer_pitch
         self.playback = AudioPlayback()
         self.playback_pos = 0.
 
-        self.timer = QtCore.QTimer()
-        self.timer.setInterval(timer_pitch)
-        self.timer.timeout.connect(self.send_signal)
+        #self.timer = QTimer()
+        #self.timer.setInterval(timer_pitch)
+        #self.timer.timeout.connect(self.send_signal)
 
     def run(self):
-        self.timer.start()
         self.playback.play()
+        self.play_clicked.emit()
 
     def pause(self):
-        self.timer.stop()
         self.playback.pause()
-
-    def send_signal(self):
-        self.playback_pos += self.timer_pitch / 1000.
-        if self.playback.is_playing():
-            if self.playback_pos < self.playback.get_pos_seconds():
-                self.playback_pos = self.playback.get_pos_seconds()
-                self.time_out.emit(self.playback_pos)
-
-            elif self.playback_pos >= self.playback.duration:
-                self.timer.stop()
-                self.playback.pause()
-            else:
-                self.time_out.emit(self.playback_pos)
-        else:
-            self.timer.stop()
-            self.playback.pause()
+        self.pause_clicked.emit()

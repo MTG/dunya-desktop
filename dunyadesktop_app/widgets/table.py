@@ -2,7 +2,11 @@ import os
 import platform
 import json
 
-from PyQt4 import QtGui, QtCore
+from PyQt5.QtWidgets import QToolButton, QTableView, QAbstractItemView, \
+    QAction, QHeaderView, QTableWidget, QTableWidgetItem, QLabel, QPushButton, \
+    qApp
+from PyQt5.QtCore import pyqtSignal, Qt, QPersistentModelIndex
+from PyQt5.QtGui import QFont, QCursor, QIcon, QPixmap
 
 from dunyadesktop_app.utilities import database
 from dunyadesktop_app.cultures.makam import utilities as makamutilities
@@ -31,9 +35,9 @@ DOWNLOAD_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                              'icons', 'download.svg')
 
 
-class DownloadButton(QtGui.QToolButton):
+class DownloadButton(QToolButton):
     def __init__(self, parent=None):
-        QtGui.QToolButton.__init__(self, parent)
+        QToolButton.__init__(self, parent)
         #self.clicked.connect(self.download_clicked)
 
     def download_clicked(self):
@@ -43,20 +47,20 @@ class DownloadButton(QtGui.QToolButton):
         #print(self.parent().pos())
 
 
-class TableView(QtGui.QTableView):
-    open_dunya_triggered = QtCore.pyqtSignal(object)
-    add_to_collection = QtCore.pyqtSignal(str, object)
+class TableView(QTableView):
+    open_dunya_triggered = pyqtSignal(object)
+    add_to_collection = pyqtSignal(str, object)
 
     def __init__(self, *__args):
-        QtGui.QTableView.__init__(self, *__args)
+        QTableView.__init__(self, *__args)
 
         # setting the table for no edit and row selection
-        self.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
-        self.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
+        self.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.setSelectionBehavior(QAbstractItemView.SelectRows)
         #self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
         self.setMouseTracking(True)
         self.horizontalHeader().setStretchLastSection(True)
-        font = QtGui.QFont()
+        font = QFont()
         font.setPointSize(13)
         self.horizontalHeader().setFont(font)
 
@@ -65,16 +69,16 @@ class TableView(QtGui.QTableView):
 
         # arranging the artist column for being multi-line
         self.setWordWrap(True)
-        self.setTextElideMode(QtCore.Qt.ElideMiddle)
+        self.setTextElideMode(Qt.ElideMiddle)
 
-        self._last_index = QtCore.QPersistentModelIndex()
+        self._last_index = QPersistentModelIndex()
         self.viewport().installEventFilter(self)
 
         self._set_css()
         self._set_font()
 
     def _set_font(self):
-        font = QtGui.QFont()
+        font = QFont()
         font.setPointSize(FONT_SIZE)
         self.setFont(font)
 
@@ -91,7 +95,7 @@ class TableView(QtGui.QTableView):
         self.index = index
 
         menu = RCMenu(self)
-        menu.popup(QtGui.QCursor.pos())
+        menu.popup(QCursor.pos())
         #self.menu.popup(QtGui.QCursor.pos())
 
     def send_rec(self):
@@ -118,37 +122,37 @@ class TableViewResults(TableView):
     def __init__(self, parent=None):
         TableView.__init__(self)
         self.setSortingEnabled(True)
-        self.setDragDropMode(QtGui.QAbstractItemView.DragOnly)
+        self.setDragDropMode(QAbstractItemView.DragOnly)
 
         self.horizontal_header = self.horizontalHeader()
         self._set_horizontal_header()
 
-        self.add_maincoll = QtGui.QAction("Add to main collection", self)
+        self.add_maincoll = QAction("Add to main collection", self)
         self.setColumnWidth(0, 10)
 
     def _set_menu(self):
-        self.add_maincoll = QtGui.QAction("Add to main collection", self)
+        self.add_maincoll = QAction("Add to main collection", self)
 
         self.menu.addSeparator()
 
-        self.open_dunya = QtGui.QAction("Open on Player", self)
-        self.open_dunya.setIcon(QtGui.QIcon(DUNYA_ICON))
+        self.open_dunya = QAction("Open on Player", self)
+        self.open_dunya.setIcon(QIcon(DUNYA_ICON))
 
     def _set_horizontal_header(self):
         self.horizontal_header.setStretchLastSection(True)
         self.horizontal_header.hide()
-        self.horizontal_header.setResizeMode(QtGui.QHeaderView.Fixed)
+        self.horizontal_header.setResizeMode(QHeaderView.Fixed)
 
 
-class TableWidget(QtGui.QTableWidget, TableView):
-    added_new_doc = QtCore.pyqtSignal(list)
-    open_dunya_triggered = QtCore.pyqtSignal(object)
-    set_result_checked = QtCore.pyqtSignal(str)
+class TableWidget(QTableWidget, TableView):
+    added_new_doc = pyqtSignal(list)
+    open_dunya_triggered = pyqtSignal(object)
+    set_result_checked = pyqtSignal(str)
 
     def __init__(self):
-        QtGui.QTableWidget.__init__(self)
+        QTableWidget.__init__(self)
         TableView.__init__(self)
-        self.setDragDropMode(QtGui.QAbstractItemView.DropOnly)
+        self.setDragDropMode(QAbstractItemView.DropOnly)
         self.setAcceptDrops(True)
         self.setDragDropOverwriteMode(False)
 
@@ -162,7 +166,7 @@ class TableWidget(QtGui.QTableWidget, TableView):
     def _set_columns(self):
         self.setColumnCount(2)
         self.setHorizontalHeaderLabels(['Status', 'Title'])
-        self.horizontalHeader().setResizeMode(QtGui.QHeaderView.Fixed)
+        self.horizontalHeader().setResizeMode(QHeaderView.Fixed)
 
     def dropMimeData(self, p_int, p_int_1, QMimeData, Qt_DropAction):
         self.last_drop_row = p_int
@@ -176,7 +180,7 @@ class TableWidget(QtGui.QTableWidget, TableView):
 
         # Default dropEvent method fires dropMimeData with appropriate
         # parameters (we're interested in the row index).
-        super(QtGui.QTableWidget, self).dropEvent(event)
+        super(QTableWidget, self).dropEvent(event)
         # Now we know where to insert selected row(s)
         drop_row = self.last_drop_row
         selected_rows = sender.get_selected_rows()
@@ -217,7 +221,7 @@ class TableWidget(QtGui.QTableWidget, TableView):
     def add_item(self, text):
         self.insertRow(self.rowCount())
         self.set_status(self.rowCount() - 1, 0)
-        source = QtGui.QTableWidgetItem(text)
+        source = QTableWidgetItem(text)
         self.setItem(self.rowCount() - 1, 1, source)
 
     def create_table(self, coll):
@@ -234,11 +238,11 @@ class TableWidget(QtGui.QTableWidget, TableView):
 
             if makamutilities.check_doc(item):
                 metadata = json.load(open(path))
-                cell = QtGui.QTableWidgetItem(metadata['title'])
+                cell = QTableWidgetItem(metadata['title'])
                 set_check = 1
             else:
                 print("Needs to be downloaded {0}".format(item))
-                cell = QtGui.QTableWidgetItem(item)
+                cell = QTableWidgetItem(item)
 
             self.insertRow(self.rowCount())
             self.setItem(i, 1, cell)
@@ -265,37 +269,35 @@ class TableWidget(QtGui.QTableWidget, TableView):
                 self.refresh_row(docid)
 
     def set_status(self, raw, exist=None):
-        item = QtGui.QLabel()
-        item.setAlignment(QtCore.Qt.AlignCenter)
+        item = QLabel()
+        item.setAlignment(Qt.AlignCenter)
 
         if exist is 0:
-            icon = QtGui.QPixmap(QUEUE_ICON).scaled(20, 20,
-                                                    QtCore.Qt.KeepAspectRatio,
-                                                    QtCore.Qt.SmoothTransformation)
+            icon = QPixmap(QUEUE_ICON).scaled(20, 20, Qt.KeepAspectRatio,
+                                              Qt.SmoothTransformation)
             item.setPixmap(icon)
             item.setToolTip('Waiting in the download queue...')
 
         if exist is 1:
-            icon = QtGui.QPixmap(CHECK_ICON).scaled(20, 20,
-                                                    QtCore.Qt.KeepAspectRatio,
-                                                    QtCore.Qt.SmoothTransformation)
+            icon = QPixmap(CHECK_ICON).scaled(20, 20, Qt.KeepAspectRatio,
+                                              Qt.SmoothTransformation)
             item.setPixmap(icon)
             item.setToolTip('All the features are downloaded...')
 
         if exist is 2:
-            item = QtGui.QPushButton(self)
+            item = QPushButton(self)
             item.setToolTip('Download')
-            item.setIcon(QtGui.QIcon(DOWNLOAD_ICON))
+            item.setIcon(QIcon(DOWNLOAD_ICON))
             item.clicked.connect(self.download_clicked)
 
         self.setCellWidget(raw, 0, item)
 
     def download_clicked(self):
-        click_me = QtGui.qApp.focusWidget()
+        click_me = qApp.focusWidget()
         index = self.indexAt(click_me.pos())
         if index.isValid():
             row = index.row()
-            docid = str(self.item(row, 1).text().toUtf8())
+            docid = str(self.item(row, 1).text())
 
             self.set_status(row, 0)
             self.indexes[docid] = row
@@ -311,7 +313,7 @@ class TableWidget(QtGui.QTableWidget, TableView):
                 title = json.load(open(os.path.join(
                     DOCS_PATH, docid,
                     'audioanalysis--metadata.json')))['title']
-                item = QtGui.QTableWidgetItem(title)
+                item = QTableWidgetItem(title)
                 self.setItem(row, 1, item)
                 self.set_result_checked.emit(docid)
             else:
