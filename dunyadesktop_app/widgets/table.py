@@ -212,8 +212,7 @@ class TableWidget(QTableWidget, TableView):
 
                     docs.append(self.recordings[source_index.row()])
                     self.indexes[self.recordings[source_index.row()]] = self.rowCount() - 1
-
-                    sender.model().sourceModel().set_checked([selected_rows_index[i]])
+                    #sender.model().sourceModel().set_checked([selected_rows_index[i]])
         if docs:
             self.added_new_doc.emit(docs)
         event.accept()

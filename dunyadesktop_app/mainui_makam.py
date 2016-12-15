@@ -203,8 +203,11 @@ class MainWindowMakam(MainWindowMakamDesign):
             self.queue.put(None)  # tells the workers to shut down
 
     def check_query_table(self, docid):
-        row = self.recordings.index(docid)
-        self.frame_query.tableView_results.model().sourceModel().set_checked([row])
+        try:
+            row = self.recordings.index(docid)
+            self.frame_query.tableView_results.model().sourceModel().set_checked([row])
+        except:
+            pass
 
 app = QApplication(sys.argv)
 mainwindow_makam = MainWindowMakam()

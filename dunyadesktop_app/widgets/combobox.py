@@ -16,7 +16,7 @@ else:
     CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
                             'combobox_mac.css')
     BUTTON_POS = 20
-    FONT_SIZE = 11
+    FONT_SIZE = 10
 
 ICON_PATH_CANCEL = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                                 'icons', 'cancel-music.svg')
@@ -144,5 +144,5 @@ class ComboBox(QComboBox):
     def check_lineedit_status(self):
         """Checks the lineedit widget and set the cancel button as
         visible/invisible"""
-        if str(self.lineEdit().text()) == '':
+        if str(u''.join(self.lineEdit().text()).encode('utf-8').strip()) == '':
             self.cancel_button.setVisible(False)
