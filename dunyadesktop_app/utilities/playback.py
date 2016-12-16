@@ -9,6 +9,7 @@ class AudioPlayback:
     def set_source(self, audio_path):
         source = pyglet.media.load(audio_path)
         self.player.queue(source)
+        self.duration = self.player.source.duration - 0.5
 
     def get_pos_sample(self):
         return self.player.time * 44100.
@@ -30,34 +31,38 @@ class AudioPlayback:
 
 
 class AudioPlaybackThread(QtCore.QThread):
-    time_out = QtCore.pyqtSignal()
-    time_out_wf = QtCore.pyqtSignal()
+    time_out = QtCore.pyqtSignal(float)
 
-    def __init__(self, timer_pitch=50, timer_wf=300):
+    def __init__(self, timer_pitch=50):
         QtCore.QThread.__init__(self)
+        self.timer_pitch = timer_pitch
         self.playback = AudioPlayback()
+        self.playback_pos = 0.
 
         self.timer = QtCore.QTimer()
         self.timer.setInterval(timer_pitch)
-
-        self.timer_wf = QtCore.QTimer()
-        self.timer_wf.setInterval(timer_wf)
-
         self.timer.timeout.connect(self.send_signal)
-        self.timer_wf.timeout.connect(self.send_signal_wf)
 
     def run(self):
         self.timer.start()
-        self.timer_wf.start()
         self.playback.play()
 
     def pause(self):
         self.timer.stop()
-        self.timer_wf.stop()
         self.playback.pause()
 
     def send_signal(self):
-        self.time_out.emit()
+        self.playback_pos += self.timer_pitch / 1000.
+        if self.playback.is_playing():
+            if self.playback_pos < self.playback.get_pos_seconds():
+                self.playback_pos = self.playback.get_pos_seconds()
+                self.time_out.emit(self.playback_pos)
 
-    def send_signal_wf(self):
-        self.time_out_wf.emit()
+            elif self.playback_pos >= self.playback.duration:
+                self.timer.stop()
+                self.playback.pause()
+            else:
+                self.time_out.emit(self.playback_pos)
+        else:
+            self.timer.stop()
+            self.playback.pause()

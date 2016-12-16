@@ -26,4 +26,5 @@ ratings:
   - "**.php"
   - "**.py"
   - "**.rb"
-exclude_paths: []
+exclude_paths:
+  - "dunyadesktop_app/ui_files/resources_rc.py"
