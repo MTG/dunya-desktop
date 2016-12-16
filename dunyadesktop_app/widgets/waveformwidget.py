@@ -1,4 +1,5 @@
-from PyQt4 import QtGui, QtCore
+from PyQt5.QtWidgets import QSizePolicy
+from PyQt5.QtCore import QSize, Qt
 from pyqtgraph import GraphicsLayoutWidget
 import pyqtgraph as pg
 import numpy as np
@@ -12,15 +13,14 @@ class WaveformWidget(GraphicsLayoutWidget):
         self._set_size_policy()
 
     def _set_size_policy(self):
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred,
-                                       QtGui.QSizePolicy.Fixed)
+        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(50)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
 
-        self.setMinimumSize(QtCore.QSize(0, 50))
-        self.setMaximumSize(QtCore.QSize(16777215, 50))
-        self.setFocusPolicy(QtCore.Qt.NoFocus)
+        self.setMinimumSize(QSize(0, 50))
+        self.setMaximumSize(QSize(16777215, 50))
+        self.setFocusPolicy(Qt.NoFocus)
         self.setAcceptDrops(False)
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)

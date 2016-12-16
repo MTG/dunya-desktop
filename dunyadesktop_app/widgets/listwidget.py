@@ -1,7 +1,9 @@
 import os
 import json
 
-from PyQt4 import QtGui, QtCore
+#from PyQt4 import QtGui, QtCore
+from PyQt5.QtWidgets import QListWidget, QListWidgetItem, QAbstractItemView
+from PyQt5.QtCore import pyqtSignal
 
 CSS_LISTVIEW = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                             'css', 'listwidget.css')
@@ -10,13 +12,13 @@ DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
                          'documents')
 
 
-class DockListWidget(QtGui.QListWidget):
+class DockListWidget(QListWidget):
     def __init__(self, parent=None):
-        QtGui.QListView.__init__(self, parent)
+        QListWidget.__init__(self, parent)
 
         self._set_css(self, CSS_LISTVIEW)
 
-        self.setViewMode(QtGui.QListView.ListMode)
+        self.setViewMode(QListWidget.ListMode)
 
     @staticmethod
     def _set_css(obj, css_path):
@@ -26,7 +28,7 @@ class DockListWidget(QtGui.QListWidget):
 
 
 class CollectionsWidget(DockListWidget):
-    index_changed = QtCore.pyqtSignal(str)
+    index_changed = pyqtSignal(str)
 
     def __init__(self, parent=None):
         DockListWidget.__init__(self, parent)
@@ -36,7 +38,7 @@ class CollectionsWidget(DockListWidget):
 
     def add_collections(self, colls):
         for coll in colls:
-            item = QtGui.QListWidgetItem(coll)
+            item = QListWidgetItem(coll)
             self.addItem(item)
 
     def item_clicked(self):
@@ -52,7 +54,7 @@ class CollectionsWidget(DockListWidget):
 class CollectionList(DockListWidget):
     def __init__(self, parent=None):
         DockListWidget.__init__(self, parent)
-        self.setDragDropMode(QtGui.QAbstractItemView.DropOnly)
+        self.setDragDropMode(QAbstractItemView.DropOnly)
         self.setAcceptDrops(True)
 
     def add_items(self, coll):
@@ -62,5 +64,5 @@ class CollectionList(DockListWidget):
             path = os.path.join(DOCS_PATH, item,
                                 'audioanalysis--metadata.json')
             metadata = json.load(open(path))
-            item = QtGui.QListWidgetItem(metadata['title'])
+            item = QListWidgetItem(metadata['title'])
             self.addItem(item)

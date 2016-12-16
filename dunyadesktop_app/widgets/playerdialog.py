@@ -3,7 +3,9 @@ import time
 import json
 import copy
 
-from PyQt4 import QtGui, QtCore
+#from PyQt4 import QtGui, QtCore
+from PyQt5.QtWidgets import QDialog, QVBoxLayout
+from PyQt5.QtCore import QSize, QMetaObject, QTimer
 from essentia.standard import MonoLoader
 import pyqtgraph.dockarea as pgdock
 import numpy as np
@@ -61,10 +63,10 @@ def get_paths(recid):
     return doc_folder, audio_path, pitch_path, pd_path
 
 
-class PlayerDialog(QtGui.QDialog):
+class PlayerDialog(QDialog):
     def __init__(self, recid):
         now = time.time()
-        QtGui.QDialog.__init__(self)
+        QDialog.__init__(self)
         self._set_design()
 
         # paths
@@ -90,12 +92,40 @@ class PlayerDialog(QtGui.QDialog):
 
         self.frame_player.toolbutton_pause.setDisabled(True)
 
+        self.playback_pos = 0.
+        self.timer = QTimer()
+        self.timer.setInterval(50)
+
         # signals
-        self.playback_thread.time_out.connect(self.update_vlines)
+        self.playback_thread.play_clicked.connect(self.start_timer)
+        self.playback_thread.pause_clicked.connect(self.stop_timer)
+        self.timer.timeout.connect(self.update_playback_pos)
+
         self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
             self.wf_region_changed)
         self.frame_player.toolbutton_play.clicked.connect(self.playback_play)
         self.frame_player.toolbutton_pause.clicked.connect(self.playback_pause)
+
+    def start_timer(self):
+        self.timer.start()
+
+    def stop_timer(self):
+        self.timer.stop()
+
+    def update_playback_pos(self):
+        self.playback_pos += 0.05
+        if self.playback_thread.playback.is_playing():
+            if self.playback_pos < self.playback_thread.playback.get_pos_seconds():
+                self.playback_pos = self.playback_thread.playback.get_pos_seconds()
+
+            elif self.playback_thread.playback_pos >= \
+                    self.playback_thread.playback.duration:
+                self.timer.stop()
+                self.playback_thread.playback.pause()
+        else:
+            self.timer.stop()
+            self.playback_thread.playback.pause()
+        self.update_vlines(self.playback_pos)
 
     def closeEvent(self, QCloseEvent):
         self.waveform_widget.clear()
@@ -112,9 +142,9 @@ class PlayerDialog(QtGui.QDialog):
     def _set_design(self):
         self.setWindowTitle('Player')
         self.resize(1050, 550)
-        self.setMinimumSize(QtCore.QSize(850, 500))
+        self.setMinimumSize(QSize(850, 500))
         self.setStyleSheet("background-color: rgb(30, 30, 30);")
-        self.verticalLayout = QtGui.QVBoxLayout(self)
+        self.verticalLayout = QVBoxLayout(self)
 
         area1 = pgdock.DockArea()
         area1.allowedAreas = ['top', 'bottom']
@@ -146,10 +176,9 @@ class PlayerDialog(QtGui.QDialog):
 
         self.frame_player = PlayerFrame(self)
         self.verticalLayout.addWidget(self.frame_player)
-        self.verticalLayout.addWidget(area1)
-        self.verticalLayout.addWidget(area2)
-        QtCore.QMetaObject.connectSlotsByName(self)
-
+        self.verticalLayout.addWidget(area)
+        QMetaObject.connectSlotsByName(self)
+    
     def playback_play(self):
         self.frame_player.toolbutton_play.setDisabled(True)
         self.frame_player.toolbutton_pause.setEnabled(True)

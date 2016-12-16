@@ -1,13 +1,14 @@
 import os
 
-from PyQt4 import QtGui
+from PyQt5.QtWidgets import QTabWidget, QWidget
+from PyQt5.QtGui import QFont
 
 
 CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
                         'tabwidget.css')
 
 
-class TabWidget(QtGui.QTabWidget):
+class TabWidget(QTabWidget):
     """Tab widget of related collection/s"""
     def __init__(self, parent=None):
         super(TabWidget, self).__init__(parent)
@@ -15,13 +16,13 @@ class TabWidget(QtGui.QTabWidget):
         self._set_css()
 
         # audio tab
-        self.tab_audio = QtGui.QWidget()
+        self.tab_audio = QWidget()
         self.addTab(self.tab_audio, "")
 
         self._retranslate_status_tips()
 
     def _set_font(self):
-        font = QtGui.QFont()
+        font = QFont()
         font.setPointSize(10)
         self.setFont(font)
 

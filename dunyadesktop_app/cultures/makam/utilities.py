@@ -7,7 +7,7 @@ from compmusic.dunya.makam import (get_makams, get_forms, get_usuls,
                                    get_composers, get_artists, get_instruments)
 from compmusic.dunya.docserver import (document, get_document_as_json, get_mp3)
 from compmusic.dunya.conn import HTTPError
-from PyQt4 import QtCore
+from PyQt5.QtCore import QObject, QThread, pyqtSignal
 
 FOLDER = os.path.join(os.path.dirname(__file__), '..', 'documents')
 
@@ -80,28 +80,28 @@ def get_attributes():
     return makams, forms, usuls, composers, performers, instruments
 
 
-class ResultObj(QtCore.QObject):
+class ResultObj(QObject):
     def __init__(self, docid, step, n_progress):
-        QtCore.QObject.__init__(self)
+        QObject.__init__(self)
 
         self.docid = docid
         self.step = step
         self.n_progress = n_progress
 
 
-class DocThread(QtCore.QThread):
+class DocThread(QThread):
     """Downloads the available features from Dunya-backend related with the
     given docid"""
 
     FOLDER = os.path.join(os.path.dirname(__file__), '..', 'documents')
-    step_completed = QtCore.pyqtSignal(object)
+    step_completed = pyqtSignal(object)
 
     # checking existance of documents folder in culture
     if not os.path.exists(FOLDER):
         os.makedirs(FOLDER)
 
     def __init__(self, queue, callback, parent=None):
-        QtCore.QThread.__init__(self, parent)
+        QThread.__init__(self, parent)
         self.queue = queue
         self.step_completed.connect(callback)
         

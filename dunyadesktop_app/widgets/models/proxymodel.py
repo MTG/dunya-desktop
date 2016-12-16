@@ -1,11 +1,11 @@
-from PyQt4 import QtGui, QtCore
+from PyQt5.QtCore import QSortFilterProxyModel, Qt, QRegExp
 
 
-class SortFilterProxyModel(QtGui.QSortFilterProxyModel):
+class SortFilterProxyModel(QSortFilterProxyModel):
     """Sort filter model is for filtering the table of query results."""
     def __init__(self, QObject_parent=None):
-        QtGui.QSortFilterProxyModel.__init__(self, QObject_parent)
+        QSortFilterProxyModel.__init__(self, QObject_parent)
 
     def filter_table(self, text):
-        reg_exp = QtCore.QRegExp(text, QtCore.Qt.CaseInsensitive)
+        reg_exp = QRegExp(text, Qt.CaseInsensitive)
         self.setFilterRegExp(reg_exp)

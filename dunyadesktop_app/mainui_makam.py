@@ -2,7 +2,7 @@ import sys
 import os
 import Queue
 
-from PyQt4 import QtGui, QtCore
+from PyQt5.QtWidgets import QApplication
 
 from cultures import apiconfig
 from cultures.makam import utilities
@@ -116,7 +116,7 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.progress_number = progress_number
 
     def append_recording(self, rec_mbid):
-        self.recordings.append(str(rec_mbid.toUtf8()))
+        self.recordings.append(str(rec_mbid))
         self.dwc_left.tableView_downloaded.recordings = self.recordings
 
     def work_received(self, work):
@@ -203,10 +203,13 @@ class MainWindowMakam(MainWindowMakamDesign):
             self.queue.put(None)  # tells the workers to shut down
 
     def check_query_table(self, docid):
-        row = self.recordings.index(docid)
-        self.frame_query.tableView_results.model().sourceModel().set_checked([row])
+        try:
+            row = self.recordings.index(docid)
+            self.frame_query.tableView_results.model().sourceModel().set_checked([row])
+        except:
+            pass
 
-app = QtGui.QApplication(sys.argv)
+app = QApplication(sys.argv)
 mainwindow_makam = MainWindowMakam()
 mainwindow_makam.show()
 app.exec_()

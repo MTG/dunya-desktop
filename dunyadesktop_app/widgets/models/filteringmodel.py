@@ -1,14 +1,14 @@
-from PyQt4 import QtGui
+from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
 
-class FilteringModel(QtGui.QStandardItemModel):
+class FilteringModel(QStandardItemModel):
     """This model is contains the attributes"""
     def __init__(self, parent=None):
-        QtGui.QStandardItemModel.__init__(self, parent)
+        QStandardItemModel.__init__(self, parent)
 
     def add_items(self, attribute):
         self.setRowCount(len(attribute))
 
         for row, item in enumerate(attribute):
-            name = QtGui.QStandardItem(item['name'])
+            name = QStandardItem(item['name'])
             self.setItem(row, 0, name)
