@@ -5,6 +5,7 @@ import numpy as np
 
 from PyQt5.QtWidgets import QSizePolicy
 
+pg.setConfigOptions(useOpenGL=True)
 
 class MelodyWidget(GraphicsLayoutWidget):
     def __init__(self, parent=None):
