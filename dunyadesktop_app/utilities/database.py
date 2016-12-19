@@ -10,7 +10,8 @@ def add_collection(conn, c, list_name):
     """Adds collection to the db"""
     try:
         # creating the collections table
-        c.execute('''CREATE TABLE {0}(DOCID TEXT, UNIQUE(DOCID));'''.format(list_name))
+        c.execute('''CREATE TABLE {0}(DOCID TEXT, UNIQUE(DOCID));'''.
+                  format(list_name))
         conn.commit()
         return True
     except:
@@ -52,7 +53,8 @@ def add_doc_to_coll(conn, c, doc, coll):
     c.execute("SELECT * FROM {0} WHERE DOCID=?".format(coll), (doc,))
     data = c.fetchone()
     if data is None:
-        c.execute('''INSERT OR IGNORE INTO {0}(DOCID) VALUES (?)'''.format(coll), (doc,))
+        c.execute('''INSERT OR IGNORE INTO {0}(DOCID) VALUES (?)'''.
+                  format(coll), (doc,))
         conn.commit()
         return True
     else:
