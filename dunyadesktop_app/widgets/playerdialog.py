@@ -3,7 +3,6 @@ import time
 import json
 import copy
 
-# from PyQt4 import QtGui, QtCore
 from PyQt5.QtWidgets import QDialog, QVBoxLayout
 from PyQt5.QtCore import QSize, QMetaObject, QTimer
 from essentia.standard import MonoLoader
@@ -101,8 +100,7 @@ class PlayerDialog(QDialog):
         # self.playback_thread.pause_clicked.connect(self.stop_timer)
         # self.timer.timeout.connect(self.update_playback_pos)
         self.playback_thread.player.positionChanged.connect(self.update_vlines)
-        self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
-            self.wf_region_changed)
+        self.waveform_widget.region_wf.sigRegionChangeFinished.connect(self.wf_region_changed)
         self.frame_player.toolbutton_play.clicked.connect(self.playback_play)
         self.frame_player.toolbutton_pause.clicked.connect(self.playback_pause)
 
