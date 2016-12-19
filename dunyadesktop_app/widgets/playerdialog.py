@@ -3,7 +3,6 @@ import time
 import json
 import copy
 
-#from PyQt4 import QtGui, QtCore
 from PyQt5.QtWidgets import QDialog, QVBoxLayout
 from PyQt5.QtCore import QSize, QMetaObject, QTimer
 from essentia.standard import MonoLoader
@@ -13,7 +12,7 @@ import numpy as np
 from dunyadesktop_app.widgets.waveformwidget import WaveformWidget
 from dunyadesktop_app.widgets.melodywidget import MelodyWidget
 from dunyadesktop_app.widgets.playerframe import PlayerFrame
-from dunyadesktop_app.utilities.playback import AudioPlaybackThread
+from dunyadesktop_app.utilities.playback import Player
 import dunyadesktop_app.ui_files.resources_rc
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
@@ -86,8 +85,8 @@ class PlayerDialog(QDialog):
         self.melody_widget.plot_histogram(vals, bins, max_pitch)
 
         # slider and playback thread
-        self.playback_thread = AudioPlaybackThread(timer_pitch=50)
-        self.playback_thread.playback.set_source(audio_path)
+        self.playback_thread = Player()
+        self.playback_thread.set_source(audio_path)
         self._set_slider(len_audio)
 
         self.frame_player.toolbutton_pause.setDisabled(True)
@@ -97,12 +96,11 @@ class PlayerDialog(QDialog):
         self.timer.setInterval(50)
 
         # signals
-        self.playback_thread.play_clicked.connect(self.start_timer)
-        self.playback_thread.pause_clicked.connect(self.stop_timer)
-        self.timer.timeout.connect(self.update_playback_pos)
-
-        self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
-            self.wf_region_changed)
+        # self.playback_thread.play_clicked.connect(self.start_timer)
+        # self.playback_thread.pause_clicked.connect(self.stop_timer)
+        # self.timer.timeout.connect(self.update_playback_pos)
+        self.playback_thread.player.positionChanged.connect(self.update_vlines)
+        self.waveform_widget.region_wf.sigRegionChangeFinished.connect(self.wf_region_changed)
         self.frame_player.toolbutton_play.clicked.connect(self.playback_play)
         self.frame_player.toolbutton_pause.clicked.connect(self.playback_pause)
 
@@ -130,10 +128,7 @@ class PlayerDialog(QDialog):
     def closeEvent(self, QCloseEvent):
         self.waveform_widget.clear()
         self.melody_widget.clear()
-
-        if self.playback_thread.playback.is_playing():
-            self.playback_thread.playback.pause()
-        self.playback_thread.exit()
+        self.playback_thread.pause()
 
     def update_wf_pos(self, samplerate):
         self.waveform_widget.vline_wf.setPos(
@@ -146,28 +141,18 @@ class PlayerDialog(QDialog):
         self.setStyleSheet("background-color: rgb(30, 30, 30);")
         self.verticalLayout = QVBoxLayout(self)
 
-        area1 = pgdock.DockArea()
-        area1.allowedAreas = ['top', 'bottom']
-
-        # d1 = pgdock.Dock("Waveform", area='Top',
-        #                  autoOrientation=False, closable=True)
-        # d1.allowedAreas = ['top', 'bottom']
+        area = pgdock.DockArea()
+        d1 = pgdock.Dock("Waveform", area='Top', autoOrientation=False,
+                         closable=True)
         # d1.allowedAreas = ['top']
-        # self.waveform_widget = WaveformWidget()
-        # d1.addWidget(self.waveform_widget)
-        # area1.addDock(d1, 'top')
+        self.waveform_widget = WaveformWidget()
+        d1.addWidget(self.waveform_widget)
+        area.addDock(d1, 'top')
 
         d2 = pgdock.Dock('Pitch')
         self.melody_widget = MelodyWidget()
         d2.addWidget(self.melody_widget)
-        area1.addDock(d2, 'bottom')
-
-        area2 = pgdock.DockArea()
-        area2.allowedAreas = ['top', 'bottom']
-        d3 = pgdock.Dock('Waveform')
-        self.waveform_widget = WaveformWidget()
-        d3.addWidget(self.waveform_widget)
-        area2.addDock(d3, 'top')
+        area.addDock(d2, 'bottom')
 
         # self.verticalLayout.addWidget(self.waveform_widget)
 
@@ -178,11 +163,11 @@ class PlayerDialog(QDialog):
         self.verticalLayout.addWidget(self.frame_player)
         self.verticalLayout.addWidget(area)
         QMetaObject.connectSlotsByName(self)
-    
+
     def playback_play(self):
         self.frame_player.toolbutton_play.setDisabled(True)
         self.frame_player.toolbutton_pause.setEnabled(True)
-        self.playback_thread.start()
+        self.playback_thread.play()
 
     def playback_pause(self):
         self.frame_player.toolbutton_play.setEnabled(True)
@@ -202,6 +187,7 @@ class PlayerDialog(QDialog):
                                                    self.hopsize)
 
     def update_vlines(self, playback_pos):
+        # print(playback_pos)
         # if self.playback_thread.playback.is_playing():
         # if self.playback_pos_pyglet == \
         #        self.playback_thread.playback.get_pos_seconds():
@@ -213,8 +199,9 @@ class PlayerDialog(QDialog):
         #        self.playback_thread.playback.get_pos_seconds()
 
         # self.playback_pos = self.playback_thread.playback.get_pos_seconds()
-        playback_pos_sample = playback_pos * self.samplerate
-        self.melody_widget.vline.setPos([playback_pos, 0])
+        playback_pos_sec = playback_pos / 1000.
+        playback_pos_sample = playback_pos_sec * self.samplerate
+        self.melody_widget.vline.setPos([playback_pos_sec, 0])
         self.melody_widget.hline_histogram.setPos(
             pos=[0,
                  self.pitch_plot[np.int(playback_pos_sample / self.hopsize)]])

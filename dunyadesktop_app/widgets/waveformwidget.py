@@ -4,6 +4,8 @@ from pyqtgraph import GraphicsLayoutWidget
 import pyqtgraph as pg
 import numpy as np
 
+pg.setConfigOptions(useOpenGL=True)
+
 
 class WaveformWidget(GraphicsLayoutWidget):
     def __init__(self):
@@ -38,7 +40,7 @@ class WaveformWidget(GraphicsLayoutWidget):
 
         self.waveform.setDownsampling(auto=True, mode='peak')
         self.waveform.plot(y=raw_audio, connect='finite',
-                           pen=(20, 170, 100, 30),
+                           pen=(20, 170, 100, 90),
                            clipToView=True)
         self.layout.addItem(self.waveform)
         self._add_elements_to_plot(len_audio, np.max(raw_audio))
