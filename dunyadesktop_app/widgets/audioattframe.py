@@ -1,9 +1,8 @@
 import os
 import platform
 
-#from PyQt4 import QtGui, QtCore
-from PyQt5.QtWidgets import QFrame, QGridLayout, QSizePolicy, QLayout, \
-    QHBoxLayout, QToolButton, QSpacerItem
+from PyQt5.QtWidgets import (QFrame, QGridLayout, QSizePolicy, QLayout,
+                             QHBoxLayout, QToolButton, QSpacerItem)
 from PyQt5.QtGui import QCursor, QIcon, QPixmap
 from PyQt5.QtCore import Qt, QSize
 
@@ -31,9 +30,8 @@ class AudioAttFrame(QFrame):
     """Frame contains the comboboxes of attributes (such as makams, forms,
     etc) and query button"""
 
-    def __init__(self, QWidget_parent=None):
-        QFrame.__init__(self, QWidget_parent)
-
+    def __init__(self, qwidget_parent=None):
+        QFrame.__init__(self, qwidget_parent)
         self._set_size_attributes()
 
         layout = QGridLayout(self)
@@ -138,7 +136,6 @@ class AudioAttFrame(QFrame):
         self.comboBox_composer.setStatusTip("Select composer")
         self.comboBox_performer.setStatusTip("Select performer")
         self.comboBox_instrument.setStatusTip("Select instrument")
-
         self.toolButton_query.setStatusTip("Query your selection")
 
     def set_toolbutton(self):

@@ -1,7 +1,6 @@
 import os
 import platform
 
-#from PyQt4 import QtGui
 from PyQt5.QtWidgets import QComboBox, QToolButton, QStyle
 from PyQt5.QtGui import QIcon, QFont
 
