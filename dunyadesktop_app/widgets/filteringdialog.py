@@ -1,6 +1,5 @@
 import os
 
-#from PyQt4 import QtGui, QtCore
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLineEdit, QDialogButtonBox
 from PyQt5.QtCore import pyqtSignal, Qt
 
