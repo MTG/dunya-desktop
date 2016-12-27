@@ -1,7 +1,7 @@
 import os
 
-from PyQt5.QtWidgets import QDialog, QGridLayout, QLineEdit, QTextEdit, QLabel, \
-    QDialogButtonBox, QSizePolicy, QMessageBox
+from PyQt5.QtWidgets import (QDialog, QGridLayout, QLineEdit, QMessageBox,
+                             QLabel, QDialogButtonBox, QSizePolicy, QTextEdit)
 from PyQt5.QtCore import pyqtSignal, QSize
 
 
@@ -61,12 +61,12 @@ class NewCollectionDialog(QDialog):
         self.setMaximumSize(QSize(350, 250))
 
     def _set_desc_edit(self):
-        sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
+        size_policy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        size_policy.setHorizontalStretch(0)
+        size_policy.setVerticalStretch(0)
+        size_policy.setHeightForWidth(
             self.desc_edit.sizePolicy().hasHeightForWidth())
-        self.desc_edit.setSizePolicy(sizePolicy)
+        self.desc_edit.setSizePolicy(size_policy)
         self.desc_edit.setMinimumSize(QSize(0, 140))
         self.desc_edit.setMaximumSize(QSize(16777215, 150))
 

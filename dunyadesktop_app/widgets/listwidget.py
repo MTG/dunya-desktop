@@ -1,7 +1,6 @@
 import os
 import json
 
-#from PyQt4 import QtGui, QtCore
 from PyQt5.QtWidgets import QListWidget, QListWidgetItem, QAbstractItemView
 from PyQt5.QtCore import pyqtSignal
 

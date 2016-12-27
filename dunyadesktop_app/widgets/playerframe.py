@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import QFrame, QHBoxLayout, QToolButton, QSlider, \
-    QSizePolicy
+from PyQt5.QtWidgets import (QFrame, QHBoxLayout, QToolButton,
+                             QSlider, QSizePolicy)
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import QSize, Qt
 
@@ -22,20 +22,20 @@ class PlayerFrame(QFrame):
         self._set_slider()
 
     def _set_size_policy(self):
-        sizePolicy = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
+        size_policy = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        size_policy.setHorizontalStretch(0)
+        size_policy.setVerticalStretch(0)
+        size_policy.setHeightForWidth(
             self.sizePolicy().hasHeightForWidth())
-        self.setSizePolicy(sizePolicy)
+        self.setSizePolicy(size_policy)
 
     def _set_visualization(self):
         self.setStyleSheet("QFrame{\n"
-                                        "border: 0.5px solid white;\n"
-                                        "border-radius: 4px;\n"
-                                        "padding: 2px;\n"
-                                        "background-color: rgb(25, 25,25);\n"
-                                        "}")
+                           "border: 0.5px solid white;\n"
+                           "border-radius: 4px;\n"
+                           "padding: 2px;\n"
+                           "background-color: rgb(25, 25,25);\n"
+                           "}")
 
         self.setFrameShape(QFrame.StyledPanel)
         self.setFrameShadow(QFrame.Raised)
@@ -75,7 +75,8 @@ class PlayerFrame(QFrame):
             "QSlider::groove:horizontal {\n"
             "border: 1px solid #999999;\n"
             "height: 2px;"
-            "background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #B1B1B1, stop:1 #c4c4c4);\n"
+            "background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 "
+            "#B1B1B1, stop:1 #c4c4c4);\n "
             "margin: 2px 0;\n"
             "}\n"
             "\n"

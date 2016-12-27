@@ -15,10 +15,10 @@ class WaveformWidget(GraphicsLayoutWidget):
         self._set_size_policy()
 
     def _set_size_policy(self):
-        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(50)
-        sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
+        size_policy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        size_policy.setHorizontalStretch(0)
+        size_policy.setVerticalStretch(50)
+        size_policy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
 
         self.setMinimumSize(QSize(0, 50))
         self.setMaximumSize(QSize(16777215, 50))

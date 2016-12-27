@@ -1,4 +1,3 @@
-#from PyQt4 import QtGui, QtCore
 from pyqtgraph import GraphicsLayoutWidget
 import pyqtgraph as pg
 import numpy as np

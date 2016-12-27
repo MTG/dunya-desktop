@@ -2,14 +2,14 @@ import os
 import platform
 import json
 
-from PyQt5.QtWidgets import QToolButton, QTableView, QAbstractItemView, \
-    QAction, QHeaderView, QTableWidget, QTableWidgetItem, QLabel, QPushButton, \
-    qApp
+from PyQt5.QtWidgets import (QToolButton, QTableView, QAbstractItemView,
+                             QAction, QHeaderView, QTableWidget,
+                             QTableWidgetItem, QLabel, QPushButton, qApp)
 from PyQt5.QtCore import pyqtSignal, Qt, QPersistentModelIndex
 from PyQt5.QtGui import QFont, QCursor, QIcon, QPixmap
 
 from dunyadesktop_app.utilities import database
-from dunyadesktop_app.cultures.makam import utilities as makamutilities
+from dunyadesktop_app.cultures.makam import utilities as makam_utilities
 from progressbar import ProgressBar
 from menu import RCMenu
 
@@ -38,13 +38,13 @@ DOWNLOAD_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
 class DownloadButton(QToolButton):
     def __init__(self, parent=None):
         QToolButton.__init__(self, parent)
-        #self.clicked.connect(self.download_clicked)
+        # self.clicked.connect(self.download_clicked)
 
     def download_clicked(self):
         pass
-        #print('clicked')
-        #print(self.parent())
-        #print(self.parent().pos())
+        # print('clicked')
+        # print(self.parent())
+        # print(self.parent().pos())
 
 
 class TableView(QTableView):
@@ -57,7 +57,7 @@ class TableView(QTableView):
         # setting the table for no edit and row selection
         self.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.setSelectionBehavior(QAbstractItemView.SelectRows)
-        #self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
+        # self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
         self.setMouseTracking(True)
         self.horizontalHeader().setStretchLastSection(True)
         font = QFont()
@@ -96,7 +96,7 @@ class TableView(QTableView):
 
         menu = RCMenu(self)
         menu.popup(QCursor.pos())
-        #self.menu.popup(QtGui.QCursor.pos())
+        # self.menu.popup(QtGui.QCursor.pos())
 
     def send_rec(self):
         if self.index:
@@ -171,8 +171,8 @@ class TableWidget(QTableWidget, TableView):
     def dropMimeData(self, p_int, p_int_1, QMimeData, Qt_DropAction):
         self.last_drop_row = p_int
         return True
-        #self.last_drop_row = self.rowCount()
-        #return True
+        # self.last_drop_row = self.rowCount()
+        # return True
 
     def dropEvent(self, event):
         # The QTableWidget from which selected rows will be moved
@@ -211,8 +211,10 @@ class TableWidget(QTableWidget, TableView):
                     self.add_item(item.text())
 
                     docs.append(self.recordings[source_index.row()])
-                    self.indexes[self.recordings[source_index.row()]] = self.rowCount() - 1
-                    #sender.model().sourceModel().set_checked([selected_rows_index[i]])
+                    self.indexes[self.recordings[source_index.row()]] = \
+                        self.rowCount() - 1
+                    # sender.model().sourceModel().set_checked(
+                    # [selected_rows_index[i]])
         if docs:
             self.added_new_doc.emit(docs)
         event.accept()
@@ -235,7 +237,7 @@ class TableWidget(QTableWidget, TableView):
             path = os.path.join(DOCS_PATH, item,
                                 'audioanalysis--metadata.json')
 
-            if makamutilities.check_doc(item):
+            if makam_utilities.check_doc(item):
                 metadata = json.load(open(path))
                 cell = QTableWidgetItem(metadata['title'])
                 set_check = 1
@@ -306,7 +308,7 @@ class TableWidget(QTableWidget, TableView):
         """checks the status and the title columns of given row"""
         row = self.indexes[docid]
         if self.item(row, 1):
-            if makamutilities.check_doc(docid):
+            if makam_utilities.check_doc(docid):
                 self.set_status(row, exist=1)
 
                 title = json.load(open(os.path.join(

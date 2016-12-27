@@ -1,5 +1,4 @@
 import os
-import time
 import json
 import copy
 
@@ -8,12 +7,14 @@ from PyQt5.QtCore import QSize, QMetaObject, QTimer
 from essentia.standard import MonoLoader
 import pyqtgraph.dockarea as pgdock
 import numpy as np
+from pyqtgraph.ptime import time
 
 from dunyadesktop_app.widgets.waveformwidget import WaveformWidget
 from dunyadesktop_app.widgets.melodywidget import MelodyWidget
 from dunyadesktop_app.widgets.playerframe import PlayerFrame
 from dunyadesktop_app.utilities.playback import Player
 import dunyadesktop_app.ui_files.resources_rc
+
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
                          'documents')
@@ -63,8 +64,11 @@ def get_paths(recid):
 
 
 class PlayerDialog(QDialog):
+    fps = None
+    last_time = time()
+
     def __init__(self, recid):
-        now = time.time()
+
         QDialog.__init__(self)
         self._set_design()
 
@@ -100,7 +104,8 @@ class PlayerDialog(QDialog):
         # self.playback_thread.pause_clicked.connect(self.stop_timer)
         # self.timer.timeout.connect(self.update_playback_pos)
         self.playback_thread.player.positionChanged.connect(self.update_vlines)
-        self.waveform_widget.region_wf.sigRegionChangeFinished.connect(self.wf_region_changed)
+        self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
+            self.wf_region_changed)
         self.frame_player.toolbutton_play.clicked.connect(self.playback_play)
         self.frame_player.toolbutton_pause.clicked.connect(self.playback_pause)
 
@@ -109,21 +114,6 @@ class PlayerDialog(QDialog):
 
     def stop_timer(self):
         self.timer.stop()
-
-    def update_playback_pos(self):
-        self.playback_pos += 0.05
-        if self.playback_thread.playback.is_playing():
-            if self.playback_pos < self.playback_thread.playback.get_pos_seconds():
-                self.playback_pos = self.playback_thread.playback.get_pos_seconds()
-
-            elif self.playback_thread.playback_pos >= \
-                    self.playback_thread.playback.duration:
-                self.timer.stop()
-                self.playback_thread.playback.pause()
-        else:
-            self.timer.stop()
-            self.playback_thread.playback.pause()
-        self.update_vlines(self.playback_pos)
 
     def closeEvent(self, QCloseEvent):
         self.waveform_widget.clear()
@@ -207,6 +197,17 @@ class PlayerDialog(QDialog):
                  self.pitch_plot[np.int(playback_pos_sample / self.hopsize)]])
         self.frame_player.slider.setValue(playback_pos_sample)
         self.waveform_widget.vline_wf.setPos([playback_pos_sample, 0])
+
+        now = time()
+
+        dt = now - self.last_time
+        self.last_time = now
+        if self.fps is None:
+            self.fps = 1.0 / dt
+        else:
+            s = np.clip(dt * 3., 0, 1)
+            self.fps = self.fps * (1 - s) + (1.0 / dt) * s
+        self.melody_widget.zoom_selection.setTitle('%0.2f fps' % self.fps)
 
         # pos_vline = self.melody_widget.vline.pos()[0]
         # pos_xmin, pos_xmax = \

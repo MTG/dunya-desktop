@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import QFrame, QGridLayout, QVBoxLayout, QLabel, \
-    QLineEdit, QSizePolicy
+from PyQt5.QtWidgets import (QFrame, QGridLayout, QVBoxLayout, QLabel,
+                             QLineEdit, QSizePolicy)
 from PyQt5.QtCore import QMetaObject, Qt
 from PyQt5.QtGui import QFont
 
@@ -89,7 +89,10 @@ class QueryFrame(QFrame):
     def _retranslate_ui(self):
         self.setWindowTitle("Dunya Desktop")
 
-        self.label_filtering.setText("<html><head/><body><p><span style=\" font-size:10pt; color:#878787;\">FILTERING</span></p></body></html>")
+        self.label_filtering.setText("<html><head/><body><p><span style=\" "
+                                     "font-size:10pt; "
+                                     "color:#878787;\">FILTERING</span></p"
+                                     "></body></html>")
 
         self.lineEdit_filter.setPlaceholderText(
             "Type here to filter the results...")
