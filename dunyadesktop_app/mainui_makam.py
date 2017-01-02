@@ -3,6 +3,7 @@ import os
 import Queue
 
 from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QMessageBox
 
 from cultures import apiconfig
 from cultures.makam import utilities
@@ -23,33 +24,45 @@ class MainWindowMakam(MainWindowMakamDesign):
     def __init__(self):
         MainWindowMakamDesign.__init__(self)
 
-        # fetches the attributes and sets the comboboxes
-        (self.makams, self.forms, self.usuls, self.composers,
-         self.performers, self.instruments) = utilities.get_attributes()
-        self._set_combobox_attributes()
+        # check if dunya is up or not
+        if utilities.is_dunya_up():
+            # fetches the attributes and sets the comboboxes
+            (self.makams, self.forms, self.usuls, self.composers,
+             self.performers, self.instruments) = utilities.get_attributes()
+            self._set_combobox_attributes()
+            self.frame_query.frame_attributes.comboBox_instrument.setDisabled(True)
+            self.recordings = []
+            self.work_count = 0
+            self.progress_number = 0
+            self.d_threads = []
+            self.q_threads = []
+            self.queue = Queue.Queue()
 
-        self.frame_query.frame_attributes.comboBox_instrument.setDisabled(True)
-        self.recordings = []
-        self.work_count = 0
-        self.progress_number = 0
-        self.thread_query = QueryThread(self)
-        self.threads = []
-        self.queue = Queue.Queue()
+            # signals
+            self.online_status = True
+
+        else:
+            # working in offline mode
+            self.frame_query.setDisabled(True)
+            QMessageBox.information(self, "QMessageBox.information()",
+                                    "Dunya-desktop is working in offline "
+                                    "mode.")
+            self.dwc_top.label_status.setText('Offline')
+            self.online_status = False
 
         # creating db
         self._set_collections()
-
         self.download_queue = []
+
         # signals
-        self.frame_query.frame_attributes.toolButton_query.clicked.connect(self.query)
-        self.thread_query.combobox_results.connect(
-            self.change_combobox_backgrounds)
-        self.thread_query.progress_number.connect(self.set_progress_number)
-        self.thread_query.query_completed.connect(self.query_finished)
-        self.thread_query.fetching_completed.connect(self.work_received)
 
-        self.frame_query.recording_model.rec_fetched.connect(self.append_recording)
+        self.frame_query.frame_attributes.toolButton_query.clicked.connect(
+            self.query)
 
+        self.frame_query.recording_model.rec_fetched.connect(
+            self.append_recording)
+
+        # filtering the results
         self.frame_query.lineEdit_filter.textChanged.connect(
             lambda: self.frame_query.proxy_model.filter_table(
                 self.frame_query.lineEdit_filter.text()))
@@ -72,12 +85,16 @@ class MainWindowMakam(MainWindowMakamDesign):
             self.check_query_table)
 
     def _set_combobox_attributes(self):
-        self.frame_query.frame_attributes.comboBox_melodic.add_items(self.makams)
+        self.frame_query.frame_attributes.\
+            comboBox_melodic.add_items(self.makams)
         self.frame_query.frame_attributes.comboBox_form.add_items(self.forms)
         self.frame_query.frame_attributes.comboBox_rhythm.add_items(self.usuls)
-        self.frame_query.frame_attributes.comboBox_composer.add_items(self.composers)
-        self.frame_query.frame_attributes.comboBox_performer.add_items(self.performers)
-        self.frame_query.frame_attributes.comboBox_instrument.add_items(self.instruments)
+        self.frame_query.frame_attributes.\
+            comboBox_composer.add_items(self.composers)
+        self.frame_query.frame_attributes.\
+            comboBox_performer.add_items(self.performers)
+        self.frame_query.frame_attributes.\
+            comboBox_instrument.add_items(self.instruments)
 
     def _set_collections(self):
         conn, c = database.connect(add_main=True)
@@ -103,17 +120,20 @@ class MainWindowMakam(MainWindowMakamDesign):
         cmbid = self.frame_query.frame_attributes.comboBox_composer.get_attribute_id()
         ambid = self.frame_query.frame_attributes.comboBox_performer.get_attribute_id()
 
-        self.thread_query.mid = mid
-        self.thread_query.fid = fid
-        self.thread_query.uid = uid
-        self.thread_query.cmbid = cmbid
-        self.thread_query.ambid = ambid
+        q_thread = QueryThread(parent=self)
+        q_thread.mid = mid
+        q_thread.fid = fid
+        q_thread.uid = uid
+        q_thread.cmbid = cmbid
+        q_thread.ambid = ambid
+
+        self.q_threads.append(q_thread)
 
         self.progress_bar.setVisible(True)
-        self.thread_query.start()
+        q_thread.start()
 
     def set_progress_number(self, progress_number):
-        self.progress_number = progress_number
+        self.progress_number = progress_number.status
 
     def append_recording(self, rec_mbid):
         self.recordings.append(str(rec_mbid))
@@ -123,11 +143,12 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.work_count += 1
         self.progress_bar.update_progress_bar(self.work_count,
                                               self.progress_number)
-        self.frame_query.recording_model.add_recording(work)
+        self.frame_query.recording_model.add_recording(work.work)
         self.frame_query.tableView_results.resizeColumnToContents(1)
         self.frame_query.tableView_results.setColumnWidth(0, 28)
 
-    def change_combobox_backgrounds(self, combobox_status):
+    def change_combobox_backgrounds(self, status):
+        combobox_status = status.results
         color_palette = {0: '', 1: '#D9F4DD', 2: '#F4D1D0'}
         self.frame_query.frame_attributes.comboBox_melodic.change_background(
             color=color_palette[combobox_status[0]])
@@ -149,8 +170,6 @@ class MainWindowMakam(MainWindowMakamDesign):
     def download_related_features(self, index):
         source_index = self.frame_query.tableView_results.model().mapToSource(index)
         self.recid = self.recordings[source_index.row()]
-        #self.thread_feature_downloader.docid = self.recid
-        #self.thread_feature_downloader.start()
 
     def open_player_collection(self, index):
         coll = str(self.dwc_left.listView_collections.currentItem().text())
@@ -195,7 +214,7 @@ class MainWindowMakam(MainWindowMakamDesign):
         d_thread = utilities.DocThread(self.queue,
                                        self.dwc_left.tableView_downloaded.set_progress_bar)
         if download:
-            self.threads.append(d_thread)
+            self.d_threads.append(d_thread)
             d_thread.start()
 
             for doc in download:
@@ -208,6 +227,7 @@ class MainWindowMakam(MainWindowMakamDesign):
             self.frame_query.tableView_results.model().sourceModel().set_checked([row])
         except:
             pass
+
 
 app = QApplication(sys.argv)
 mainwindow_makam = MainWindowMakam()

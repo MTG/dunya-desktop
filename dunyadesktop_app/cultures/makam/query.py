@@ -1,11 +1,36 @@
 from compmusic.dunya import makam
-from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtCore import QThread, QObject, pyqtSignal
+
+
+class WorkObject(QObject):
+    def __init__(self, work):
+        QObject.__init__(self)
+        self.work = work
+
+
+class ComboboxResultsObject(QObject):
+    def __init__(self, results):
+        QObject.__init__(self)
+        self.results = results
+
+
+class ProgressBarStatusObject(QObject):
+    def __init__(self, status):
+        QObject.__init__(self)
+        self.status = status
+
+
+class CompletedObject(QObject):
+    def __init__(self, status):
+        QObject.__init__(self)
+        self.status = status
+
 
 class QueryThread(QThread):
-    fetching_completed = pyqtSignal(dict)
-    progress_number = pyqtSignal(int)
-    query_completed = pyqtSignal()
-    combobox_results = pyqtSignal(list)
+    fetching_completed = pyqtSignal(object)
+    progress_number = pyqtSignal(object)
+    query_completed = pyqtSignal(object)
+    combobox_results = pyqtSignal(object)
 
     def __init__(self, parent=None):
         QThread.__init__(self, parent)
@@ -18,6 +43,12 @@ class QueryThread(QThread):
         self.ambid = None
         self.iid = None
 
+        self.parent = self.parent()
+        self.fetching_completed.connect(self.parent.work_received)
+        self.combobox_results.connect(self.parent.change_combobox_backgrounds)
+        self.progress_number.connect(self.parent.set_progress_number)
+        self.query_completed.connect(self.parent.query_finished)
+
     def check_selection(self):
         iteration = iter([self.mid, self.fid, self.uid,
                           self.cmbid, self.ambid])
@@ -25,7 +56,8 @@ class QueryThread(QThread):
 
     def fetch_recordings(self):
         for work in self.works:
-            self.fetching_completed.emit(makam.get_work(work['mbid']))
+            w = makam.get_work(work['mbid'])
+            self.fetching_completed.emit(WorkObject(w))
 
     def check_attribute_existence(self, combobox_index):
         if len(self.data['works']) > 0 or len(self.recordings) > 0:
@@ -87,7 +119,11 @@ class QueryThread(QThread):
                 for i in selected_indexes:
                     self.combobox_status[i] = 2
 
-        self.combobox_results.emit(self.combobox_status)
-        self.progress_number.emit(len(self.works))
+        combobox_status = ComboboxResultsObject(self.combobox_status)
+        progressbar_status = ProgressBarStatusObject(len(self.works))
+        completed = CompletedObject(True)
+
+        self.combobox_results.emit(combobox_status)
+        self.progress_number.emit(progressbar_status)
         self.fetch_recordings()
-        self.query_completed.emit()
+        self.query_completed.emit(completed)
