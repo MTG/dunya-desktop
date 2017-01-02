@@ -166,6 +166,7 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.progress_bar.setValue(0)
         self.progress_bar.setFormat("")
         self.frame_query.frame_attributes.toolButton_query.setEnabled(True)
+        self.q_threads = []
 
     def download_related_features(self, index):
         source_index = self.frame_query.tableView_results.model().mapToSource(index)
@@ -183,11 +184,16 @@ class MainWindowMakam(MainWindowMakamDesign):
             print('problem')
 
     def open_player(self, index):
-        model_index = self.frame_query.tableView_results.model().mapToSource(index)
-        recid = self.recordings[model_index.row()]
+        if not self.q_threads:
+            model_index = self.frame_query.tableView_results.model().mapToSource(index)
+            recid = self.recordings[model_index.row()]
 
-        player = PlayerDialog(recid)
-        player.exec_()
+            player = PlayerDialog(recid)
+            player.exec_()
+        else:
+            QMessageBox.information(self, "QMessageBox.information()",
+                                    "Player can not be opened until querying "
+                                    "finishes")
 
     def update_coll_list(self, coll):
         conn, c = database.connect()
