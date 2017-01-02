@@ -2,6 +2,7 @@ import os
 import os.path
 import json
 import fnmatch
+import urllib
 
 from compmusic.dunya.makam import (get_makams, get_forms, get_usuls,
                                    get_composers, get_artists, get_instruments)
@@ -10,6 +11,14 @@ from compmusic.dunya.conn import HTTPError
 from PyQt5.QtCore import QObject, QThread, pyqtSignal
 
 FOLDER = os.path.join(os.path.dirname(__file__), '..', 'documents')
+
+
+def is_dunya_up():
+    status = urllib.urlopen("http://dunya.compmusic.upf.edu/").getcode()
+    if not status is 200:
+        return False
+    else:
+        return True
 
 
 def get_filenames_in_dir(dir_name, keyword='*.mp3', skip_foldername='',
