@@ -34,9 +34,9 @@ def get_filenames_in_dir(dir_name, keyword='*.mp3', skip_foldername='',
     # walk all the subdirectories
     for (path, dirs, files) in os.walk(dir_name):
         for f in files:
-            hasKey = (fnmatch.fnmatch(f, keyword) if match_case else
+            has_key = (fnmatch.fnmatch(f, keyword) if match_case else
                       fnmatch.fnmatch(f.lower(), keyword.lower()))
-            if hasKey and skip_foldername not in path.split(os.sep)[1:]:
+            if has_key and skip_foldername not in path.split(os.sep)[1:]:
                 try:
                     folders.append(unicode(path, 'utf-8'))
                 except TypeError:  # already unicode
@@ -104,19 +104,19 @@ class DocThread(QThread):
         QThread.__init__(self, parent)
         self.queue = queue
         self.step_completed.connect(callback)
-        
+
     def run(self):
         while True:
             arg = self.queue.get()
             if arg is None:
-                return 
+                return
             self.download(arg)
-    
+
     def download(self, docid):
         if docid:
-            DOC_FOLDER = os.path.join(self.FOLDER, docid)
-            if not os.path.exists(DOC_FOLDER):
-                os.makedirs(DOC_FOLDER)
+            doc_folder = os.path.join(self.FOLDER, docid)
+            if not os.path.exists(doc_folder):
+                os.makedirs(doc_folder)
 
             # feature list
             try:
@@ -126,7 +126,7 @@ class DocThread(QThread):
                 return
 
             try:
-                m_path = os.path.join(DOC_FOLDER, docid + '.mp3')
+                m_path = os.path.join(doc_folder, docid + '.mp3')
                 if not os.path.exists(m_path):
                     # for now, all tokens have permission to download
                     # audio files
@@ -141,8 +141,8 @@ class DocThread(QThread):
             count = 0
             for thetype in ['audioanalysis', 'jointanalysis']:
                 for subtype in features[thetype]:
-                    f_path = os.path.join(DOC_FOLDER, thetype + '--' + subtype
-                                          + '.json')
+                    f_path = os.path.join(doc_folder,
+                                          thetype + '--' + subtype + '.json')
                     if not os.path.exists(f_path):
                         try:
                             feature = get_document_as_json(docid, thetype,
@@ -170,8 +170,6 @@ def check_doc(docid):
             except KeyError:
                 features[name.split('--')[0]] = []
                 features[name.split('--')[0]].append(name.split('--')[1])
-            #finally:
-            #    return False
 
         try:
             num_features = sum([len(features[key]) for key in features])
