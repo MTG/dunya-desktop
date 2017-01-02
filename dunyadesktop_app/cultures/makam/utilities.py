@@ -24,7 +24,7 @@ def get_filenames_in_dir(dir_name, keyword='*.mp3', skip_foldername='',
     # check if the folder exists
     if not os.path.isdir(dir_name):
         if verbose:
-            print "> Directory doesn't exist!"
+            print("> Directory doesn't exist!")
         return [], [], []
 
     # if the dir_name finishes with the file separator,
@@ -48,7 +48,7 @@ def get_filenames_in_dir(dir_name, keyword='*.mp3', skip_foldername='',
                 fullnames.append(os.path.join(path, f))
 
     if verbose:
-        print "> Found " + str(len(names)) + " files."
+        print("> Found " + str(len(names)) + " files.")
     return fullnames, folders, names
 
 
