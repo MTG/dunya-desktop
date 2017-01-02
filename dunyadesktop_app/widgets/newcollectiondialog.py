@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import (QDialog, QGridLayout, QLineEdit, QMessageBox,
 from PyQt5.QtCore import pyqtSignal, QSize
 
 
-import dunyadesktop_app.utilities.database as database
+import utilities.database as database
 
 CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
                         'newcollectiondialog.css')

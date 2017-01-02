@@ -9,7 +9,7 @@ from audioattframe import AudioAttFrame
 from models.recordingmodel import RecordingModel
 from models.proxymodel import SortFilterProxyModel
 
-import dunyadesktop_app.ui_files.resources_rc
+import ui_files.resources_rc
 
 DUNYA_ICON = ":/compmusic/icons/dunya.svg"
 QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"

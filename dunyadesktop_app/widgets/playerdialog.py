@@ -9,11 +9,11 @@ import pyqtgraph.dockarea as pgdock
 import numpy as np
 from pyqtgraph.ptime import time
 
-from dunyadesktop_app.widgets.waveformwidget import WaveformWidget
-from dunyadesktop_app.widgets.melodywidget import MelodyWidget
-from dunyadesktop_app.widgets.playerframe import PlayerFrame
-from dunyadesktop_app.utilities.playback import Player
-import dunyadesktop_app.ui_files.resources_rc
+from .waveformwidget import WaveformWidget
+from .melodywidget import MelodyWidget
+from .playerframe import PlayerFrame
+from utilities.playback import Player
+import ui_files.resources_rc
 
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',

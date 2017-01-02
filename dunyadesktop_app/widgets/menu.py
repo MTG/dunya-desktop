@@ -2,8 +2,7 @@ import os
 
 from PyQt5.QtWidgets import QAction, QMenu
 from PyQt5.QtGui import QIcon
-from dunyadesktop_app.utilities import database
-
+from utilities import database
 
 CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
                         'menu.css')

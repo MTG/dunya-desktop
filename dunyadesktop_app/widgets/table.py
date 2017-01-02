@@ -8,8 +8,8 @@ from PyQt5.QtWidgets import (QToolButton, QTableView, QAbstractItemView,
 from PyQt5.QtCore import pyqtSignal, Qt, QPersistentModelIndex
 from PyQt5.QtGui import QFont, QCursor, QIcon, QPixmap
 
-from dunyadesktop_app.utilities import database
-from dunyadesktop_app.cultures.makam import utilities as makam_utilities
+from utilities import database
+from cultures.makam import utilities as makam_utilities
 from progressbar import ProgressBar
 from menu import RCMenu
 

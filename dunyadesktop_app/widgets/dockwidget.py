@@ -9,7 +9,7 @@ from PyQt5.QtCore import QSize, Qt
 from table import TableWidget
 from listwidget import CollectionsWidget
 from newcollectiondialog import NewCollectionDialog
-from dunyadesktop_app.utilities import database
+from utilities import database
 
 CSS_DOCKWIDGET = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                               'css', 'dockwidget.css')
