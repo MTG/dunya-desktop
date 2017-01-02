@@ -14,12 +14,14 @@ FOLDER = os.path.join(os.path.dirname(__file__), '..', 'documents')
 
 
 def is_dunya_up():
-    status = urllib.urlopen("http://dunya.compmusic.upf.edu/").getcode()
-    if not status is 200:
+    try:
+        status = urllib.urlopen("http://dunya.compmusic.upf.edu/").getcode()
+        if not status is 200:
+            return False
+        else:
+            return True
+    except IOError:
         return False
-    else:
-        return True
-
 
 def get_filenames_in_dir(dir_name, keyword='*.mp3', skip_foldername='',
                          match_case=True, verbose=None):
