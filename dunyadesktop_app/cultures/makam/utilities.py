@@ -19,7 +19,7 @@ def get_filenames_in_dir(dir_name, keyword='*.mp3', skip_foldername='',
     fullnames = []
 
     if verbose:
-        print dir_name
+        print(dir_name)
 
     # check if the folder exists
     if not os.path.isdir(dir_name):
@@ -35,7 +35,7 @@ def get_filenames_in_dir(dir_name, keyword='*.mp3', skip_foldername='',
     for (path, dirs, files) in os.walk(dir_name):
         for f in files:
             has_key = (fnmatch.fnmatch(f, keyword) if match_case else
-                      fnmatch.fnmatch(f.lower(), keyword.lower()))
+                       fnmatch.fnmatch(f.lower(), keyword.lower()))
             if has_key and skip_foldername not in path.split(os.sep)[1:]:
                 try:
                     folders.append(unicode(path, 'utf-8'))
