@@ -12,7 +12,7 @@ from utilities import database
 from cultures.makam import utilities as makam_utilities
 from .progressbar import ProgressBar
 from .menu import RCMenu
-from .widgetutilities import set_css
+from .widgetutilities import set_css, convert_str
 
 if platform.system() == 'Linux':
     FONT_SIZE = 9
@@ -296,7 +296,7 @@ class TableWidget(QTableWidget, TableView):
         index = self.indexAt(click_me.pos())
         if index.isValid():
             row = index.row()
-            docid = str(self.item(row, 1).text())
+            docid = convert_str(self.item(row, 1).text())
 
             self.set_status(row, 0)
             self.indexes[docid] = row
