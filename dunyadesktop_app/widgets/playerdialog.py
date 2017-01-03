@@ -9,9 +9,9 @@ import pyqtgraph.dockarea as pgdock
 import numpy as np
 from pyqtgraph.ptime import time
 
-from .waveformwidget import WaveformWidget
-from .melodywidget import MelodyWidget
-from .playerframe import PlayerFrame
+from waveformwidget import WaveformWidget
+from melodywidget import MelodyWidget
+from playerframe import PlayerFrame
 from utilities.playback import Player
 import ui_files.resources_rc
 
@@ -76,13 +76,13 @@ class PlayerDialog(QDialog):
         doc_folder, audio_path, pitch_path, pd_path = get_paths(recid)
 
         # loading features and audio
-        raw_audio, len_audio, min_audio, max_audio = load_audio(audio_path)
+        self.raw_audio, len_audio, min_audio, max_audio = load_audio(audio_path)
         (time_stamps, self.pitch_plot, max_pitch, min_pitch,
          self.samplerate, self.hopsize) = load_pitch(pitch_path)
         vals, bins = load_pd(pd_path)
 
         # plotting features
-        self.waveform_widget.plot_waveform(raw_audio, len_audio, min_audio,
+        self.waveform_widget.plot_waveform(self.raw_audio, len_audio, min_audio,
                                            max_audio)
         self.melody_widget.plot_melody(time_stamps, self.pitch_plot, len_audio,
                                        self.samplerate, max_pitch)
@@ -172,9 +172,15 @@ class PlayerDialog(QDialog):
 
     def wf_region_changed(self):
         pos_wf_x_min, pos_wf_x_max = self.waveform_widget.region_wf.getRegion()
-        self.melody_widget.set_zoom_selection_area(pos_wf_x_min, pos_wf_x_max,
-                                                   self.samplerate,
-                                                   self.hopsize)
+
+        ratio = len(self.raw_audio) / len(self.waveform_widget.visible)
+        x_min = (pos_wf_x_min * ratio) / self.samplerate
+        x_max = (pos_wf_x_max * ratio) / self.samplerate
+        self.melody_widget.updateHDF5Plot(x_min, x_max)
+        #self.melody_widget.set_zoom_selection_area(pos_wf_x_min * ratio,
+        #                                           pos_wf_x_max * ratio,
+        #                                           self.samplerate,
+        #                                           self.hopsize)
 
     def update_vlines(self, playback_pos):
         # print(playback_pos)
@@ -189,6 +195,7 @@ class PlayerDialog(QDialog):
         #        self.playback_thread.playback.get_pos_seconds()
 
         # self.playback_pos = self.playback_thread.playback.get_pos_seconds()
+        ratio = len(self.raw_audio) / len(self.waveform_widget.visible)
         playback_pos_sec = playback_pos / 1000.
         playback_pos_sample = playback_pos_sec * self.samplerate
         self.melody_widget.vline.setPos([playback_pos_sec, 0])
@@ -196,7 +203,7 @@ class PlayerDialog(QDialog):
             pos=[0,
                  self.pitch_plot[np.int(playback_pos_sample / self.hopsize)]])
         self.frame_player.slider.setValue(playback_pos_sample)
-        self.waveform_widget.vline_wf.setPos([playback_pos_sample, 0])
+        self.waveform_widget.vline_wf.setPos([playback_pos_sample/ratio, 0])
 
         now = time()
 

@@ -12,7 +12,7 @@ class Player:
     def set_source(self, audio_path):
         url = QUrl.fromLocalFile(audio_path)
         media = QMediaContent(url)
-        self.player.setNotifyInterval(50)
+        self.player.setNotifyInterval(25)
         self.player.setMedia(media)
 
     def play(self):

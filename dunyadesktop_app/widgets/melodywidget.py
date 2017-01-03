@@ -11,6 +11,7 @@ class MelodyWidget(GraphicsLayoutWidget):
         GraphicsLayoutWidget.__init__(self, parent)
         self.layout = pg.GraphicsLayout()
         self._set_size_policy()
+        self.limit = 500
 
     def _set_size_policy(self):
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
@@ -23,6 +24,7 @@ class MelodyWidget(GraphicsLayoutWidget):
 
     def plot_melody(self, time_stamps, pitch_plot, len_raw_audio, samplerate,
                     max_pitch):
+        self.pitch_plot = pitch_plot
         x_axis = pg.AxisItem('bottom')
         x_axis.enableAutoSIPrefix(enable=False)
 
@@ -37,22 +39,18 @@ class MelodyWidget(GraphicsLayoutWidget):
         self.zoom_selection.setDownsampling(auto=True, mode='mean')
 
         pen = pg.mkPen(cosmetic=True, width=1.5, color=(30, 110, 216,))
-        self.curve = self.zoom_selection.plot(time_stamps, pitch_plot,
-                                              connect='finite',
-                                              pen=pen,
-                                              clipToView=True,
-                                              autoDownsample=True,
-                                              downsampleMethod='subsample',
-                                              antialias=False)
+        self.updateHDF5Plot(0, len_raw_audio/(25*44100.))
+
         self.zoom_selection.setLabel(axis="bottom", text="Time", units="sec")
         self.zoom_selection.setLabel(axis="left", text="Frequency", units="Hz",
                                      unitPrefix=False)
 
-        self.zoom_selection.setXRange(0, len_raw_audio / samplerate * 25.,
-                                      padding=0)
-        self.zoom_selection.setYRange(20, max_pitch, padding=0)
+        #self.zoom_selection.setXRange(0, len_raw_audio / samplerate * 25.,
+        #                              padding=0)
+        #self.zoom_selection.setYRange(20, max_pitch, padding=0)
+        self.layout.addItem(self.zoom_selection)
         self.add_elements_to_plot(max_pitch)
-        self.addItem(self.zoom_selection)
+        self.addItem(self.layout)
 
     def plot_histogram(self, vals, bins, max_pitch):
         self.histogram = self.layout.addPlot(row=0, col=1, title="Histogram")
@@ -86,12 +84,68 @@ class MelodyWidget(GraphicsLayoutWidget):
                                          width=1))
         self.zoom_selection.addItem(self.vline)
 
-    def set_zoom_selection_area(self, pos_wf_x_min, pos_wf_x_max, samplerate,
-                                hopsize):
-        x_min = pos_wf_x_min / samplerate
-        x_max = pos_wf_x_max / samplerate
-        self.zoom_selection.setXRange(x_min, x_max, padding=0)
+    #def set_zoom_selection_area(self, pos_wf_x_min, pos_wf_x_max, samplerate,
+    #                            hopsize):
+    #    x_min = pos_wf_x_min / samplerate
+    #    x_max = pos_wf_x_max / samplerate
+    #    self.zoom_selection.setXRange(x_min, x_max, padding=0)
 
     def set_zoom_selection_area_hor(self, min_freq, max_freq):
         self.zoom_selection.setYRange(min_freq, max_freq, padding=0)
         self.histogram.setYRange(min_freq, max_freq, padding=0)
+
+    def updateHDF5Plot(self, start, stop):
+        start *=  1/(128./44100.)
+        stop *= 1/(128./44100.)
+        start = int(start)
+        stop = int(stop)
+        # Decide by how much we should downsample
+        ds = int((stop - start) / self.limit) + 1
+
+        if ds == 1:
+            # Small enough to display with no intervention.
+            visible = self.pitch_plot[start:stop]
+            scale = 1
+        else:
+            # Here convert data into a down-sampled array suitable for visualizing.
+            # Must do this piecewise to limit memory usage.
+            samples = 1 + ((stop - start) // ds)
+            visible = np.zeros(samples * 2, dtype=self.pitch_plot.dtype)
+            sourcePtr = start
+            targetPtr = 0
+
+            # read data in chunks of ~1M samples
+            chunkSize = (1000000 // ds) * ds
+            while sourcePtr < stop - 1:
+                chunk = self.pitch_plot[sourcePtr:min(stop, sourcePtr + chunkSize)]
+                sourcePtr += len(chunk)
+
+                # reshape chunk to be integral multiple of ds
+                chunk = chunk[:(len(chunk) // ds) * ds].reshape(
+                    len(chunk) // ds, ds)
+
+                # compute max and min
+                chunkMax = chunk.max(axis=1)
+                chunkMin = chunk.min(axis=1)
+
+                # interleave min and max into plot data to preserve envelope shape
+                visible[targetPtr:targetPtr + chunk.shape[0] * 2:2] = chunkMin
+                visible[
+                1 + targetPtr:1 + targetPtr + chunk.shape[0] * 2:2] = chunkMax
+                targetPtr += chunk.shape[0] * 2
+
+            self.visible = visible[:targetPtr]
+            scale = ds * 0.5
+
+        start = (start*128.)/44100
+        stop = (stop*128.)/44100
+        step = (stop - start) / (len(visible))
+
+        time = np.arange(start, stop, step)
+
+        self.zoom_selection.clearPlots()
+        pen = pg.mkPen(cosmetic=True, width=1.5, color=(30, 110, 216,))
+        self.zoom_selection.plot(time[0:len(visible)], visible, connect='finite',
+                                 pen=pen)
+        self.zoom_selection.resetTransform()
+        #self.zoom_selection.resetTransform()
