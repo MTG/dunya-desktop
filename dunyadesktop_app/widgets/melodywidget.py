@@ -11,7 +11,7 @@ class MelodyWidget(GraphicsLayoutWidget):
         GraphicsLayoutWidget.__init__(self, parent)
         self.layout = pg.GraphicsLayout()
         self._set_size_policy()
-        self.limit = 500
+        self.limit = 300
 
     def _set_size_policy(self):
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)

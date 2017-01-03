@@ -13,12 +13,12 @@ class WaveformWidget(GraphicsLayoutWidget):
 
         self.layout = pg.GraphicsLayout()
         self._set_size_policy()
-        self.limit = 1000  # maximum number of samples to be plotted
+        self.limit = 800  # maximum number of samples to be plotted
 
     def _set_size_policy(self):
         size_policy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
         size_policy.setHorizontalStretch(0)
-        size_policy.setVerticalStretch(50)
+        #size_policy.setVerticalStretch(50)
         size_policy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
 
         self.setMinimumSize(QSize(0, 50))
@@ -34,7 +34,7 @@ class WaveformWidget(GraphicsLayoutWidget):
         self.waveform.hideAxis(axis='bottom')
         self.waveform.hideAxis(axis='left')
 
-        self.waveform.setMaximumHeight(200)
+        #self.waveform.setMaximumHeight(200)
         self.waveform.setMouseEnabled(x=False, y=False)
         self.waveform.setMenuEnabled(False)
 
@@ -100,7 +100,7 @@ class WaveformWidget(GraphicsLayoutWidget):
             scale = ds * 0.5
         self.waveform.clearPlots()
         self.waveform.plot(visible, connect='finite',
-                           pen=(20, 170, 100),
+                           pen=(20, 170, 100, 60),
                            clipToView=True)
         #self.waveform.setPos(start, 0)  # shift to match starting index
         self.waveform.resetTransform()
