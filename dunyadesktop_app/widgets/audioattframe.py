@@ -6,7 +6,8 @@ from PyQt5.QtWidgets import (QFrame, QGridLayout, QSizePolicy, QLayout,
 from PyQt5.QtGui import QCursor, QIcon, QPixmap
 from PyQt5.QtCore import Qt, QSize
 
-from combobox import ComboBox
+from .combobox import ComboBox
+from .widgetutilities import set_css
 
 # platform dependent margins/spacings
 if platform.system() == 'Linux':
@@ -39,8 +40,8 @@ class AudioAttFrame(QFrame):
         self._retranslate_status_tips()
 
         if platform.system() != 'Linux':
-            self._set_css(self, CSS_PATH)
-        self._set_css(self.toolButton_query, CSS_BUTTON)
+            set_css(self, CSS_PATH)
+        set_css(self.toolButton_query, CSS_BUTTON)
         self.toolButton_query.setDisabled(True)
 
         # signals
@@ -153,10 +154,3 @@ class AudioAttFrame(QFrame):
             self.toolButton_query.setDisabled(True)
         else:
             self.toolButton_query.setEnabled(True)
-
-    @staticmethod
-    def _set_css(obj, css_path):
-        """Sets the css"""
-        with open(css_path) as f:
-            css = f.read()
-        obj.setStyleSheet(css)

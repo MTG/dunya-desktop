@@ -4,6 +4,8 @@ from PyQt5.QtWidgets import QAction, QMenu
 from PyQt5.QtGui import QIcon
 from utilities import database
 
+from .widgetutilities import set_css
+
 CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
                         'menu.css')
 DUNYA_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
@@ -22,15 +24,10 @@ class CollectionAction(QAction):
 class RCMenu(QMenu):
     def __init__(self, parent=None):
         QMenu.__init__(self, parent)
-        #self._set_css()
+        set_css(self, CSS_PATH)
         self._add_actions()
 
         self.open_dunya.triggered.connect(self._send_player_request)
-
-    def _set_css(self):
-        with open(CSS_PATH) as f:
-            css = f.read()
-        self.setStyleSheet(css)
 
     def _add_actions(self):
         self.open_dunya = QAction("Open on Player", self)

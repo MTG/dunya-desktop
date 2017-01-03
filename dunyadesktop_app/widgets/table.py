@@ -10,8 +10,9 @@ from PyQt5.QtGui import QFont, QCursor, QIcon, QPixmap
 
 from utilities import database
 from cultures.makam import utilities as makam_utilities
-from progressbar import ProgressBar
-from menu import RCMenu
+from .progressbar import ProgressBar
+from .menu import RCMenu
+from .widgetutilities import set_css
 
 if platform.system() == 'Linux':
     FONT_SIZE = 9
@@ -74,18 +75,13 @@ class TableView(QTableView):
         self._last_index = QPersistentModelIndex()
         self.viewport().installEventFilter(self)
 
-        self._set_css()
+        set_css(self, CSS_PATH)
         self._set_font()
 
     def _set_font(self):
         font = QFont()
         font.setPointSize(FONT_SIZE)
         self.setFont(font)
-
-    def _set_css(self):
-        with open(CSS_PATH) as f:
-            css = f.read()
-        self.setStyleSheet(css)
 
     def contextMenuEvent(self, event):
         """Pops up the context menu when the right button is clicked."""

@@ -4,10 +4,12 @@ from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QStatusBar, \
     QSizePolicy, QFrame
 from PyQt5.QtGui import QPixmap, QFont, QIcon
 from PyQt5 import QtCore
+
 from widgets.dockwidget import DockWidget, DockWidgetContentsLeft, \
     DockWidgetContentsTop
 from widgets.queryframe import QueryFrame
 from widgets.progressbar import ProgressBar
+from widgets.widgetutilities import set_css
 
 
 CSS_MAIN = os.path.join(os.path.dirname(__file__), 'ui_files', 'css',
@@ -26,7 +28,7 @@ class GeneralMainDesign(QMainWindow):
     def __init__(self, QWidgetParent=None):
         QMainWindow.__init__(self, QWidgetParent)
         self._set_main_window()
-        self._set_css(self, CSS_MAIN)
+        set_css(self, CSS_MAIN)
 
         self.centralwidget = QWidget(self)
 
@@ -36,7 +38,7 @@ class GeneralMainDesign(QMainWindow):
 
         # query frame
         self.frame_query = QueryFrame()
-        self._set_css(self.frame_query, CSS_FRAME_QUERY)
+        set_css(self.frame_query, CSS_FRAME_QUERY)
         self._set_frame()
         layout.addWidget(self.frame_query)
 
@@ -44,7 +46,7 @@ class GeneralMainDesign(QMainWindow):
 
         # status bar
         self.statusbar = QStatusBar(self)
-        self._set_css(self.statusbar, CSS_STATUSBAR)
+        set_css(self.statusbar, CSS_STATUSBAR)
         self._set_status_bar()
         self.setStatusBar(self.statusbar)
 
@@ -74,19 +76,13 @@ class GeneralMainDesign(QMainWindow):
         size_policy.setVerticalStretch(0)
         size_policy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(size_policy)
-        self.setMinimumSize(QtCore.QSize(1000, 600))
+        self.setMinimumSize(QtCore.QSize(1000, 750))
 
         # main window icon
         icon_dunya = QIcon()
         icon_dunya.addPixmap(QPixmap(DUNYA_ICON), QIcon.Normal, QIcon.Off)
         self.setWindowIcon(icon_dunya)
         self.setWindowTitle('Dunya Desktop')
-
-    @staticmethod
-    def _set_css(obj, css_path):
-        with open(css_path) as f:
-            css = f.read()
-        obj.setStyleSheet(css)
 
     def _set_frame(self):
         self.frame_query.setFrameShape(QFrame.StyledPanel)

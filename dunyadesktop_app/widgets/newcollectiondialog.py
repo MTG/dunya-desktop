@@ -4,8 +4,8 @@ from PyQt5.QtWidgets import (QDialog, QGridLayout, QLineEdit, QMessageBox,
                              QLabel, QDialogButtonBox, QSizePolicy, QTextEdit)
 from PyQt5.QtCore import pyqtSignal, QSize
 
-
 import utilities.database as database
+from .widgetutilities import set_css
 
 CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
                         'newcollectiondialog.css')
@@ -45,7 +45,7 @@ class NewCollectionDialog(QDialog):
         self.label_description.setText('Description')
         layout.addWidget(self.label_description, 2, 0, 1, 1)
 
-        self._set_css(self, CSS_PATH)
+        set_css(self, CSS_PATH)
 
         self.buttonBox.rejected.connect(self.clicked_cancel)
         self.buttonBox.accepted.connect(self.clicked_ok)
@@ -69,12 +69,6 @@ class NewCollectionDialog(QDialog):
         self.desc_edit.setSizePolicy(size_policy)
         self.desc_edit.setMinimumSize(QSize(0, 140))
         self.desc_edit.setMaximumSize(QSize(16777215, 150))
-
-    @staticmethod
-    def _set_css(obj, css_path):
-        with open(css_path) as f:
-            css = f.read()
-        obj.setStyleSheet(css)
 
     def clicked_cancel(self):
         """Closes the window"""

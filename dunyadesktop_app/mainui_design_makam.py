@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QWidget
+
 from general_design import GeneralMainDesign
 
 

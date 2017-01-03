@@ -4,7 +4,8 @@ import platform
 from PyQt5.QtWidgets import QComboBox, QToolButton, QStyle
 from PyQt5.QtGui import QIcon, QFont
 
-from filteringdialog import FilteringDialog
+from .widgetutilities import set_css
+from .filteringdialog import FilteringDialog
 
 if platform.system() == 'Linux':
     BUTTON_POS = 9
@@ -38,7 +39,7 @@ class ComboBox(QComboBox):
         else:
             self.setFixedHeight(25)
 
-        self._set_css()
+        set_css(self, CSS_PATH)
 
         self.cancel_button = QToolButton(self)
         self.cancel_button.setStyleSheet(CSS_BUTTON)
@@ -54,11 +55,6 @@ class ComboBox(QComboBox):
         self.dialog_filtering = FilteringDialog()
         self.dialog_filtering.ok_button_clicked.connect(
             lambda: self.set_selection(self.dialog_filtering.selection))
-
-    def _set_css(self):
-        with open(CSS_PATH) as f:
-            css = f.read()
-        self.setStyleSheet(css)
 
     def resizeEvent(self, QResizeEvent):
         """Sets the position of cancel button."""

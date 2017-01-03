@@ -2,6 +2,8 @@ import os
 
 from PyQt5.QtWidgets import QProgressBar
 
+from .widgetutilities import set_css
+
 CSS_PROGRESS = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                             'css', 'progressbar.css')
 
@@ -10,7 +12,7 @@ class ProgressBar(QProgressBar):
     def __init__(self, parent=None):
         QProgressBar.__init__(self, parent)
         self.setGeometry(30, 40, 200, 25)
-        self._set_css(self, CSS_PROGRESS)
+        set_css(self, CSS_PROGRESS)
         self.setToolTip('Downloading...')
 
     def update_progress_bar(self, index, work_number):
@@ -20,9 +22,3 @@ class ProgressBar(QProgressBar):
         self.setTextVisible(True)
         self.setFormat("{0}/{1}".format(index, work_number))
         self.setValue(progress)
-
-    @staticmethod
-    def _set_css(obj, css_path):
-        with open(css_path) as f:
-            css = f.read()
-        obj.setStyleSheet(css)

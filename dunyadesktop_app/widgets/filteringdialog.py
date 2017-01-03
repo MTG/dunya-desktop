@@ -7,6 +7,7 @@ from table import TableView
 from models.filteringmodel import FilteringModel
 from models.proxymodel import SortFilterProxyModel
 
+from .widgetutilities import set_css
 import ui_files.resources_rc
 
 CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
@@ -21,7 +22,7 @@ class FilteringDialog(QDialog):
         QDialog.__init__(self, parent)
         self.attribute = None
         self.setFixedSize(200, 300)
-        self._set_css()
+        set_css(self, CSS_PATH)
 
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.Popup)
 
@@ -59,11 +60,6 @@ class FilteringDialog(QDialog):
         self.table_attribute.doubleClicked.connect(
             self.get_selected_item_index)
         self.button_box.accepted.connect(self.get_selected_item_index)
-
-    def _set_css(self):
-        with open(CSS_PATH) as f:
-            css = f.read()
-        self.setStyleSheet(css)
 
     def get_selected_item_index(self):
         """Stores the index of the selected item and emits the clicked

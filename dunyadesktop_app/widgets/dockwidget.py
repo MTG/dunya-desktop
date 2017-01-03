@@ -6,9 +6,10 @@ from PyQt5.QtWidgets import (QDockWidget, QSizePolicy, QWidget, QVBoxLayout,
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import QSize, Qt
 
-from table import TableWidget
-from listwidget import CollectionsWidget
-from newcollectiondialog import NewCollectionDialog
+from .widgetutilities import set_css
+from .table import TableWidget
+from .listwidget import CollectionsWidget
+from .newcollectiondialog import NewCollectionDialog
 from utilities import database
 
 CSS_DOCKWIDGET = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
@@ -81,7 +82,7 @@ class DockWidgetContentsLeft(QWidget):
         self.label_collections = QLabel(self.frame_collection)
         self.label_collections.setIndent(15)  # check it
         self.label_collections.setTextInteractionFlags(Qt.NoTextInteraction)
-        self._set_css(self.label_collections, CSS_LABEL_COLLECTION)
+        set_css(self.label_collections, CSS_LABEL_COLLECTION)
         layout_3.addWidget(self.label_collections)
 
         self.listView_collections = CollectionsWidget()
@@ -120,12 +121,6 @@ class DockWidgetContentsLeft(QWidget):
         self.setSizePolicy(size_policy)
         self.setMaximumSize(QSize(500, 16777215))
 
-    @staticmethod
-    def _set_css(obj, css_path):
-        with open(css_path) as f:
-            css = f.read()
-        obj.setStyleSheet(css)
-
     def _set_frame(self):
         """Sets the size policies of the frame."""
         size_policy = QSizePolicy(QSizePolicy.MinimumExpanding,
@@ -138,7 +133,7 @@ class DockWidgetContentsLeft(QWidget):
         self.frame_collection.setMinimumSize(QSize(0, 200))
         self.frame_collection.setMaximumSize(QSize(16777215, 200))
         self.frame_collection.setBaseSize(QSize(0, 0))
-        self._set_css(self.frame_collection, CSS_FRAME_COLLECTION)
+        set_css(self.frame_collection, CSS_FRAME_COLLECTION)
         self.frame_collection.setFrameShape(QFrame.StyledPanel)
         self.frame_collection.setFrameShadow(QFrame.Raised)
 
@@ -152,7 +147,7 @@ class DockWidgetContentsLeft(QWidget):
         self.toolButton_collection.setSizePolicy(size_policy)
         self.toolButton_collection.setMinimumSize(QSize(0, 30))
         self.toolButton_collection.setMaximumSize(QSize(16777215, 30))
-        self._set_css(self.toolButton_collection, CSS_TOOLBUTTON)
+        set_css(self.toolButton_collection, CSS_TOOLBUTTON)
 
         self.toolButton_collection.setToolButtonStyle(
             Qt.ToolButtonTextBesideIcon)
@@ -171,7 +166,7 @@ class DockWidgetContentsLeft(QWidget):
         self.frame_downloaded.setSizePolicy(size_policy)
         self.frame_downloaded.setMinimumSize(QSize(0, 150))
         self.frame_downloaded.setBaseSize(QSize(0, 100))
-        self._set_css(self.frame_downloaded, CSS_FRAME_DOWNLOADED)
+        set_css(self.frame_downloaded, CSS_FRAME_DOWNLOADED)
         self.frame_downloaded.setFrameShape(QFrame.StyledPanel)
         self.frame_downloaded.setFrameShadow(QFrame.Raised)
 
@@ -181,7 +176,7 @@ class DockWidgetContentsLeft(QWidget):
         font.setFamily("Garuda")
         self.label_downloaded.setFont(font)
         self.label_downloaded.setIndent(15)
-        self._set_css(self.label_downloaded, CSS_LABEL_COLLECTION)
+        set_css(self.label_downloaded, CSS_LABEL_COLLECTION)
 
     def retranslateUi(self):
         self.label_collections.setText("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD "
@@ -221,7 +216,7 @@ class DockWidgetContentsLeft(QWidget):
         self._set_label_downloaded()
         self.label_collections.setIndent(15)  # check it
         self.label_collections.setTextInteractionFlags(Qt.NoTextInteraction)
-        self._set_css(self.label_collections, CSS_LABEL_COLLECTION)
+        set_css(self.label_collections, CSS_LABEL_COLLECTION)
 
     def update_collection_widget(self):
         conn, c = database.connect(add_main=True)

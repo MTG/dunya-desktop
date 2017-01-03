@@ -1,10 +1,10 @@
 import sys
 import os.path
 
-#from PyQt4 import QtGui, QtCore
-
 from PyQt5.QtWidgets import QDialog, QApplication
 from PyQt5 import QtCore
+
+from .widgets.widgetutilities import set_css
 
 import ui_files.resources_rc
 
@@ -22,13 +22,7 @@ class SplashScreen(QDialog):
                             QtCore.Qt.SplashScreen)
 
         self.setFixedSize(680, 380)
-
-        self._set_css()
-
-    def _set_css(self):
-        with open(CSS_PATH) as f:
-            css = f.read()
-        self.setStyleSheet(css)
+        set_css(self, CSS_PATH)
 
 
 app = QApplication(sys.argv)

@@ -3,11 +3,11 @@ from PyQt5.QtWidgets import (QFrame, QGridLayout, QVBoxLayout, QLabel,
 from PyQt5.QtCore import QMetaObject, Qt
 from PyQt5.QtGui import QFont
 
-from table import TableViewResults
-from tabwidget import TabWidget
-from audioattframe import AudioAttFrame
-from models.recordingmodel import RecordingModel
-from models.proxymodel import SortFilterProxyModel
+from .table import TableViewResults
+from .tabwidget import TabWidget
+from .audioattframe import AudioAttFrame
+from .models.recordingmodel import RecordingModel
+from .models.proxymodel import SortFilterProxyModel
 
 import ui_files.resources_rc
 
