@@ -146,11 +146,17 @@ class DocThread(QThread):
             except:
                 pass
 
-            num_f = (sum([len(features[key]) for key in ['audioanalysis',
-                                                         'jointanalysis']]))
+            num_f = 0
+            download_list = []
+            if 'audioanalysis' in features:
+                num_f += len(features['audioanalysis'])
+                download_list.append('audioanalysis')
+            if 'jointanalysis' in features:
+                num_f += len(features['jointanalysis'])
+                download_list.append('jointanalysis')
 
             count = 0
-            for thetype in ['audioanalysis', 'jointanalysis']:
+            for thetype in download_list:
                 for subtype in features[thetype]:
                     f_path = os.path.join(doc_folder,
                                           thetype + '--' + subtype + '.json')
