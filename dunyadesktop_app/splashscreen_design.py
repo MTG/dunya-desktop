@@ -4,7 +4,7 @@ import os.path
 from PyQt5.QtWidgets import QDialog, QApplication
 from PyQt5 import QtCore
 
-from .widgets.widgetutilities import set_css
+from widgets.widgetutilities import set_css
 
 import ui_files.resources_rc
 
