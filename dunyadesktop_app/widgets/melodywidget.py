@@ -148,4 +148,3 @@ class MelodyWidget(GraphicsLayoutWidget):
         self.zoom_selection.plot(time[0:len(visible)], visible, connect='finite',
                                  pen=pen)
         self.zoom_selection.resetTransform()
-        #self.zoom_selection.resetTransform()
