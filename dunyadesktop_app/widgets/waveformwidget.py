@@ -100,8 +100,7 @@ class WaveformWidget(GraphicsLayoutWidget):
             scale = ds * 0.5
         self.waveform.clearPlots()
         self.waveform.plot(visible, connect='finite',
-                           pen=(20, 170, 100, 60),
-                           clipToView=True)
+                           pen=(20, 170, 100, 80))
         #self.waveform.setPos(start, 0)  # shift to match starting index
         self.waveform.resetTransform()
         #self.waveform.scale(scale, 1)  # scale to match downsampling
