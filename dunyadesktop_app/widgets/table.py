@@ -89,14 +89,16 @@ class TableView(QTableView):
 
     def contextMenuEvent(self, event):
         """Pops up the context menu when the right button is clicked."""
-        if self.selectionModel().selection().indexes():
-            for index in self.selectionModel().selection().indexes():
-                row, column = index.row(), index.column()
-        self.index = index
+        try:
+            if self.selectionModel().selection().indexes():
+                for index in self.selectionModel().selection().indexes():
+                    row, column = index.row(), index.column()
+            self.index = index
 
-        menu = RCMenu(self)
-        menu.popup(QCursor.pos())
-        # self.menu.popup(QtGui.QCursor.pos())
+            menu = RCMenu(self)
+            menu.popup(QCursor.pos())
+        except UnboundLocalError:
+            pass
 
     def send_rec(self):
         if self.index:
