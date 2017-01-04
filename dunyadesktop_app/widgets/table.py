@@ -79,6 +79,7 @@ class TableView(QTableView):
         self._set_font()
 
     def _set_font(self):
+        """Sets the font of the table"""
         font = QFont()
         font.setPointSize(FONT_SIZE)
         self.setFont(font)
@@ -97,11 +98,14 @@ class TableView(QTableView):
             pass
 
     def send_rec(self):
+        """Emits 'open_dunya_triggered' signal and the current index to open
+        the player"""
         if self.index:
             self.open_dunya_triggered.emit(self.index)
             self.index = None
 
     def get_selected_rows(self):
+        """Returns the current selected rows in the table."""
         selected_rows = []
         for item in self.selectionModel().selectedRows():
             if item.row() not in selected_rows:
@@ -109,6 +113,8 @@ class TableView(QTableView):
         return selected_rows
 
     def send_to_db(self, coll):
+        """Emits 'add_to_collection' signal to add the selected rows to the
+        database"""
         if self.index:
             self.add_to_collection.emit(coll, self.index)
             self.index = None
