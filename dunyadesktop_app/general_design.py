@@ -55,7 +55,7 @@ class GeneralMainDesign(QMainWindow):
         self.progress_bar.setVisible(False)
 
         # dockwidget collection (left side)
-        self.dw_collections = DockWidget(300, 600, 400, 20000)
+        self.dw_collections = DockWidget(300, 500, 400, 20000)
         self.dwc_left = DockWidgetContentsLeft(self)
         self.dw_collections.setWidget(self.dwc_left)
         self.addDockWidget(QtCore.Qt.DockWidgetArea(1),
