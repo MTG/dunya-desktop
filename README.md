@@ -9,7 +9,7 @@ according to their needs.
 Dunya-desktop mainly uses [PyQt5](https://www.riverbankcomputing.com/software/pyqt/download5), 
 python bindings for [Qt5](https://www.qt.io/developers/) application framework, 
 for the user interface design and [pycompmusic](https://github.com/MTG/pycompmusic) 
-module for reaching the backend of the [Dunya](http://dunya.compmusic.upf.edu) Corpora.
+module for reaching the backend of the [Dunya](http://dunya.compmusic.upf.edu).
 
 
 Installation
