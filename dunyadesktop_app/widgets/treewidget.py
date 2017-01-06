@@ -29,10 +29,10 @@ class FeatureWidget(QTreeWidget):
         self._set_tree_widget()
 
         self.expanded.connect(lambda: self.resizeColumnToContents(0))
-        self.itemClicked.connect(self._item_pressed)
+        self.itemChanged.connect(self._item_changed)
 
-    def _item_pressed(self, item, column):
-        print column
+    def _item_changed(self, item):
+        print item.data(0, 0)
 
     def _set_tree_widget(self):
         header = QTreeWidgetItem(['Features', 'Visualize'])
@@ -63,9 +63,7 @@ class FeatureWidget(QTreeWidget):
                 for type in self.feature_dict[key]:
                     feature = QTreeWidgetItem(root, ['Feature Types'])
                     feature.setData(0, Qt.EditRole, type)
-
-                    click = CheckBox(parent=self)
-                    self.setItemWidget(feature, 1, click)
+                    feature.setCheckState(1, Qt.Unchecked)
 
         self.resizeColumnToContents(0)
         self.resizeColumnToContents(1)
