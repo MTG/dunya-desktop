@@ -1,8 +1,7 @@
 import sys
 import os
 
-from PyQt5.QtWidgets import (QTreeWidget, QTreeWidgetItem, QApplication,
-                             QCheckBox)
+from PyQt5.QtWidgets import (QTreeWidget, QTreeWidgetItem, QApplication)
 from PyQt5.QtCore import Qt
 
 from cultures.makam.utilities import get_filenames_in_dir
