@@ -33,9 +33,9 @@ class FeatureWidget(QTreeWidget):
         self.expanded.connect(lambda: self.resizeColumnToContents(0))
         self.itemChanged.connect(self._item_changed)
 
-    def _item_changed(self, item):
+    def _item_changed(self, item, column):
         if self.is_ready:
-            print item.data(0, 0)
+            print item.data(0, 0), item.checkState(column)
 
     def _set_tree_widget(self):
         header = QTreeWidgetItem(['Features', 'Visualize'])
