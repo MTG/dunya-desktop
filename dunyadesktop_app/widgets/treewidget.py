@@ -23,16 +23,19 @@ class CheckBox(QCheckBox):
 
 
 class FeatureWidget(QTreeWidget):
+
     def __init__(self, parent=None):
         QTreeWidget.__init__(self, parent=parent)
         self.feature_dict = {}
-        self._set_tree_widget()
+        self.is_ready = False
 
+        self._set_tree_widget()
         self.expanded.connect(lambda: self.resizeColumnToContents(0))
         self.itemChanged.connect(self._item_changed)
 
     def _item_changed(self, item):
-        print item.data(0, 0)
+        if self.is_ready:
+            print item.data(0, 0)
 
     def _set_tree_widget(self):
         header = QTreeWidgetItem(['Features', 'Visualize'])
@@ -67,6 +70,8 @@ class FeatureWidget(QTreeWidget):
 
         self.resizeColumnToContents(0)
         self.resizeColumnToContents(1)
+
+        self.is_ready = True
 
 
 app = QApplication(sys.argv)
