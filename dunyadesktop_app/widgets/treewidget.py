@@ -12,16 +12,6 @@ DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
                          'documents')
 
 
-class CheckBox(QCheckBox):
-    def __init__(self, parent=None):
-        QCheckBox.__init__(self, parent)
-        self.stateChanged.connect(self._state_changed)
-
-    def _state_changed(self, state):
-        print self.parent()
-        #print(self.parent().currentItem())
-
-
 class FeatureWidget(QTreeWidget):
 
     def __init__(self, parent=None):
