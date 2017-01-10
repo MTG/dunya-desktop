@@ -2,7 +2,7 @@ import os
 import json
 import copy
 
-from PyQt5.QtWidgets import QDialog, QVBoxLayout
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QWidget
 from PyQt5.QtCore import QSize, QMetaObject, QTimer
 from essentia.standard import MonoLoader
 import pyqtgraph.dockarea as pgdock
@@ -67,9 +67,9 @@ class PlayerDialog(QDialog):
     fps = None
     last_time = time()
 
-    def __init__(self, recid):
+    def __init__(self, recid, parent=None):
 
-        QDialog.__init__(self)
+        QDialog.__init__(self, parent=parent)
         self._set_design()
 
         # paths
