@@ -1,4 +1,3 @@
-import sys
 import os
 
 from PyQt5.QtWidgets import (QTreeWidget, QTreeWidgetItem, QApplication)
@@ -11,7 +10,7 @@ DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
                          'documents')
 
 
-class FeatureWidget(QTreeWidget):
+class FeatureTreeWidget(QTreeWidget):
 
     def __init__(self, parent=None):
         QTreeWidget.__init__(self, parent=parent)
@@ -46,6 +45,7 @@ class FeatureWidget(QTreeWidget):
             except KeyError:
                 f_list= [f_name]
                 self.feature_dict[f_type] = f_list
+        self.add_items()
 
     def add_items(self):
         if self.feature_dict:
@@ -61,11 +61,3 @@ class FeatureWidget(QTreeWidget):
         self.resizeColumnToContents(1)
 
         self.is_ready = True
-
-
-app = QApplication(sys.argv)
-t = FeatureWidget()
-t.get_feature_list('519264d7-255d-41cf-9c70-6ff3e7ba0ca5')
-t.add_items()
-t.show()
-app.exec_()
