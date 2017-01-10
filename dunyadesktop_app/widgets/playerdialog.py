@@ -2,7 +2,7 @@ import os
 import json
 import copy
 
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QFrame
 from PyQt5.QtCore import QSize, QMetaObject, QTimer
 from essentia.standard import MonoLoader
 import pyqtgraph.dockarea as pgdock
@@ -11,7 +11,7 @@ from pyqtgraph.ptime import time
 
 from waveformwidget import WaveformWidget
 from melodywidget import MelodyWidget
-from playerframe import PlayerFrame
+from playbackframe import PlaybackFrame
 from utilities.playback import Player
 import ui_files.resources_rc
 
@@ -63,13 +63,13 @@ def get_paths(recid):
     return doc_folder, audio_path, pitch_path, pd_path
 
 
-class PlayerDialog(QDialog):
+class PlayerDialog(QFrame):
     fps = None
     last_time = time()
 
     def __init__(self, recid, parent=None):
 
-        QDialog.__init__(self, parent=parent)
+        QFrame.__init__(self, parent=parent)
         self._set_design()
 
         # paths
@@ -149,7 +149,7 @@ class PlayerDialog(QDialog):
         # self.melody_widget = MelodyWidget()
         # self.verticalLayout.addWidget(self.melody_widget)
 
-        self.frame_player = PlayerFrame(self)
+        self.frame_player = PlaybackFrame(self)
         self.verticalLayout.addWidget(self.frame_player)
         self.verticalLayout.addWidget(area)
         QMetaObject.connectSlotsByName(self)
