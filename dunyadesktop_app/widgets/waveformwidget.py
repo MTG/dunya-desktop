@@ -13,7 +13,7 @@ class WaveformWidget(GraphicsLayoutWidget):
 
         self.layout = pg.GraphicsLayout()
         self._set_size_policy()
-        self.limit = 800  # maximum number of samples to be plotted
+        self.limit = 900  # maximum number of samples to be plotted
 
     def _set_size_policy(self):
         size_policy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
