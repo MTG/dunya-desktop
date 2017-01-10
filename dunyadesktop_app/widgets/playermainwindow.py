@@ -44,7 +44,7 @@ class PlayerMainWindow(QMainWindow):
         layout2 = QVBoxLayout()
 
         self.feature_tree = FeatureTreeWidget(self.dockWidgetContents)
-        self.feature_tree.get_feature_list(docid=docid)
+        self.feature_tree.get_feature_list(docid=str(docid))
 
         layout2.addWidget(self.feature_tree)
         layout3.addLayout(layout2)
@@ -55,8 +55,5 @@ class PlayerMainWindow(QMainWindow):
 
         QMetaObject.connectSlotsByName(self)
 
-
-app = QApplication(sys.argv)
-p = PlayerMainWindow(docid='014db042-f0c4-49a8-a859-83403c7e6f45')
-p.show()
-app.exec_()
+    def closeEvent(self, QCloseEvent):
+        self.player_frame.closeEvent(QCloseEvent)

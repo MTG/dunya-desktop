@@ -179,17 +179,17 @@ class MainWindowMakam(MainWindowMakamDesign):
         try:
             docid = database.get_nth_row(c, coll, index.row())[0]
             conn.close()
-            player = PlayerDialog(docid, self)
+            player = PlayerMainWindow(docid=docid, parent=self)
             player.show()
         except:
-            print('problem')
+            QMessageBox.information(self, "Cannot open the player!")
 
     def open_player(self, index):
         if not self.q_threads:
             model_index = self.frame_query.tableView_results.model().mapToSource(index)
             recid = self.recordings[model_index.row()]
 
-            player = PlayerDialog(recid, self)
+            player = PlayerMainWindow(docid=recid, parent=self)
             player.show()
         else:
             QMessageBox.information(self, "QMessageBox.information()",
