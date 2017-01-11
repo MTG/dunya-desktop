@@ -11,7 +11,7 @@ class MelodyWidget(GraphicsLayoutWidget):
         GraphicsLayoutWidget.__init__(self, parent)
         self.layout = pg.GraphicsLayout()
         self._set_size_policy()
-        self.limit = 300
+        self.limit = 500
 
     def _set_size_policy(self):
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
@@ -145,6 +145,13 @@ class MelodyWidget(GraphicsLayoutWidget):
 
         self.zoom_selection.clearPlots()
         pen = pg.mkPen(cosmetic=True, width=1.5, color=(30, 110, 216,))
-        self.zoom_selection.plot(time[0:len(visible)], visible, connect='finite',
-                                 pen=pen)
+        self.zoom_selection.plot(time[0:len(visible)],
+                                 visible,
+                                 connect='finite',
+                                 pen=pen,
+                                 symbol='o',
+                                 symbolSize=1.5,
+                                 symbolBrush=pg.mkBrush(222, 244, 237),
+                                 symbolPen=None,
+                                 autoDownsample=True)
         self.zoom_selection.resetTransform()
