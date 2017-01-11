@@ -10,6 +10,7 @@ from cultures.makam import utilities
 from cultures.makam.query import QueryThread
 from mainui_design_makam import MainWindowMakamDesign
 from widgets.playerdialog import PlayerDialog
+from widgets.playermainwindow import PlayerMainWindow
 from utilities import database
 
 apiconfig.set_token()
@@ -178,18 +179,18 @@ class MainWindowMakam(MainWindowMakamDesign):
         try:
             docid = database.get_nth_row(c, coll, index.row())[0]
             conn.close()
-            player = PlayerDialog(docid)
-            player.exec_()
+            player = PlayerMainWindow(docid=docid, parent=self)
+            player.show()
         except:
-            print('problem')
+            QMessageBox.information(self, "Cannot open the player!")
 
     def open_player(self, index):
         if not self.q_threads:
             model_index = self.frame_query.tableView_results.model().mapToSource(index)
             recid = self.recordings[model_index.row()]
 
-            player = PlayerDialog(recid)
-            player.exec_()
+            player = PlayerMainWindow(docid=recid, parent=self)
+            player.show()
         else:
             QMessageBox.information(self, "QMessageBox.information()",
                                     "Player can not be opened until querying "

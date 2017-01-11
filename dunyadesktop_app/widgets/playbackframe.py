@@ -4,7 +4,7 @@ from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import QSize, Qt
 
 
-class PlayerFrame(QFrame):
+class PlaybackFrame(QFrame):
     def __init__(self, parent=None):
         QFrame.__init__(self, parent=parent)
 
