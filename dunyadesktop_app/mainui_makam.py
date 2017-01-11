@@ -182,7 +182,8 @@ class MainWindowMakam(MainWindowMakamDesign):
             player = PlayerMainWindow(docid=docid, parent=self)
             player.show()
         except:
-            QMessageBox.information(self, "Cannot open the player!")
+            QMessageBox.information(self, "QMessageBox.information()",
+                                    "Cannot open the player!")
 
     def open_player(self, index):
         if not self.q_threads:
