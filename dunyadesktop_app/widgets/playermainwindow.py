@@ -2,38 +2,40 @@ import sys
 
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import (QMainWindow, QApplication, QWidget, QVBoxLayout,
-                             QFrame, QDockWidget, QPushButton)
+                             QDockWidget, QPushButton)
 from PyQt5.QtCore import Qt, QMetaObject
 
 from treewidget import FeatureTreeWidget
-from playerdialog import PlayerDialog
+from playerframe import PlayerFrame
+
 
 class PlayerMainWindow(QMainWindow):
     def __init__(self, docid, parent=None):
         QMainWindow.__init__(self, parent=parent)
+        self._set_design(docid)
+        QMetaObject.connectSlotsByName(self)
 
+        # signals
+        self.feature_tree.item_checked.connect(self.evaluate_check_signal)
+
+    def _set_design(self, docid):
         self.resize(710, 550)
-        self.centralwidget = QWidget(self)
+        self.central_widget = QWidget(self)
 
-        layout = QVBoxLayout(self.centralwidget)
+        layout = QVBoxLayout(self.central_widget)
         layout.setContentsMargins(2, 2, 2, 2)
 
-
-        self.player_frame = PlayerDialog(recid=docid, parent=self)
+        self.player_frame = PlayerFrame(recid=docid, parent=self)
         layout.addWidget(self.player_frame)
 
-        self.setCentralWidget(self.centralwidget)
-
-        button = QPushButton(self)
-        l = QVBoxLayout()
-        l.addWidget(button)
-        self.player_frame.setLayout(l)
+        self.setCentralWidget(self.central_widget)
 
         self.features_dw = QDockWidget(self)
         self.features_dw.setMinimumSize(QtCore.QSize(100, 130))
         self.features_dw.setMaximumSize(QtCore.QSize(400, 524287))
         self.features_dw.setFloating(False)
-        self.features_dw.setFeatures(QtWidgets.QDockWidget.NoDockWidgetFeatures)
+        self.features_dw.setFeatures(
+            QtWidgets.QDockWidget.NoDockWidgetFeatures)
         self.features_dw.setAllowedAreas(QtCore.Qt.LeftDockWidgetArea)
         self.features_dw.setWindowTitle("")
         self.features_dw.setObjectName("dockWidget")
@@ -53,7 +55,15 @@ class PlayerMainWindow(QMainWindow):
 
         self.addDockWidget(Qt.DockWidgetArea(1), self.features_dw)
 
-        QMetaObject.connectSlotsByName(self)
-
     def closeEvent(self, QCloseEvent):
         self.player_frame.closeEvent(QCloseEvent)
+
+    def evaluate_check_signal(self, type, item, is_checked):
+        if 'pitch' in item:
+            print type, item, is_checked
+
+
+app = QApplication(sys.argv)
+ply = PlayerMainWindow(docid='1fd7a362-cf14-42fa-a6c6-0093857ca5eb')
+ply.show()
+app.exec_()
