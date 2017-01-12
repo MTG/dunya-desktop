@@ -21,7 +21,7 @@ class WaveformWidget(GraphicsLayoutWidget):
         #size_policy.setVerticalStretch(50)
         size_policy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
 
-        self.setMinimumSize(QSize(0, 50))
+        #self.setMinimumSize(QSize(0, 100))
         #self.setMaximumSize(QSize(16777215, 50))
         self.setFocusPolicy(Qt.NoFocus)
         self.setAcceptDrops(False)
@@ -38,20 +38,21 @@ class WaveformWidget(GraphicsLayoutWidget):
         self.waveform.setMouseEnabled(x=False, y=False)
         self.waveform.setMenuEnabled(False)
 
-        self.raw_audio += np.abs(np.min(raw_audio))
+        #self.raw_audio += np.abs(np.min(raw_audio))
         self.updateHDF5Plot()
         self.waveform.setDownsampling(auto=True, mode='peak')
         self.layout.addItem(self.waveform)
-        self._add_elements_to_plot(len(self.visible), np.max(self.visible))
+        self._add_elements_to_plot(len(self.visible), np.min(self.visible),
+                                   np.max(self.visible))
 
         self.addItem(self.layout)
 
-    def _add_elements_to_plot(self, len_audio, max_audio):
+    def _add_elements_to_plot(self, len_audio, min_audio, max_audio):
         pos_wf_x_max = len_audio / 25.
         self.region_wf = pg.LinearRegionItem([0, pos_wf_x_max],
                                              brush=pg.mkBrush((50, 255, 255, 45)),
                                              bounds=[0., len_audio])
-        self.vline_wf = pg.ROI([0, 0], [0, max_audio], angle=0,
+        self.vline_wf = pg.ROI([0, min_audio], [0, max_audio-min_audio], angle=0,
                                pen=pg.mkPen((255, 40, 35, 150), cosmetic=True,
                                             width=1))
         self.waveform.addItem(self.vline_wf)
