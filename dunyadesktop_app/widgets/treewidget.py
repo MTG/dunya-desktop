@@ -1,7 +1,7 @@
 import os
 
 from PyQt5.QtWidgets import (QTreeWidget, QTreeWidgetItem, QApplication)
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 
 from cultures.makam.utilities import get_filenames_in_dir
 
@@ -11,6 +11,7 @@ DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
 
 
 class FeatureTreeWidget(QTreeWidget):
+    item_checked = pyqtSignal(str, str, bool)
 
     def __init__(self, parent=None):
         QTreeWidget.__init__(self, parent=parent)
@@ -23,7 +24,14 @@ class FeatureTreeWidget(QTreeWidget):
 
     def _item_changed(self, item, column):
         if self.is_ready:
-            print item.data(0, 0), item.checkState(column)
+            type = item.parent().data(0, 0)
+            it = item.data(0, 0)
+            check_state = item.checkState(column)
+            if check_state==2:
+                is_checked = True
+            else:
+                is_checked = False
+            self.item_checked.emit(type, it, is_checked)
 
     def _set_tree_widget(self):
         header = QTreeWidgetItem(['Features', 'Visualize'])
