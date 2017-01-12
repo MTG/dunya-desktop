@@ -2,7 +2,7 @@ import os
 import json
 import copy
 
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QFrame
+from PyQt5.QtWidgets import QVBoxLayout, QFrame
 from PyQt5.QtCore import QSize, QMetaObject, QTimer
 from essentia.standard import MonoLoader
 import pyqtgraph.dockarea as pgdock
@@ -13,6 +13,7 @@ from waveformwidget import WaveformWidget
 from melodywidget import MelodyWidget
 from playbackframe import PlaybackFrame
 from utilities.playback import Player
+from cultures.makam import utilities
 import ui_files.resources_rc
 
 
@@ -55,42 +56,45 @@ def load_pd(pd_path):
 
 def get_paths(recid):
     doc_folder = os.path.join(DOCS_PATH, recid)
-    audio_path = os.path.join(doc_folder, recid + '.mp3')
-    pitch_path = os.path.join(doc_folder,
-                              'audioanalysis--pitch_filtered.json')
-    pd_path = os.path.join(doc_folder,
-                           'audioanalysis--pitch_distribution.json')
-    return doc_folder, audio_path, pitch_path, pd_path
+    full_names, folders, names = utilities.get_filenames_in_dir(
+        dir_name=doc_folder, keyword='*.json')
+
+    paths = {}
+    paths['audio_path'] = os.path.join(doc_folder, recid + '.mp3')
+    for xx, name in enumerate(names):
+        paths[name.split('.json')[0]] = full_names[xx]
+    return paths
 
 
-class PlayerDialog(QFrame):
+class PlayerFrame(QFrame):
     fps = None
     last_time = time()
 
     def __init__(self, recid, parent=None):
-
         QFrame.__init__(self, parent=parent)
         self._set_design()
-
         # paths
-        doc_folder, audio_path, pitch_path, pd_path = get_paths(recid)
+        self.paths = get_paths(recid)
 
         # loading features and audio
-        self.raw_audio, len_audio, min_audio, max_audio = load_audio(audio_path)
+        self.raw_audio, len_audio, min_audio, max_audio = \
+            load_audio(self.paths['audio_path'])
         (time_stamps, self.pitch_plot, max_pitch, min_pitch,
-         self.samplerate, self.hopsize) = load_pitch(pitch_path)
-        vals, bins = load_pd(pd_path)
+         self.samplerate, self.hopsize) = load_pitch(
+            self.paths['audioanalysis--pitch_filtered'])
+        vals, bins = \
+            load_pd(self.paths['audioanalysis--pitch_distribution'])
 
         # plotting features
-        self.waveform_widget.plot_waveform(self.raw_audio, len_audio, min_audio,
-                                           max_audio)
+        self.waveform_widget.plot_waveform(self.raw_audio, len_audio,
+                                           min_audio, max_audio)
         self.melody_widget.plot_melody(time_stamps, self.pitch_plot, len_audio,
                                        self.samplerate, max_pitch)
         self.melody_widget.plot_histogram(vals, bins, max_pitch)
 
         # slider and playback thread
-        self.playback_thread = Player()
-        self.playback_thread.set_source(audio_path)
+        self.playback = Player()
+        self.playback.set_source(self.paths['audio_path'])
         self._set_slider(len_audio)
 
         self.frame_player.toolbutton_pause.setDisabled(True)
@@ -99,26 +103,16 @@ class PlayerDialog(QFrame):
         self.timer = QTimer()
         self.timer.setInterval(50)
 
-        # signals
-        # self.playback_thread.play_clicked.connect(self.start_timer)
-        # self.playback_thread.pause_clicked.connect(self.stop_timer)
-        # self.timer.timeout.connect(self.update_playback_pos)
-        self.playback_thread.player.positionChanged.connect(self.update_vlines)
+        self.playback.player.positionChanged.connect(self.update_vlines)
         self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
             self.wf_region_changed)
         self.frame_player.toolbutton_play.clicked.connect(self.playback_play)
         self.frame_player.toolbutton_pause.clicked.connect(self.playback_pause)
 
-    def start_timer(self):
-        self.timer.start()
-
-    def stop_timer(self):
-        self.timer.stop()
-
     def closeEvent(self, QCloseEvent):
         self.waveform_widget.clear()
         self.melody_widget.clear()
-        self.playback_thread.pause()
+        self.playback.pause()
 
     def update_wf_pos(self, samplerate):
         self.waveform_widget.vline_wf.setPos(
@@ -126,16 +120,19 @@ class PlayerDialog(QFrame):
 
     def _set_design(self):
         self.setWindowTitle('Player')
-        self.resize(1050, 550)
+        self.resize(1200, 550)
         self.setMinimumSize(QSize(850, 500))
         self.setStyleSheet("background-color: rgb(30, 30, 30);")
         self.verticalLayout = QVBoxLayout(self)
 
         area = pgdock.DockArea()
-        d1 = pgdock.Dock("Waveform", area='Top', autoOrientation=False,
-                         closable=True)
+        d1 = pgdock.Dock("Waveform", area='Top', closable=False,
+                         autoOrientation=False)
+        #d1.setMinimumHeight(150)
         # d1.allowedAreas = ['top']
         self.waveform_widget = WaveformWidget()
+        #self.waveform_widget.setMinimumHeight(100)
+
         d1.addWidget(self.waveform_widget)
         area.addDock(d1, 'top')
 
@@ -157,12 +154,12 @@ class PlayerDialog(QFrame):
     def playback_play(self):
         self.frame_player.toolbutton_play.setDisabled(True)
         self.frame_player.toolbutton_pause.setEnabled(True)
-        self.playback_thread.play()
+        self.playback.play()
 
     def playback_pause(self):
         self.frame_player.toolbutton_play.setEnabled(True)
         self.frame_player.toolbutton_pause.setDisabled(True)
-        self.playback_thread.pause()
+        self.playback.pause()
 
     def _set_slider(self, len_audio):
         self.frame_player.slider.setMinimum(0)
@@ -203,7 +200,8 @@ class PlayerDialog(QFrame):
             pos=[0,
                  self.pitch_plot[np.int(playback_pos_sample / self.hopsize)]])
         self.frame_player.slider.setValue(playback_pos_sample)
-        self.waveform_widget.vline_wf.setPos([playback_pos_sample/ratio, 0])
+        self.waveform_widget.vline_wf.setPos([playback_pos_sample/ratio,
+                                              np.min(self.raw_audio)])
 
         now = time()
 
