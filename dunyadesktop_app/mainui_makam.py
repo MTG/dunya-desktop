@@ -9,7 +9,6 @@ from cultures import apiconfig
 from cultures.makam import utilities
 from cultures.makam.query import QueryThread
 from mainui_design_makam import MainWindowMakamDesign
-from widgets.playerdialog import PlayerDialog
 from widgets.playermainwindow import PlayerMainWindow
 from utilities import database
 
@@ -179,7 +178,7 @@ class MainWindowMakam(MainWindowMakamDesign):
         try:
             docid = database.get_nth_row(c, coll, index.row())[0]
             conn.close()
-            player = PlayerMainWindow(docid=docid, parent=self)
+            player = PlayerMainWindow(docid=str(docid), parent=self)
             player.show()
         except:
             QMessageBox.information(self, "QMessageBox.information()",
