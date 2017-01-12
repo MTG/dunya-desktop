@@ -148,10 +148,10 @@ class MelodyWidget(GraphicsLayoutWidget):
         self.zoom_selection.plot(time[0:len(visible)],
                                  visible,
                                  connect='finite',
-                                 pen=pen,
-                                 symbol='o',
-                                 symbolSize=1.5,
-                                 symbolBrush=pg.mkBrush(222, 244, 237),
-                                 symbolPen=None,
-                                 autoDownsample=True)
+                                 pen=pen,)
+                                 #symbol='o',
+                                 #symbolSize=1.5,
+                                 #symbolBrush=pg.mkBrush(222, 244, 237),
+                                 #symbolPen=None,
+                                 #autoDownsample=True)
         self.zoom_selection.resetTransform()
