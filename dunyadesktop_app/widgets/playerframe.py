@@ -110,9 +110,12 @@ class PlayerFrame(QFrame):
         self.frame_player.toolbutton_pause.clicked.connect(self.playback_pause)
 
     def closeEvent(self, QCloseEvent):
-        self.waveform_widget.clear()
-        self.melody_widget.clear()
-        self.playback.pause()
+        if hasattr(self, 'waveform_widget'):
+            self.waveform_widget.clear()
+        if hasattr(self, 'melody_widget'):
+            self.melody_widget.clear()
+        if hasattr(self, 'playback'):
+            self.playback.pause()
 
     def update_wf_pos(self, samplerate):
         self.waveform_widget.vline_wf.setPos(
