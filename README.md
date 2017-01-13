@@ -47,7 +47,7 @@ Then install command-line tools.
         cd ..
         tar -xvf PyQt-gpl-5.7.1.tar.gz
         cd PyQt-gpl-5.7.1
-        python configure.py -d /usr/local/lib/python2.7/site-packages/ --qmake=/usr/local/Cellar/qt5/5.7.1_1/bin/qmake --sip=/usr/local/bin/sip --sip-incdir=../sip-4.19/siplib
+        python configure.py -d /usr/local/lib/python2.7/site-packages/ --qmake=/usr/local/Cellar/qt5/5.7.1_1/bin/qmake --sip=../sip-4.19/sipgen/sip --sip-incdir=../sip-4.19/siplib
         make
         make install
 
