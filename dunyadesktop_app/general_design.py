@@ -58,13 +58,13 @@ class GeneralMainDesign(QMainWindow):
         self.dw_collections = DockWidget(300, 600, 400, 20000)
         self.dwc_left = DockWidgetContentsLeft(self)
         self.dw_collections.setWidget(self.dwc_left)
-        self.addDockWidget(QtCore.Qt.DockWidgetArea(1),
+        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea,
                            self.dw_collections)
 
         self.dw_top = DockWidget(460, 50, 20000, 50)
         self.dwc_top = DockWidgetContentsTop()
         self.dw_top.setWidget(self.dwc_top)
-        self.addDockWidget(QtCore.Qt.DockWidgetArea(4), self.dw_top)
+        self.addDockWidget(QtCore.Qt.TopDockWidgetArea, self.dw_top)
 
         QtCore.QMetaObject.connectSlotsByName(self)
 
