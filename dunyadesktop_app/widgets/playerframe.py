@@ -85,7 +85,6 @@ class PlayerFrame(QFrame):
 
         self.playback = Playback()
         self.playback.set_source(self.feature_paths['audio_path'])
-
         self.frame_playback.toolbutton_pause.setDisabled(True)
 
         self.playback.player.positionChanged.connect(self.update_vlines)
@@ -119,11 +118,11 @@ class PlayerFrame(QFrame):
                                                hideTitle=True, closable=False,
                                                autoOrientation=False)
         self.dock_fixed_waveform.setFixedHeight(60)
-
         self.waveform_widget = WaveformWidget()
         self.waveform_widget.setMinimumHeight(60)
-
         self.dock_fixed_waveform.addWidget(self.waveform_widget)
+        self.dock_fixed_waveform.allowedAreas = ['top']
+        self.dock_fixed_waveform.setAcceptDrops(False)
         self.dock_area.addDock(self.dock_fixed_waveform, position='top')
 
         self.dock_playback = pgdock.Dock(name='Playback', area='bottom',
@@ -131,6 +130,7 @@ class PlayerFrame(QFrame):
         self.frame_playback = PlaybackFrame(self)
         self.dock_playback.addWidget(self.frame_playback)
         self.dock_playback.setFixedHeight(60)
+        self.dock_playback.setAcceptDrops(False)
         self.dock_area.addDock(self.dock_playback, position='bottom')
 
         layout = QVBoxLayout(self)
