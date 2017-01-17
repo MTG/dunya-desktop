@@ -1,11 +1,8 @@
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
-from PyQt5.QtCore import QUrl, pyqtSignal
+from PyQt5.QtCore import QUrl
 
 
-class Player:
-    play_clicked = pyqtSignal()
-    pause_clicked = pyqtSignal()
-
+class Playback:
     def __init__(self):
         self.player = QMediaPlayer()
 
