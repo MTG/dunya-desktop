@@ -5,13 +5,15 @@ import numpy as np
 from PyQt5.QtWidgets import QSizePolicy
 
 pg.setConfigOptions(useOpenGL=True)
+pg.setConfigOptions(useWeave=True)
 
-class MelodyWidget(GraphicsLayoutWidget):
+
+class TimeSeriesWidget(GraphicsLayoutWidget):
     def __init__(self, parent=None):
         GraphicsLayoutWidget.__init__(self, parent)
         self.layout = pg.GraphicsLayout()
         self._set_size_policy()
-        self.limit = 500
+        self.limit = 300
 
     def _set_size_policy(self):
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
@@ -22,13 +24,13 @@ class MelodyWidget(GraphicsLayoutWidget):
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
 
-    def plot_melody(self, time_stamps, pitch_plot, len_raw_audio, samplerate,
-                    max_pitch):
+    def plot_pitch(self, time_stamps, pitch_plot, len_raw_audio, samplerate,
+                   max_pitch):
         self.pitch_plot = pitch_plot
         x_axis = pg.AxisItem('bottom')
         x_axis.enableAutoSIPrefix(enable=False)
 
-        y_axis = pg.AxisItem('left', )
+        y_axis = pg.AxisItem('left')
         y_axis.enableAutoSIPrefix(enable=False)
 
         self.zoom_selection = self.layout.addPlot(title="Zoom selection",
