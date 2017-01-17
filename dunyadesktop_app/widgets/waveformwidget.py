@@ -5,7 +5,7 @@ import pyqtgraph as pg
 import numpy as np
 
 pg.setConfigOptions(useOpenGL=True)
-
+pg.setConfigOptions(useWeave=True)
 
 class WaveformWidget(GraphicsLayoutWidget):
     def __init__(self):
@@ -27,6 +27,7 @@ class WaveformWidget(GraphicsLayoutWidget):
         self.setAcceptDrops(False)
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
+        self.setContentsMargins(0, 0, 0, 0)
 
     def plot_waveform(self, raw_audio, len_audio, min_audio, max_audio):
         self.raw_audio = raw_audio
