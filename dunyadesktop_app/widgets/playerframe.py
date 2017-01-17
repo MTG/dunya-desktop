@@ -10,7 +10,7 @@ import numpy as np
 from pyqtgraph.ptime import time
 
 from waveformwidget import WaveformWidget
-from melodywidget import MelodyWidget
+from timeserieswidget import TimeSeriesWidget
 from playbackframe import PlaybackFrame
 from utilities.playback import Playback
 from cultures.makam import utilities
@@ -72,20 +72,19 @@ class PlayerFrame(QFrame):
 
     def __init__(self, recid, parent=None):
         QFrame.__init__(self, parent=parent)
+        self.recid = recid
         self.__set_design()
 
         self.feature_paths = get_feature_paths(recid)
 
-        (self.raw_audio, len_audio, min_audio, max_audio) = \
-            read_audio(self.feature_paths['audio_path'])
-        self._set_slider(len_audio)
-
+        (self.raw_audio, len_audio,
+         min_audio, max_audio) = read_audio(self.feature_paths['audio_path'])
+        self.__set_slider(len_audio)
         self.waveform_widget.plot_waveform(self.raw_audio, len_audio,
                                            min_audio, max_audio)
 
         self.playback = Playback()
         self.playback.set_source(self.feature_paths['audio_path'])
-        self.frame_playback.toolbutton_pause.setDisabled(True)
 
         self.playback.player.positionChanged.connect(self.update_vlines)
         self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
@@ -97,7 +96,7 @@ class PlayerFrame(QFrame):
         if hasattr(self, 'waveform_widget'):
             self.waveform_widget.clear()
         if hasattr(self, 'melody_widget'):
-            self.melody_widget.clear()
+            self.ts_widget.clear()
         if hasattr(self, 'playback'):
             self.playback.pause()
 
@@ -128,6 +127,7 @@ class PlayerFrame(QFrame):
         self.dock_playback = pgdock.Dock(name='Playback', area='bottom',
                                          closable=False, autoOrientation=False)
         self.frame_playback = PlaybackFrame(self)
+        self.frame_playback.toolbutton_pause.setDisabled(True)
         self.dock_playback.addWidget(self.frame_playback)
         self.dock_playback.setFixedHeight(60)
         self.dock_playback.setAcceptDrops(False)
@@ -138,11 +138,30 @@ class PlayerFrame(QFrame):
 
         QMetaObject.connectSlotsByName(self)
 
-    def _set_slider(self, len_audio):
+    def __set_slider(self, len_audio):
         self.frame_playback.slider.setMinimum(0)
         self.frame_playback.slider.setMaximum(len_audio)
         self.frame_playback.slider.setTickInterval(10)
         self.frame_playback.slider.setSingleStep(1)
+
+    def plot_1d_data(self, type, feature):
+        ftr = type + '--' + feature + '.json'
+        feature_path = os.path.join(DOCS_PATH, self.recid, ftr)
+
+        if feature == 'pitch' or feature == 'pitch_filtered':
+            if not hasattr(self, 'ts_widget'):
+                (time_stamps, pitch_plot, max_pitch,
+                 min_pitch, samplerate, hopsize) = load_pitch(feature_path)
+                self.ts_widget = TimeSeriesWidget(self)
+                self.dock_ts = pgdock.Dock(name='Time Series', area='bottom',
+                                           closable=True)
+                self.dock_ts.addWidget(self.ts_widget)
+                self.dock_area.addDock(self.dock_ts)
+                self.ts_widget.plot_pitch(time_stamps, pitch_plot,
+                                          len(self.raw_audio), samplerate,
+                                          max_pitch)
+            else:
+                print 'already has'
 
     def playback_play(self):
         self.frame_playback.toolbutton_play.setDisabled(True)
