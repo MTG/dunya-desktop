@@ -2,7 +2,7 @@ import sys
 
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import (QMainWindow, QApplication, QWidget, QVBoxLayout,
-                             QDockWidget, QPushButton)
+                             QDockWidget)
 from PyQt5.QtCore import Qt, QMetaObject
 
 from treewidget import FeatureTreeWidget
@@ -16,7 +16,7 @@ class PlayerMainWindow(QMainWindow):
         QMetaObject.connectSlotsByName(self)
 
         # signals
-        self.feature_tree.item_checked.connect(self.evaluate_check_signal)
+        self.feature_tree.item_checked.connect(self.evaluate_checked_signal)
 
     def _set_design(self, docid):
         self.resize(710, 550)
@@ -53,17 +53,19 @@ class PlayerMainWindow(QMainWindow):
 
         self.features_dw.setWidget(self.dockWidgetContents)
 
-        self.addDockWidget(Qt.DockWidgetArea(1), self.features_dw)
+        self.addDockWidget(Qt.LeftDockWidgetArea, self.features_dw)
 
     def closeEvent(self, QCloseEvent):
         self.player_frame.closeEvent(QCloseEvent)
 
-    def evaluate_check_signal(self, type, item, is_checked):
-        if 'pitch' in item:
-            print type, item, is_checked
+    def evaluate_checked_signal(self, type, item, is_checked):
+        if item == 'pitch' or item == 'pitch_filtered':
+            if is_checked:
+                self.player_frame.plot_1d_data(type, item)
+            else:
+                print 'remove 1d plot'
 
-
-app = QApplication(sys.argv)
-ply = PlayerMainWindow(docid='1fd7a362-cf14-42fa-a6c6-0093857ca5eb')
-ply.show()
-app.exec_()
+#app = QApplication(sys.argv)
+#ply = PlayerMainWindow(docid='752e447a-97a1-4f51-82f9-38d4d535b9db')
+#ply.show()
+#app.exec_()
