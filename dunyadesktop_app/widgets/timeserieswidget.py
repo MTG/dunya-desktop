@@ -8,6 +8,18 @@ pg.setConfigOptions(useOpenGL=True)
 pg.setConfigOptions(useWeave=True)
 
 
+class TonicLine(pg.InfiniteLine):
+    movable = False
+    angle = 0
+    label_opts = {'position': 0.1, 'color': (200, 200, 100),
+                 'fill': (200, 200, 200, 50), 'movable': True}
+
+    def __init__(self, value, label):
+        pg.InfiniteLine.__init__(self, pos=value, angle=self.angle,
+                                 movable=self.movable,
+                                 labelOpts=self.label_opts)
+
+
 class TimeSeriesWidget(GraphicsLayoutWidget):
     def __init__(self, parent=None):
         GraphicsLayoutWidget.__init__(self, parent)
@@ -92,6 +104,17 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
     def set_zoom_selection_area_hor(self, min_freq, max_freq):
         self.zoom_selection.setYRange(min_freq, max_freq, padding=0)
         self.histogram.setYRange(min_freq, max_freq, padding=0)
+
+    def add_tonic(self, value):
+        if not hasattr(self, 'tonic_line'):
+            self.tonic_line = pg.InfiniteLine(pos= value, movable=False,
+                                              angle=0, label='Tonic',
+                                              labelOpts=
+                                              {'position': 0.1,
+                                               'color': (200, 200, 100),
+                                               'fill': (200, 200, 200, 50),
+                                               'movable': True})
+            self.zoom_selection.addItem(self.tonic_line)
 
     def updateHDF5Plot(self, start, stop):
         start *=  1/(128./44100.)

@@ -54,6 +54,11 @@ def load_pd(pd_path):
     return vals, bins
 
 
+def load_tonic(tonic_path):
+    tnc = json.load(open(tonic_path))
+    return tnc['value']
+
+
 def get_feature_paths(recid):
     doc_folder = os.path.join(DOCS_PATH, recid)
     (full_names, folders, names) = \
@@ -163,6 +168,12 @@ class PlayerFrame(QFrame):
                                           x_max, max_pitch)
             else:
                 print 'already has'
+
+        if feature == 'tonic':
+            if hasattr(self, 'ts_widget'):
+                tonic_value = load_tonic(feature_path)
+                self.ts_widget.add_tonic(tonic_value)
+
 
     def playback_play(self):
         self.frame_playback.toolbutton_play.setDisabled(True)
