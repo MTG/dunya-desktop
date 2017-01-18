@@ -13,7 +13,7 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         GraphicsLayoutWidget.__init__(self, parent)
         self.layout = pg.GraphicsLayout()
         self._set_size_policy()
-        self.limit = 300
+        self.limit = 600
 
     def _set_size_policy(self):
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
@@ -24,11 +24,11 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
 
-    def plot_pitch(self, time_stamps, pitch_plot, len_raw_audio, samplerate,
-                   max_pitch):
+    def plot_pitch(self, time_stamps, pitch_plot, x_start, x_end, max_pitch):
         self.pitch_plot = pitch_plot
         x_axis = pg.AxisItem('bottom')
         x_axis.enableAutoSIPrefix(enable=False)
+        x_axis.setGrid(100)
 
         y_axis = pg.AxisItem('left')
         y_axis.enableAutoSIPrefix(enable=False)
@@ -41,15 +41,12 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         self.zoom_selection.setDownsampling(auto=True, mode='mean')
 
         pen = pg.mkPen(cosmetic=True, width=1.5, color=(30, 110, 216,))
-        self.updateHDF5Plot(0, len_raw_audio/(25*44100.))
+        self.updateHDF5Plot(x_start, x_end)
 
         self.zoom_selection.setLabel(axis="bottom", text="Time", units="sec")
         self.zoom_selection.setLabel(axis="left", text="Frequency", units="Hz",
                                      unitPrefix=False)
 
-        #self.zoom_selection.setXRange(0, len_raw_audio / samplerate * 25.,
-        #                              padding=0)
-        #self.zoom_selection.setYRange(20, max_pitch, padding=0)
         self.layout.addItem(self.zoom_selection)
         self.add_elements_to_plot(max_pitch)
         self.addItem(self.layout)
