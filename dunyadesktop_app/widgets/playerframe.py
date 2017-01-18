@@ -105,10 +105,6 @@ class PlayerFrame(QFrame):
         if hasattr(self, 'playback'):
             self.playback.pause()
 
-    def update_wf_pos(self, samplerate):
-        self.waveform_widget.vline_wf.setPos(
-            [self.playback_pos * samplerate, 0])
-
     def __set_design(self):
         self.setWindowTitle('Player')
         self.resize(1200, 550)
@@ -189,8 +185,8 @@ class PlayerFrame(QFrame):
     def wf_region_changed(self):
         if hasattr(self, 'ts_widget'):
             if hasattr(self.ts_widget, 'zoom_selection'):
-                x_min, x_max = self.waveform_widget.get_waveform_region()
-                if self.is_pitch_plotted:
+                if self.ts_widget.is_pitch_plotted:
+                    x_min, x_max = self.waveform_widget.get_waveform_region()
                     self.ts_widget.update_plot(x_min, x_max)
 
 
