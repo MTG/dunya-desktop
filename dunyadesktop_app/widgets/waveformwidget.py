@@ -14,6 +14,7 @@ class WaveformWidget(GraphicsLayoutWidget):
         self.layout = pg.GraphicsLayout()
         self._set_size_policy()
         self.limit = 900  # maximum number of samples to be plotted
+        self.samplerate = 44100.
 
     def _set_size_policy(self):
         size_policy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
@@ -51,11 +52,12 @@ class WaveformWidget(GraphicsLayoutWidget):
     def _add_elements_to_plot(self, len_audio, min_audio, max_audio):
         pos_wf_x_max = len_audio / 25.
         self.region_wf = pg.LinearRegionItem([0, pos_wf_x_max],
-                                             brush=pg.mkBrush((50, 255, 255, 45)),
+                                             brush=pg.mkBrush((50, 255,
+                                                               255, 45)),
                                              bounds=[0., len_audio])
-        self.vline_wf = pg.ROI([0, min_audio], [0, max_audio-min_audio], angle=0,
-                               pen=pg.mkPen((255, 40, 35, 150), cosmetic=True,
-                                            width=1))
+        self.vline_wf = pg.ROI([0, min_audio], [0, max_audio-min_audio],
+                               angle=0, pen=pg.mkPen((255, 40, 35, 150),
+                                                     cosmetic=True, width=1))
         self.waveform.addItem(self.vline_wf)
         self.waveform.addItem(self.region_wf)
 
@@ -106,3 +108,10 @@ class WaveformWidget(GraphicsLayoutWidget):
         #self.waveform.setPos(start, 0)  # shift to match starting index
         self.waveform.resetTransform()
         #self.waveform.scale(scale, 1)  # scale to match downsampling
+
+    def get_waveform_region(self):
+        pos_wf_x_min, pos_wf_x_max = self.region_wf.getRegion()
+        ratio = len(self.raw_audio) / len(self.visible)
+        x_min = (pos_wf_x_min * ratio) / self.samplerate
+        x_max = (pos_wf_x_max * ratio) / self.samplerate
+        return x_min, x_max
