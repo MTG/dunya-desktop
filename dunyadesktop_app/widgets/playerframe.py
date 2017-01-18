@@ -157,9 +157,10 @@ class PlayerFrame(QFrame):
                                            closable=True)
                 self.dock_ts.addWidget(self.ts_widget)
                 self.dock_area.addDock(self.dock_ts)
-                self.ts_widget.plot_pitch(time_stamps, pitch_plot,
-                                          len(self.raw_audio), samplerate,
-                                          max_pitch)
+
+                x_min, x_max = self.waveform_widget.get_waveform_region()
+                self.ts_widget.plot_pitch(time_stamps, pitch_plot, x_min,
+                                          x_max, max_pitch)
             else:
                 print 'already has'
 
@@ -174,10 +175,9 @@ class PlayerFrame(QFrame):
         self.playback.pause()
 
     def wf_region_changed(self):
-        pos_wf_x_min, pos_wf_x_max = self.waveform_widget.region_wf.getRegion()
-        ratio = len(self.raw_audio) / len(self.waveform_widget.visible)
-        #x_min = (pos_wf_x_min * ratio) / self.samplerate
-        #x_max = (pos_wf_x_max * ratio) / self.samplerate
+        if hasattr(self, 'ts_widget'):
+            x_min, x_max = self.waveform_widget.get_waveform_region()
+            self.ts_widget.updateHDF5Plot(x_min, x_max)
         #self.melody_widget.updateHDF5Plot(x_min, x_max)
         #self.melody_widget.set_zoom_selection_area(pos_wf_x_min * ratio,
         #                                           pos_wf_x_max * ratio,
@@ -185,28 +185,18 @@ class PlayerFrame(QFrame):
         #                                           self.hopsize)
 
     def update_vlines(self, playback_pos):
-        # print(playback_pos)
-        # if self.playback_thread.playback.is_playing():
-        # if self.playback_pos_pyglet == \
-        #        self.playback_thread.playback.get_pos_seconds():
-        #    self.playback_pos += 0.05
-        # else:
-        #    self.playback_pos = \
-        #        self.playback_thread.playback.get_pos_seconds()
-        #    self.playback_pos_pyglet = \
-        #        self.playback_thread.playback.get_pos_seconds()
-
-        # self.playback_pos = self.playback_thread.playback.get_pos_seconds()
         ratio = len(self.raw_audio) / len(self.waveform_widget.visible)
         playback_pos_sec = playback_pos / 1000.
         playback_pos_sample = playback_pos_sec * self.samplerate
-        #self.melody_widget.vline.setPos([playback_pos_sec, 0])
+
+        self.frame_playback.slider.setValue(playback_pos_sample)
+        self.waveform_widget.vline_wf.setPos([playback_pos_sample / ratio,
+                                              np.min(self.raw_audio)])
+        if hasattr(self, 'ts_widget'):
+            self.ts_widget.vline.setPos([playback_pos_sec, 0])
         #self.melody_widget.hline_histogram.setPos(
         #    pos=[0,
         #         self.pitch_plot[np.int(playback_pos_sample / self.hopsize)]])
-        self.frame_playback.slider.setValue(playback_pos_sample)
-        self.waveform_widget.vline_wf.setPos([playback_pos_sample/ratio,
-                                              np.min(self.raw_audio)])
 
         #now = time()
         #dt = now - self.last_time
