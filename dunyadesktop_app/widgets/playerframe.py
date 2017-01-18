@@ -150,27 +150,28 @@ class PlayerFrame(QFrame):
         self.frame_playback.slider.setSingleStep(1)
 
     def plot_1d_data(self, type, feature):
+        if not hasattr(self, 'ts_widget'):
+            self.ts_widget = TimeSeriesWidget(self)
+            self.ts_widget.add_1d_view()
+            self.dock_ts = pgdock.Dock(name='Time Series', area='bottom',
+                                       closable=True)
+            self.dock_ts.addWidget(self.ts_widget)
+            self.dock_area.addDock(self.dock_ts)
+
         ftr = type + '--' + feature + '.json'
         feature_path = os.path.join(DOCS_PATH, self.recid, ftr)
 
         if feature == 'pitch' or feature == 'pitch_filtered':
-            if not hasattr(self, 'ts_widget'):
-                (time_stamps, pitch_plot, max_pitch,
-                 min_pitch, samplerate, hopsize) = load_pitch(feature_path)
-                self.ts_widget = TimeSeriesWidget(self)
-                self.dock_ts = pgdock.Dock(name='Time Series', area='bottom',
-                                           closable=True)
-                self.dock_ts.addWidget(self.ts_widget)
-                self.dock_area.addDock(self.dock_ts)
-
-                x_min, x_max = self.waveform_widget.get_waveform_region()
+            (time_stamps, pitch_plot, max_pitch, min_pitch, samplerate,
+             hopsize) = load_pitch(feature_path)
+            x_min, x_max = self.waveform_widget.get_waveform_region()
+            if hasattr(self.ts_widget, 'zoom_selection'):
                 self.ts_widget.plot_pitch(time_stamps, pitch_plot, x_min,
                                           x_max, max_pitch)
-            else:
-                print 'already has'
+                self.is_pitch_plotted = True
 
         if feature == 'tonic':
-            if hasattr(self, 'ts_widget'):
+            if hasattr(self.ts_widget, 'zoom_selection'):
                 tonic_value = load_tonic(feature_path)
                 self.ts_widget.add_tonic(tonic_value)
 
@@ -187,13 +188,11 @@ class PlayerFrame(QFrame):
 
     def wf_region_changed(self):
         if hasattr(self, 'ts_widget'):
-            x_min, x_max = self.waveform_widget.get_waveform_region()
-            self.ts_widget.updateHDF5Plot(x_min, x_max)
-        #self.melody_widget.updateHDF5Plot(x_min, x_max)
-        #self.melody_widget.set_zoom_selection_area(pos_wf_x_min * ratio,
-        #                                           pos_wf_x_max * ratio,
-        #                                           self.samplerate,
-        #                                           self.hopsize)
+            if hasattr(self.ts_widget, 'zoom_selection'):
+                x_min, x_max = self.waveform_widget.get_waveform_region()
+                if self.is_pitch_plotted:
+                    self.ts_widget.update_plot(x_min, x_max)
+
 
     def update_vlines(self, playback_pos):
         ratio = len(self.raw_audio) / len(self.waveform_widget.visible)
@@ -204,7 +203,8 @@ class PlayerFrame(QFrame):
         self.waveform_widget.vline_wf.setPos([playback_pos_sample / ratio,
                                               np.min(self.raw_audio)])
         if hasattr(self, 'ts_widget'):
-            self.ts_widget.vline.setPos([playback_pos_sec, 0])
+            if hasattr(self.ts_widget, 'vline'):
+                self.ts_widget.vline.setPos([playback_pos_sec, 0])
         #self.melody_widget.hline_histogram.setPos(
         #    pos=[0,
         #         self.pitch_plot[np.int(playback_pos_sample / self.hopsize)]])

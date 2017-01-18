@@ -27,6 +27,9 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         self._set_size_policy()
         self.limit = 600
 
+        # flags
+        self.is_pitch_plotted = False
+
     def _set_size_policy(self):
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -36,8 +39,7 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
 
-    def plot_pitch(self, time_stamps, pitch_plot, x_start, x_end, max_pitch):
-        self.pitch_plot = pitch_plot
+    def add_1d_view(self):
         x_axis = pg.AxisItem('bottom')
         x_axis.enableAutoSIPrefix(enable=False)
         x_axis.setGrid(100)
@@ -52,16 +54,21 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         self.zoom_selection.setMenuEnabled(False)
         self.zoom_selection.setDownsampling(auto=True, mode='mean')
 
-        pen = pg.mkPen(cosmetic=True, width=1.5, color=(30, 110, 216,))
-        self.updateHDF5Plot(x_start, x_end)
-
         self.zoom_selection.setLabel(axis="bottom", text="Time", units="sec")
         self.zoom_selection.setLabel(axis="left", text="Frequency", units="Hz",
                                      unitPrefix=False)
-
         self.layout.addItem(self.zoom_selection)
-        self.add_elements_to_plot(max_pitch)
+        self.vline = pg.ROI([0, 0], [0, 20000], angle=0,
+                            pen=pg.mkPen((255, 40, 35, 150), cosmetic=True,
+                                         width=1))
+        self.zoom_selection.addItem(self.vline)
         self.addItem(self.layout)
+
+    def plot_pitch(self, time_stamps, pitch_plot, x_start, x_end, max_pitch):
+        self.pitch_plot = pitch_plot
+        pen = pg.mkPen(cosmetic=True, width=1.5, color=(30, 110, 216,))
+        self.update_plot(x_start, x_end)
+        self.is_pitch_plotted = True
 
     def plot_histogram(self, vals, bins, max_pitch):
         self.histogram = self.layout.addPlot(row=0, col=1, title="Histogram")
@@ -89,12 +96,6 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         self.histogram.addItem(self.hline_histogram)
         self.addItem(self.histogram)
 
-    def add_elements_to_plot(self, max_pitch):
-        self.vline = pg.ROI([0, 0], [0, max_pitch], angle=0,
-                            pen=pg.mkPen((255, 40, 35, 150), cosmetic=True,
-                                         width=1))
-        self.zoom_selection.addItem(self.vline)
-
     #def set_zoom_selection_area(self, pos_wf_x_min, pos_wf_x_max, samplerate,
     #                            hopsize):
     #    x_min = pos_wf_x_min / samplerate
@@ -116,7 +117,7 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
                                                'movable': True})
             self.zoom_selection.addItem(self.tonic_line)
 
-    def updateHDF5Plot(self, start, stop):
+    def update_plot(self, start, stop):
         start *=  1/(128./44100.)
         stop *= 1/(128./44100.)
         start = int(start)
@@ -170,10 +171,5 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         self.zoom_selection.plot(time[0:len(visible)],
                                  visible,
                                  connect='finite',
-                                 pen=pen,)
-                                 #symbol='o',
-                                 #symbolSize=1.5,
-                                 #symbolBrush=pg.mkBrush(222, 244, 237),
-                                 #symbolPen=None,
-                                 #autoDownsample=True)
+                                 pen=pen)
         self.zoom_selection.resetTransform()

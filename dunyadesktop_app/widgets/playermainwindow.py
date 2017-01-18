@@ -63,7 +63,8 @@ class PlayerMainWindow(QMainWindow):
             if is_checked:
                 self.player_frame.plot_1d_data(type, item)
             else:
-                print 'remove 1d plot'
+                self.player_frame.ts_widget.zoom_selection.clearPlots()
+                self.player_frame.is_pitch_plotted = False
         if item == 'tonic':
             if is_checked:
                 self.player_frame.plot_1d_data(type, item)
@@ -72,6 +73,7 @@ class PlayerMainWindow(QMainWindow):
                     self.player_frame.ts_widget.zoom_selection.removeItem(
                         self.player_frame.ts_widget.tonic_line)
                     del self.player_frame.ts_widget.tonic_line
+
 
 app = QApplication(sys.argv)
 ply = PlayerMainWindow(docid='f09db163-2549-4f67-bfb3-7b626f20a8c2')
