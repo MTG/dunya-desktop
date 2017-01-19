@@ -65,6 +65,7 @@ class PlayerMainWindow(QMainWindow):
             else:
                 self.player_frame.ts_widget.zoom_selection.clearPlots()
                 self.player_frame.is_pitch_plotted = False
+                self.player_frame.ts_widget.pitch_plot = None
         if item == 'tonic':
             if is_checked:
                 self.player_frame.plot_1d_data(type, item)

@@ -169,7 +169,6 @@ class PlayerFrame(QFrame):
                 ftr_hist = os.path.join(DOCS_PATH, self.recid,
                                         'audioanalysis--pitch_distribution.json')
                 vals, bins = load_pd(ftr_hist)
-                for xx in range(len(vals)): print vals[xx], bins[xx]
                 self.ts_widget.plot_histogram(vals, bins)
 
         if feature == 'tonic':

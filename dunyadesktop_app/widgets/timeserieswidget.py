@@ -47,7 +47,7 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         y_axis = pg.AxisItem('left')
         y_axis.enableAutoSIPrefix(enable=False)
 
-        self.zoom_selection = self.layout.addPlot(title="Zoom selection",
+        self.zoom_selection = self.layout.addPlot(#title="Zoom selection",
                                                   axisItems={'left': y_axis,
                                                              'bottom': x_axis})
         self.zoom_selection.setMouseEnabled(x=False, y=False)
@@ -73,6 +73,7 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         self.histogram.plot(x=vals, y=bins, shadowPen=shadow_pen)
         self.histogram.setXRange(0, np.max(vals), padding=0)
         self.histogram.resetTransform()
+        self.zoom_selection.setYLink(self.histogram)
 
     def plot_1d_region(self):
         self.histogram = self.layout.addPlot(row=0, col=1)
@@ -121,61 +122,62 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
             self.zoom_selection.addItem(self.tonic_line)
 
     def update_plot(self, start, stop):
-        start *=  1/(128./44100.)
-        stop *= 1/(128./44100.)
-        start = int(start)
-        stop = int(stop)
-        # Decide by how much we should downsample
-        ds = int((stop - start) / self.limit) + 1
+        if self.pitch_plot is not None:
+            start *=  1/(128./44100.)
+            stop *= 1/(128./44100.)
+            start = int(start)
+            stop = int(stop)
+            # Decide by how much we should downsample
+            ds = int((stop - start) / self.limit) + 1
 
-        if ds == 1:
-            # Small enough to display with no intervention.
-            visible = self.pitch_plot[start:stop]
-            scale = 1
-        else:
-            # Here convert data into a down-sampled array suitable for visualizing.
-            # Must do this piecewise to limit memory usage.
-            samples = 1 + ((stop - start) // ds)
-            visible = np.zeros(samples * 2, dtype=self.pitch_plot.dtype)
-            sourcePtr = start
-            targetPtr = 0
+            if ds == 1:
+                # Small enough to display with no intervention.
+                visible = self.pitch_plot[start:stop]
+                scale = 1
+            else:
+                # Here convert data into a down-sampled array suitable for visualizing.
+                # Must do this piecewise to limit memory usage.
+                samples = 1 + ((stop - start) // ds)
+                visible = np.zeros(samples * 2, dtype=self.pitch_plot.dtype)
+                sourcePtr = start
+                targetPtr = 0
 
-            # read data in chunks of ~1M samples
-            chunkSize = (1000000 // ds) * ds
-            while sourcePtr < stop - 1:
-                chunk = self.pitch_plot[sourcePtr:min(stop, sourcePtr + chunkSize)]
-                sourcePtr += len(chunk)
+                # read data in chunks of ~1M samples
+                chunkSize = (1000000 // ds) * ds
+                while sourcePtr < stop - 1:
+                    chunk = self.pitch_plot[sourcePtr:min(stop, sourcePtr + chunkSize)]
+                    sourcePtr += len(chunk)
 
-                # reshape chunk to be integral multiple of ds
-                chunk = chunk[:(len(chunk) // ds) * ds].reshape(
-                    len(chunk) // ds, ds)
+                    # reshape chunk to be integral multiple of ds
+                    chunk = chunk[:(len(chunk) // ds) * ds].reshape(
+                        len(chunk) // ds, ds)
 
-                # compute max and min
-                chunkMax = chunk.max(axis=1)
-                chunkMin = chunk.min(axis=1)
+                    # compute max and min
+                    chunkMax = chunk.max(axis=1)
+                    chunkMin = chunk.min(axis=1)
 
-                # interleave min and max into plot data to preserve envelope shape
-                visible[targetPtr:targetPtr + chunk.shape[0] * 2:2] = chunkMin
-                visible[
-                1 + targetPtr:1 + targetPtr + chunk.shape[0] * 2:2] = chunkMax
-                targetPtr += chunk.shape[0] * 2
+                    # interleave min and max into plot data to preserve envelope shape
+                    visible[targetPtr:targetPtr + chunk.shape[0] * 2:2] = chunkMin
+                    visible[
+                    1 + targetPtr:1 + targetPtr + chunk.shape[0] * 2:2] = chunkMax
+                    targetPtr += chunk.shape[0] * 2
 
-            self.visible = visible[:targetPtr]
-            scale = ds * 0.5
+                self.visible = visible[:targetPtr]
+                scale = ds * 0.5
 
-        start = (start*128.)/44100
-        stop = (stop*128.)/44100
-        step = (stop - start) / (len(visible))
+            start = (start*128.)/44100
+            stop = (stop*128.)/44100
+            step = (stop - start) / (len(visible))
 
-        time = np.arange(start, stop, step)
+            time = np.arange(start, stop, step)
 
-        self.zoom_selection.clearPlots()
-        pen = pg.mkPen(cosmetic=True, width=1.5, color=(30, 110, 216,))
-        self.zoom_selection.plot(time[0:len(visible)],
-                                 visible,
-                                 connect='finite',
-                                 pen=pen)
-        self.zoom_selection.resetTransform()
+            self.zoom_selection.clearPlots()
+            pen = pg.mkPen(cosmetic=True, width=1.5, color=(30, 110, 216,))
+            self.zoom_selection.plot(time[0:len(visible)],
+                                     visible,
+                                     connect='finite',
+                                     pen=pen)
+            self.zoom_selection.resetTransform()
 
     def set_hline_pos(self, playback_pos):
         self.hline_histogram.setPos(pos=[0,self.pitch_plot[
