@@ -6,7 +6,6 @@ from PyQt5.QtWidgets import QVBoxLayout, QFrame
 from PyQt5.QtCore import QSize, QMetaObject, QTimer
 from essentia.standard import MonoLoader
 import pyqtgraph.dockarea as pgdock
-import pyqtgraph as pg
 import numpy as np
 
 from waveformwidget import WaveformWidget
@@ -93,9 +92,11 @@ class PlayerFrame(QFrame):
         self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
             self.wf_region_changed)
         self.frame_playback.toolbutton_play.clicked.connect(self.playback_play)
-        self.frame_playback.toolbutton_pause.clicked.connect(self.playback_pause)
+        self.frame_playback.toolbutton_pause.clicked.connect(
+            self.playback_pause)
 
     def closeEvent(self, QCloseEvent):
+        super(QFrame, self).closeEvent(QCloseEvent)
         if hasattr(self, 'waveform_widget'):
             self.waveform_widget.clear()
         if hasattr(self, 'melody_widget'):
@@ -166,9 +167,10 @@ class PlayerFrame(QFrame):
                                           x_max, max_pitch)
                 self.is_pitch_plotted = True
 
-                ftr_hist = os.path.join(DOCS_PATH, self.recid,
-                                        'audioanalysis--pitch_distribution.json')
-                vals, bins = load_pd(ftr_hist)
+                histogram = \
+                    os.path.join(DOCS_PATH, self.recid,
+                                 'audioanalysis--pitch_distribution.json')
+                vals, bins = load_pd(histogram)
                 self.ts_widget.plot_histogram(vals, bins)
 
         if feature == 'tonic':
@@ -207,53 +209,3 @@ class PlayerFrame(QFrame):
                 self.ts_widget.vline.setPos([playback_pos_sec, 0])
             if hasattr(self.ts_widget, 'hline_histogram'):
                 self.ts_widget.set_hline_pos(playback_pos_sec)
-                #self.ts_widget.hline_histogram.setPos()
-
-        #self.melody_widget.hline_histogram.setPos(
-        #    pos=[0,
-        #         self.pitch_plot[np.int(playback_pos_sample / self.hopsize)]])
-
-        #now = time()
-        #dt = now - self.last_time
-        #self.last_time = now
-        #if self.fps is None:
-        #    self.fps = 1.0 / dt
-        #else:
-        #    s = np.clip(dt * 3., 0, 1)
-        #    self.fps = self.fps * (1 - s) + (1.0 / dt) * s
-        #self.melody_widget.zoom_selection.setTitle('%0.2f fps' % self.fps)
-
-        # pos_vline = self.melody_widget.vline.pos()[0]
-        # pos_xmin, pos_xmax = \
-        #    self.melody_widget.zoom_selection.viewRange()[0]
-        # dist = pos_xmax - pos_xmin
-
-        # if pos_xmax * 0.98 <= pos_vline <= pos_xmax * 1.02:
-        #    self.waveform_widget.region_wf.setRegion(
-        #        [pos_xmax*samplerate+(hopsize/samplerate),
-        #         (pos_xmax+dist)*samplerate])
-        #    self.melody_widget.zoom_selection.setXRange(
-        #        pos_xmax+(hopsize/samplerate), pos_xmax+dist, padding=0)
-
-
-        # elif pos_vline < pos_xmin * 0.99 or pos_vline > pos_xmax:
-        #    self.playback_pause()
-        #    pos_xmin, pos_xmax = self.waveform_widget.region_wf.getRegion()
-        #    pos = pos_xmin/samplerate
-
-        #    self.playback_pos = pos
-        #    self.playback_pos_pyglet = pos
-        #    self.playback_thread.playback.seek(pos)
-
-        #    self.waveform_widget.vline_wf.setPos(pos_xmin)
-        #    self.melody_widget.vline.setPos(pos_xmin / samplerate)
-        #    self.melody_widget.hline_histogram.setPos(
-        #        pos=[0,
-        #             pitch[int(self.playback_pos*samplerate/hopsize)]])
-        #    self.frame_player.slider.setValue(pos_xmin)
-
-        #    self.melody_widget.zoom_selection.setXRange(
-        #        pos_xmin/samplerate, pos_xmax/samplerate, padding=0)
-        # else:
-        # pass
-        # else for now playing option
