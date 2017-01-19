@@ -6,8 +6,8 @@ from PyQt5.QtWidgets import QVBoxLayout, QFrame
 from PyQt5.QtCore import QSize, QMetaObject, QTimer
 from essentia.standard import MonoLoader
 import pyqtgraph.dockarea as pgdock
+import pyqtgraph as pg
 import numpy as np
-from pyqtgraph.ptime import time
 
 from waveformwidget import WaveformWidget
 from timeserieswidget import TimeSeriesWidget
@@ -72,8 +72,6 @@ def get_feature_paths(recid):
 
 class PlayerFrame(QFrame):
     samplerate = 44100.
-    fps = None
-    last_time = time()
 
     def __init__(self, recid, parent=None):
         QFrame.__init__(self, parent=parent)
@@ -162,15 +160,22 @@ class PlayerFrame(QFrame):
              hopsize) = load_pitch(feature_path)
             x_min, x_max = self.waveform_widget.get_waveform_region()
             if hasattr(self.ts_widget, 'zoom_selection'):
+                self.ts_widget.hopsize = hopsize
+                self.ts_widget.samplerate = samplerate
                 self.ts_widget.plot_pitch(time_stamps, pitch_plot, x_min,
                                           x_max, max_pitch)
                 self.is_pitch_plotted = True
+
+                ftr_hist = os.path.join(DOCS_PATH, self.recid,
+                                        'audioanalysis--pitch_distribution.json')
+                vals, bins = load_pd(ftr_hist)
+                for xx in range(len(vals)): print vals[xx], bins[xx]
+                self.ts_widget.plot_histogram(vals, bins)
 
         if feature == 'tonic':
             if hasattr(self.ts_widget, 'zoom_selection'):
                 tonic_value = load_tonic(feature_path)
                 self.ts_widget.add_tonic(tonic_value)
-
 
     def playback_play(self):
         self.frame_playback.toolbutton_play.setDisabled(True)
@@ -201,6 +206,10 @@ class PlayerFrame(QFrame):
         if hasattr(self, 'ts_widget'):
             if hasattr(self.ts_widget, 'vline'):
                 self.ts_widget.vline.setPos([playback_pos_sec, 0])
+            if hasattr(self.ts_widget, 'hline_histogram'):
+                self.ts_widget.set_hline_pos(playback_pos_sec)
+                #self.ts_widget.hline_histogram.setPos()
+
         #self.melody_widget.hline_histogram.setPos(
         #    pos=[0,
         #         self.pitch_plot[np.int(playback_pos_sample / self.hopsize)]])

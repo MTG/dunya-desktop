@@ -176,3 +176,7 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
                                  connect='finite',
                                  pen=pen)
         self.zoom_selection.resetTransform()
+
+    def set_hline_pos(self, playback_pos):
+        self.hline_histogram.setPos(pos=[0,self.pitch_plot[
+            int(playback_pos*self.samplerate/self.hopsize)]])
