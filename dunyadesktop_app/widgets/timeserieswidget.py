@@ -54,9 +54,6 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         self.zoom_selection.setMenuEnabled(False)
         self.zoom_selection.setDownsampling(auto=True, mode='mean')
 
-        self.zoom_selection.setLabel(axis="bottom", text="Time", units="sec")
-        self.zoom_selection.setLabel(axis="left", text="Frequency", units="Hz",
-                                     unitPrefix=False)
         self.layout.addItem(self.zoom_selection)
         self.vline = pg.ROI([0, 0], [0, 20000], angle=0,
                             pen=pg.mkPen((255, 40, 35, 150), cosmetic=True,
@@ -71,37 +68,42 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         self.update_plot(x_start, x_end)
         self.is_pitch_plotted = True
 
+    def plot_histogram(self, vals, bins):
+        shadow_pen = pg.mkPen((70, 70, 30), width=5, cosmetic=True)
+        self.histogram.plot(x=vals, y=bins, shadowPen=shadow_pen)
+        self.histogram.setXRange(0, np.max(vals), padding=0)
+        self.histogram.resetTransform()
+
     def plot_1d_region(self):
         self.histogram = self.layout.addPlot(row=0, col=1)
         self.histogram.setMouseEnabled(x=False, y=False)
         self.histogram.setMenuEnabled(False)
-        self.histogram.setMaximumWidth(100)
+        self.histogram.setMaximumWidth(125)
         self.histogram.setContentsMargins(0, 0, 0, 40)
         self.histogram.setAutoVisible(y=True)
-        self.histogram.setDownsampling(auto=True, mode='subsample')
-
         self.histogram.hideAxis(axis="left")
         self.histogram.hideAxis(axis="bottom")
         self.histogram.setYRange(0, 20000, padding=0)
+        self.histogram.setLabel(axis="right", text="Frequency (Hz)")
 
         hline_pen = pg.mkPen((255, 40, 35, 150), cosmetic=True, width=1.5)
-        self.histogram.setLabel(axis="right", text="Frequency (Hz)")
         self.hline_histogram = pg.ROI([0, 0], [0, 1], angle=-90,
                                       pen=hline_pen)
         self.histogram.addItem(self.hline_histogram)
 
-        self.region_1d = pg.LinearRegionItem([0, 20000],
+        self.region_1d = pg.LinearRegionItem(values=[0, 20000],
                                              brush=pg.mkBrush((50, 255,
                                                                255, 45)),
                                              orientation=pg.LinearRegionItem.Horizontal,
                                              bounds=[0, 20000])
         self.histogram.addItem(self.region_1d)
-        self.addItem(self.histogram)
         self.region_1d.sigRegionChangeFinished.connect(self.change_y_axis)
+        self.addItem(self.histogram)
 
     def change_y_axis(self):
         pos_y_min, pos_y_max = self.region_1d.getRegion()
         self.zoom_selection.setYRange(pos_y_min, pos_y_max)
+        self.histogram.setYRange(pos_y_min, pos_y_max)
 
     def set_zoom_selection_area_hor(self, min_freq, max_freq):
         self.zoom_selection.setYRange(min_freq, max_freq, padding=0)
