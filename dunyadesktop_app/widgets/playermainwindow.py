@@ -73,6 +73,8 @@ class PlayerMainWindow(QMainWindow):
                 if hasattr(self.player_frame.ts_widget, 'tonic_line'):
                     self.player_frame.ts_widget.zoom_selection.removeItem(
                         self.player_frame.ts_widget.tonic_line)
+                    self.player_frame.ts_widget.histogram.removeItem(
+                        self.player_frame.ts_widget.hline_histogram)
                     del self.player_frame.ts_widget.tonic_line
 
 

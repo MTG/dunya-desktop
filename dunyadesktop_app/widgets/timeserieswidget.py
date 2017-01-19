@@ -47,8 +47,7 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         y_axis = pg.AxisItem('left')
         y_axis.enableAutoSIPrefix(enable=False)
 
-        self.zoom_selection = self.layout.addPlot(#title="Zoom selection",
-                                                  axisItems={'left': y_axis,
+        self.zoom_selection = self.layout.addPlot(axisItems={'left': y_axis,
                                                              'bottom': x_axis})
         self.zoom_selection.setMouseEnabled(x=False, y=False)
         self.zoom_selection.setMenuEnabled(False)
@@ -73,6 +72,10 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         self.histogram.plot(x=vals, y=bins, shadowPen=shadow_pen)
         self.histogram.setXRange(0, np.max(vals), padding=0)
         self.histogram.resetTransform()
+        hline_pen = pg.mkPen((255, 40, 35, 150), cosmetic=True, width=1.5)
+        self.hline_histogram = pg.ROI([0, 0], [0, 1], angle=-90,
+                                      pen=hline_pen)
+        self.histogram.addItem(self.hline_histogram)
         self.zoom_selection.setYLink(self.histogram)
 
     def plot_1d_region(self):
@@ -86,11 +89,6 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         self.histogram.hideAxis(axis="bottom")
         self.histogram.setYRange(0, 20000, padding=0)
         self.histogram.setLabel(axis="right", text="Frequency (Hz)")
-
-        hline_pen = pg.mkPen((255, 40, 35, 150), cosmetic=True, width=1.5)
-        self.hline_histogram = pg.ROI([0, 0], [0, 1], angle=-90,
-                                      pen=hline_pen)
-        self.histogram.addItem(self.hline_histogram)
 
         self.region_1d = pg.LinearRegionItem(values=[0, 20000],
                                              brush=pg.mkBrush((50, 255,

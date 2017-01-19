@@ -3,7 +3,7 @@ import json
 import copy
 
 from PyQt5.QtWidgets import QVBoxLayout, QFrame
-from PyQt5.QtCore import QSize, QMetaObject, QTimer
+from PyQt5.QtCore import QSize, QMetaObject
 from essentia.standard import MonoLoader
 import pyqtgraph.dockarea as pgdock
 import numpy as np
@@ -207,5 +207,6 @@ class PlayerFrame(QFrame):
         if hasattr(self, 'ts_widget'):
             if hasattr(self.ts_widget, 'vline'):
                 self.ts_widget.vline.setPos([playback_pos_sec, 0])
-            if hasattr(self.ts_widget, 'hline_histogram'):
+            if hasattr(self.ts_widget, 'hline_histogram') and \
+                            self.ts_widget.pitch_plot is not None:
                 self.ts_widget.set_hline_pos(playback_pos_sec)
