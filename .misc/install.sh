@@ -2,7 +2,7 @@
 
 sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
 sudo apt-get update -qq
-sudo apt-get install -qq libqt5webkit5-dev qtdeclarative5-dev libqt5webkit5-dev libsqlite3-dev
+sudo apt-get install -qq qtdeclarative5-dev
 export QMAKE=/usr/lib/x86_64-linux-gnu/qt5/bin/qmake
 
 PYQT_VERSION=5.7.1
@@ -16,8 +16,6 @@ python configure.py
 make
 sudo make install
 cd ..
-which sip
-which qmake
 
 # Install PyQt5
 wget --retry-connrefused https://sourceforge.net/projects/pyqt/files/PyQt5/PyQt-$PYQT_VERSION/PyQt5_gpl-$PYQT_VERSION.tar.gz
