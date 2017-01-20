@@ -93,7 +93,8 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         self.region_1d = pg.LinearRegionItem(values=[0, 20000],
                                              brush=pg.mkBrush((50, 255,
                                                                255, 45)),
-                                             orientation=pg.LinearRegionItem.Horizontal,
+                                             orientation=
+                                             pg.LinearRegionItem.Horizontal,
                                              bounds=[0, 20000])
         self.histogram.addItem(self.region_1d)
         self.region_1d.sigRegionChangeFinished.connect(self.change_y_axis)
@@ -111,7 +112,8 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
     def add_tonic(self, value):
         if not hasattr(self, 'tonic_line'):
             self.tonic_line = pg.InfiniteLine(pos= value, movable=False,
-                                              angle=0, label='Tonic',
+                                              angle=0,
+                                              label='Tonic=%.2f' % value,
                                               labelOpts=
                                               {'position': 0.1,
                                                'color': (200, 200, 100),
