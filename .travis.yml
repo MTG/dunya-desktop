@@ -6,12 +6,12 @@ python:
   - "2.7_with_system_site_packages" # For PyQt5
 
 before_install:
+  - bash .misc/install.sh
+
+install:
   - pip install setuptools --upgrade
   - pip install -r requirements
   - pip install flake8
-
-install:
-  - bash .misc/install.sh
 
 #before_script:
 #  - "flake8 dunyadesktop_app --ignore=E501"
