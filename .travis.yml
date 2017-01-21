@@ -8,7 +8,7 @@ python:
   - "2.7_with_system_site_packages" # For PyQt5
 
 before_install:
-  - bash .misc/install.sh
+  - bash .travis/install.sh
 
 install:
   - pip install setuptools --upgrade
