@@ -1,4 +1,5 @@
 # dunya-desktop
+[![Code Climate](https://codeclimate.com/github/MTG/dunya-desktop/badges/gpa.svg)](https://codeclimate.com/github/MTG/dunya-desktop)
 
 **Dunya-desktop** is a desktop application that has been developed for accessing 
 and visualizing the music information sources, the features and the analysis 
