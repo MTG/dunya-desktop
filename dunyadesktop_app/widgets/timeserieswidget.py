@@ -27,8 +27,11 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         self._set_size_policy()
         self.limit = 600
 
+        self.rois = []
+
         # flags
         self.is_pitch_plotted = False
+        self.is_notes_added = False
 
     def _set_size_policy(self):
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
@@ -182,3 +185,37 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
     def set_hline_pos(self, playback_pos):
         self.hline_histogram.setPos(pos=[0,self.pitch_plot[
             int(playback_pos*self.samplerate/self.hopsize)]])
+
+    def update_notes(self, xmin, xmax):
+        ts_start = self.notes[:, 0]
+        ts_end = self.notes[:, 1]
+
+        start_ind = self.find_nearest_index(ts_start, xmin)
+        end_ind = self.find_nearest_index(ts_end, xmax)
+
+        for roi_item in self.rois:
+            self.zoom_selection.removeItem(roi_item)
+
+        self.rois = []
+        for i in range(start_ind, end_ind):
+            r = self.notes[i]
+            #roi = pg.LineROI([r[0], r[2]], [r[1]-r[0], 0], movable=True)
+            roi = pg.LineROI([r[0], r[2]], [r[1], r[2]], width=5, pen=(10,10))
+            self.rois.append(roi)
+            self.zoom_selection.addItem(roi)
+
+
+    def find_nearest_index(self, n_array, value):
+        index = (np.abs(n_array-value)).argmin()
+        val = n_array[index]
+        if value < val:
+            return index
+        else:
+            return index + 1
+
+    def add_roi(self, start, end, pitch):
+        for r in self.rois:
+            self.zoom_selection.removeItem(r)
+        roi = pg.ROI([start, pitch], [end-start, 0])
+        self.rois.append(roi)
+        self.zoom_selection.addItem(roi)

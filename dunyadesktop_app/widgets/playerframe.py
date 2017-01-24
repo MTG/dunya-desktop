@@ -69,6 +69,17 @@ def get_feature_paths(recid):
     return paths
 
 
+def load_notes(notes_path):
+    notes = json.load(open(notes_path))
+    return notes
+    #return_notes = []
+    #for key in notes.keys():
+    #    for dict in notes[key]:
+    #        temp_note = []
+    #        index = dict['index_in_audio']
+    #        symbol = dict['symbol']
+    #        interval = dict['interval']
+
 class PlayerFrame(QFrame):
     samplerate = 44100.
 
@@ -191,10 +202,11 @@ class PlayerFrame(QFrame):
     def wf_region_changed(self):
         if hasattr(self, 'ts_widget'):
             if hasattr(self.ts_widget, 'zoom_selection'):
+                x_min, x_max = self.waveform_widget.get_waveform_region()
                 if self.ts_widget.is_pitch_plotted:
-                    x_min, x_max = self.waveform_widget.get_waveform_region()
                     self.ts_widget.update_plot(x_min, x_max)
-
+                if self.ts_widget.is_notes_added:
+                    self.ts_widget.update_notes(x_min, x_max)
 
     def update_vlines(self, playback_pos):
         ratio = len(self.raw_audio) / len(self.waveform_widget.visible)
@@ -210,3 +222,19 @@ class PlayerFrame(QFrame):
             if hasattr(self.ts_widget, 'hline_histogram') and \
                             self.ts_widget.pitch_plot is not None:
                 self.ts_widget.set_hline_pos(playback_pos_sec)
+
+    def add_1d_roi_items(self, type, item):
+        ftr = type + '--' + item + '.json'
+        feature_path = os.path.join(DOCS_PATH, self.recid, ftr)
+        notes_dict = load_notes(feature_path)
+
+        notes = []
+        for key in notes_dict.keys():
+            for dict in notes_dict[key]:
+                #symbol = dict['symbol']
+                interval = dict['interval']
+                pitch = dict['performed_pitch']['value']
+                notes.append([interval[0], interval[1], pitch])
+
+        self.ts_widget.notes = np.array(notes)
+        self.ts_widget.is_notes_added = True
