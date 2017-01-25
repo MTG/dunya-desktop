@@ -15,7 +15,6 @@ from utilities.playback import Playback
 from cultures.makam import utilities
 import ui_files.resources_rc
 
-
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
                          'documents')
 
@@ -72,13 +71,7 @@ def get_feature_paths(recid):
 def load_notes(notes_path):
     notes = json.load(open(notes_path))
     return notes
-    #return_notes = []
-    #for key in notes.keys():
-    #    for dict in notes[key]:
-    #        temp_note = []
-    #        index = dict['index_in_audio']
-    #        symbol = dict['symbol']
-    #        interval = dict['interval']
+
 
 class PlayerFrame(QFrame):
     samplerate = 44100.
@@ -155,7 +148,7 @@ class PlayerFrame(QFrame):
         self.frame_playback.slider.setTickInterval(10)
         self.frame_playback.slider.setSingleStep(1)
 
-    def plot_1d_data(self, type, feature):
+    def plot_1d_data(self, f_type, feature):
         if not hasattr(self, 'ts_widget'):
             self.ts_widget = TimeSeriesWidget(self)
             self.ts_widget.add_1d_view()
@@ -164,7 +157,7 @@ class PlayerFrame(QFrame):
             self.dock_ts.addWidget(self.ts_widget)
             self.dock_area.addDock(self.dock_ts)
 
-        ftr = type + '--' + feature + '.json'
+        ftr = f_type + '--' + feature + '.json'
         feature_path = os.path.join(DOCS_PATH, self.recid, ftr)
 
         if feature == 'pitch' or feature == 'pitch_filtered':
@@ -174,8 +167,7 @@ class PlayerFrame(QFrame):
             if hasattr(self.ts_widget, 'zoom_selection'):
                 self.ts_widget.hopsize = hopsize
                 self.ts_widget.samplerate = samplerate
-                self.ts_widget.plot_pitch(time_stamps, pitch_plot, x_min,
-                                          x_max, max_pitch)
+                self.ts_widget.plot_pitch(pitch_plot, x_min, x_max)
                 self.is_pitch_plotted = True
 
                 histogram = \
@@ -219,21 +211,20 @@ class PlayerFrame(QFrame):
         if hasattr(self, 'ts_widget'):
             if hasattr(self.ts_widget, 'vline'):
                 self.ts_widget.vline.setPos([playback_pos_sec, 0])
-            if hasattr(self.ts_widget, 'hline_histogram') and \
-                            self.ts_widget.pitch_plot is not None:
+            if hasattr(self.ts_widget, 'hline_histogram') \
+                    and self.ts_widget.pitch_plot is not None:
                 self.ts_widget.set_hline_pos(playback_pos_sec)
 
-    def add_1d_roi_items(self, type, item):
-        ftr = type + '--' + item + '.json'
+    def add_1d_roi_items(self, f_type, item):
+        ftr = f_type + '--' + item + '.json'
         feature_path = os.path.join(DOCS_PATH, self.recid, ftr)
         notes_dict = load_notes(feature_path)
 
         notes = []
         for key in notes_dict.keys():
-            for dict in notes_dict[key]:
-                #symbol = dict['symbol']
-                interval = dict['interval']
-                pitch = dict['performed_pitch']['value']
+            for dic in notes_dict[key]:
+                interval = dic['interval']
+                pitch = dic['performed_pitch']['value']
                 notes.append([interval[0], interval[1], pitch])
 
         self.ts_widget.notes = np.array(notes)
