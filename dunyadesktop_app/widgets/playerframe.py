@@ -86,8 +86,7 @@ class PlayerFrame(QFrame):
         (self.raw_audio, len_audio,
          min_audio, max_audio) = read_audio(self.feature_paths['audio_path'])
         self.__set_slider(len_audio)
-        self.waveform_widget.plot_waveform(self.raw_audio, len_audio,
-                                           min_audio, max_audio)
+        self.waveform_widget.plot_waveform(self.raw_audio)
 
         self.playback = Playback()
         self.playback.set_source(self.feature_paths['audio_path'])
