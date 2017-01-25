@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QSizePolicy
 
 pg.setConfigOptions(useOpenGL=True)
 pg.setConfigOptions(useWeave=True)
-pg.setConfigOptions(crashWarning=True)
+# pg.setConfigOptions(crashWarning=True)
 
 
 class TimeSeriesWidget(GraphicsLayoutWidget):

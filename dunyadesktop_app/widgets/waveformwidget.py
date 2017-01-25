@@ -6,7 +6,7 @@ import numpy as np
 
 pg.setConfigOptions(useOpenGL=True)
 pg.setConfigOptions(useWeave=True)
-pg.setConfigOptions(crashWarning=True)
+# pg.setConfigOptions(crashWarning=True)
 
 
 class WaveformWidget(GraphicsLayoutWidget):
