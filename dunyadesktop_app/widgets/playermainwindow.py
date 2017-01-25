@@ -80,7 +80,7 @@ class PlayerMainWindow(QMainWindow):
                 self.player_frame.add_1d_roi_items(type, item)
 
 
-app = QApplication(sys.argv)
-ply = PlayerMainWindow(docid='f09db163-2549-4f67-bfb3-7b626f20a8c2')
-ply.show()
-app.exec_()
+# app = QApplication(sys.argv)
+# ply = PlayerMainWindow(docid='f09db163-2549-4f67-bfb3-7b626f20a8c2')
+# ply.show()
+# app.exec_()
