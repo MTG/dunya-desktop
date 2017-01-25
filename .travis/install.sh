@@ -26,4 +26,5 @@ make
 sudo make install
 
 # test
-python -c 'import PyQt5'
+python -c 'from PyQt5 import QtWidgets'
+python -c 'from PyQt5 import QtCore'
