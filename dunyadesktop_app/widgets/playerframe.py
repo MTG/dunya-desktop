@@ -54,7 +54,10 @@ def load_pd(pd_path):
 
 def load_tonic(tonic_path):
     tnc = json.load(open(tonic_path))
-    return tnc['value']
+    try:
+        return [tnc['value']]
+    except KeyError:
+        return [work['value'] for work in tnc.values()]
 
 
 def get_feature_paths(recid):
@@ -147,14 +150,17 @@ class PlayerFrame(QFrame):
         self.frame_playback.slider.setTickInterval(10)
         self.frame_playback.slider.setSingleStep(1)
 
+    def _set_ts_widget(self):
+        self.ts_widget = TimeSeriesWidget(self)
+        self.ts_widget.add_1d_view()
+        self.dock_ts = pgdock.Dock(name='Time Series', area='bottom',
+                                   closable=True)
+        self.dock_ts.addWidget(self.ts_widget)
+        self.dock_area.addDock(self.dock_ts)
+
     def plot_1d_data(self, f_type, feature):
         if not hasattr(self, 'ts_widget'):
-            self.ts_widget = TimeSeriesWidget(self)
-            self.ts_widget.add_1d_view()
-            self.dock_ts = pgdock.Dock(name='Time Series', area='bottom',
-                                       closable=True)
-            self.dock_ts.addWidget(self.ts_widget)
-            self.dock_area.addDock(self.dock_ts)
+            self._set_ts_widget()
 
         ftr = f_type + '--' + feature + '.json'
         feature_path = os.path.join(DOCS_PATH, self.recid, ftr)
@@ -176,9 +182,8 @@ class PlayerFrame(QFrame):
                 self.ts_widget.plot_histogram(vals, bins)
 
         if feature == 'tonic':
-            if hasattr(self.ts_widget, 'zoom_selection'):
-                tonic_value = load_tonic(feature_path)
-                self.ts_widget.add_tonic(tonic_value)
+            tonic_values = load_tonic(feature_path)
+            self.ts_widget.add_tonic(tonic_values)
 
     def playback_play(self):
         self.frame_playback.toolbutton_play.setDisabled(True)
@@ -215,9 +220,13 @@ class PlayerFrame(QFrame):
                 self.ts_widget.set_hline_pos(playback_pos_sec)
 
     def add_1d_roi_items(self, f_type, item):
-        ftr = f_type + '--' + item + '.json'
-        feature_path = os.path.join(DOCS_PATH, self.recid, ftr)
-        notes_dict = load_notes(feature_path)
+        if not hasattr(self, 'ts_widget'):
+            self._set_ts_widget()
+
+        if item == 'notes':
+            ftr = f_type + '--' + item + '.json'
+            feature_path = os.path.join(DOCS_PATH, self.recid, ftr)
+            notes_dict = load_notes(feature_path)
 
         notes = []
         for key in notes_dict.keys():
@@ -226,5 +235,10 @@ class PlayerFrame(QFrame):
                 pitch = dic['performed_pitch']['value']
                 notes.append([interval[0], interval[1], pitch])
 
-        self.ts_widget.notes = np.array(notes)
-        self.ts_widget.is_notes_added = True
+            self.ts_widget.notes = np.array(notes)
+            self.ts_widget.notes_start = self.ts_widget.notes[:, 0]
+            self.ts_widget.notes_end = self.ts_widget.notes[:, 1]
+
+            x_min, x_max = self.waveform_widget.get_waveform_region()
+            self.ts_widget.update_notes(x_min, x_max)
+            self.ts_widget.is_notes_added = True

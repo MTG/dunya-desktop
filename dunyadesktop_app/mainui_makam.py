@@ -55,7 +55,6 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.download_queue = []
 
         # signals
-
         self.frame_query.frame_attributes.toolButton_query.clicked.connect(
             self.query)
 

@@ -97,17 +97,19 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         self.zoom_selection.setYRange(min_freq, max_freq, padding=0)
         self.histogram.setYRange(min_freq, max_freq, padding=0)
 
-    def add_tonic(self, value):
-        if not hasattr(self, 'tonic_line'):
-            label_opts = {'position': 0.1,
-                          'color': (200, 200, 100),
-                          'fill': (200, 200, 200, 50),
-                          'movable': True}
-            self.tonic_line = pg.InfiniteLine(pos=value, movable=False,
-                                              angle=0,
-                                              label='Tonic=%.2f' % value,
-                                              labelOpts=label_opts)
-            self.zoom_selection.addItem(self.tonic_line)
+    def add_tonic(self, values):
+        label_opts = {'position': 0.1, 'color': (200, 200, 100),
+                      'fill': (200, 200, 200, 50), 'movable': True}
+
+        if not hasattr(self, 'tonic_lines'):
+            self.tonic_lines = []
+
+        for value in values:
+            t_line = pg.InfiniteLine(pos=value, movable=False,angle=0,
+                                     label='Tonic=%.2f' % value,
+                                     labelOpts=label_opts)
+            self.tonic_lines.append(t_line)
+            self.zoom_selection.addItem(t_line)
 
     def update_plot(self, start, stop):
         if self.pitch_plot is not None:
@@ -174,23 +176,32 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
             int(playback_pos * self.samplerate / self.hopsize)]])
 
     def update_notes(self, xmin, xmax):
-        ts_start = self.notes[:, 0]
-        ts_end = self.notes[:, 1]
+        start_ind = self.find_nearest_index(self.notes_start, xmin)
+        end_ind = self.find_nearest_index(self.notes_end, xmax)
 
-        start_ind = self.find_nearest_index(ts_start, xmin)
-        end_ind = self.find_nearest_index(ts_end, xmax)
+        self.remove_all_note_rois()
 
-        for roi_item in self.rois:
-            self.zoom_selection.removeItem(roi_item)
+        if not hasattr(self, 'rois'):
+            self.rois = []
 
-        self.rois = []
         for i in range(start_ind, end_ind):
-            r = self.notes[i]
-            roi = pg.ROI(pos=[r[0], r[2]], size=[r[1] - r[0], 2])
+            temp_note = self.notes[i]
+            roi = pg.ROI(pos=[temp_note[0], temp_note[2]],
+                         size=[temp_note[1] - temp_note[0], 2])
             roi.addScaleHandle(pos=[0, 0], center=[0.5, 0.5])
-            roi.addScaleHandle(pos=[1, 0], center=[0.5, 0.5])
-            self.rois.append(roi)
+            roi.addScaleHandle(pos=[1, 1], center=[0.5, 0.5])
             self.zoom_selection.addItem(roi)
+            self.rois.append(roi)
+
+    def remove_all_note_rois(self):
+        for r in self.rois:
+            self.zoom_selection.removeItem(r)
+        self.rois = []
+
+    def remove_all_tonic_lines(self):
+        for t_line in self.tonic_lines:
+            self.zoom_selection.removeItem(t_line)
+        self.tonic_lines = []
 
     @staticmethod
     def find_nearest_index(n_array, value):
@@ -200,10 +211,3 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
             return index
         else:
             return index + 1
-
-    def add_roi(self, start, end, pitch):
-        for r in self.rois:
-            self.zoom_selection.removeItem(r)
-        roi = pg.ROI([start, pitch], [end - start, 0])
-        self.rois.append(roi)
-        self.zoom_selection.addItem(roi)
