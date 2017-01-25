@@ -34,23 +34,23 @@ Then install command-line tools.
 
 * Download PyQt5 and sip source.
 
-        wget https://sourceforge.net/projects/pyqt/files/PyQt5/PyQt-5.7.1/PyQt5_gpl-5.7.1.tar.gz
         wget https://sourceforge.net/projects/pyqt/files/sip/sip-4.19/sip-4.19.tar.gz
+        wget https://sourceforge.net/projects/pyqt/files/PyQt5/PyQt-5.7.1/PyQt5_gpl-5.7.1.tar.gz
 
 * Untar and compile.
 
         tar -xvf sip-4.19.tar.gz
-        cd /sip-4.19
+        cd sip-4.19
         python configure.py -d /usr/local/lib/python2.7/site-packages/
         make
-        make install
+        sudo make install
         
         cd ..
         tar -xvf PyQt-gpl-5.7.1.tar.gz
         cd PyQt-gpl-5.7.1
         python configure.py -d /usr/local/lib/python2.7/site-packages/ --qmake=/usr/local/Cellar/qt5/5.7.1_1/bin/qmake --sip=../sip-4.19/sipgen/sip --sip-incdir=../sip-4.19/siplib
         make
-        make install
+        sudo make install
 
 * Create a virtualenv and install requirements.
         
