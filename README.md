@@ -54,6 +54,7 @@ Then install command-line tools.
 
 * Create a virtualenv and install requirements.
         
+        pip install virtualenv
         virtualenv --system-site-packages env
         source env/bin/activate
         pip install -r requirements
