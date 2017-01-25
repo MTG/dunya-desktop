@@ -44,9 +44,13 @@ def _add_docs_to_maincoll(conn, c):
             os.path.isdir(os.path.join(DOCS_PATH, d))]
 
     for doc in docs:
-        c.execute('''INSERT OR IGNORE INTO MainCollection(DOCID) VALUES (?)''',
-                  (doc,))
-        conn.commit()
+        try:
+            c.execute(
+                '''INSERT OR IGNORE INTO MainCollection(DOCID) VALUES (?)''',
+                (doc,))
+            conn.commit()
+        except sqlite3.ProgrammingError:
+            pass
 
 
 def add_doc_to_coll(conn, c, doc, coll):
