@@ -40,11 +40,7 @@ class ComboBox(QComboBox):
             self.setFixedHeight(25)
 
         set_css(self, CSS_PATH)
-
-        self.cancel_button = QToolButton(self)
-        self.cancel_button.setStyleSheet(CSS_BUTTON)
-        self.cancel_button.setIcon(QIcon(ICON_PATH_CANCEL))
-        self.cancel_button.setVisible(False)
+        self._set_cancel_button()
 
         # signals
         self.currentIndexChanged.connect(self.change_lineedit_status)
@@ -55,6 +51,12 @@ class ComboBox(QComboBox):
         self.dialog_filtering = FilteringDialog()
         self.dialog_filtering.ok_button_clicked.connect(
             lambda: self.set_selection(self.dialog_filtering.selection))
+
+    def _set_cancel_button(self):
+        self.cancel_button = QToolButton(self)
+        self.cancel_button.setStyleSheet(CSS_BUTTON)
+        self.cancel_button.setIcon(QIcon(ICON_PATH_CANCEL))
+        self.cancel_button.setVisible(False)
 
     def resizeEvent(self, QResizeEvent):
         """Sets the position of cancel button."""
