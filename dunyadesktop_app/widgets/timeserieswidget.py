@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QSizePolicy
 
 pg.setConfigOptions(useOpenGL=True)
 pg.setConfigOptions(useWeave=True)
+pg.setConfigOptions(crashWarning=True)
 
 
 class TimeSeriesWidget(GraphicsLayoutWidget):
@@ -148,8 +149,8 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
                     # envelope shape
                     visible[target_ptr:target_ptr + chunk.shape[0] * 2:2] = \
                         chunk_min
-                    visible[1 + target_ptr:1 + target_ptr +
-                                           chunk.shape[0] * 2:2] = chunk_max
+                    visible[1 + target_ptr:
+                            1 + target_ptr + chunk.shape[0] * 2:2] = chunk_max
                     target_ptr += chunk.shape[0] * 2
 
                 self.visible = visible[:target_ptr]
