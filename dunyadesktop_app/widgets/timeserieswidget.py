@@ -8,18 +8,6 @@ pg.setConfigOptions(useOpenGL=True)
 pg.setConfigOptions(useWeave=True)
 
 
-class TonicLine(pg.InfiniteLine):
-    movable = False
-    angle = 0
-    label_opts = {'position': 0.1, 'color': (200, 200, 100),
-                 'fill': (200, 200, 200, 50), 'movable': True}
-
-    def __init__(self, value, label):
-        pg.InfiniteLine.__init__(self, pos=value, angle=self.angle,
-                                 movable=self.movable,
-                                 labelOpts=self.label_opts)
-
-
 class TimeSeriesWidget(GraphicsLayoutWidget):
     def __init__(self, parent=None):
         GraphicsLayoutWidget.__init__(self, parent)
@@ -34,11 +22,11 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         self.is_notes_added = False
 
     def _set_size_policy(self):
-        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
-        self.setSizePolicy(sizePolicy)
+        size_policy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        size_policy.setHorizontalStretch(0)
+        size_policy.setVerticalStretch(0)
+        size_policy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
+        self.setSizePolicy(size_policy)
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
 
@@ -64,9 +52,8 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         self.addItem(self.layout)
         self.plot_1d_region()
 
-    def plot_pitch(self, time_stamps, pitch_plot, x_start, x_end, max_pitch):
+    def plot_pitch(self, pitch_plot, x_start, x_end):
         self.pitch_plot = pitch_plot
-        pen = pg.mkPen(cosmetic=True, width=1.5, color=(30, 110, 216,))
         self.update_plot(x_start, x_end)
         self.is_pitch_plotted = True
 
@@ -93,12 +80,9 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         self.histogram.setYRange(0, 20000, padding=0)
         self.histogram.setLabel(axis="right", text="Frequency (Hz)")
 
-        self.region_1d = pg.LinearRegionItem(values=[0, 20000],
-                                             brush=pg.mkBrush((50, 255,
-                                                               255, 45)),
-                                             orientation=
-                                             pg.LinearRegionItem.Horizontal,
-                                             bounds=[0, 20000])
+        self.region_1d = pg.LinearRegionItem(
+            values=[0, 20000], brush=pg.mkBrush((50, 255, 255, 45)),
+            orientation=pg.LinearRegionItem.Horizontal, bounds=[0, 20000])
         self.histogram.addItem(self.region_1d)
         self.region_1d.sigRegionChangeFinished.connect(self.change_y_axis)
         self.addItem(self.histogram)
@@ -114,20 +98,20 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
 
     def add_tonic(self, value):
         if not hasattr(self, 'tonic_line'):
-            self.tonic_line = pg.InfiniteLine(pos= value, movable=False,
+            label_opts = {'position': 0.1,
+                          'color': (200, 200, 100),
+                          'fill': (200, 200, 200, 50),
+                          'movable': True}
+            self.tonic_line = pg.InfiniteLine(pos=value, movable=False,
                                               angle=0,
                                               label='Tonic=%.2f' % value,
-                                              labelOpts=
-                                              {'position': 0.1,
-                                               'color': (200, 200, 100),
-                                               'fill': (200, 200, 200, 50),
-                                               'movable': True})
+                                              labelOpts=label_opts)
             self.zoom_selection.addItem(self.tonic_line)
 
     def update_plot(self, start, stop):
         if self.pitch_plot is not None:
-            start *=  1/(128./44100.)
-            stop *= 1/(128./44100.)
+            start *= 1 / (128. / 44100.)
+            stop *= 1 / (128. / 44100.)
             start = int(start)
             stop = int(stop)
             # Decide by how much we should downsample
@@ -136,40 +120,42 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
             if ds == 1:
                 # Small enough to display with no intervention.
                 visible = self.pitch_plot[start:stop]
-                scale = 1
             else:
-                # Here convert data into a down-sampled array suitable for visualizing.
+                # Here convert data into a down-sampled array suitable for
+                # visualizing.
                 # Must do this piecewise to limit memory usage.
                 samples = 1 + ((stop - start) // ds)
                 visible = np.zeros(samples * 2, dtype=self.pitch_plot.dtype)
-                sourcePtr = start
-                targetPtr = 0
+                source_ptr = start
+                target_ptr = 0
 
                 # read data in chunks of ~1M samples
-                chunkSize = (1000000 // ds) * ds
-                while sourcePtr < stop - 1:
-                    chunk = self.pitch_plot[sourcePtr:min(stop, sourcePtr + chunkSize)]
-                    sourcePtr += len(chunk)
+                chunk_size = (1000000 // ds) * ds
+                while source_ptr < stop - 1:
+                    chunk = self.pitch_plot[
+                            source_ptr:min(stop, source_ptr + chunk_size)]
+                    source_ptr += len(chunk)
 
                     # reshape chunk to be integral multiple of ds
                     chunk = chunk[:(len(chunk) // ds) * ds].reshape(
                         len(chunk) // ds, ds)
 
                     # compute max and min
-                    chunkMax = chunk.max(axis=1)
-                    chunkMin = chunk.min(axis=1)
+                    chunk_max = chunk.max(axis=1)
+                    chunk_min = chunk.min(axis=1)
 
-                    # interleave min and max into plot data to preserve envelope shape
-                    visible[targetPtr:targetPtr + chunk.shape[0] * 2:2] = chunkMin
-                    visible[
-                    1 + targetPtr:1 + targetPtr + chunk.shape[0] * 2:2] = chunkMax
-                    targetPtr += chunk.shape[0] * 2
+                    # interleave min and max into plot data to preserve
+                    # envelope shape
+                    visible[target_ptr:target_ptr + chunk.shape[0] * 2:2] = \
+                        chunk_min
+                    visible[1 + target_ptr:1 + target_ptr +
+                                           chunk.shape[0] * 2:2] = chunk_max
+                    target_ptr += chunk.shape[0] * 2
 
-                self.visible = visible[:targetPtr]
-                scale = ds * 0.5
+                self.visible = visible[:target_ptr]
 
-            start = (start*128.)/44100
-            stop = (stop*128.)/44100
+            start = (start * 128.) / 44100
+            stop = (stop * 128.) / 44100
             step = (stop - start) / (len(visible))
 
             time = np.arange(start, stop, step)
@@ -183,8 +169,8 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
             self.zoom_selection.resetTransform()
 
     def set_hline_pos(self, playback_pos):
-        self.hline_histogram.setPos(pos=[0,self.pitch_plot[
-            int(playback_pos*self.samplerate/self.hopsize)]])
+        self.hline_histogram.setPos(pos=[0, self.pitch_plot[
+            int(playback_pos * self.samplerate / self.hopsize)]])
 
     def update_notes(self, xmin, xmax):
         ts_start = self.notes[:, 0]
@@ -199,14 +185,15 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         self.rois = []
         for i in range(start_ind, end_ind):
             r = self.notes[i]
-            #roi = pg.LineROI([r[0], r[2]], [r[1]-r[0], 0], movable=True)
-            roi = pg.LineROI([r[0], r[2]], [r[1], r[2]], width=5, pen=(10,10))
+            roi = pg.ROI(pos=[r[0], r[2]], size=[r[1] - r[0], 2])
+            roi.addScaleHandle(pos=[0, 0], center=[0.5, 0.5])
+            roi.addScaleHandle(pos=[1, 0], center=[0.5, 0.5])
             self.rois.append(roi)
             self.zoom_selection.addItem(roi)
 
-
-    def find_nearest_index(self, n_array, value):
-        index = (np.abs(n_array-value)).argmin()
+    @staticmethod
+    def find_nearest_index(n_array, value):
+        index = (np.abs(n_array - value)).argmin()
         val = n_array[index]
         if value < val:
             return index
@@ -216,6 +203,6 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
     def add_roi(self, start, end, pitch):
         for r in self.rois:
             self.zoom_selection.removeItem(r)
-        roi = pg.ROI([start, pitch], [end-start, 0])
+        roi = pg.ROI([start, pitch], [end - start, 0])
         self.rois.append(roi)
         self.zoom_selection.addItem(roi)
