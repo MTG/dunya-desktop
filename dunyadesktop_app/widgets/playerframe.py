@@ -97,9 +97,13 @@ class PlayerFrame(QFrame):
         self.playback.player.positionChanged.connect(self.player_pos_changed)
         self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
             self.wf_region_changed)
+        self.waveform_widget.region_wf.clicked.connect(self.wf_region_item_clicked)
         self.frame_playback.toolbutton_play.clicked.connect(self.playback_play)
         self.frame_playback.toolbutton_pause.clicked.connect(
             self.playback_pause)
+
+    def wf_region_item_clicked(self):
+        self.playback_pause()
 
     def closeEvent(self, QCloseEvent):
         super(QFrame, self).closeEvent(QCloseEvent)

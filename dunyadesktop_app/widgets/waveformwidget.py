@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QSizePolicy
-from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtCore import QSize, Qt, pyqtSignal
 from pyqtgraph import GraphicsLayoutWidget
 import pyqtgraph as pg
 import numpy as np
@@ -7,6 +7,24 @@ import numpy as np
 pg.setConfigOptions(useOpenGL=True)
 pg.setConfigOptions(useWeave=True)
 # pg.setConfigOptions(crashWarning=True)
+
+
+class WaveformRegionItem(pg.LinearRegionItem):
+    clicked = pyqtSignal()
+
+    def __init__(self, values=[0,1], orientation=None, brush=None,
+                 movable=True, bounds=None):
+        pg.LinearRegionItem.__init__(self, values=values,
+                                     orientation=orientation, brush=brush,
+                                     movable=movable, bounds=bounds)
+
+    def mouseClickEvent(self, ev):
+        self.clicked.emit()
+        super(WaveformRegionItem, self).mouseClickEvent(ev)
+
+    def mouseDragEvent(self, ev):
+        self.clicked.emit()
+        super(WaveformRegionItem, self).mouseDragEvent(ev)
 
 
 class WaveformWidget(GraphicsLayoutWidget):
@@ -53,11 +71,12 @@ class WaveformWidget(GraphicsLayoutWidget):
 
     def _add_elements_to_plot(self, len_audio, min_audio, max_audio):
         pos_wf_x_max = len_audio / 25.
-        self.region_wf = pg.LinearRegionItem([0, pos_wf_x_max],
-                                             brush=pg.mkBrush((50, 255,
-                                                               255, 45)),
+        self.region_wf = WaveformRegionItem([0, pos_wf_x_max],
+                                            brush=pg.mkBrush((50, 255,
+                                                              255, 45)),
                                              bounds=[0., len_audio])
-        self.vline_wf = pg.ROI([0, min_audio], [0, max_audio-min_audio],
+
+        self.vline_wf = pg.ROI([0, min_audio], [0, max_audio - min_audio],
                                angle=0, pen=pg.mkPen((255, 40, 35, 150),
                                                      cosmetic=True, width=1))
         self.waveform.addItem(self.vline_wf)
