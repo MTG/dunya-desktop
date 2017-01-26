@@ -11,7 +11,7 @@ from PyQt5.QtGui import QFont, QCursor, QIcon, QPixmap
 from utilities import database
 from cultures.makam import utilities as makam_utilities
 from .progressbar import ProgressBar
-from .menu import RCMenu
+from .contextmenu import RCMenu
 from .widgetutilities import set_css, convert_str
 
 if platform.system() == 'Linux':
@@ -94,6 +94,9 @@ class TableView(QTableView):
 
             menu = RCMenu(self)
             menu.popup(QCursor.pos())
+
+            self.selected_indexes = menu.return_selected_row_indexes()
+            print self.selected_indexes
         except UnboundLocalError:
             pass
 
