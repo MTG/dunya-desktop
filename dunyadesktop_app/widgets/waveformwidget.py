@@ -122,3 +122,10 @@ class WaveformWidget(GraphicsLayoutWidget):
         x_min = (pos_wf_x_min * ratio) / self.samplerate
         x_max = (pos_wf_x_max * ratio) / self.samplerate
         return x_min, x_max
+
+    def change_wf_region(self, x_start, x_end):
+        ratio = len(self.raw_audio) / len(self.visible)
+
+        x_start = (x_start * self.samplerate) / ratio
+        x_end = (x_end * self.samplerate) / ratio
+        self.region_wf.setRegion([x_start, x_end])

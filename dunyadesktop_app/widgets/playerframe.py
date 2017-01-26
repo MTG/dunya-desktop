@@ -94,7 +94,7 @@ class PlayerFrame(QFrame):
         self.playback = Playback()
         self.playback.set_source(self.feature_paths['audio_path'])
 
-        self.playback.player.positionChanged.connect(self.update_vlines)
+        self.playback.player.positionChanged.connect(self.player_pos_changed)
         self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
             self.wf_region_changed)
         self.frame_playback.toolbutton_play.clicked.connect(self.playback_play)
@@ -196,22 +196,49 @@ class PlayerFrame(QFrame):
         self.playback.pause()
 
     def wf_region_changed(self):
-        if hasattr(self, 'ts_widget'):
-            if hasattr(self.ts_widget, 'zoom_selection'):
-                x_min, x_max = self.waveform_widget.get_waveform_region()
-                if self.ts_widget.is_pitch_plotted:
-                    self.ts_widget.update_plot(x_min, x_max)
-                if self.ts_widget.is_notes_added:
-                    self.ts_widget.update_notes(x_min, x_max)
+        pos = self.playback.player.position() / 1000.
+        x_min, x_max = self.waveform_widget.get_waveform_region()
 
-    def update_vlines(self, playback_pos):
+        if x_min < pos < x_max:
+            if hasattr(self, 'ts_widget'):
+                if hasattr(self.ts_widget, 'zoom_selection'):
+                    if self.ts_widget.is_pitch_plotted:
+                        self.ts_widget.update_plot(x_min, x_max)
+                    if self.ts_widget.is_notes_added:
+                        self.ts_widget.update_notes(x_min, x_max)
+        else:
+            self.playback_pause()
+            pos = x_min * 1000.
+            self.playback.player.setPosition(pos)
+            self._update_vlines(pos)
+            if hasattr(self, 'ts_widget'):
+                if hasattr(self.ts_widget, 'zoom_selection'):
+                    if self.ts_widget.is_pitch_plotted:
+                        self.ts_widget.update_plot(x_min, x_max)
+                    if self.ts_widget.is_notes_added:
+                        self.ts_widget.update_notes(x_min, x_max)
+
+    def _update_vlines(self, playback_pos):
         ratio = len(self.raw_audio) / len(self.waveform_widget.visible)
         playback_pos_sec = playback_pos / 1000.
-        playback_pos_sample = playback_pos_sec * self.samplerate
+        playback_pos_sample = (playback_pos_sec * self.samplerate) + 10
 
         self.frame_playback.slider.setValue(playback_pos_sample)
         self.waveform_widget.vline_wf.setPos([playback_pos_sample / ratio,
                                               np.min(self.raw_audio)])
+
+    def player_pos_changed(self, playback_pos):
+        self._update_vlines(playback_pos)
+        playback_pos_sec = playback_pos / 1000.
+
+        xmin, xmax = self.waveform_widget.get_waveform_region()
+        diff = (xmax - xmin) * 0.1
+        if not playback_pos_sec <= xmax - diff:
+            x_start = xmax - diff
+            x_end = x_start + (xmax - xmin)
+
+            self.waveform_widget.change_wf_region(x_start, x_end)
+
         if hasattr(self, 'ts_widget'):
             if hasattr(self.ts_widget, 'vline'):
                 self.ts_widget.vline.setPos([playback_pos_sec, 0])
@@ -229,16 +256,18 @@ class PlayerFrame(QFrame):
             notes_dict = load_notes(feature_path)
 
         notes = []
+        print notes_dict.keys()
         for key in notes_dict.keys():
             for dic in notes_dict[key]:
                 interval = dic['interval']
                 pitch = dic['performed_pitch']['value']
                 notes.append([interval[0], interval[1], pitch])
 
-            self.ts_widget.notes = np.array(notes)
-            self.ts_widget.notes_start = self.ts_widget.notes[:, 0]
-            self.ts_widget.notes_end = self.ts_widget.notes[:, 1]
+        self.ts_widget.notes = np.array(notes)
+        self.ts_widget.notes_start = self.ts_widget.notes[:, 0]
+        self.ts_widget.notes_end = self.ts_widget.notes[:, 1]
 
-            x_min, x_max = self.waveform_widget.get_waveform_region()
-            self.ts_widget.update_notes(x_min, x_max)
-            self.ts_widget.is_notes_added = True
+        x_min, x_max = self.waveform_widget.get_waveform_region()
+        self.ts_widget.update_notes(x_min, x_max)
+        self.ts_widget.is_notes_added = True
+        print len(self.ts_widget.notes)
