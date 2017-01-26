@@ -27,6 +27,7 @@ class RCMenu(QMenu):
         set_css(self, CSS_PATH)
         self._add_actions()
 
+
         self.open_dunya.triggered.connect(self._send_player_request)
 
     def _add_actions(self):
@@ -50,3 +51,11 @@ class RCMenu(QMenu):
 
     def _send_player_request(self):
         self.parent().send_rec()
+
+    def return_selected_row_indexes(self):
+        try:
+            indexes = self.parent().selectedIndexes()
+            user_rows = list(set([ind.row() for ind in indexes]))
+            return user_rows
+        except:
+            return
