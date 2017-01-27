@@ -156,6 +156,7 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
                     target_ptr += chunk.shape[0] * 2
 
                 self.visible = visible[:target_ptr]
+            self.visible[-1] = np.nan
 
             start = (start * 128.) / 44100
             stop = (stop * 128.) / 44100

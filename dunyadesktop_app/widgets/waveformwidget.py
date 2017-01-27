@@ -128,6 +128,7 @@ class WaveformWidget(GraphicsLayoutWidget):
 
             self.visible = visible[:target_ptr]
             # scale = ds * 0.5
+        self.visible[-1] = np.nan
         self.waveform.clearPlots()
         self.waveform.plot(visible, connect='finite',
                            pen=(20, 170, 100, 80))
