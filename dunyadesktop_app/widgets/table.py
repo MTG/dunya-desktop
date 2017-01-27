@@ -8,8 +8,9 @@ from PyQt5.QtWidgets import (QToolButton, QTableView, QAbstractItemView,
 from PyQt5.QtCore import pyqtSignal, Qt, QPersistentModelIndex
 from PyQt5.QtGui import QFont, QCursor, QIcon, QPixmap
 
-from utilities import database
+from utilities import database, corpusbasestatistics
 from cultures.makam import utilities as makam_utilities
+from .playerframe import load_pd, load_tonic
 from .progressbar import ProgressBar
 from .contextmenu import RCMenu
 from .widgetutilities import set_css, convert_str
@@ -96,9 +97,27 @@ class TableView(QTableView):
             menu.popup(QCursor.pos())
 
             self.selected_indexes = menu.return_selected_row_indexes()
-            print self.selected_indexes
+            menu.overall_hist_action.triggered.connect(
+                self._compute_overall_histograms)
         except UnboundLocalError:
             pass
+
+    def _compute_overall_histograms(self):
+        coll_widget =  self.parent().parent().listView_collections
+        coll = str(coll_widget.currentItem().text())
+
+        conn, c = database.connect()
+        histograms = {}
+        for row in self.selected_indexes:
+            mbid = str(database.get_nth_row(c, coll, row)[0])
+            pd_path = os.path.join(DOCS_PATH, mbid,
+                                   'audioanalysis--pitch_distribution.json')
+            tnc_path = os.path.join(DOCS_PATH, mbid,
+                                   'audioanalysis--tonic.json')
+            vals, bins = load_pd(pd_path)
+            tonic = load_tonic(tnc_path)
+            histograms[mbid] = [[vals, bins], tonic]
+        corpusbasestatistics.compute_overall_histogram(histograms)
 
     def send_rec(self):
         """Emits 'open_dunya_triggered' signal and the current index to open
