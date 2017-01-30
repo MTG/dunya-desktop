@@ -4,7 +4,7 @@
 **Dunya-desktop** is a desktop application that has been developed for accessing 
 and visualizing the music information sources, the features and the analysis 
 results that are part of the [CompMusic](http://compmusic.upf.edu) Project. 
-It is a modular and extensible desktop application that the users can customise 
+It is a modular and extensive desktop application that the users can customise 
 according to their needs.
 
 Dunya-desktop mainly uses [PyQt5](https://www.riverbankcomputing.com/software/pyqt/download5), 
