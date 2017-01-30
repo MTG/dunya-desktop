@@ -188,7 +188,7 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         for i in range(start_ind, end_ind):
             temp_note = self.notes[i]
             roi = pg.ROI(pos=[temp_note[0], temp_note[2]],
-                         size=[temp_note[1] - temp_note[0], 2])
+                         size=[temp_note[1] - temp_note[0], 5])
             roi.addScaleHandle(pos=[0, 0], center=[0.5, 0.5])
             roi.addScaleHandle(pos=[1, 1], center=[0.5, 0.5])
             self.zoom_selection.addItem(roi)
