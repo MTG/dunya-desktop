@@ -6,6 +6,7 @@ class Playback:
     def __init__(self):
         self.player = QMediaPlayer()
 
+        self.player.mediaStatusChanged.connect(self.status_changed)
     def set_source(self, audio_path):
         url = QUrl.fromLocalFile(audio_path)
         media = QMediaContent(url)
@@ -17,3 +18,7 @@ class Playback:
 
     def pause(self):
         self.player.pause()
+
+    def status_changed(self, status):
+        if status == 7:
+            self.player.pause()
