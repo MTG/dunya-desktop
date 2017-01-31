@@ -10,7 +10,7 @@ from cultures.makam.utilities import get_filenames_in_dir
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
                          'documents')
 MB_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
-                       'icons', 'musicbrainzicon.svg')
+                       'icons', 'mb-icon-large.svg')
 
 
 class FeatureTreeWidget(QTreeWidget):
