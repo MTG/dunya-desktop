@@ -180,8 +180,8 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         start_ind = self.find_nearest_index(self.notes_start, xmin)
         end_ind = self.find_nearest_index(self.notes_end, xmax)
 
-        self.remove_all_note_rois()
-
+        self.remove_given_items(self.zoom_selection, self.rois)
+        self.rois = []
         if not hasattr(self, 'rois'):
             self.rois = []
 
@@ -194,15 +194,9 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
             self.zoom_selection.addItem(roi)
             self.rois.append(roi)
 
-    def remove_all_note_rois(self):
-        for r in self.rois:
-            self.zoom_selection.removeItem(r)
-        self.rois = []
-
-    def remove_all_tonic_lines(self):
-        for t_line in self.tonic_lines:
-            self.zoom_selection.removeItem(t_line)
-        self.tonic_lines = []
+    def remove_given_items(self, obj, items):
+        for item in items:
+            obj.removeItem(item)
 
     @staticmethod
     def find_nearest_index(n_array, value):
