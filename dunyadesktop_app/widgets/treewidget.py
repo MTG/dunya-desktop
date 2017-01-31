@@ -69,3 +69,124 @@ class FeatureTreeWidget(QTreeWidget):
         self.resizeColumnToContents(1)
 
         self.is_ready = True
+
+
+class MetadataTreeMakam(QTreeWidget):
+    MB = 'https://musicbrainz.org/'
+
+    def __init__(self, metadata_dict, parent=None):
+        QTreeWidget.__init__(self, parent=parent)
+        self.metadata_dict = metadata_dict
+
+        header = QTreeWidgetItem(['Metadata', '', '', '', ''])
+        self.setHeaderItem(header)
+        self._parse_dict()
+
+    def _parse_dict(self):
+        self.root_title = QTreeWidgetItem(self, ['Title'])
+        mbid_link = self.MB + "recording/" + self.metadata_dict['mbid']
+        title = QTreeWidgetItem(self.root_title, ['Title'])
+        title.setData(1, Qt.EditRole, self.metadata_dict['title'])
+        title.setData(2, Qt.EditRole, mbid_link)
+
+        # parsing and adding musical attributes
+        self.root_ma = QTreeWidgetItem(self, ['Musical Attribute'])
+        try:  # makam
+            for item in self.metadata_dict['makam']:
+                makam = QTreeWidgetItem(self.root_ma, ['Makam'])
+                try:
+                    makam.setData(1, Qt.EditRole, item['mb_attribute'])
+                except KeyError:
+                    makam.setData(1, Qt.EditRole, item['mb_tag'])
+                makam.setData(2, Qt.EditRole, item['source'])
+        except KeyError:
+            print 'no makam'
+
+        try:  # usul
+            for item in self.metadata_dict['usul']:
+                usul = QTreeWidgetItem(self.root_ma, ['Usul'])
+                try:
+                    usul.setData(1, Qt.EditRole, item['mb_attribute'])
+                except KeyError:
+                    usul.setData(1, Qt.EditRole, item['mb_tag'])
+                usul.setData(2, Qt.EditRole, item['source'])
+        except KeyError:
+            print 'no usul'
+
+        try:  # form
+            for item in self.metadata_dict['form']:
+                form = QTreeWidgetItem(self.root_ma, ['Form'])
+                try:
+                    form.setData(1, Qt.EditRole, item['mb_attribute'])
+                except KeyError:
+                    form.setData(1, Qt.EditRole, item['mb_tag'])
+                form.setData(2, Qt.EditRole, item['source'])
+        except KeyError:
+            print 'no form'
+
+        # release
+        self.root_release = QTreeWidgetItem(self, ['Releases'])
+        try:
+            for item in self.metadata_dict['releases']:
+                mb_release = self.MB + 'release/' + item['mbid']
+                release = QTreeWidgetItem(self.root_release, ['Release'])
+                release.setData(1, Qt.EditRole, item['title'])
+                release.setData(2, Qt.EditRole, mb_release)
+        except KeyError:
+            print 'no release'
+
+        # artist credits
+        self.root_art_cred = QTreeWidgetItem(self, ['Artist Credits'])
+        try:
+            for item in self.metadata_dict['artist_credits']:
+                mb_artist = self.MB + 'artist/' + item['mbid']
+                artist = QTreeWidgetItem(self.root_art_cred, ['Artist'])
+                artist.setData(1, Qt.EditRole, item['name'])
+                artist.setData(2, Qt.EditRole, mb_artist)
+        except KeyError:
+            print 'no artist'
+
+        # artists
+        self.root_artists = QTreeWidgetItem(self, ['Artists'])
+        try:
+            for item in self.metadata_dict['artists']:
+                mb_artist = self.MB + 'artist/' + item['mbid']
+                artist = QTreeWidgetItem(self.root_artists, ['Artist'])
+                artist.setData(1, Qt.EditRole, item['type'])
+                artist.setData(2, Qt.EditRole, item['name'])
+
+                att_list = u''
+                for item in item['attribute-list']:
+                    att_list += item
+                artist.setData(3, Qt.EditRole, att_list)
+                artist.setData(4, Qt.EditRole, mb_artist)
+
+        except KeyError:
+            print 'no artist'
+
+        # work
+        self.root_work = QTreeWidgetItem(self, ['Works'])
+
+        try:
+            for item in self.metadata_dict['works']:
+                mb_work = self.MB + 'work/' + item['mbid']
+                work = QTreeWidgetItem(self.root_work, ['Work'])
+                work.setData(1, Qt.EditRole, item['title'])
+                work.setData(2, Qt.EditRole, mb_work)
+        except KeyError:
+            print 'no work'
+
+        # audio attributes
+        self.root_audio = QTreeWidgetItem(self, ['Audio'])
+        fs = self.metadata_dict['sampling_frequency']
+        bit_rate = self.metadata_dict['bit_rate']
+        duration = self.metadata_dict['duration']
+
+        fs_item = QTreeWidgetItem(self.root_audio, ['Sampling Frequency'])
+        fs_item.setData(1, Qt.EditRole, fs)
+
+        bit_rate_item = QTreeWidgetItem(self.root_audio, ['Bit Rate'])
+        bit_rate_item.setData(1, Qt.EditRole, bit_rate)
+
+        duration_item = QTreeWidgetItem(self.root_audio, ['Duration'])
+        duration_item.setData(1, Qt.EditRole, duration)
