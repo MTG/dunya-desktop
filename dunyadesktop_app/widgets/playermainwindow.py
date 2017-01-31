@@ -1,17 +1,23 @@
-import sys
+import os
+import json
 
 from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import (QMainWindow, QApplication, QWidget, QVBoxLayout,
-                             QDockWidget)
+from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QDockWidget,
+                             QDialog)
 from PyQt5.QtCore import Qt, QMetaObject
 
-from treewidget import FeatureTreeWidget
+from treewidget import FeatureTreeWidget, MetadataTreeMakam
 from playerframe import PlayerFrame
+
+
+DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
+                         'documents')
 
 
 class PlayerMainWindow(QMainWindow):
     def __init__(self, docid, parent=None):
         QMainWindow.__init__(self, parent=parent)
+        self.docid = docid
         self._set_design(docid)
         QMetaObject.connectSlotsByName(self)
 
@@ -55,8 +61,8 @@ class PlayerMainWindow(QMainWindow):
 
         self.addDockWidget(Qt.LeftDockWidgetArea, self.features_dw)
 
-    def closeEvent(self, QCloseEvent):
-        self.player_frame.closeEvent(QCloseEvent)
+    def closeEvent(self, close_event):
+        self.player_frame.closeEvent(close_event)
 
     def evaluate_checked_signal(self, type, item, is_checked):
         if item == 'pitch' or item == 'pitch_filtered':
@@ -77,7 +83,9 @@ class PlayerMainWindow(QMainWindow):
                 self.player_frame.plot_1d_data(type, item)
             else:
                 self.player_frame.ts_widget.remove_all_tonic_lines()
-
+                self.player_frame.ts_widget.remove_given_items(
+                    self.player_frame.ts_widget.zoom_selection,
+                    self.player_frame.ts_widget.tonic_lines)
         if item == 'notes':
             if is_checked:
                 self.player_frame.add_1d_roi_items(type, item)
@@ -85,8 +93,17 @@ class PlayerMainWindow(QMainWindow):
                 self.player_frame.ts_widget.remove_all_note_rois()
                 self.player_frame.ts_widget.is_notes_added = False
 
+        if item == 'metadata':
+            if is_checked:
+                m_feature = type + '--' + item + '.json'
+                m_path = os.path.join(DOCS_PATH, self.docid, m_feature)
+                metadata = json.load(open(m_path))
 
-# app = QApplication(sys.argv)
-# ply = PlayerMainWindow(docid='f09db163-2549-4f67-bfb3-7b626f20a8c2')
-# ply.show()
-# app.exec_()
+                dlg = QDialog(self)
+                layout = QVBoxLayout(dlg)
+                mt = MetadataTreeMakam(metadata)
+                layout.addWidget(mt)
+                dlg.setLayout(layout)
+                dlg.show()
+            else:
+                print 'unchecked'
