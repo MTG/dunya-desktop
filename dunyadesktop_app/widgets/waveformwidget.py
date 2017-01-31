@@ -16,9 +16,9 @@ class WaveformRegionItem(pg.LinearRegionItem):
 
     def __init__(self, values=[0,1], orientation=None, brush=None,
                  movable=True, bounds=None):
-        pg.LinearRegionItem.__init__(self, values=values,
-                                     orientation=orientation, brush=brush,
-                                     movable=movable, bounds=bounds)
+        pg.LinearRegionItem.__init__(self, values=values, brush=brush,
+                                     orientation=orientation, movable=movable,
+                                     bounds=bounds)
 
     def mouseClickEvent(self, ev):
         self.clicked.emit()
@@ -76,7 +76,7 @@ class WaveformWidget(GraphicsLayoutWidget):
         self.region_wf = WaveformRegionItem([0, pos_wf_x_max],
                                             brush=pg.mkBrush((50, 255,
                                                               255, 45)),
-                                             bounds=[0., len_audio])
+                                            bounds=[0., len_audio])
 
         self.vline_wf = pg.ROI([0, min_audio], [0, max_audio - min_audio],
                                angle=0, pen=pg.mkPen((255, 40, 35, 150),
