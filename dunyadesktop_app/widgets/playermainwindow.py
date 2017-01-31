@@ -75,8 +75,7 @@ class PlayerMainWindow(QMainWindow):
 
                 if hasattr(self.player_frame.ts_widget, 'hline_histogram'):
                     self.player_frame.ts_widget.histogram.removeItem(
-                        self.player_frame.ts_widget.hline_histogram
-                    )
+                        self.player_frame.ts_widget.hline_histogram)
 
         if item == 'tonic':
             if is_checked:

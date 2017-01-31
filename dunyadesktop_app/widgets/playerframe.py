@@ -109,10 +109,14 @@ class PlayerFrame(QFrame):
         super(QFrame, self).closeEvent(QCloseEvent)
         if hasattr(self, 'waveform_widget'):
             self.waveform_widget.clear()
-        if hasattr(self, 'melody_widget'):
+            self.waveform_widget.layout.close()
+            self.waveform_widget.close()
+        if hasattr(self, 'ts_widget'):
             self.ts_widget.clear()
+            self.ts_widget.close()
         if hasattr(self, 'playback'):
             self.playback.pause()
+        self.close()
 
     def __set_design(self):
         self.setWindowTitle('Player')

@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QSizePolicy
-from PyQt5.QtCore import QSize, Qt, pyqtSignal
+from PyQt5.QtCore import Qt, pyqtSignal
 from pyqtgraph import GraphicsLayoutWidget
 import pyqtgraph as pg
 import numpy as np
@@ -14,7 +14,7 @@ pg.setConfigOptions(useWeave=True)
 class WaveformRegionItem(pg.LinearRegionItem):
     clicked = pyqtSignal()
 
-    def __init__(self, values=[0,1], orientation=None, brush=None,
+    def __init__(self, values=[0, 1], orientation=None, brush=None,
                  movable=True, bounds=None):
         pg.LinearRegionItem.__init__(self, values=values, brush=brush,
                                      orientation=orientation, movable=movable,
