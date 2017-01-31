@@ -47,7 +47,6 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         self.zoom_selection.setMenuEnabled(False)
         self.zoom_selection.setDownsampling(auto=True, mode='mean')
 
-        self.layout.addItem(self.zoom_selection)
         self.vline = pg.ROI([0, 0], [0, 20000], angle=0,
                             pen=pg.mkPen((255, 40, 35, 150), cosmetic=True,
                                          width=1))
