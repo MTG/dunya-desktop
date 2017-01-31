@@ -139,8 +139,8 @@ class MetadataTreeMakam(QTreeWidget):
                 artist.setData(2, Qt.EditRole, item['name'])
 
                 att_list = u''
-                for item in item['attribute-list']:
-                    att_list += item
+                for item_a in item['attribute-list']:
+                    att_list += item_a
                 artist.setData(3, Qt.EditRole, att_list)
 
                 artist_link = MBItem(mb_artist)
