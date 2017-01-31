@@ -7,7 +7,6 @@ from PyQt5.QtCore import Qt, pyqtSignal
 
 from cultures.makam.utilities import get_filenames_in_dir
 
-
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
                          'documents')
 MB_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
@@ -31,7 +30,7 @@ class FeatureTreeWidget(QTreeWidget):
             type = item.parent().data(0, 0)
             it = item.data(0, 0)
             check_state = item.checkState(column)
-            if check_state==2:
+            if check_state == 2:
                 is_checked = True
             else:
                 is_checked = False
@@ -44,7 +43,7 @@ class FeatureTreeWidget(QTreeWidget):
 
     def get_feature_list(self, docid):
         fullnames, folders, names = get_filenames_in_dir(
-            os.path.join(DOCS_PATH, docid),keyword='*.json')
+            os.path.join(DOCS_PATH, docid), keyword='*.json')
 
         for name in names:
             f_type = name.split('--')[0].strip()
@@ -55,7 +54,7 @@ class FeatureTreeWidget(QTreeWidget):
                 f_list.append(f_name)
                 self.feature_dict[f_type] = f_list
             except KeyError:
-                f_list= [f_name]
+                f_list = [f_name]
                 self.feature_dict[f_type] = f_list
         self.add_items()
 
@@ -110,42 +109,29 @@ class MetadataTreeMakam(QTreeWidget):
 
         # parsing and adding musical attributes
         self.root_ma = QTreeWidgetItem(self, ['Musical Attribute'])
-        try:  # makam
-            for item in self.metadata_dict['makam']:
-                self.__add_musical_attribute(self.root_ma, 'Makam', item)
-        except KeyError:
-            print 'no makam'
-
-        try:  # usul
-            for item in self.metadata_dict['usul']:
-                self.__add_musical_attribute(self.root_ma, 'Usul', item)
-        except KeyError:
-            print 'no usul'
-
-        try:  # form
-            for item in self.metadata_dict['form']:
-                self.__add_musical_attribute(self.root_ma, 'Form', item)
-        except KeyError:
-            print 'no form'
-
-        # release
         self.root_release = QTreeWidgetItem(self, ['Releases'])
-        try:
-            for item in self.metadata_dict['releases']:
-                self.__add_to_tree(self.root_release, 'Release', item)
-        except KeyError:
-            print 'no release'
-
-        # artist credits
         self.root_art_cred = QTreeWidgetItem(self, ['Artist Credits'])
-        try:
-            for item in self.metadata_dict['artist_credits']:
-                self.__add_to_tree(self.root_art_cred, 'Credits', item)
-        except KeyError:
-            print 'no artist'
+        self.root_artists = QTreeWidgetItem(self, ['Artists'])
+        self.root_work = QTreeWidgetItem(self, ['Works'])
+
+        for att in ['makam', 'usul', 'form']:
+            try:
+                for item in self.metadata_dict[att]:
+                    self.__add_musical_attribute(self.root_ma, att.title(),
+                                                 item)
+            except KeyError:
+                print 'no', att
+
+        for att in [(self.root_release, 'releases', 'Release'),
+                    (self.root_art_cred, 'artist_credits', 'Credits'),
+                    (self.root_work, 'works', 'Work')]:
+            try:
+                for item in self.metadata_dict[att[1]]:
+                    self.__add_to_tree(att[0], att[1], att[2], item)
+            except KeyError:
+                print 'No', att
 
         # artists
-        self.root_artists = QTreeWidgetItem(self, ['Artists'])
         try:
             for item in self.metadata_dict['artists']:
                 mb_artist = self.MB + 'artist/' + item['mbid']
@@ -161,15 +147,6 @@ class MetadataTreeMakam(QTreeWidget):
 
         except KeyError:
             print 'no artistssss'
-
-        # work
-        self.root_work = QTreeWidgetItem(self, ['Works'])
-
-        try:
-            for item in self.metadata_dict['works']:
-                self.__add_to_tree(self.root_work, 'Work', item)
-        except KeyError:
-            print 'no work'
 
         # audio attributes
         self.root_audio = QTreeWidgetItem(self, ['Audio'])
@@ -196,7 +173,7 @@ class MetadataTreeMakam(QTreeWidget):
         mb_item = MBItem(item['source'])
         self.setItemWidget(widget_item, 2, mb_item)
 
-    def __add_to_tree(self, root, name, item):
+    def __add_to_tree(self, root, key, name, item):
         mb_link = self.MB + 'release/' + item['mbid']
         item_widget = QTreeWidgetItem(root, [name])
 
@@ -207,9 +184,3 @@ class MetadataTreeMakam(QTreeWidget):
 
         mb_item = MBItem(mb_link=mb_link)
         self.setItemWidget(item_widget, 2, mb_item)
-
-
-#app = QApplication(sys.argv)
-#mt = MetadataTreeMakam(metadata_dict=test)
-#mt.show()
-#app.exec_()
