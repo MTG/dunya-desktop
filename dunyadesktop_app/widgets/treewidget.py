@@ -86,7 +86,7 @@ class MBItem(QPushButton):
         self.clicked.connect(self._button_clicked)
 
     def _button_clicked(self):
-        print 'clicked', self.mb_link
+        print('clicked', self.mb_link)
 
 
 class MetadataTreeMakam(QTreeWidget):
@@ -166,9 +166,9 @@ class MetadataTreeMakam(QTreeWidget):
     def __add_musical_attribute(self, root, name, item):
         widget_item = QTreeWidgetItem(root, [name])
         try:
-            widget_item.setData(1, Qt.EditRole, item['mb_attribute'])
+            self.__set_item_widget(widget_item, 1, item, 'mb_attribute')
         except KeyError:
-            widget_item.setData(1, Qt.EditRole, item['mb_tag'])
+            self.__set_item_widget(widget_item, 1, item, 'mb_tag')
 
         mb_item = MBItem(item['source'])
         self.setItemWidget(widget_item, 2, mb_item)
@@ -178,9 +178,13 @@ class MetadataTreeMakam(QTreeWidget):
         item_widget = QTreeWidgetItem(root, [name])
 
         try:
-            item_widget.setData(1, Qt.EditRole, item['title'])
+            self.__set_item_widget(item_widget, 1, item, 'title')
         except KeyError:
-            item_widget.setData(1, Qt.EditRole, item['name'])
+            self.__set_item_widget(item_widget, 1, item, 'name')
 
         mb_item = MBItem(mb_link=mb_link)
         self.setItemWidget(item_widget, 2, mb_item)
+
+    @staticmethod
+    def __set_item_widget(widget, col, item, key):
+        widget.setData(col, Qt.EditRole, item[key])
