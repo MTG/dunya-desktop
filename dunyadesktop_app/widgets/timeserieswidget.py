@@ -115,8 +115,16 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
 
     def update_plot(self, start, stop):
         if self.pitch_plot is not None:
-            plot_x, plot_y = downsample_plot(self.pitch_plot, self.limit,
-                                             start, stop, 128., 44100.)
+            ratio = 1. / (128. / 44100.)
+            start = int(start * ratio)
+            stop = int(stop * ratio)
+            plot_y = downsample_plot(self.pitch_plot[start:stop], self.limit)
+
+            start = (start * 128.) / 44100.
+            stop = (stop * 128.) / 44100.
+            step = (stop - start) / (len(plot_y))
+            plot_x = np.arange(start, stop, step)
+
             self.zoom_selection.clearPlots()
             pen = pg.mkPen(cosmetic=True, width=1.5, color=(30, 110, 216,))
             self.zoom_selection.plot(plot_x[0:len(plot_y)],
@@ -147,7 +155,8 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
             self.zoom_selection.addItem(roi)
             self.rois.append(roi)
 
-    def remove_given_items(self, obj, items):
+    @staticmethod
+    def remove_given_items(obj, items):
         for item in items:
             obj.removeItem(item)
 

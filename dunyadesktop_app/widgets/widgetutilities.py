@@ -14,36 +14,30 @@ def set_css(widget, css_path):
         pass
 
 
-def downsample_plot(plot_array, limit, start, stop, hop_size, fs):
-    start *= 1 / (hop_size / fs)
-    stop *= 1 / (128. / 44100.)
-    start = int(start)
-    stop = int(stop)
+def downsample_plot(plot_array, ds_limit):
     # Decide by how much we should downsample
-    ds = int((stop - start) / limit) + 1
+    ds = int(len(plot_array) / ds_limit) + 1
 
     if ds == 1:
         # Small enough to display with no intervention.
-        plot_y = plot_array[start:stop]
+        return plot_array
     else:
         # Here convert data into a down-sampled array suitable for
-        # visualizing.
-        # Must do this piecewise to limit memory usage.
-        samples = 1 + ((stop - start) // ds)
+        # visualizing. Must do this piecewise to limit memory usage.
+        samples = 1 + (len(plot_array) // ds)
         visible = np.zeros(samples * 2, dtype=plot_array.dtype)
-        source_ptr = start
+        source_ptr = 0
         target_ptr = 0
 
         # read data in chunks of ~1M samples
         chunk_size = (1000000 // ds) * ds
-        while source_ptr < stop - 1:
-            chunk = plot_array[source_ptr:min(stop, source_ptr + chunk_size)]
+        while source_ptr < len(plot_array) - 1:
+            chunk = plot_array[source_ptr:min(len(plot_array),
+                                              source_ptr + chunk_size)]
             source_ptr += len(chunk)
-
             # reshape chunk to be integral multiple of ds
-            chunk = chunk[:(len(chunk) // ds) * ds].reshape(
-                len(chunk) // ds, ds)
-
+            chunk = chunk[:(len(chunk) // ds) * ds].reshape(len(chunk) // ds,
+                                                            ds)
             # compute max and min
             chunk_max = chunk.max(axis=1)
             chunk_min = chunk.min(axis=1)
@@ -54,13 +48,7 @@ def downsample_plot(plot_array, limit, start, stop, hop_size, fs):
             visible[1 + target_ptr:
             1 + target_ptr + chunk.shape[0] * 2:2] = chunk_max
             target_ptr += chunk.shape[0] * 2
-
         plot_y = visible[:target_ptr]
         plot_y[-1] = np.nan
 
-    start = (start * hop_size) / fs
-    stop = (stop * hop_size) / fs
-    step = (stop - start) / (len(plot_y))
-    plot_x = np.arange(start, stop, step)
-
-    return plot_x, plot_y
+    return plot_y

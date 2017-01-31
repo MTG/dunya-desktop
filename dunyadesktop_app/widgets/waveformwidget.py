@@ -4,6 +4,8 @@ from pyqtgraph import GraphicsLayoutWidget
 import pyqtgraph as pg
 import numpy as np
 
+from .widgetutilities import downsample_plot
+
 pg.setConfigOptions(useOpenGL=True)
 pg.setConfigOptions(useWeave=True)
 # pg.setConfigOptions(crashWarning=True)
@@ -83,58 +85,12 @@ class WaveformWidget(GraphicsLayoutWidget):
         self.waveform.addItem(self.region_wf)
 
     def update_wf_plot(self):
-        start = 0
-        stop = len(self.raw_audio)
-
-        # Decide by how much we should downsample
-        ds = int((stop - start) / self.limit) + 1
-
-        if ds == 1:
-            # Small enough to display with no intervention.
-            visible = self.raw_audio[start:stop]
-            # scale = 1
-        else:
-            # Here convert data into a down-sampled array suitable for
-            # visualizing.
-            # Must do this piecewise to limit memory usage.
-            samples = 1 + ((stop - start) // ds)
-            visible = np.zeros(samples * 2, dtype=self.raw_audio.dtype)
-            source_ptr = start
-            target_ptr = 0
-
-            # read data in chunks of ~1M samples
-            chunk_size = (1000000 // ds) * ds
-            while source_ptr < stop - 1:
-                chunk = \
-                    self.raw_audio[source_ptr:min(stop, source_ptr +
-                                                  chunk_size)]
-                source_ptr += len(chunk)
-
-                # reshape chunk to be integral multiple of ds
-                chunk = chunk[:(len(chunk) // ds) * ds].reshape(
-                    len(chunk) // ds, ds)
-
-                # compute max and min
-                chunk_max = chunk.max(axis=1)
-                chunk_min = chunk.min(axis=1)
-
-                # interleave min and max into plot data to preserve envelope
-                # shape
-                visible[target_ptr:target_ptr + chunk.shape[0] * 2:2] = \
-                    chunk_min
-                visible[1 + target_ptr:1 + target_ptr + chunk.shape[0] * 2:2] \
-                    = chunk_max
-                target_ptr += chunk.shape[0] * 2
-
-            self.visible = visible[:target_ptr]
-            # scale = ds * 0.5
-        self.visible[-1] = np.nan
+        self.visible = downsample_plot(self.raw_audio, self.limit)
         self.waveform.clearPlots()
-        self.waveform.plot(visible, connect='finite',
+        self.waveform.plot(self.visible, connect='finite',
                            pen=(20, 170, 100, 80))
         # self.waveform.setPos(start, 0)  # shift to match starting index
         self.waveform.resetTransform()
-        # self.waveform.scale(scale, 1)  # scale to match downsampling
 
     def get_waveform_region(self):
         pos_wf_x_min, pos_wf_x_max = self.region_wf.getRegion()
