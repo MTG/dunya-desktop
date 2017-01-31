@@ -1,7 +1,7 @@
 import os
+import webbrowser
 
-from PyQt5.QtWidgets import (QTreeWidget, QTreeWidgetItem, QApplication,
-                             QPushButton)
+from PyQt5.QtWidgets import (QTreeWidget, QTreeWidgetItem, QPushButton)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt, pyqtSignal
 
@@ -27,14 +27,14 @@ class FeatureTreeWidget(QTreeWidget):
 
     def _item_changed(self, item, column):
         if self.is_ready:
-            type = item.parent().data(0, 0)
+            type_t = item.parent().data(0, 0)
             it = item.data(0, 0)
             check_state = item.checkState(column)
             if check_state == 2:
                 is_checked = True
             else:
                 is_checked = False
-            self.item_checked.emit(type, it, is_checked)
+            self.item_checked.emit(type_t, it, is_checked)
 
     def _set_tree_widget(self):
         header = QTreeWidgetItem(['Features', 'Visualize'])
@@ -63,14 +63,12 @@ class FeatureTreeWidget(QTreeWidget):
             for key in self.feature_dict.keys():
                 root = QTreeWidgetItem(self, [key])
 
-                for type in self.feature_dict[key]:
+                for type_t in self.feature_dict[key]:
                     feature = QTreeWidgetItem(root, ['Feature Types'])
-                    feature.setData(0, Qt.EditRole, type)
+                    feature.setData(0, Qt.EditRole, type_t)
                     feature.setCheckState(1, Qt.Unchecked)
-
         self.resizeColumnToContents(0)
         self.resizeColumnToContents(1)
-
         self.is_ready = True
 
 
@@ -86,7 +84,7 @@ class MBItem(QPushButton):
         self.clicked.connect(self._button_clicked)
 
     def _button_clicked(self):
-        print('clicked', self.mb_link)
+        webbrowser.open(self.mb_link, new=2)
 
 
 class MetadataTreeMakam(QTreeWidget):
@@ -105,7 +103,8 @@ class MetadataTreeMakam(QTreeWidget):
         mbid_link = self.MB + "recording/" + self.metadata_dict['mbid']
         title = QTreeWidgetItem(self.root_title, ['Title'])
         title.setData(1, Qt.EditRole, self.metadata_dict['title'])
-        title.setData(2, Qt.EditRole, mbid_link)
+        title_link = MBItem(mbid_link)
+        self.setItemWidget(title, 2, title_link)
 
         # parsing and adding musical attributes
         self.root_ma = QTreeWidgetItem(self, ['Musical Attribute'])
@@ -120,16 +119,16 @@ class MetadataTreeMakam(QTreeWidget):
                     self.__add_musical_attribute(self.root_ma, att.title(),
                                                  item)
             except KeyError:
-                print 'no', att
+                print('No', att)  # add logging
 
         for att in [(self.root_release, 'releases', 'Release'),
                     (self.root_art_cred, 'artist_credits', 'Credits'),
                     (self.root_work, 'works', 'Work')]:
             try:
                 for item in self.metadata_dict[att[1]]:
-                    self.__add_to_tree(att[0], att[1], att[2], item)
+                    self.__add_to_tree(att[0], att[2], item)
             except KeyError:
-                print 'No', att
+                print ('No', att)  # add logging
 
         # artists
         try:
@@ -143,10 +142,12 @@ class MetadataTreeMakam(QTreeWidget):
                 for item in item['attribute-list']:
                     att_list += item
                 artist.setData(3, Qt.EditRole, att_list)
-                artist.setData(4, Qt.EditRole, mb_artist)
+
+                artist_link = MBItem(mb_artist)
+                self.setItemWidget(artist, 4, artist_link)
 
         except KeyError:
-            print 'no artistssss'
+            print('no artistssss')  # add logging
 
         # audio attributes
         self.root_audio = QTreeWidgetItem(self, ['Audio'])
@@ -173,7 +174,7 @@ class MetadataTreeMakam(QTreeWidget):
         mb_item = MBItem(item['source'])
         self.setItemWidget(widget_item, 2, mb_item)
 
-    def __add_to_tree(self, root, key, name, item):
+    def __add_to_tree(self, root, name, item):
         mb_link = self.MB + 'release/' + item['mbid']
         item_widget = QTreeWidgetItem(root, [name])
 
