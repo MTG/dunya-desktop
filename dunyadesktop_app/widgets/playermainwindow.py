@@ -82,7 +82,6 @@ class PlayerMainWindow(QMainWindow):
             if is_checked:
                 self.player_frame.plot_1d_data(type, item)
             else:
-                self.player_frame.ts_widget.remove_all_tonic_lines()
                 self.player_frame.ts_widget.remove_given_items(
                     self.player_frame.ts_widget.zoom_selection,
                     self.player_frame.ts_widget.tonic_lines)
@@ -90,7 +89,9 @@ class PlayerMainWindow(QMainWindow):
             if is_checked:
                 self.player_frame.add_1d_roi_items(type, item)
             else:
-                self.player_frame.ts_widget.remove_all_note_rois()
+                self.player_frame.ts_widget.remove_given_items(
+                    self.player_frame.ts_widget.zoom_selection,
+                    self.player_frame.ts_widget.rois)
                 self.player_frame.ts_widget.is_notes_added = False
 
         if item == 'metadata':

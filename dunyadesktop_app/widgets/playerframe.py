@@ -202,7 +202,7 @@ class PlayerFrame(QFrame):
     def wf_region_changed(self):
         pos = self.playback.player.position() / 1000.
         x_min, x_max = self.waveform_widget.get_waveform_region()
-
+        #self._update_vlines(pos)
         if x_min < pos < x_max:
             if hasattr(self, 'ts_widget'):
                 if hasattr(self.ts_widget, 'zoom_selection'):

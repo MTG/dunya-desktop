@@ -4,6 +4,8 @@ import numpy as np
 
 from PyQt5.QtWidgets import QSizePolicy
 
+from .widgetutilities import downsample_plot
+
 pg.setConfigOptions(useOpenGL=True)
 pg.setConfigOptions(useWeave=True)
 # pg.setConfigOptions(crashWarning=True)
@@ -105,7 +107,7 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
             self.tonic_lines = []
 
         for value in values:
-            t_line = pg.InfiniteLine(pos=value, movable=False,angle=0,
+            t_line = pg.InfiniteLine(pos=value, movable=False, angle=0,
                                      label='Tonic=%.2f' % value,
                                      labelOpts=label_opts)
             self.tonic_lines.append(t_line)
@@ -113,61 +115,12 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
 
     def update_plot(self, start, stop):
         if self.pitch_plot is not None:
-            start *= 1 / (128. / 44100.)
-            stop *= 1 / (128. / 44100.)
-            start = int(start)
-            stop = int(stop)
-            # Decide by how much we should downsample
-            ds = int((stop - start) / self.limit) + 1
-
-            if ds == 1:
-                # Small enough to display with no intervention.
-                visible = self.pitch_plot[start:stop]
-            else:
-                # Here convert data into a down-sampled array suitable for
-                # visualizing.
-                # Must do this piecewise to limit memory usage.
-                samples = 1 + ((stop - start) // ds)
-                visible = np.zeros(samples * 2, dtype=self.pitch_plot.dtype)
-                source_ptr = start
-                target_ptr = 0
-
-                # read data in chunks of ~1M samples
-                chunk_size = (1000000 // ds) * ds
-                while source_ptr < stop - 1:
-                    chunk = self.pitch_plot[
-                            source_ptr:min(stop, source_ptr + chunk_size)]
-                    source_ptr += len(chunk)
-
-                    # reshape chunk to be integral multiple of ds
-                    chunk = chunk[:(len(chunk) // ds) * ds].reshape(
-                        len(chunk) // ds, ds)
-
-                    # compute max and min
-                    chunk_max = chunk.max(axis=1)
-                    chunk_min = chunk.min(axis=1)
-
-                    # interleave min and max into plot data to preserve
-                    # envelope shape
-                    visible[target_ptr:target_ptr + chunk.shape[0] * 2:2] = \
-                        chunk_min
-                    visible[1 + target_ptr:
-                            1 + target_ptr + chunk.shape[0] * 2:2] = chunk_max
-                    target_ptr += chunk.shape[0] * 2
-
-                self.visible = visible[:target_ptr]
-            self.visible[-1] = np.nan
-
-            start = (start * 128.) / 44100
-            stop = (stop * 128.) / 44100
-            step = (stop - start) / (len(visible))
-
-            time = np.arange(start, stop, step)
-
+            plot_x, plot_y = downsample_plot(self.pitch_plot, self.limit,
+                                             start, stop, 128., 44100.)
             self.zoom_selection.clearPlots()
             pen = pg.mkPen(cosmetic=True, width=1.5, color=(30, 110, 216,))
-            self.zoom_selection.plot(time[0:len(visible)],
-                                     visible,
+            self.zoom_selection.plot(plot_x[0:len(plot_y)],
+                                     plot_y,
                                      connect='finite',
                                      pen=pen)
             self.zoom_selection.resetTransform()

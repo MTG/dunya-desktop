@@ -188,4 +188,4 @@ class MetadataTreeMakam(QTreeWidget):
 
     @staticmethod
     def __set_item_widget(widget, col, item, key):
-        widget.setData(col, Qt.EditRole, item[key])
+        widget.setData(col, Qt.EditRole, item[key].title())
