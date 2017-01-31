@@ -18,3 +18,4 @@ ratings:
   - "**.py"
 exclude_paths:
   - "dunyadesktop_app/ui_files/resources_rc.py"
+  - "dunyadesktop_app/ui_files/css"
