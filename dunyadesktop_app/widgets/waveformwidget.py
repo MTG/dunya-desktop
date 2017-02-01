@@ -69,16 +69,15 @@ class WaveformWidget(GraphicsLayoutWidget):
         self.waveform.clearPlots()
         self.waveform.plot(self.visible, connect='finite', pen=WAVEFORM_PEN)
         self.waveform.resetTransform()
-        self._add_elements_to_plot(len(self.visible), np.min(self.visible),
-                                   np.max(self.visible))
+        self._add_elements_to_plot(len(self.visible), np.nanmin(self.visible),
+                                   np.nanmax(self.visible))
 
     def _add_elements_to_plot(self, len_plot, min_audio, max_audio):
         pos_wf_x_max = len_plot / 25.
         self.region_wf = WaveformRegionItem([0, pos_wf_x_max],
                                             brush=WAVEFORM_BRUSH,
                                             bounds=[0., len_plot])
-
-        self.vline_wf = pg.ROI([0, min_audio], [0, max_audio - min_audio],
+        self.vline_wf = pg.ROI([0, min_audio], [0, max_audio-min_audio],
                                angle=0, pen=WAVEFORM_VLINE)
         self.waveform.addItem(self.region_wf)
         self.waveform.addItem(self.vline_wf)
