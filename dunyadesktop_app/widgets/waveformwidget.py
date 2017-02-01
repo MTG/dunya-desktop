@@ -37,11 +37,11 @@ class WaveformWidget(GraphicsLayoutWidget):
     def __init__(self):
         GraphicsLayoutWidget.__init__(self, parent=None)
 
-        self._set_size_policy()
+        self.__set_size_policy()
         self.limit = 900  # maximum number of samples to be plotted
         self.samplerate = 44100.
 
-    def _set_size_policy(self):
+    def __set_size_policy(self):
         size_policy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
         size_policy.setHorizontalStretch(0)
         # size_policy.setVerticalStretch(50)
@@ -82,13 +82,23 @@ class WaveformWidget(GraphicsLayoutWidget):
         self.waveform.addItem(self.region_wf)
         self.waveform.addItem(self.vline_wf)
 
+    @property
     def get_waveform_region(self):
+        """
+
+        :return:
+        """
         pos_wf_x_min, pos_wf_x_max = self.region_wf.getRegion()
         x_min = (pos_wf_x_min * self.ratio) / self.samplerate
         x_max = (pos_wf_x_max * self.ratio) / self.samplerate
         return x_min, x_max
 
     def change_wf_region(self, x_start, x_end):
+        """
+        Sets the region on the waveform.
+        :param x_start: Start point of the region item in seconds.
+        :param x_end: End point of the region item in seconds.
+        """
         x_start = (x_start * self.samplerate) / self.ratio
         x_end = (x_end * self.samplerate) / self.ratio
         self.region_wf.setRegion([x_start, x_end])
