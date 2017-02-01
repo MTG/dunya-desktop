@@ -94,7 +94,7 @@ class PlayerFrame(QFrame):
         self.playback = Playback()
         self.playback.set_source(self.feature_paths['audio_path'])
 
-        self.playback.player.positionChanged.connect(self.player_pos_changed)
+        self.playback.positionChanged.connect(self.player_pos_changed)
         self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
             self.wf_region_changed)
         self.waveform_widget.region_wf.clicked.connect(self.wf_region_item_clicked)
@@ -204,7 +204,7 @@ class PlayerFrame(QFrame):
         self.playback.pause()
 
     def wf_region_changed(self):
-        pos = self.playback.player.position() / 1000.
+        pos = self.playback.position() / 1000.
         x_min, x_max = self.waveform_widget.get_waveform_region()
         #self._update_vlines(pos)
         if x_min < pos < x_max:
@@ -217,7 +217,7 @@ class PlayerFrame(QFrame):
         else:
             self.playback_pause()
             pos = x_min * 1000.
-            self.playback.player.setPosition(pos)
+            self.playback.setPosition(pos)
             self._update_vlines(pos)
             if hasattr(self, 'ts_widget'):
                 if hasattr(self.ts_widget, 'zoom_selection'):

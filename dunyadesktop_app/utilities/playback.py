@@ -1,23 +1,17 @@
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
-from PyQt5.QtCore import QUrl
+from PyQt5.QtCore import QUrl, QThread
 
 
-class Playback:
-    def __init__(self):
-        self.player = QMediaPlayer()
+class Playback(QMediaPlayer):
+    def __init__(self, parent=None):
+        QMediaPlayer.__init__(self, parent=parent)
+        self.mediaStatusChanged.connect(self.status_changed)
 
-        self.player.mediaStatusChanged.connect(self.status_changed)
     def set_source(self, audio_path):
         url = QUrl.fromLocalFile(audio_path)
         media = QMediaContent(url)
-        self.player.setNotifyInterval(35)
-        self.player.setMedia(media)
-
-    def play(self):
-        self.player.play()
-
-    def pause(self):
-        self.player.pause()
+        self.setNotifyInterval(35)
+        self.setMedia(media)
 
     def status_changed(self, status):
         if status == 7:
