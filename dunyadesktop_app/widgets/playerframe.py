@@ -109,7 +109,6 @@ class PlayerFrame(QFrame):
         super(QFrame, self).closeEvent(QCloseEvent)
         if hasattr(self, 'waveform_widget'):
             self.waveform_widget.clear()
-            self.waveform_widget.layout.close()
             self.waveform_widget.close()
         if hasattr(self, 'ts_widget'):
             self.ts_widget.clear()

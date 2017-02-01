@@ -10,6 +10,10 @@ pg.setConfigOptions(useOpenGL=True)
 pg.setConfigOptions(useWeave=True)
 # pg.setConfigOptions(crashWarning=True)
 
+WAVEFORM_PEN = (20, 170, 100, 80)
+WAVEFORM_BRUSH = pg.mkBrush((50, 255, 255, 45))
+WAVEFORM_VLINE = pg.mkPen((255, 40, 35, 150), cosmetic=True, width=2)
+
 
 class WaveformRegionItem(pg.LinearRegionItem):
     clicked = pyqtSignal()
@@ -33,7 +37,6 @@ class WaveformWidget(GraphicsLayoutWidget):
     def __init__(self):
         GraphicsLayoutWidget.__init__(self, parent=None)
 
-        self.layout = pg.GraphicsLayout()
         self._set_size_policy()
         self.limit = 900  # maximum number of samples to be plotted
         self.samplerate = 44100.
@@ -48,60 +51,45 @@ class WaveformWidget(GraphicsLayoutWidget):
         # self.setMaximumSize(QSize(16777215, 50))
         self.setFocusPolicy(Qt.NoFocus)
         self.setAcceptDrops(False)
-        self.layout.setContentsMargins(0, 0, 0, 0)
-        self.layout.setSpacing(0)
-        self.setContentsMargins(0, 0, 0, 0)
+        self.centralWidget.setContentsMargins(0, 0, 0, 0)
+        self.centralWidget.setSpacing(0)
 
     def plot_waveform(self, raw_audio):
-        self.raw_audio = raw_audio
-        self.waveform = self.layout.addPlot()
+        self.waveform = self.centralWidget.addPlot()
         self.waveform.hideAxis(axis='bottom')
         self.waveform.hideAxis(axis='left')
 
-        # self.waveform.setMaximumHeight(200)
+        # disabling the mouse events and menu events
         self.waveform.setMouseEnabled(x=False, y=False)
         self.waveform.setMenuEnabled(False)
 
-        # self.raw_audio += np.abs(np.min(raw_audio))
-        self.update_wf_plot()
-        self.waveform.setDownsampling(auto=True, mode='peak')
-        self.layout.addItem(self.waveform)
+        # downsampling the given plot array
+        self.visible = downsample_plot(raw_audio, self.limit)
+        self.ratio = len(raw_audio) / float(len(self.visible))
+        self.waveform.clearPlots()
+        self.waveform.plot(self.visible, connect='finite', pen=WAVEFORM_PEN)
+        self.waveform.resetTransform()
         self._add_elements_to_plot(len(self.visible), np.min(self.visible),
                                    np.max(self.visible))
 
-        self.addItem(self.layout)
-
-    def _add_elements_to_plot(self, len_audio, min_audio, max_audio):
-        pos_wf_x_max = len_audio / 25.
+    def _add_elements_to_plot(self, len_plot, min_audio, max_audio):
+        pos_wf_x_max = len_plot / 25.
         self.region_wf = WaveformRegionItem([0, pos_wf_x_max],
-                                            brush=pg.mkBrush((50, 255,
-                                                              255, 45)),
-                                            bounds=[0., len_audio])
+                                            brush=WAVEFORM_BRUSH,
+                                            bounds=[0., len_plot])
 
         self.vline_wf = pg.ROI([0, min_audio], [0, max_audio - min_audio],
-                               angle=0, pen=pg.mkPen((255, 40, 35, 150),
-                                                     cosmetic=True, width=1))
-        self.waveform.addItem(self.vline_wf)
+                               angle=0, pen=WAVEFORM_VLINE)
         self.waveform.addItem(self.region_wf)
-
-    def update_wf_plot(self):
-        self.visible = downsample_plot(self.raw_audio, self.limit)
-        self.waveform.clearPlots()
-        self.waveform.plot(self.visible, connect='finite',
-                           pen=(20, 170, 100, 80))
-        # self.waveform.setPos(start, 0)  # shift to match starting index
-        self.waveform.resetTransform()
+        self.waveform.addItem(self.vline_wf)
 
     def get_waveform_region(self):
         pos_wf_x_min, pos_wf_x_max = self.region_wf.getRegion()
-        ratio = len(self.raw_audio) / len(self.visible)
-        x_min = (pos_wf_x_min * ratio) / self.samplerate
-        x_max = (pos_wf_x_max * ratio) / self.samplerate
+        x_min = (pos_wf_x_min * self.ratio) / self.samplerate
+        x_max = (pos_wf_x_max * self.ratio) / self.samplerate
         return x_min, x_max
 
     def change_wf_region(self, x_start, x_end):
-        ratio = len(self.raw_audio) / len(self.visible)
-
-        x_start = (x_start * self.samplerate) / ratio
-        x_end = (x_end * self.samplerate) / ratio
+        x_start = (x_start * self.samplerate) / self.ratio
+        x_end = (x_end * self.samplerate) / self.ratio
         self.region_wf.setRegion([x_start, x_end])
