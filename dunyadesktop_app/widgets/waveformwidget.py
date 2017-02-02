@@ -1,5 +1,4 @@
-from PyQt5.QtWidgets import QSizePolicy
-from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtCore import pyqtSignal
 import pyqtgraph as pg
 import numpy as np
 
@@ -28,31 +27,30 @@ class WaveformRegionItem(pg.LinearRegionItem):
                                      bounds=bounds)
 
     def mouseClickEvent(self, ev):
-        self.clicked.emit()
-        super(WaveformRegionItem, self).mouseClickEvent(ev)
+        # Override the mouseClickEvent. Add self.clicked signal before the
+        # original method. Original method is called with super() method.
+        self.clicked.emit()  # emit clicked signal
+        super(WaveformRegionItem, self).mouseClickEvent(ev)  # call original
+        # method
 
     def mouseDragEvent(self, ev):
-        self.clicked.emit()
-        super(WaveformRegionItem, self).mouseDragEvent(ev)
+        # Override the mouseDragEvent. Add self.clicked signal before the
+        # original method. Original method is called with super() method.
+        self.clicked.emit()  # emit clicked signal
+        super(WaveformRegionItem, self).mouseDragEvent(ev)  # call original
+        # method
 
 
 class WaveformWidget(pg.GraphicsLayoutWidget):
     def __init__(self):
         pg.GraphicsLayoutWidget.__init__(self, parent=None)
 
-        self.__set_size_policy()
-        self.limit = 900  # maximum number of samples to be plotted
-        self.samplerate = 44100.
-
-    def __set_size_policy(self):
-        size_policy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
-        size_policy.setHorizontalStretch(0)
-        size_policy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
-
-        self.setFocusPolicy(Qt.NoFocus)
-        self.setAcceptDrops(False)
+        # # Set 0 margin 0 spacing to cover the whole area.
         self.centralWidget.setContentsMargins(0, 0, 0, 0)
         self.centralWidget.setSpacing(0)
+
+        self.limit = 900  # maximum number of samples to be plotted
+        self.samplerate = 44100.
 
     def plot_waveform(self, raw_audio):
         """
