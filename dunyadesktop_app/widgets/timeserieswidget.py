@@ -1,23 +1,30 @@
-from pyqtgraph import GraphicsLayoutWidget
 import pyqtgraph as pg
 import numpy as np
 
-from PyQt5.QtWidgets import QSizePolicy
-
 from .widgetutilities import downsample_plot
 
+# Enable OpenGL and Weave to improve the performance of plotting functions.
 pg.setConfigOptions(useOpenGL=True)
 pg.setConfigOptions(useWeave=True)
 # pg.setConfigOptions(crashWarning=True)
 
+CURSOR_PEN = pg.mkPen((255, 40, 35, 150), cosmetic=True, width=3)
+YAXIS_BRUSH = pg.mkBrush((50, 255, 255, 45))
+PITCH_PEN = pg.mkPen(cosmetic=True, width=1.5, color=(30, 110, 216,))
+SHADOW_PEN = pg.mkPen((70, 70, 30), width=5, cosmetic=True)
 
-class TimeSeriesWidget(GraphicsLayoutWidget):
+
+class TimeSeriesWidget(pg.GraphicsLayoutWidget):
+    sample_rate = 44100
+
     def __init__(self, parent=None):
-        GraphicsLayoutWidget.__init__(self, parent)
-        self.layout = pg.GraphicsLayout()
-        self._set_size_policy()
-        self.limit = 600
+        pg.GraphicsLayoutWidget.__init__(self, parent)
 
+        # Set 0 margin 0 spacing to cover the whole area.
+        self.centralWidget.setContentsMargins(0, 0, 0, 0)
+        self.centralWidget.setSpacing(0)
+
+        self.limit = 600  # maximum number of samples to be plotted
         self.rois = []
 
         # flags
@@ -27,81 +34,145 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
     def wheelEvent(self, ev):
         return
 
-    def _set_size_policy(self):
-        size_policy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        size_policy.setHorizontalStretch(0)
-        size_policy.setVerticalStretch(0)
-        size_policy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
-        self.setSizePolicy(size_policy)
-        self.layout.setContentsMargins(0, 0, 0, 0)
-        self.layout.setSpacing(0)
-
     def add_1d_view(self):
-        x_axis = pg.AxisItem('bottom')
-        x_axis.enableAutoSIPrefix(enable=False)
-        x_axis.setGrid(100)
+        """
+        Adds a 1d view to TimeSeriesWidget where you can plot and add items
+        on it.
+        """
 
-        y_axis = pg.AxisItem('left')
-        y_axis.enableAutoSIPrefix(enable=False)
+        # To customize the plot axises, create new ones.
+        x_axis = pg.AxisItem('bottom')  # x-axis
+        x_axis.enableAutoSIPrefix(enable=False)  # Prevent automatic SI
+        # prefix scaling on this axis.
+        x_axis.setGrid(100)  # the alpha value of grids on x-axis
 
-        self.zoom_selection = self.layout.addPlot(axisItems={'left': y_axis,
-                                                             'bottom': x_axis})
+        y_axis = pg.AxisItem('left')  # x-axis
+        y_axis.enableAutoSIPrefix(enable=False)  # Prevent automatic SI
+        # prefix scaling on this axis.
+        axis_items = {'left': y_axis, 'bottom': x_axis}
+
+        # add plot
+        self.zoom_selection = self.centralWidget.addPlot(axisItems=axis_items)
+
+        # disable the mouse events and menu events
         self.zoom_selection.setMouseEnabled(x=False, y=False)
         self.zoom_selection.setMenuEnabled(False)
-        self.zoom_selection.setDownsampling(auto=True, mode='mean')
 
-        self.vline = pg.ROI([0, 0], [0, 20000], angle=0,
-                            pen=pg.mkPen((255, 40, 35, 150), cosmetic=True,
-                                         width=1))
-        self.zoom_selection.addItem(self.vline)
-        self.addItem(self.layout)
-        self.plot_1d_region()
+        # initialize a cursor object. Height of cursor is 20000.
+        self.vline = pg.ROI(pos=[0, 0], size=[0, 20000], angle=0,
+                            pen=CURSOR_PEN)
+        self.zoom_selection.addItem(self.vline)  # add item to plot area
 
-    def plot_pitch(self, pitch_plot, x_start, x_end):
-        self.pitch_plot = pitch_plot
-        self.update_plot(x_start, x_end)
-        self.is_pitch_plotted = True
+        # add y-axis region
+        self.right_axis = self.centralWidget.addPlot(row=0, col=1)
 
-    def plot_histogram(self, vals, bins):
-        shadow_pen = pg.mkPen((70, 70, 30), width=5, cosmetic=True)
-        self.histogram.plot(x=vals, y=bins, shadowPen=shadow_pen)
-        self.histogram.setXRange(0, np.max(vals), padding=0)
-        self.histogram.resetTransform()
-        hline_pen = pg.mkPen((255, 40, 35, 150), cosmetic=True, width=1.5)
-        self.hline_histogram = pg.ROI([0, 0], [0, 1], angle=-90,
-                                      pen=hline_pen)
-        self.histogram.addItem(self.hline_histogram)
-        self.zoom_selection.setYLink(self.histogram)
+        # disable the mouse events and menu events
+        self.right_axis.setMouseEnabled(x=False, y=False)
+        self.right_axis.setMenuEnabled(False)
 
-    def plot_1d_region(self):
-        self.histogram = self.layout.addPlot(row=0, col=1)
-        self.histogram.setMouseEnabled(x=False, y=False)
-        self.histogram.setMenuEnabled(False)
-        self.histogram.setMaximumWidth(125)
-        self.histogram.setContentsMargins(0, 0, 0, 40)
-        self.histogram.setAutoVisible(y=True)
-        self.histogram.hideAxis(axis="left")
-        self.histogram.hideAxis(axis="bottom")
-        self.histogram.setYRange(0, 20000, padding=0)
-        self.histogram.setLabel(axis="right", text="Frequency (Hz)")
+        self.right_axis.setMaximumWidth(125)  # maximum width 125
+        self.right_axis.setContentsMargins(0, 0, 0, 40)  # set 40 left margin
 
-        self.region_1d = pg.LinearRegionItem(
-            values=[0, 20000], brush=pg.mkBrush((50, 255, 255, 45)),
-            orientation=pg.LinearRegionItem.Horizontal, bounds=[0, 20000])
-        self.histogram.addItem(self.region_1d)
-        self.region_1d.sigRegionChangeFinished.connect(self.change_y_axis)
-        self.addItem(self.histogram)
+        self.right_axis.hideAxis(axis="left")  # hide left-axis
+        self.right_axis.hideAxis(axis="bottom")  # hide botton-axis
+        self.right_axis.setYRange(0, 20000, padding=0)
+        # show right axis
+        self.right_axis.setLabel(axis="right", text="Frequency (Hz)")
 
-    def change_y_axis(self):
-        pos_y_min, pos_y_max = self.region_1d.getRegion()
+        # initialize a linear region item
+        orientation = pg.LinearRegionItem.Horizontal  # set the item horizontal
+        self.region_yaxis = pg.LinearRegionItem(values=[0, 20000],
+                                                brush=YAXIS_BRUSH,
+                                                orientation=orientation,
+                                                bounds=[0, 20000])
+        self.right_axis.addItem(self.region_yaxis)  # add item to right axis
+
+        # set region changed signal to set y axis range in the plot
+        self.region_yaxis.sigRegionChangeFinished.connect(
+            self.change_yaxis_range)
+
+    def plot_pitch(self, pitch_plot, x_start, x_end, hop_size):
+        """
+        Plots the given pitch_plot array.
+        :param pitch_plot: (numpy array or list) List of pitch values.
+        Ex: [234.5, 234,3, 234.0, ...]
+        :param x_start: (int or float) Time stamp of starting point in
+        seconds.
+        :param x_end: (int or float) Time stamp of ending point in seconds.
+        :param hop_size: (int) Hop size in samples. Ex: 128
+        """
+        if not self.is_pitch_plotted:  # if pitch is not plotted yet
+            self.ratio = 1. / (hop_size / np.float(self.sample_rate))
+            self.pitch_plot = pitch_plot
+
+            # downsample the plot in given time stamps
+            self.update_plot(start=x_start, stop=x_end, hop_size=hop_size)
+            # set the flag as true after plot the pitch
+            self.is_pitch_plotted = True
+        else:
+            # downsample the plot in given time stamps
+            self.update_plot(start=x_start, stop=x_end, hop_size=hop_size)
+
+    def update_plot(self, start, stop, hop_size):
+        """
+        Updates the view of the plot region with given time stamps.
+        :param start: (int or float) Time stamp of starting point in seconds.
+        :param stop: (int or float) Time stamp of ending point in seconds.
+        :param hop_size: (int) Hop size in samples. Ex: 128
+        """
+
+        # convert the given time stamps into samples to specify the plot array
+        start = int(start * self.ratio)
+        stop = int(stop * self.ratio)
+        plot_y = downsample_plot(self.pitch_plot[start:stop], self.limit)
+
+        # create time stamps array for x-axis
+        start = (np.float(start) * hop_size) / self.sample_rate
+        stop = (np.float(stop) * hop_size) / self.sample_rate
+        step = (stop - start) / (np.size(plot_y))
+        plot_x = np.arange(start=start, stop=stop, step=step)
+        # Sometimes the dimensions of plot_x and plot_y are not same. To fix
+        # this situation, take plot_x with the same dimension of plot_y
+        plot_x = plot_x[0:np.size(plot_y)]
+
+        self.zoom_selection.clearPlots()  # clears the current plots
+        self.zoom_selection.plot(x=plot_x[0:np.size(plot_y)], y=plot_y,
+                                 connect='finite', pen=PITCH_PEN)
+
+    def plot_histogram_raxis(self, vals, bins):
+        """
+        Plots histogram to the right axis.
+        :param vals: (list or numpy array) List of valley values of histogram.
+        :param bins: (list or numpy array) List of bins values of histogram
+        in Hz
+        """
+
+        # shadow pen is the properties of shadow around the lines
+        self.right_axis.plot(x=vals, y=bins, shadowPen=SHADOW_PEN)
+        self.right_axis.setXRange(0, np.max(vals), padding=0)
+
+        # cursor in the histogram plot.
+        self.hline_histogram = pg.ROI(pos=[0, 0], size=[0, 1], angle=-90,
+                                      pen=CURSOR_PEN)
+        self.right_axis.addItem(self.hline_histogram)
+
+        # Link the y-axises of pitch and histogram plots
+        self.zoom_selection.setYLink(self.right_axis)
+
+    def change_yaxis_range(self):
+        """
+        Changes the y-axis range according to the selected region in y-axis.
+        """
+        pos_y_min, pos_y_max = self.region_yaxis.getRegion()
         self.zoom_selection.setYRange(pos_y_min, pos_y_max)
-        self.histogram.setYRange(pos_y_min, pos_y_max)
-
-    def set_zoom_selection_area_hor(self, min_freq, max_freq):
-        self.zoom_selection.setYRange(min_freq, max_freq, padding=0)
-        self.histogram.setYRange(min_freq, max_freq, padding=0)
+        self.right_axis.setYRange(pos_y_min, pos_y_max)
 
     def add_tonic(self, values):
+        """
+        Adds tonic lines on the pitch plot.
+        :param values: (list or numpy array) A sequence of tonic values in Hz.
+        """
+        # label options for the tonic values on the tonic line
         label_opts = {'position': 0.1, 'color': (200, 200, 100),
                       'fill': (200, 200, 200, 50), 'movable': True}
 
@@ -109,35 +180,21 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
             self.tonic_lines = []
 
         for value in values:
+            # create infinite line
             t_line = pg.InfiniteLine(pos=value, movable=False, angle=0,
                                      label='Tonic=%.2f' % value,
                                      labelOpts=label_opts)
+            # take tonic lines in a list to remove in the future
             self.tonic_lines.append(t_line)
-            self.zoom_selection.addItem(t_line)
+            self.zoom_selection.addItem(t_line)  # add item to zoom selection
 
-    def update_plot(self, start, stop):
-        if self.pitch_plot is not None:
-            ratio = 1. / (128. / 44100.)
-            start = int(start * ratio)
-            stop = int(stop * ratio)
-            plot_y = downsample_plot(self.pitch_plot[start:stop], self.limit)
-
-            start = (start * 128.) / 44100.
-            stop = (stop * 128.) / 44100.
-            step = (stop - start) / (len(plot_y))
-            plot_x = np.arange(start, stop, step)
-
-            self.zoom_selection.clearPlots()
-            pen = pg.mkPen(cosmetic=True, width=1.5, color=(30, 110, 216,))
-            self.zoom_selection.plot(plot_x[0:len(plot_y)],
-                                     plot_y,
-                                     connect='finite',
-                                     pen=pen)
-            self.zoom_selection.resetTransform()
-
-    def set_hline_pos(self, playback_pos):
-        self.hline_histogram.setPos(pos=[0, self.pitch_plot[
-            int(playback_pos * self.samplerate / self.hopsize)]])
+    def set_hist_cursor_pos(self, pos):
+        """
+        Sets the position of histogram in y-axis.
+        :param pos: (int or float) Playback position in seconds.
+        """
+        pos_sample = np.int(pos * self.samplerate / self.hopsize)
+        self.hline_histogram.setPos(pos=[0, self.pitch_plot[pos_sample]])
 
     def update_notes(self, xmin, xmax):
         start_ind = self.find_nearest_index(self.notes_start, xmin)
@@ -145,8 +202,6 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
 
         self.remove_given_items(self.zoom_selection, self.rois)
         self.rois = []
-        if not hasattr(self, 'rois'):
-            self.rois = []
 
         for i in range(start_ind, end_ind):
             temp_note = self.notes[i]
@@ -159,6 +214,11 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
 
     @staticmethod
     def remove_given_items(obj, items):
+        """
+        Removes the given items from the given object
+        :param obj: pyqtgraph.GraphicsWidget object
+        :param items: (list) Sequence of pyqtgraph.GraphicsObject object
+        """
         for item in items:
             obj.removeItem(item)
 

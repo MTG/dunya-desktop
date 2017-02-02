@@ -45,7 +45,7 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
     def __init__(self):
         pg.GraphicsLayoutWidget.__init__(self, parent=None)
 
-        # # Set 0 margin 0 spacing to cover the whole area.
+        # Set 0 margin 0 spacing to cover the whole area.
         self.centralWidget.setContentsMargins(0, 0, 0, 0)
         self.centralWidget.setSpacing(0)
 
@@ -65,7 +65,7 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
         self.waveform.hideAxis(axis='bottom')
         self.waveform.hideAxis(axis='left')
 
-        # disabling the mouse events and menu events
+        # disable the mouse events and menu events
         self.waveform.setMouseEnabled(x=False, y=False)
         self.waveform.setMenuEnabled(False)
 

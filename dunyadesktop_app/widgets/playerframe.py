@@ -186,18 +186,22 @@ class PlayerFrame(QFrame):
         if feature == 'pitch' or feature == 'pitch_filtered':
             (time_stamps, pitch_plot, max_pitch, min_pitch, samplerate,
              hopsize) = load_pitch(feature_path)
+            self.hop_size = hopsize
             x_min, x_max = self.waveform_widget.get_waveform_region
             if hasattr(self.ts_widget, 'zoom_selection'):
                 self.ts_widget.hopsize = hopsize
                 self.ts_widget.samplerate = samplerate
-                self.ts_widget.plot_pitch(pitch_plot, x_min, x_max)
+                self.ts_widget.plot_pitch(pitch_plot=pitch_plot,
+                                          x_start=x_min,
+                                          x_end=x_max,
+                                          hop_size=hopsize)
                 self.is_pitch_plotted = True
 
                 histogram = \
                     os.path.join(DOCS_PATH, self.recid,
                                  'audioanalysis--pitch_distribution.json')
                 vals, bins = load_pd(histogram)
-                self.ts_widget.plot_histogram(vals, bins)
+                self.ts_widget.plot_histogram_raxis(vals, bins)
 
         if feature == 'tonic':
             tonic_values = load_tonic(feature_path)
@@ -220,7 +224,8 @@ class PlayerFrame(QFrame):
             if hasattr(self, 'ts_widget'):
                 if hasattr(self.ts_widget, 'zoom_selection'):
                     if self.ts_widget.is_pitch_plotted:
-                        self.ts_widget.update_plot(x_min, x_max)
+                        self.ts_widget.update_plot(start=x_min, stop=x_max,
+                                                   hop_size=self.hop_size)
                     if self.ts_widget.is_notes_added:
                         self.ts_widget.update_notes(x_min, x_max)
         else:
@@ -231,7 +236,8 @@ class PlayerFrame(QFrame):
             if hasattr(self, 'ts_widget'):
                 if hasattr(self.ts_widget, 'zoom_selection'):
                     if self.ts_widget.is_pitch_plotted:
-                        self.ts_widget.update_plot(x_min, x_max)
+                        self.ts_widget.update_plot(start=x_min, stop=x_max,
+                                                   hop_size=self.hop_size)
                     if self.ts_widget.is_notes_added:
                         self.ts_widget.update_notes(x_min, x_max)
 
@@ -261,7 +267,7 @@ class PlayerFrame(QFrame):
                 self.ts_widget.vline.setPos([playback_pos_sec, 0])
             if hasattr(self.ts_widget, 'hline_histogram'):
                 if self.ts_widget.pitch_plot is not None:
-                    self.ts_widget.set_hline_pos(playback_pos_sec)
+                    self.ts_widget.set_hist_cursor_pos(playback_pos_sec)
 
     def add_1d_roi_items(self, f_type, item):
         if not hasattr(self, 'ts_widget'):
