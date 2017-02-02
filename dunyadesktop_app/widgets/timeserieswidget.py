@@ -24,6 +24,9 @@ class TimeSeriesWidget(GraphicsLayoutWidget):
         self.is_pitch_plotted = False
         self.is_notes_added = False
 
+    def wheelEvent(self, ev):
+        return
+
     def _set_size_policy(self):
         size_policy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         size_policy.setHorizontalStretch(0)
