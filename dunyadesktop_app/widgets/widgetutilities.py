@@ -16,7 +16,8 @@ def set_css(widget, css_path):
 
 def downsample_plot(plot_array, ds_limit):
     # Decide by how much we should downsample
-    ds = int(len(plot_array) / ds_limit) + 1
+    size_array = np.size(plot_array)
+    ds = int(size_array / ds_limit) + 1
 
     if ds == 1:
         # Small enough to display with no intervention.
@@ -24,20 +25,21 @@ def downsample_plot(plot_array, ds_limit):
     else:
         # Here convert data into a down-sampled array suitable for
         # visualizing. Must do this piecewise to limit memory usage.
-        samples = 1 + (len(plot_array) // ds)
+        samples = 1 + (size_array // ds)
         visible = np.zeros(samples * 2, dtype=plot_array.dtype)
         source_ptr = 0
         target_ptr = 0
 
         # read data in chunks of ~1M samples
         chunk_size = (1000000 // ds) * ds
-        while source_ptr < len(plot_array) - 1:
-            chunk = plot_array[source_ptr:min(len(plot_array),
-                                              source_ptr + chunk_size)]
-            source_ptr += len(chunk)
+        while source_ptr < size_array - 1:
+            chunk = plot_array[source_ptr:min(size_array,
+                                              source_ptr+chunk_size)]
+            size_chunk = np.size(chunk)
+            source_ptr += size_chunk
             # reshape chunk to be integral multiple of ds
-            chunk = chunk[:(len(chunk) // ds) * ds].reshape(len(chunk) // ds,
-                                                            ds)
+            chunk = chunk[:(size_chunk // ds) * ds].reshape(size_chunk//ds, ds)
+
             # compute max and min
             chunk_max = chunk.max(axis=1)
             chunk_min = chunk.min(axis=1)
@@ -45,10 +47,8 @@ def downsample_plot(plot_array, ds_limit):
             # interleave min and max into plot data to preserve
             # envelope shape
             visible[target_ptr:target_ptr + chunk.shape[0] * 2:2] = chunk_min
-            visible[1 + target_ptr:1 + target_ptr + chunk.shape[0] * 2:2] = \
-                chunk_max
+            visible[1+target_ptr:1+target_ptr+chunk.shape[0] * 2:2] = chunk_max
             target_ptr += chunk.shape[0] * 2
         plot_y = visible[:target_ptr]
         plot_y[-1] = np.nan
-
     return plot_y

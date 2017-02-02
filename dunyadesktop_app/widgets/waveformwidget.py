@@ -1,6 +1,5 @@
 from PyQt5.QtWidgets import QSizePolicy
 from PyQt5.QtCore import Qt, pyqtSignal
-from pyqtgraph import GraphicsLayoutWidget
 import pyqtgraph as pg
 import numpy as np
 
@@ -9,7 +8,6 @@ from .widgetutilities import downsample_plot
 # Enable OpenGL and Weave to improve the performance of plotting functions.
 pg.setConfigOptions(useOpenGL=True)
 pg.setConfigOptions(useWeave=True)
-pg.setConfigOptions(leftButtonPan=False)
 # pg.setConfigOptions(crashWarning=True)
 
 
@@ -38,9 +36,9 @@ class WaveformRegionItem(pg.LinearRegionItem):
         super(WaveformRegionItem, self).mouseDragEvent(ev)
 
 
-class WaveformWidget(GraphicsLayoutWidget):
+class WaveformWidget(pg.GraphicsLayoutWidget):
     def __init__(self):
-        GraphicsLayoutWidget.__init__(self, parent=None)
+        pg.GraphicsLayoutWidget.__init__(self, parent=None)
 
         self.__set_size_policy()
         self.limit = 900  # maximum number of samples to be plotted
@@ -59,9 +57,13 @@ class WaveformWidget(GraphicsLayoutWidget):
     def plot_waveform(self, raw_audio):
         """
         Plots the given raw audio.
-        :param raw_audio: List of floats.
+        :param raw_audio: (list of numpy array) List of floats.
         """
+
+        # add a new plot
         self.waveform = self.centralWidget.addPlot()
+
+        # hide x and y axis
         self.waveform.hideAxis(axis='bottom')
         self.waveform.hideAxis(axis='left')
 
@@ -72,12 +74,14 @@ class WaveformWidget(GraphicsLayoutWidget):
         # downsampling the given plot array
         self.visible = downsample_plot(raw_audio, self.limit)
 
-        # ratio is used
-        self.ratio = len(raw_audio) / float(len(self.visible))
-        self.waveform.clearPlots()
+        # ratio is used in self.change_wf_region and self.get_waveform_region
+        # methods.
+        self.ratio = np.size(raw_audio) / float(np.size(self.visible))
         self.waveform.plot(self.visible, connect='finite', pen=WAVEFORM_PEN)
-        self.waveform.resetTransform()
-        self.__add_items_to_plot(len(self.visible), np.nanmin(self.visible),
+
+        # add waveform region item and playback cursor
+        self.__add_items_to_plot(np.size(self.visible),
+                                 np.nanmin(self.visible),
                                  np.nanmax(self.visible))
 
     def __add_items_to_plot(self, len_plot, min_audio, max_audio):
@@ -89,16 +93,18 @@ class WaveformWidget(GraphicsLayoutWidget):
         """
 
         # Create a waveform region item and add it to waveform plot
-        pos_wf_x_max = len_plot * 0.05  # Region item focuses on the 10% of
+        pos_wf_x_max = len_plot * 0.05  # Region item focuses on the 5% of
         # waveform plot.
         self.region_wf = WaveformRegionItem(values=[0, pos_wf_x_max],
                                             brush=WAVEFORM_BRUSH,
                                             bounds=[0., len_plot])
 
-        # Creating a cursor with pyqtgraph.ROI.
+        # Creating a cursor with pyqtgraph.ROI
         self.vline_wf = pg.ROI(pos=[0, min_audio],
                                size=[0, max_audio - min_audio],
                                angle=0, pen=WAVEFORM_VLINE)
+
+        # add items to waveform plot
         self.waveform.addItem(self.region_wf)
         self.waveform.addItem(self.vline_wf)
 
