@@ -74,7 +74,7 @@ class PlayerMainWindow(QMainWindow):
                 self.player_frame.ts_widget.pitch_plot = None
 
                 if hasattr(self.player_frame.ts_widget, 'hline_histogram'):
-                    self.player_frame.ts_widget.histogram.removeItem(
+                    self.player_frame.ts_widget.right_axis.removeItem(
                         self.player_frame.ts_widget.hline_histogram)
 
         if item == 'tonic':
