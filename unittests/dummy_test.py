@@ -1,7 +1,10 @@
 import compmusic.dunya.conn
 import compmusic.dunya.makam as makam
+import os
 
-compmusic.dunya.conn.set_token('asdadasdsa')
+DUNYA_TOKEN = os.environ['DUNYA_TOKEN']
+
+compmusic.dunya.conn.set_token(DUNYA_TOKEN)
 
 
 def test_dunya_api():
