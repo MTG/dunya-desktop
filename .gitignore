@@ -5,7 +5,6 @@ dunyadesktop_app/ui_files/makam_main_design.py
 dunyadesktop_app/makam_demo.py
 audio
 test
-test*.py
 .Python
 pitchfilter.egg-info/
 *.pyc
