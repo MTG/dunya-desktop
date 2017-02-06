@@ -7,8 +7,8 @@ language: python
 python:
 - 2.7_with_system_site_packages
 
-#before_install:
-#- bash .travis/install.sh
+before_install:
+- bash .travis/install.sh
 
 install:
 - pip install setuptools --upgrade
