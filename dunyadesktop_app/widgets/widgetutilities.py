@@ -16,6 +16,13 @@ def set_css(widget, css_path):
 
 def downsample_plot(plot_array, ds_limit):
     # Decide by how much we should downsample
+    """
+    Downsamples the given pitch array according to the given downsample limit.
+    :param plot_array: (numpy array) A sequence of pitch values
+                       [440.4, 442.3, 440.0, ...]
+    :param ds_limit: (int) Maximum number of samples to be plotted.
+    :return: (numpy array) A sequence of pitch values
+    """
     size_array = np.size(plot_array)
     ds = int(size_array / ds_limit) + 1
 
