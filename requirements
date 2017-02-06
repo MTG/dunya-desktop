@@ -1,3 +1,10 @@
+Unidecode
+eyeD3
+ipython
+musicbrainzngs
+python-dateutil
+requests
+six
 numpy
 git+https://github.com/MTG/pycompmusic.git#egg=pycompmusic
 pyqtgraph
