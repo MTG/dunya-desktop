@@ -17,6 +17,7 @@ from cultures.makam.featureparsers import (read_raw_audio, load_pitch, load_pd,
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
                          'documents')
 
+
 class DockAreaWidget(pgdock.DockArea):
     def __init__(self, temporary=False, home=None):
         pgdock.DockArea.__init__(self, temporary=temporary, home=home)
@@ -64,9 +65,9 @@ class PlayerFrame(QFrame):
         self.dock_area = DockAreaWidget()
 
         # dock fixed waveform
-        dock_waveform = pgdock.Dock("Waveform", area='Top',
-                                          hideTitle=True, closable=False,
-                                          autoOrientation=False)
+        dock_waveform = pgdock.Dock(name="Waveform", area='Top',
+                                    hideTitle=True, closable=False,
+                                    autoOrientation=False)
         dock_waveform.setFixedHeight(60)
 
         # initializing waveform widget
@@ -100,6 +101,10 @@ class PlayerFrame(QFrame):
         layout.addWidget(self.dock_area)
 
     def __set_slider(self, len_audio):
+        """
+        Sets the slider according to the given audio recording.
+        :param len_audio:
+        """
         self.frame_playback.slider.setMinimum(0)
         self.frame_playback.slider.setMaximum(len_audio)
         self.frame_playback.slider.setTickInterval(10)
@@ -130,17 +135,22 @@ class PlayerFrame(QFrame):
             self.playback.pause()
         self.close()
 
-    def __set_ts_widget(self):
+    def __add_ts_widget(self):
         self.ts_widget = TimeSeriesWidget(self)
         self.ts_widget.add_1d_view()
-        self.dock_ts = pgdock.Dock(name='Time Series', area='bottom',
-                                   closable=True)
-        self.dock_ts.addWidget(self.ts_widget)
-        self.dock_area.addDock(self.dock_ts)
+        dock_ts = pgdock.Dock(name='Time Series', area='bottom', closable=True)
+        dock_ts.addWidget(self.ts_widget)
+        self.dock_area.addDock(dock_ts)
 
     def plot_1d_data(self, f_type, feature):
+
+        """
+        Plots 1D data.
+        :param f_type:
+        :param feature:
+        """
         if not hasattr(self, 'ts_widget'):
-            self.__set_ts_widget()
+            self.__add_ts_widget()
 
         ftr = f_type + '--' + feature + '.json'
         feature_path = os.path.join(DOCS_PATH, self.recid, ftr)
@@ -180,7 +190,10 @@ class PlayerFrame(QFrame):
         self.playback.pause()
 
     def wf_region_changed(self):
-        pos = self.playback.position() / 1000.
+        """
+        Updates the plots according to the change in waveform region item.
+        """
+        pos = self.playback.position() / 1000.  # playback pos in seconds
         x_min, x_max = self.waveform_widget.get_waveform_region
 
         if not x_min < pos < x_max:
@@ -199,7 +212,6 @@ class PlayerFrame(QFrame):
                     self.ts_widget.vline.setPos([x_min, 0])
                 if self.ts_widget.is_notes_added:
                     self.ts_widget.update_notes(x_min, x_max)
-
 
     def player_pos_changed(self, playback_pos):
         """
@@ -232,26 +244,30 @@ class PlayerFrame(QFrame):
                         self.ts_widget.set_hist_cursor_pos(playback_pos_sec)
 
     def add_1d_roi_items(self, f_type, item):
+        """
+        Adds 1d roi item.
+        :param f_type: (str) Feature type
+        :param item: (str) Feature subtype
+        """
         if not hasattr(self, 'ts_widget'):
-            self.__set_ts_widget()
+            self.__add_ts_widget()
 
         if item == 'notes':
             ftr = f_type + '--' + item + '.json'
             feature_path = os.path.join(DOCS_PATH, self.recid, ftr)
             notes_dict = load_notes(feature_path)
 
-        notes = []
-        print notes_dict.keys()
-        for key in notes_dict.keys():
-            for dic in notes_dict[key]:
-                interval = dic['interval']
-                pitch = dic['performed_pitch']['value']
-                notes.append([interval[0], interval[1], pitch])
+            notes = []
+            for key in notes_dict.keys():
+                for dic in notes_dict[key]:
+                    interval = dic['interval']
+                    pitch = dic['performed_pitch']['value']
+                    notes.append([interval[0], interval[1], pitch])
 
-        self.ts_widget.notes = np.array(notes)
-        self.ts_widget.notes_start = self.ts_widget.notes[:, 0]
-        self.ts_widget.notes_end = self.ts_widget.notes[:, 1]
+            self.ts_widget.notes = np.array(notes)
+            self.ts_widget.notes_start = self.ts_widget.notes[:, 0]
+            self.ts_widget.notes_end = self.ts_widget.notes[:, 1]
 
-        x_min, x_max = self.waveform_widget.get_waveform_region
-        self.ts_widget.update_notes(x_min, x_max)
-        self.ts_widget.is_notes_added = True
+            x_min, x_max = self.waveform_widget.get_waveform_region
+            self.ts_widget.update_notes(x_min, x_max)
+            self.ts_widget.is_notes_added = True
