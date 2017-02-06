@@ -132,3 +132,11 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
         x_start = (x_start * self.samplerate) / self.ratio
         x_end = (x_end * self.samplerate) / self.ratio
         self.region_wf.setRegion([x_start, x_end])
+
+    def update_wf_vline(self, playback_pos_sample):
+        """
+        Updated the position of vertical line.
+        :param playback_pos_sample: (int) Position of playback in seconds.
+        """
+        self.vline_wf.setPos(
+            [playback_pos_sample/self.ratio,self.min_raw_audio])

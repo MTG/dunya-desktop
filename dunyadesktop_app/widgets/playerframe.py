@@ -106,6 +106,9 @@ class PlayerFrame(QFrame):
         self.frame_playback.slider.setSingleStep(1)
 
     def __set_waveform(self):
+        """
+        Reads the audio and plots the waveform.
+        """
         (raw_audio, len_audio, min_audio,
          max_audio) = read_raw_audio(self.feature_paths['audio_path'])
         self.min_raw_audio = np.min(raw_audio)
@@ -191,7 +194,7 @@ class PlayerFrame(QFrame):
             self.playback_pause()
             pos = x_min * 1000.
             self.playback.setPosition(pos)
-            self.__update_vlines(pos)
+            self.__update_wf_vline(pos)
             if hasattr(self, 'ts_widget'):
                 if hasattr(self.ts_widget, 'zoom_selection'):
                     if self.ts_widget.is_pitch_plotted:
@@ -200,19 +203,20 @@ class PlayerFrame(QFrame):
                     if self.ts_widget.is_notes_added:
                         self.ts_widget.update_notes(x_min, x_max)
 
-    def __update_vlines(self, playback_pos):
-        playback_pos_sec = playback_pos / 1000.
-        playback_pos_sample = (playback_pos_sec * self.samplerate) + 10
-
-        self.frame_playback.slider.setValue(playback_pos_sample)
-        self.waveform_widget.vline_wf.setPos(
-            [playback_pos_sample / self.waveform_widget.ratio,
-             self.min_raw_audio])
-
     def player_pos_changed(self, playback_pos):
-        self.__update_vlines(playback_pos)
+        """
+        Updates the positions of cursors when playback position is changed.
+        Changes the waveform region item according to the position of playback.
+        :param playback_pos: (int) Position of player in milliseconds.
+        """
         playback_pos_sec = playback_pos / 1000.
+        playback_pos_sample = playback_pos_sec * self.samplerate
 
+        self.waveform_widget.update_wf_vline(playback_pos_sample)
+        self.frame_playback.slider.setValue(playback_pos_sample)
+
+        # checks the position of linear region item. If the position of
+        # waveform cursor is
         xmin, xmax = self.waveform_widget.get_waveform_region
         diff = (xmax - xmin) * 0.1
         if not playback_pos_sec <= xmax - diff:
@@ -221,9 +225,10 @@ class PlayerFrame(QFrame):
 
             self.waveform_widget.change_wf_region(x_start, x_end)
 
+        # checks if time series widget is initialized or not
         if hasattr(self, 'ts_widget'):
-            if hasattr(self.ts_widget, 'vline'):
-                self.ts_widget.vline.setPos([playback_pos_sec, 0])
+            self.ts_widget.vline.setPos([playback_pos_sec, 0])
+            # checks if horizontal line of y-axis exists
             if hasattr(self.ts_widget, 'hline_histogram'):
                 if self.ts_widget.pitch_plot is not None:
                     self.ts_widget.set_hist_cursor_pos(playback_pos_sec)
