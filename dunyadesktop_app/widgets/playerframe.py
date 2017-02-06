@@ -1,10 +1,8 @@
-import json
-
 import os
 
 import numpy as np
 import pyqtgraph.dockarea as pgdock
-from PyQt5.QtCore import QSize, QMetaObject
+from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import QVBoxLayout, QFrame
 
 from playbackframe import PlaybackFrame
@@ -55,6 +53,9 @@ class PlayerFrame(QFrame):
             self.playback_pause)
 
     def __set_design(self):
+        """
+        Sets general settings of frame widget, adds dock area and dock widgets.
+        """
         self.setWindowTitle('Player')
         self.resize(1200, 550)
         self.setMinimumSize(QSize(850, 500))
@@ -63,33 +64,40 @@ class PlayerFrame(QFrame):
         self.dock_area = DockAreaWidget()
 
         # dock fixed waveform
-        self.dock_fixed_waveform = pgdock.Dock("Waveform", area='Top',
-                                               hideTitle=True, closable=False,
-                                               autoOrientation=False)
-        self.dock_fixed_waveform.setFixedHeight(60)
+        dock_waveform = pgdock.Dock("Waveform", area='Top',
+                                          hideTitle=True, closable=False,
+                                          autoOrientation=False)
+        dock_waveform.setFixedHeight(60)
 
         # initializing waveform widget
         self.waveform_widget = WaveformWidget()
         self.waveform_widget.setMinimumHeight(60)
 
-        self.dock_fixed_waveform.addWidget(self.waveform_widget)
-        self.dock_fixed_waveform.allowedAreas = ['top']
-        self.dock_fixed_waveform.setAcceptDrops(False)
-        self.dock_area.addDock(self.dock_fixed_waveform, position='top')
+        # adding waveform widget to waveform dock
+        dock_waveform.addWidget(self.waveform_widget)
+        dock_waveform.allowedAreas = ['top']
+        dock_waveform.setAcceptDrops(False)
+        # adding waveform dock to dock area
+        self.dock_area.addDock(dock_waveform, position='top')
 
-        self.dock_playback = pgdock.Dock(name='Playback', area='bottom',
-                                         closable=False, autoOrientation=False)
+        # dock playback
+        dock_playback = pgdock.Dock(name='Playback', area='bottom',
+                                    closable=False, autoOrientation=False)
+        # initializing playback frame
         self.frame_playback = PlaybackFrame(self)
         self.frame_playback.toolbutton_pause.setDisabled(True)
-        self.dock_playback.addWidget(self.frame_playback)
-        self.dock_playback.setFixedHeight(60)
-        self.dock_playback.setAcceptDrops(False)
-        self.dock_area.addDock(self.dock_playback, position='bottom')
 
+        # adding playback frame to playback dock
+        dock_playback.addWidget(self.frame_playback)
+        dock_playback.setFixedHeight(60)
+        dock_playback.setAcceptDrops(False)
+
+        # adding playback dock to dock area
+        self.dock_area.addDock(dock_playback, position='bottom')
+
+        # adding dock area to frame
         layout = QVBoxLayout(self)
         layout.addWidget(self.dock_area)
-
-        QMetaObject.connectSlotsByName(self)
 
     def __set_slider(self, len_audio):
         self.frame_playback.slider.setMinimum(0)
