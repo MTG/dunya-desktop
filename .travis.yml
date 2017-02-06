@@ -11,9 +11,8 @@ before_install:
 - bash .travis/install.sh
 
 install:
-- pip install setuptools --upgrade
-- pip install -r requirements
-- pip install flake8
+- sudo pip install -r requirements
+- sudo pip install flake8
 
 env:
   global:
