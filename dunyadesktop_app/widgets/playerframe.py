@@ -19,6 +19,13 @@ from cultures.makam.featureparsers import (read_raw_audio, load_pitch, load_pd,
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
                          'documents')
 
+class DockAreaWidget(pgdock.DockArea):
+    def __init__(self, temporary=False, home=None):
+        pgdock.DockArea.__init__(self, temporary=temporary, home=home)
+
+    def floatDock(self, dock):
+        pass
+
 
 class PlayerFrame(QFrame):
     samplerate = 44100.
@@ -53,7 +60,7 @@ class PlayerFrame(QFrame):
         self.setMinimumSize(QSize(850, 500))
         self.setStyleSheet("background-color: rgb(30, 30, 30);")
 
-        self.dock_area = pgdock.DockArea()
+        self.dock_area = DockAreaWidget()
 
         # dock fixed waveform
         self.dock_fixed_waveform = pgdock.Dock("Waveform", area='Top',
