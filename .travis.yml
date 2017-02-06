@@ -20,4 +20,4 @@ env:
 
 script:
 - export DUNYA_TOKEN=$DUNYA_TOKEN
-- nosetests ./unittests/ --with-coverage
+- nosetests dunyadesktop_app/tests
