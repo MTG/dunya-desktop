@@ -13,7 +13,7 @@ DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'documents')
 
 def read_raw_audio(audio_path):
     raw_audio = np.array(MonoLoader(filename=audio_path)())
-    len_audio = len(raw_audio)
+    len_audio = np.size(raw_audio)
     min_audio = np.min(raw_audio)
     max_audio = np.min(raw_audio)
     return raw_audio, len_audio, min_audio, max_audio

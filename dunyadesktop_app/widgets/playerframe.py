@@ -111,7 +111,7 @@ class PlayerFrame(QFrame):
         """
         (raw_audio, len_audio, min_audio,
          max_audio) = read_raw_audio(self.feature_paths['audio_path'])
-        self.min_raw_audio = np.min(raw_audio)
+        self.waveform_widget.min_raw_audio = min_audio
         self.__set_slider(len_audio)
         self.waveform_widget.plot_waveform(raw_audio)
 
@@ -182,26 +182,24 @@ class PlayerFrame(QFrame):
     def wf_region_changed(self):
         pos = self.playback.position() / 1000.
         x_min, x_max = self.waveform_widget.get_waveform_region
-        if x_min < pos < x_max:
-            if hasattr(self, 'ts_widget'):
-                if hasattr(self.ts_widget, 'zoom_selection'):
-                    if self.ts_widget.is_pitch_plotted:
-                        self.ts_widget.update_plot(start=x_min, stop=x_max,
-                                                   hop_size=self.hop_size)
-                    if self.ts_widget.is_notes_added:
-                        self.ts_widget.update_notes(x_min, x_max)
-        else:
+
+        if not x_min < pos < x_max:
             self.playback_pause()
-            pos = x_min * 1000.
-            self.playback.setPosition(pos)
-            self.__update_wf_vline(pos)
-            if hasattr(self, 'ts_widget'):
-                if hasattr(self.ts_widget, 'zoom_selection'):
-                    if self.ts_widget.is_pitch_plotted:
-                        self.ts_widget.update_plot(start=x_min, stop=x_max,
-                                                   hop_size=self.hop_size)
-                    if self.ts_widget.is_notes_added:
-                        self.ts_widget.update_notes(x_min, x_max)
+            pos_ms = x_min * 1000.
+            pos_sample = x_min * self.samplerate
+            self.playback.setPosition(pos_ms)
+            self.frame_playback.slider.setValue(pos_sample)
+            self.waveform_widget.update_wf_vline(pos_sample)
+
+        if hasattr(self, 'ts_widget'):
+            if hasattr(self.ts_widget, 'zoom_selection'):
+                if self.ts_widget.is_pitch_plotted:
+                    self.ts_widget.update_plot(start=x_min, stop=x_max,
+                                               hop_size=self.hop_size)
+                    self.ts_widget.vline.setPos([x_min, 0])
+                if self.ts_widget.is_notes_added:
+                    self.ts_widget.update_notes(x_min, x_max)
+
 
     def player_pos_changed(self, playback_pos):
         """
@@ -209,29 +207,29 @@ class PlayerFrame(QFrame):
         Changes the waveform region item according to the position of playback.
         :param playback_pos: (int) Position of player in milliseconds.
         """
-        playback_pos_sec = playback_pos / 1000.
-        playback_pos_sample = playback_pos_sec * self.samplerate
+        if self.playback.state() == 1:
+            playback_pos_sec = playback_pos / 1000.
+            playback_pos_sample = playback_pos_sec * self.samplerate
 
-        self.waveform_widget.update_wf_vline(playback_pos_sample)
-        self.frame_playback.slider.setValue(playback_pos_sample)
+            self.waveform_widget.update_wf_vline(playback_pos_sample)
+            self.frame_playback.slider.setValue(playback_pos_sample)
 
-        # checks the position of linear region item. If the position of
-        # waveform cursor is
-        xmin, xmax = self.waveform_widget.get_waveform_region
-        diff = (xmax - xmin) * 0.1
-        if not playback_pos_sec <= xmax - diff:
-            x_start = xmax - diff
-            x_end = x_start + (xmax - xmin)
+            # checks the position of linear region item. If the position of
+            # waveform cursor is
+            xmin, xmax = self.waveform_widget.get_waveform_region
+            diff = (xmax - xmin) * 0.1
+            if not playback_pos_sec <= xmax - diff:
+                x_start = xmax - diff
+                x_end = x_start + (xmax - xmin)
+                self.waveform_widget.change_wf_region(x_start, x_end)
 
-            self.waveform_widget.change_wf_region(x_start, x_end)
-
-        # checks if time series widget is initialized or not
-        if hasattr(self, 'ts_widget'):
-            self.ts_widget.vline.setPos([playback_pos_sec, 0])
-            # checks if horizontal line of y-axis exists
-            if hasattr(self.ts_widget, 'hline_histogram'):
-                if self.ts_widget.pitch_plot is not None:
-                    self.ts_widget.set_hist_cursor_pos(playback_pos_sec)
+            # checks if time series widget is initialized or not
+            if hasattr(self, 'ts_widget'):
+                self.ts_widget.vline.setPos([playback_pos_sec, 0])
+                # checks if horizontal line of y-axis exists
+                if hasattr(self.ts_widget, 'hline_histogram'):
+                    if self.ts_widget.pitch_plot is not None:
+                        self.ts_widget.set_hist_cursor_pos(playback_pos_sec)
 
     def add_1d_roi_items(self, f_type, item):
         if not hasattr(self, 'ts_widget'):
