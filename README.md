@@ -1,6 +1,5 @@
 # dunya-desktop
-[![Build Status](https://travis-ci.org/MTG/dunya-desktop.svg?branch=master)](https://travis-ci.org/MTG/dunya-desktop) [![Code Climate](https://codeclimate.com/github/MTG/dunya-desktop/badges/gpa.svg)](https://codeclimate.com/github/MTG/dunya-desktop) [![codecov](https://codecov.io/gh/MTG/dunya-desktop/branch/master/graph/badge.svg)](https://codecov.io/gh/MTG/dunya-desktop)
-
+[![Build Status](https://travis-ci.org/MTG/dunya-desktop.svg?branch=master)](https://travis-ci.org/MTG/dunya-desktop) [![Code Climate](https://codeclimate.com/github/MTG/dunya-desktop/badges/gpa.svg)](https://codeclimate.com/github/MTG/dunya-desktop) [![codecov](https://codecov.io/gh/MTG/dunya-desktop/branch/master/graph/badge.svg)](https://codecov.io/gh/MTG/dunya-desktop) [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](http://www.gnu.org/licenses/agpl-3.0) [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 **Dunya-desktop** is a desktop application that has been developed for accessing 
 and visualizing the music information sources, the features and the analysis 
