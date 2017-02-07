@@ -12,6 +12,7 @@ before_install:
 - bash .travis/install_essentia.sh
 
 install:
+- sudo pip install codecov
 - sudo pip install -r requirements
 - sudo pip install flake8
 
