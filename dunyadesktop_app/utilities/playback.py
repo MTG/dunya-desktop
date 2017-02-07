@@ -15,4 +15,4 @@ class Playback(QMediaPlayer):
 
     def status_changed(self, status):
         if status == 7:
-            self.player.pause()
+            self.pause()
