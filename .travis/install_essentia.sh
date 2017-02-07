@@ -7,7 +7,7 @@ wget https://github.com/MTG/essentia/archive/v2.1_beta2.tar.gz
 
 tar -xzf v2.1_beta2.tar.gz
 cd essentia-2.1_beta2
-./waf configure --mode=release --build-static --with-python
+./waf configure --mode=release --with-python
 ./waf
 sudo ./waf install
 
