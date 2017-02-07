@@ -9,7 +9,6 @@ test
 pitchfilter.egg-info/
 *.pyc
 *.*~
-*.mp3
 *.wav
 .ipynb_checkpoints
 .DS_Store
