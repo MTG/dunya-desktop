@@ -8,7 +8,7 @@ python:
 - 2.7_with_system_site_packages
 
 before_install:
-#- bash .travis/install_qt.sh
+- bash .travis/install_qt.sh
 - bash .travis/install_essentia.sh
 
 install:
