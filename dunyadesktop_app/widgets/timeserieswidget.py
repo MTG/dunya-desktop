@@ -1,6 +1,8 @@
 import pyqtgraph as pg
 import numpy as np
 
+from PyQt5.QtCore import pyqtSignal
+
 from .widgetutilities import downsample_plot
 
 # Enable OpenGL and Weave to improve the performance of plotting functions.
@@ -16,6 +18,7 @@ SHADOW_PEN = pg.mkPen((70, 70, 30), width=5, cosmetic=True)
 
 class TimeSeriesWidget(pg.GraphicsLayoutWidget):
     sample_rate = 44100
+    wheel_event = pyqtSignal(object)
 
     def __init__(self, parent=None):
         pg.GraphicsLayoutWidget.__init__(self, parent)
@@ -32,7 +35,7 @@ class TimeSeriesWidget(pg.GraphicsLayoutWidget):
         self.is_notes_added = False
 
     def wheelEvent(self, ev):
-        return
+        self.wheel_event.emit(ev)
 
     def add_1d_view(self):
         """

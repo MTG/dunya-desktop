@@ -147,3 +147,17 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
             pos = self.len
 
         self.vline_wf.setPos([pos, self.min])
+
+    def wheelEvent(self, event):
+        delta = event.pixelDelta().y()
+        xmin, xmax = self.get_waveform_region
+        distance = (xmax - xmin) * 0.03
+        if delta>0:
+            xmin += distance
+            xmax -= distance
+
+        elif delta<0:
+            xmin -= distance
+            xmax += distance
+
+        self.change_wf_region(xmin, xmax)

@@ -142,6 +142,9 @@ class PlayerFrame(QFrame):
         dock_ts.addWidget(self.ts_widget)
         self.dock_area.addDock(dock_ts)
 
+        # signals
+        self.ts_widget.wheel_event.connect(self.waveform_widget.wheelEvent)
+
     def plot_1d_data(self, f_type, feature):
 
         """
