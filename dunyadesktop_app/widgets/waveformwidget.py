@@ -74,13 +74,15 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
 
         # ratio is used in self.change_wf_region and self.get_waveform_region
         # methods.
-        self.ratio = np.size(raw_audio) / float(np.size(self.visible))
+        self.len = np.size(self.visible)
+        self.min = np.nanmin(self.visible)
+        self.max = np.nanmax(self.visible)
+
+        self.ratio = np.size(raw_audio) / self.len
         self.waveform.plot(self.visible, connect='finite', pen=WAVEFORM_PEN)
 
         # add waveform region item and playback cursor
-        self.__add_items_to_plot(np.size(self.visible),
-                                 np.nanmin(self.visible),
-                                 np.nanmax(self.visible))
+        self.__add_items_to_plot(self.len, self.min, self.max)
 
     def __add_items_to_plot(self, len_plot, min_audio, max_audio):
         """
@@ -138,5 +140,10 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
         Updated the position of vertical line.
         :param playback_pos_sample: (int) Position of playback in samples.
         """
-        self.vline_wf.setPos(
-            [playback_pos_sample/self.ratio, self.min_raw_audio])
+        pos = playback_pos_sample/self.ratio
+        if pos <= 0:
+            pos = 0
+        elif pos >= self.len:
+            pos = self.len
+
+        self.vline_wf.setPos([pos, self.min])
