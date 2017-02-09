@@ -17,48 +17,64 @@ Installation
 ============
 Installing dependencies on Mac OS X
 -------
-* Install [Homebrew package manager](http://brew.sh/).
+
+The given installation steps were tried on OS X El Capitan (v10.11.06) and OS X El Sierra (v10.12.1).
+
+* Install [Homebrew package manager](http://brew.sh/):
 
         /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
         
-* Install Python 2.x, Qt5 and wget with Homebrew.
+* Install Python 2.x, Qt5.7 and wget with Homebrew:
         
-        brew install python qt5 wget
+        brew install python qt@5.7 wget
 
 * Install Xcode (can be installed via [Mac App Store](https://itunes.apple.com/en/app/xcode/id497799835?mt=12)).
-Then install command-line tools.
+Then install command-line tools:
 
         xcode-select --install
         sudo xcodebuild -license
     After the installation, make sure that you have agreed Apple's licence agreement.
 
-* Download PyQt5 and sip source.
+* Download PyQt5.7.1 and SIP source packages:
 
         wget https://sourceforge.net/projects/pyqt/files/sip/sip-4.19/sip-4.19.tar.gz
         wget https://sourceforge.net/projects/pyqt/files/PyQt5/PyQt-5.7.1/PyQt5_gpl-5.7.1.tar.gz
 
-* Untar and compile.
-
+* Untar and compile PyQt5.7.1 and SIP:
+        
+        # compile sip
         tar -xvf sip-4.19.tar.gz
         cd sip-4.19
         python configure.py -d /usr/local/lib/python2.7/site-packages/
         make
         sudo make install
         
+        # compile PyQt5
         cd ..
-        tar -xvf PyQt-gpl-5.7.1.tar.gz
-        cd PyQt-gpl-5.7.1
-        python configure.py -d /usr/local/lib/python2.7/site-packages/ --qmake=/usr/local/Cellar/qt5/5.7.1_1/bin/qmake --sip=../sip-4.19/sipgen/sip --sip-incdir=../sip-4.19/siplib
+        tar -xvf PyQt5_gpl-5.7.1.tar.gz
+        cd PyQt5_gpl-5.7.1
+        python configure.py --confirm-license -d /usr/local/lib/python2.7/site-packages/ --qmake=/usr/local/Cellar/qt\@5.7/5.7.1/bin/qmake --sip=../sip-4.19/sipgen/sip --sip-incdir=../sip-4.19/siplib
         make
         sudo make install
 
-* Create a virtualenv and install requirements.
+* __dunya-desktop__ uses some modules in Essentia. Follow the [instructions](essentia.upf.edu/documentation/installing.html) to install the library.
+
+
+* Create a virtual environment (virtualenv) and install requirements.
         
         pip install virtualenv
         virtualenv --system-site-packages env
         source env/bin/activate
-        pip install -r requirements
         
+* Go to directory of where dunya-desktop is downloaded. 
+
+    __IMPORTANT:__ Don't forget to change 'path/to/dunya-desktop' with the actual directory name.        
+        
+        cd path/to/dunya-desktop
+
+* Finally, install the package requirements.
+
+        pip install -r requirements
 
 License
 =======
