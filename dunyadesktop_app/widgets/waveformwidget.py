@@ -1,4 +1,5 @@
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal, QPoint
+from PyQt5.QtGui import QCursor
 import pyqtgraph as pg
 import numpy as np
 
@@ -39,6 +40,25 @@ class WaveformRegionItem(pg.LinearRegionItem):
         self.clicked.emit()  # emit clicked signal
         super(WaveformRegionItem, self).mouseDragEvent(ev)  # call original
         # method
+
+
+class SectionItem(pg.LinearRegionItem):
+    hovering = pyqtSignal(str)
+
+    def __init__(self, values, label_section):
+        pg.LinearRegionItem.__init__(self, values=values, movable=False)
+
+        for line in self.lines:
+            line.setPen(pg.mkPen(None))
+        #self.setBrush(pg.mkBrush(pg.mkBrush((50, 255, 255, 45))))
+
+        self.label = label_section
+
+    def hoverEvent(self, ev):
+        if not ev.isExit():
+            self.hovering.emit(self.label)
+        else:
+            self.hovering.emit('')
 
 
 class WaveformWidget(pg.GraphicsLayoutWidget):
@@ -108,6 +128,10 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
         self.waveform.addItem(self.region_wf)
         self.waveform.addItem(self.vline_wf)
 
+        # text item
+        self.section_label = pg.TextItem(text='')
+        self.waveform.addItem(self.section_label)
+
     @property
     def get_waveform_region(self):
         """
@@ -161,3 +185,15 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
             xmax += distance
 
         self.change_wf_region(xmin, xmax)
+
+    def add_section(self, time, label):
+        time *= (self.samplerate/ self.ratio)
+        section_item = SectionItem(values=time, label_section=label)
+        self.waveform.addItem(section_item)
+        section_item.hovering.connect(self.__hover_section)
+
+    def __hover_section(self, text):
+        self.section_label.setText(text)
+        org_pos = self.mapFromGlobal(QCursor.pos())
+        pos_x = self.len * (float(org_pos.x())/self.waveform.width())
+        self.section_label.setPos(pos_x, 0)

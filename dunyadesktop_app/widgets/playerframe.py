@@ -11,7 +11,7 @@ from utilities.playback import Playback
 from waveformwidget import WaveformWidget
 from cultures.makam.featureparsers import (read_raw_audio, load_pitch, load_pd,
                                            load_tonic, get_feature_paths,
-                                           load_notes)
+                                           load_notes, get_sections)
 
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
@@ -274,3 +274,11 @@ class PlayerFrame(QFrame):
             x_min, x_max = self.waveform_widget.get_waveform_region
             self.ts_widget.update_notes(x_min, x_max)
             self.ts_widget.is_notes_added = True
+
+    def add_sections_to_waveform(self, feature_path):
+        sections = get_sections(feature_path)
+
+        for work in sections:
+            for section in sections[work]:
+                self.waveform_widget.add_section(np.array(section['time']),
+                                                 section['name'])

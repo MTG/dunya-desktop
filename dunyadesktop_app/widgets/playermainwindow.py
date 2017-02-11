@@ -110,7 +110,9 @@ class PlayerMainWindow(QMainWindow):
 
         if item == 'sections':
             if is_checked:
-                self.get_feature_path(self.docid, type=type, item=item)
+                s_path = self.get_feature_path(self.docid, type=type,
+                                               item=item)
+                self.player_frame.add_sections_to_waveform(s_path)
 
     @staticmethod
     def get_feature_path(mbid, type, item):
