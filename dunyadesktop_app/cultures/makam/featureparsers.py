@@ -66,3 +66,8 @@ def get_feature_paths(recid):
 def load_notes(notes_path):
     notes = json.load(open(notes_path))
     return notes
+
+
+def get_sections(sections_path):
+    sections_dict = json.load(open(sections_path))
+    return sections_dict
