@@ -95,8 +95,8 @@ class PlayerMainWindow(QMainWindow):
 
         if item == 'metadata':
             if is_checked:
-                m_feature = type + '--' + item + '.json'
-                m_path = os.path.join(DOCS_PATH, self.docid, m_feature)
+                m_path = self.get_feature_path(self.docid, type=type,
+                                               item=item)
                 metadata = json.load(open(m_path))
 
                 dlg = QDialog(self)
@@ -107,3 +107,13 @@ class PlayerMainWindow(QMainWindow):
                 dlg.show()
             else:
                 print 'unchecked'
+
+        if item == 'sections':
+            if is_checked:
+                self.get_feature_path(self.docid, type=type, item=item)
+
+    @staticmethod
+    def get_feature_path(mbid, type, item):
+        feature = type + '--' + item + '.json'
+        path = os.path.join(DOCS_PATH, mbid, feature)
+        return path
