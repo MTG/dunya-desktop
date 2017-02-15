@@ -44,6 +44,7 @@ class WaveformRegionItem(pg.LinearRegionItem):
 
 class SectionItem(pg.LinearRegionItem):
     hovering = pyqtSignal(str)
+    item_initialized = pyqtSignal(object)
 
     def __init__(self, values, label_section, color):
         pg.LinearRegionItem.__init__(self, values=values, movable=False)
@@ -51,8 +52,10 @@ class SectionItem(pg.LinearRegionItem):
         for line in self.lines:
             line.setPen(pg.mkPen(None))
         self.setBrush(pg.mkBrush(color))
-
         self.label = label_section
+
+        # signals
+        self.item_initialized.emit(self)
 
     def hoverEvent(self, ev):
         if not ev.isExit():
@@ -69,8 +72,11 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
         self.centralWidget.setContentsMargins(0, 0, 0, 0)
         self.centralWidget.setSpacing(0)
 
+        self.section_items = []
+
         self.limit = 900  # maximum number of samples to be plotted
         self.samplerate = 44100.
+
 
     def plot_waveform(self, raw_audio):
         """
@@ -191,6 +197,7 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
         label += "\n" + title
         section_item = SectionItem(values=time, label_section=label,
                                    color=color)
+        self.section_items.append(section_item)
         self.waveform.addItem(section_item)
         section_item.hovering.connect(self.__hover_section)
 
@@ -199,3 +206,8 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
         org_pos = self.mapFromGlobal(QCursor.pos())
         pos_x = self.len * (float(org_pos.x())/self.waveform.width())
         self.section_label.setPos(pos_x, self.max*2./3)
+
+    def remove_sections(self):
+        for item in self.section_items:
+            self.waveform.removeItem(item)
+        self.section_items = []

@@ -113,6 +113,8 @@ class PlayerMainWindow(QMainWindow):
                 s_path = self.get_feature_path(self.docid, type=type,
                                                item=item)
                 self.player_frame.add_sections_to_waveform(s_path)
+            else:
+                self.player_frame.waveform_widget.remove_sections()
 
     @staticmethod
     def get_feature_path(mbid, type, item):
