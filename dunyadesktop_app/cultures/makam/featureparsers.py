@@ -66,3 +66,23 @@ def get_feature_paths(recid):
 def load_notes(notes_path):
     notes = json.load(open(notes_path))
     return notes
+
+
+def get_sections(sections_path):
+    sections_dict = json.load(open(sections_path))
+    metadata_path = sections_path.split('jointanalysis--sections.json')[0] + \
+                    'audioanalysis--metadata.json'
+
+    metadata = json.load(open(metadata_path))
+
+    for work in metadata['works']:
+        workid = work['mbid']
+        title = work['title']
+
+        try:
+            for section in sections_dict[workid]:
+                section['title'] = title
+        except KeyError:
+            pass
+
+    return sections_dict

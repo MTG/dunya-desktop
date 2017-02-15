@@ -95,8 +95,8 @@ class PlayerMainWindow(QMainWindow):
 
         if item == 'metadata':
             if is_checked:
-                m_feature = type + '--' + item + '.json'
-                m_path = os.path.join(DOCS_PATH, self.docid, m_feature)
+                m_path = self.get_feature_path(self.docid, type=type,
+                                               item=item)
                 metadata = json.load(open(m_path))
 
                 dlg = QDialog(self)
@@ -107,3 +107,17 @@ class PlayerMainWindow(QMainWindow):
                 dlg.show()
             else:
                 print 'unchecked'
+
+        if item == 'sections':
+            if is_checked:
+                s_path = self.get_feature_path(self.docid, type=type,
+                                               item=item)
+                self.player_frame.add_sections_to_waveform(s_path)
+            else:
+                self.player_frame.waveform_widget.remove_sections()
+
+    @staticmethod
+    def get_feature_path(mbid, type, item):
+        feature = type + '--' + item + '.json'
+        path = os.path.join(DOCS_PATH, mbid, feature)
+        return path

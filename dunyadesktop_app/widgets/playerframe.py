@@ -11,11 +11,15 @@ from utilities.playback import Playback
 from waveformwidget import WaveformWidget
 from cultures.makam.featureparsers import (read_raw_audio, load_pitch, load_pd,
                                            load_tonic, get_feature_paths,
-                                           load_notes)
+                                           load_notes, get_sections)
 
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
                          'documents')
+COLORS_RGB = [(77, 157, 224, 70), (255, 217, 79, 70), (224, 76, 114, 70),
+              (250, 240, 202, 70), (255, 89, 100, 70), (255, 196, 165, 70),
+              (102, 0, 17, 70), (201, 149, 18, 70), (58, 1, 92, 70),
+              (117, 112, 201, 70)]
 
 
 class DockAreaWidget(pgdock.DockArea):
@@ -68,11 +72,11 @@ class PlayerFrame(QFrame):
         dock_waveform = pgdock.Dock(name="Waveform", area='Top',
                                     hideTitle=True, closable=False,
                                     autoOrientation=False)
-        dock_waveform.setFixedHeight(60)
+        dock_waveform.setFixedHeight(100)
 
         # initializing waveform widget
         self.waveform_widget = WaveformWidget()
-        self.waveform_widget.setMinimumHeight(60)
+        self.waveform_widget.setMinimumHeight(100)
 
         # adding waveform widget to waveform dock
         dock_waveform.addWidget(self.waveform_widget)
@@ -274,3 +278,24 @@ class PlayerFrame(QFrame):
             x_min, x_max = self.waveform_widget.get_waveform_region
             self.ts_widget.update_notes(x_min, x_max)
             self.ts_widget.is_notes_added = True
+
+    def add_sections_to_waveform(self, feature_path):
+        sections = get_sections(feature_path)
+
+        colors = {}
+        color_index = 0
+        for work in sections:
+            for section in sections[work]:
+                sec_name = section['name'].split('--')[0]
+                try:
+                    color = colors[sec_name]
+
+                except KeyError:
+                    color = COLORS_RGB[color_index]
+                    colors[sec_name] = color
+                    color_index += 1
+
+                self.waveform_widget.add_section(np.array(section['time']),
+                                                 section['name'],
+                                                 section['title'],
+                                                 color)

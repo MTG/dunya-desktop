@@ -1,4 +1,5 @@
 from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtGui import QCursor
 import pyqtgraph as pg
 import numpy as np
 
@@ -41,6 +42,28 @@ class WaveformRegionItem(pg.LinearRegionItem):
         # method
 
 
+class SectionItem(pg.LinearRegionItem):
+    hovering = pyqtSignal(str)
+    item_initialized = pyqtSignal(object)
+
+    def __init__(self, values, label_section, color):
+        pg.LinearRegionItem.__init__(self, values=values, movable=False)
+
+        for line in self.lines:
+            line.setPen(pg.mkPen(None))
+        self.setBrush(pg.mkBrush(color))
+        self.label = label_section
+
+        # signals
+        self.item_initialized.emit(self)
+
+    def hoverEvent(self, ev):
+        if not ev.isExit():
+            self.hovering.emit(self.label)
+        else:
+            self.hovering.emit('')
+
+
 class WaveformWidget(pg.GraphicsLayoutWidget):
     def __init__(self):
         pg.GraphicsLayoutWidget.__init__(self, parent=None)
@@ -49,8 +72,11 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
         self.centralWidget.setContentsMargins(0, 0, 0, 0)
         self.centralWidget.setSpacing(0)
 
+        self.section_items = []
+
         self.limit = 900  # maximum number of samples to be plotted
         self.samplerate = 44100.
+
 
     def plot_waveform(self, raw_audio):
         """
@@ -108,6 +134,10 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
         self.waveform.addItem(self.region_wf)
         self.waveform.addItem(self.vline_wf)
 
+        # text item
+        self.section_label = pg.TextItem(text='')
+        self.waveform.addItem(self.section_label)
+
     @property
     def get_waveform_region(self):
         """
@@ -161,3 +191,23 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
             xmax += distance
 
         self.change_wf_region(xmin, xmax)
+
+    def add_section(self, time, label, title, color):
+        time *= (self.samplerate/ self.ratio)
+        label += "\n" + title
+        section_item = SectionItem(values=time, label_section=label,
+                                   color=color)
+        self.section_items.append(section_item)
+        self.waveform.addItem(section_item)
+        section_item.hovering.connect(self.__hover_section)
+
+    def __hover_section(self, text):
+        self.section_label.setText(text)
+        org_pos = self.mapFromGlobal(QCursor.pos())
+        pos_x = self.len * (float(org_pos.x())/self.waveform.width())
+        self.section_label.setPos(pos_x, self.max*2./3)
+
+    def remove_sections(self):
+        for item in self.section_items:
+            self.waveform.removeItem(item)
+        self.section_items = []
