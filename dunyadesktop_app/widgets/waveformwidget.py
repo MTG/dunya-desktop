@@ -45,12 +45,12 @@ class WaveformRegionItem(pg.LinearRegionItem):
 class SectionItem(pg.LinearRegionItem):
     hovering = pyqtSignal(str)
 
-    def __init__(self, values, label_section):
+    def __init__(self, values, label_section, color):
         pg.LinearRegionItem.__init__(self, values=values, movable=False)
 
         for line in self.lines:
             line.setPen(pg.mkPen(None))
-        #self.setBrush(pg.mkBrush(pg.mkBrush((50, 255, 255, 45))))
+        self.setBrush(pg.mkBrush(color))
 
         self.label = label_section
 
@@ -186,10 +186,11 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
 
         self.change_wf_region(xmin, xmax)
 
-    def add_section(self, time, label, title):
+    def add_section(self, time, label, title, color):
         time *= (self.samplerate/ self.ratio)
         label += "\n" + title
-        section_item = SectionItem(values=time  , label_section=label)
+        section_item = SectionItem(values=time, label_section=label,
+                                   color=color)
         self.waveform.addItem(section_item)
         section_item.hovering.connect(self.__hover_section)
 
