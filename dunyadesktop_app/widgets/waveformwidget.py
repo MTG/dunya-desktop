@@ -1,4 +1,4 @@
-from PyQt5.QtCore import pyqtSignal, QPoint
+from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QCursor
 import pyqtgraph as pg
 import numpy as np
@@ -186,9 +186,10 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
 
         self.change_wf_region(xmin, xmax)
 
-    def add_section(self, time, label):
+    def add_section(self, time, label, title):
         time *= (self.samplerate/ self.ratio)
-        section_item = SectionItem(values=time, label_section=label)
+        label += "\n" + title
+        section_item = SectionItem(values=time  , label_section=label)
         self.waveform.addItem(section_item)
         section_item.hovering.connect(self.__hover_section)
 
@@ -196,4 +197,4 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
         self.section_label.setText(text)
         org_pos = self.mapFromGlobal(QCursor.pos())
         pos_x = self.len * (float(org_pos.x())/self.waveform.width())
-        self.section_label.setPos(pos_x, 0)
+        self.section_label.setPos(pos_x, self.max*2./3)

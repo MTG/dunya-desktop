@@ -281,4 +281,5 @@ class PlayerFrame(QFrame):
         for work in sections:
             for section in sections[work]:
                 self.waveform_widget.add_section(np.array(section['time']),
-                                                 section['name'])
+                                                 section['name'],
+                                                 section['title'])
