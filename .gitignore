@@ -13,4 +13,5 @@ pitchfilter.egg-info/
 .ipynb_checkpoints
 .DS_Store
 dunyadesktop_app/cultures/documents
-dunyadesktop_app/db.sqlite
+dunyadesktop_app/cultures/scores
+db.sqlite
