@@ -175,7 +175,7 @@ class DocThread(QThread):
                     self.step_completed.emit(ResultObj(docid, count, num_f))
 
     def download_score(self, docid):
-        SCORE_FOLDER = os.path.join(FOLDER, 'scores')
+        SCORE_FOLDER = os.path.join(FOLDER, '..', 'scores')
 
         if not os.path.exists(SCORE_FOLDER):
             os.makedirs(SCORE_FOLDER)

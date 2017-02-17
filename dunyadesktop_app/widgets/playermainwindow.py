@@ -8,6 +8,7 @@ from PyQt5.QtCore import Qt, QMetaObject
 
 from treewidget import FeatureTreeWidget, MetadataTreeMakam
 from playerframe import PlayerFrame
+from scoredialog import ScoreWidget
 
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
@@ -84,9 +85,11 @@ class PlayerMainWindow(QMainWindow):
                 self.player_frame.ts_widget.remove_given_items(
                     self.player_frame.ts_widget.zoom_selection,
                     self.player_frame.ts_widget.tonic_lines)
+
         if item == 'notes':
             if is_checked:
                 self.player_frame.add_1d_roi_items(type, item)
+                self.player_frame.open_score_dialog(self.docid)
             else:
                 self.player_frame.ts_widget.remove_given_items(
                     self.player_frame.ts_widget.zoom_selection,

@@ -16,3 +16,13 @@ def change_color(path, tree, root, note_id, color):
             pass
 
     tree.write(path)
+
+def get_note_indexes(path, root):
+    notes = {}
+    for child in root.iter('{http://www.w3.org/2000/svg}a'):
+        try:
+            index = child.attrib['id'].split('note-')[-1]
+            notes[index] = path
+        except KeyError:
+            pass
+    return notes

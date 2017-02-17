@@ -6,6 +6,7 @@ from essentia.standard import MonoLoader
 import numpy as np
 
 from cultures.makam import utilities
+from cultures.makam import svgparser
 
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'documents')
@@ -86,3 +87,15 @@ def get_sections(sections_path):
             pass
 
     return sections_dict
+
+
+def generate_score_map(mbid):
+    SCORE_PATH = os.path.join(os.path.dirname(__file__), '..', 'scores', mbid)
+    fullnames, folders, names = utilities.get_filenames_in_dir(SCORE_PATH,
+                                                               '*.svg')
+    notes = {}
+    for p in fullnames:
+        tree, root = svgparser.initialize_svg(p)
+        notes_dict = svgparser.get_note_indexes(p, root)
+        notes.update(notes_dict)
+    return notes

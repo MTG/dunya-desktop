@@ -1,17 +1,20 @@
 import os
+import json
 
 import numpy as np
 import pyqtgraph.dockarea as pgdock
 from PyQt5.QtCore import QSize
-from PyQt5.QtWidgets import QVBoxLayout, QFrame
+from PyQt5.QtWidgets import QVBoxLayout, QFrame, QDialog, QHBoxLayout
 
 from playbackframe import PlaybackFrame
 from timeserieswidget import TimeSeriesWidget
 from utilities.playback import Playback
 from waveformwidget import WaveformWidget
+from scoredialog import ScoreDialog
 from cultures.makam.featureparsers import (read_raw_audio, load_pitch, load_pd,
                                            load_tonic, get_feature_paths,
-                                           load_notes, get_sections)
+                                           load_notes, get_sections,
+                                           generate_score_map)
 
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
@@ -44,6 +47,9 @@ class PlayerFrame(QFrame):
         # initializing playback class
         self.playback = Playback()
         self.playback.set_source(self.feature_paths['audio_path'])
+
+        # flags
+        self.score_visible = False
 
         # signals
         self.playback.positionChanged.connect(self.player_pos_changed)
@@ -249,6 +255,26 @@ class PlayerFrame(QFrame):
                 if hasattr(self.ts_widget, 'hline_histogram'):
                     if self.ts_widget.pitch_plot is not None:
                         self.ts_widget.set_hist_cursor_pos(playback_pos_sec)
+            if self.score_visible:
+                self.__update_score(playback_pos_sec)
+
+    def __update_score(self, playback_pos_sec):
+        index = self.find_current_note_index(self.ts_widget.notes_start,
+                                             self.ts_widget.notes_end,
+                                             playback_pos_sec)
+        if index:
+            workid = self.metadata[index][0]
+            score_index = self.metadata[index][1]
+
+            try:
+                svg_path = self.notes_map[workid][str(score_index)]
+                self.score_dialog.score_widget.update_note(svg_path,
+                                                           score_index)
+                print score_index
+            except KeyError:
+                pass
+        #else:
+        #    print None
 
     def add_1d_roi_items(self, f_type, item):
         """
@@ -265,15 +291,19 @@ class PlayerFrame(QFrame):
             notes_dict = load_notes(feature_path)
 
             notes = []
-            for key in notes_dict.keys():
-                for dic in notes_dict[key]:
+            metadata = []
+            for workid in notes_dict.keys():
+                for dic in notes_dict[workid]:
                     interval = dic['interval']
                     pitch = dic['performed_pitch']['value']
                     notes.append([interval[0], interval[1], pitch])
+                    metadata.append([workid, dic['index_in_audio']])
 
             self.ts_widget.notes = np.array(notes)
             self.ts_widget.notes_start = self.ts_widget.notes[:, 0]
             self.ts_widget.notes_end = self.ts_widget.notes[:, 1]
+
+            self.metadata = metadata
 
             x_min, x_max = self.waveform_widget.get_waveform_region
             self.ts_widget.update_notes(x_min, x_max)
@@ -299,3 +329,28 @@ class PlayerFrame(QFrame):
                                                  section['name'],
                                                  section['title'],
                                                  color)
+
+    def open_score_dialog(self, mbid):
+        metadata_path = os.path.join(DOCS_PATH, mbid,
+                                     'audioanalysis--metadata.json')
+        works = json.load(open(metadata_path))['works']
+
+        notes_map = {}
+        for work in works:
+            notes_array = generate_score_map(work['mbid'])
+            notes_map[work['mbid']] = notes_array
+        self.notes_map = notes_map
+        #json.dump(self.notes_map, open('test_meh.json', 'w'), indent=4)
+        self.score_dialog = ScoreDialog(self)
+        self.score_dialog.show()
+        self.score_visible = True
+
+    @staticmethod
+    def find_current_note_index(n_array_start, n_array_end, value):
+        index = (np.abs(n_array_start - value)).argmin()
+        val_start = n_array_start[index]
+        val_end = n_array_end[index]
+        if val_start < value < val_end:
+            return index + 1  # score indexes starts with 1
+        else:
+            return None
