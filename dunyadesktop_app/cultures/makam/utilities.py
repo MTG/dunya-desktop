@@ -9,6 +9,7 @@ from compmusic.dunya.makam import (get_makams, get_forms, get_usuls,
 from compmusic.dunya.docserver import (document, get_document_as_json, get_mp3)
 from compmusic.dunya.conn import HTTPError
 from PyQt5.QtCore import QObject, QThread, pyqtSignal
+import numpy as np
 
 FOLDER = os.path.join(os.path.dirname(__file__), '..', 'documents')
 
@@ -154,6 +155,7 @@ class DocThread(QThread):
                 download_list.append('audioanalysis')
             if 'jointanalysis' in features:
                 num_f += len(features['jointanalysis'])
+                self.download_score(docid)
                 download_list.append('jointanalysis')
 
             count = 0
@@ -171,6 +173,31 @@ class DocThread(QThread):
                             pass
                     count += 1
                     self.step_completed.emit(ResultObj(docid, count, num_f))
+
+    def download_score(self, docid):
+        SCORE_FOLDER = os.path.join(FOLDER, '..', 'scores')
+
+        if not os.path.exists(SCORE_FOLDER):
+            os.makedirs(SCORE_FOLDER)
+
+        works = get_document_as_json(docid, 'audioanalysis',
+                                     'metadata')['works']
+        for work in works:
+            DOC_FOLDER = os.path.join(SCORE_FOLDER, work['mbid'])
+            try:
+                parts = document(work['mbid'])['derivedfiles']['score']['score']['numparts']
+
+                if not os.path.exists(DOC_FOLDER):
+                    os.makedirs(DOC_FOLDER)
+
+                for i in np.arange(1, parts + 1):
+                    score = get_document_as_json(work['mbid'], 'score',
+                                                 'score', part=i)
+                    score_file = 'scoresvg--' + str(i) + '.svg'
+                    score_path = os.path.join(DOC_FOLDER, score_file)
+                    open(score_path, 'w').write(score)
+            except:
+                pass
 
 
 def check_doc(docid):
