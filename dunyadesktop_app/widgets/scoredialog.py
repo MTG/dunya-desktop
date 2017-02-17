@@ -1,5 +1,3 @@
-import sys
-
 from PyQt5.QtWidgets import QDialog, QVBoxLayout
 from PyQt5.QtSvg import QSvgWidget
 
@@ -32,27 +30,20 @@ class ScoreWidget(QSvgWidget):
             change_color(self.svg_path, self.tree, self.root, self.note_index,
                          'black')
             self.note_index = note_index
-            change_color(self.svg_path, self.tree, self.root, note_index, 'red')
+            change_color(self.svg_path, self.tree, self.root, note_index,
+                         'red')
             self.load(self.svg_path)
 
     def closeEvent(self, QCloseEvent):
         change_color(self.svg_path, self.tree, self.root, self.note_index,
                      'black')
 
+
 class ScoreDialog(QDialog):
     def __init__(self, parent=None):
         QDialog.__init__(self, parent=parent)
+        self.setFixedSize(900, 600)
         self.setStyleSheet("background-color: rgb(253, 255, 222);")
         layout = QVBoxLayout(self)
         self.score_widget = ScoreWidget(self)
         layout.addWidget(self.score_widget)
-
-
-'''
-app = QApplication(sys.argv)
-scr = ScoreDialog()
-scr.show()
-scr.show_score('/Users/hsercanatli/Documents/codes/dunya-desktop/dunyadesktop_app/cultures/scores/ac003195-9ea0-4d8e-8420-2d6c269e98f6/scoresvg--2.svg')
-
-app.exec_()
-'''
