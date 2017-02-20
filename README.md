@@ -1,17 +1,9 @@
 # dunya-desktop
 [![Build Status](https://travis-ci.org/MTG/dunya-desktop.svg?branch=master)](https://travis-ci.org/MTG/dunya-desktop) [![Code Climate](https://codeclimate.com/github/MTG/dunya-desktop/badges/gpa.svg)](https://codeclimate.com/github/MTG/dunya-desktop) [![codecov](https://codecov.io/gh/MTG/dunya-desktop/branch/master/graph/badge.svg)](https://codecov.io/gh/MTG/dunya-desktop) [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](http://www.gnu.org/licenses/agpl-3.0) [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-nc-sa/4.0/)
 
-**Dunya-desktop** is a desktop application that has been developed for accessing 
-and visualizing the music information sources, the features and the analysis 
-results that are part of the [CompMusic](http://compmusic.upf.edu) Project. 
-It is a modular and extensive desktop application that the users can customise 
-according to their needs.
+**Dunya-desktop** is a desktop application, developed for accessing  and visualizing music data such as music scores, audio recordings, extracted features and analysis  results. It is a modular and extendable desktop application that the users can customise according to their needs.
 
-Dunya-desktop mainly uses [PyQt5](https://www.riverbankcomputing.com/software/pyqt/download5), 
-python bindings for [Qt5](https://www.qt.io/developers/) application framework, 
-for the user interface design and [pycompmusic](https://github.com/MTG/pycompmusic) 
-module for reaching the backend of the [Dunya](http://dunya.compmusic.upf.edu).
-
+Dunya-desktop mainly uses [PyQt5](https://www.riverbankcomputing.com/software/pyqt/download5), Python bindings for [Qt5](https://www.qt.io/developers/) application framework, for the user interface design and [pycompmusic](https://github.com/MTG/pycompmusic) module for reaching the backend of the [Dunya](http://dunya.compmusic.upf.edu).
 
 Installation
 ============
@@ -78,7 +70,12 @@ Then install command-line tools:
 
 License
 =======
-The source code hosted in this repository is licenced under the terms of the 
-GNU Affero General Public License (v3 or later). Any data (the audio recordings, 
-music scores, features, figures, outputs etc.) are licenced under Creative 
-Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+The source code hosted in this repository is licenced under the terms of the GNU Affero General Public License (v3 or later). Any data (the audio recordings, music scores, features, figures, outputs etc.) are licenced under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+
+Contact
+=========
+Hasan Sercan Altı	hsercanatli	AT	gmail	DOT	com
+
+Acknowledgements
+================
+Dunya-desktop is partially supported by the European Research Council under the European Union’s Seventh Framework Program, as part of the CompMusic project (ERC grant agreement 267583).
