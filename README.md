@@ -7,6 +7,8 @@ results that are part of the [CompMusic](http://compmusic.upf.edu) Project.
 It is a modular and extensive desktop application that the users can customise 
 according to their needs.
 
+![dunya-desktop-gif](https://github.com/MTG/dunya-desktop/blob/animated-gif/resources/dunya-desktop-demo.gif)
+
 Dunya-desktop mainly uses [PyQt5](https://www.riverbankcomputing.com/software/pyqt/download5), 
 python bindings for [Qt5](https://www.qt.io/developers/) application framework, 
 for the user interface design and [pycompmusic](https://github.com/MTG/pycompmusic) 
