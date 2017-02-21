@@ -3,6 +3,8 @@
 
 **Dunya-desktop** is a desktop application, developed for accessing  and visualizing music data such as music scores, audio recordings, extracted features and analysis  results. It is a modular and extendable desktop application that the users can customise according to their needs.
 
+![dunya-desktop-gif](https://github.com/MTG/dunya-desktop/blob/master/resources/dunya-desktop-demo.gif)
+
 Dunya-desktop mainly uses [PyQt5](https://www.riverbankcomputing.com/software/pyqt/download5), Python bindings for [Qt5](https://www.qt.io/developers/) application framework, for the user interface design and [pycompmusic](https://github.com/MTG/pycompmusic) module for reaching the backend of the [Dunya](http://dunya.compmusic.upf.edu).
 
 Installation
