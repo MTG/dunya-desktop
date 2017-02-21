@@ -74,7 +74,7 @@ The source code hosted in this repository is licenced under the terms of the GNU
 
 Contact
 =========
-Hasan Sercan Altı	hsercanatli	AT	gmail	DOT	com
+Hasan Sercan Atlı	hsercanatli	AT	gmail	DOT	com
 
 Acknowledgements
 ================
