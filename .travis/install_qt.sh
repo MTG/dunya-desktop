@@ -2,8 +2,8 @@
 
 sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
 sudo apt-get update -qq
-sudo apt-get install -qq qtdeclarative5-dev libqt5webkit5-dev
-export QMAKE=/usr/bin/qmake-qt5
+sudo apt-get install -qq qtdeclarative5-dev libqt5svg5-dev
+export QMAKE=QMAKE=/usr/lib/x86_64-linux-gnu/qt5/bin/qmake
 
 PYQT_VERSION=5.7.1
 SIP_VERSION=4.19
