@@ -104,7 +104,7 @@ The given installation steps were tried on Ubuntu 16.04.02 LTS (xenial).
         make
         sudo make install
 
-* __dunya-desktop__ uses some modules in Essentia. Follow the [instructions](essentia.upf.edu/documentation/installing.html) to install the library.
+* __dunya-desktop__ uses some modules in Essentia. Follow the [instructions](http://essentia.upf.edu/documentation/installing.html) to install the library.
 
 
 * Create a virtual environment (virtualenv) and install requirements.
