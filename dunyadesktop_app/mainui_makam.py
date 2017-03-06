@@ -188,8 +188,12 @@ class MainWindowMakam(MainWindowMakamDesign):
             model_index = self.frame_query.tableView_results.model().mapToSource(index)
             recid = self.recordings[model_index.row()]
 
-            player = PlayerMainWindow(docid=recid, parent=self)
-            player.show()
+            try:
+                player = PlayerMainWindow(docid=recid, parent=self)
+                player.show()
+            except RuntimeError:
+                QMessageBox.information(self, "QMessageBox.information()",
+                                        "Download the selected item.")
         else:
             QMessageBox.information(self, "QMessageBox.information()",
                                     "Player can not be opened until querying "
