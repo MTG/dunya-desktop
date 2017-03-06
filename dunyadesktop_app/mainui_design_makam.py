@@ -11,7 +11,6 @@ class MainWindowMakamDesign(GeneralMainDesign):
         GeneralMainDesign.__init__(self)
 
         self._set_main_label()
-        self._set_score_tab()
         self._retranslate_ui_elements()
 
     def _set_main_label(self):
@@ -23,17 +22,8 @@ class MainWindowMakamDesign(GeneralMainDesign):
                                           'Makam Music '
                                           'Corpus</span></p></body></html>')
 
-    def _set_score_tab(self):
-        """Adds a score tab for score collection"""
-        self.tab_score = QWidget(self)
-        self.frame_query.tabWidget.addTab(self.tab_score, "")
-
     def _retranslate_ui_elements(self):
         """Changes the names of comboboxes and tabs"""
-        self.frame_query.tabWidget.setTabText(
-            self.frame_query.tabWidget.indexOf(self.tab_score),
-            "Score Collection")
-
         self.frame_query.frame_attributes.comboBox_melodic.\
             set_placeholder_text('Makam')
         self.frame_query.frame_attributes.comboBox_form.\
