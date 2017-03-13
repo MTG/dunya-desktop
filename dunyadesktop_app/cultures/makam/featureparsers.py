@@ -2,8 +2,8 @@ import copy
 import os
 
 import json
-from essentia.standard import MonoLoader
 import numpy as np
+import scipy.io.wavfile
 
 from cultures.makam import utilities
 from cultures.makam import svgparser
@@ -13,11 +13,15 @@ DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'documents')
 
 
 def read_raw_audio(audio_path):
-    raw_audio = np.array(MonoLoader(filename=audio_path)())
-    len_audio = np.size(raw_audio)
-    min_audio = np.min(raw_audio)
-    max_audio = np.min(raw_audio)
-    return raw_audio, len_audio, min_audio, max_audio
+    rate, data = scipy.io.wavfile.read(audio_path)
+    c_0 = data[:, 0]
+    c_1 = data[:, 1]
+    c_mono = (c_0 + c_1) / 2.
+
+    len_audio = np.size(c_mono)
+    min_audio = np.min(c_mono)
+    max_audio = np.min(c_mono)
+    return c_mono, len_audio, min_audio, max_audio
 
 
 def load_pitch(pitch_path):
@@ -58,7 +62,9 @@ def get_feature_paths(recid):
     (full_names, folders, names) = \
         utilities.get_filenames_in_dir(dir_name=doc_folder, keyword='*.json')
 
-    paths = {'audio_path': os.path.join(doc_folder, recid + '.mp3')}
+    paths = {'audio_path_mp3': os.path.join(doc_folder, recid + '.mp3'),
+             'audio_path_wav': os.path.join(doc_folder, recid + '.wav')}
+
     for xx, name in enumerate(names):
         paths[name.split('.json')[0]] = full_names[xx]
     return paths
@@ -99,3 +105,10 @@ def generate_score_map(mbid):
         notes_dict = svgparser.get_note_indexes(p, root)
         notes.update(notes_dict)
     return notes
+
+
+def mp3_to_wav_converter(audio_path):
+    input_f = audio_path
+    output_f = audio_path[:-4] + '.wav'
+
+    os.system('ffmpeg -i {0} {1}'.format(input_f, output_f))
