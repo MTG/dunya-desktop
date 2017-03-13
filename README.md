@@ -14,20 +14,20 @@ Installing dependencies on Mac OS X
 
 The given installation steps were tried on OS X El Capitan (v10.11.06) and OS X El Sierra (v10.12.1).
 
-* Install [Homebrew package manager](http://brew.sh/):
-
-        /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-        
-* Install Python 2.x, Qt 5.7 and wget with Homebrew:
-        
-        brew install python qt@5.7 wget
-
 * Install Xcode (can be installed via [Mac App Store](https://itunes.apple.com/en/app/xcode/id497799835?mt=12)).
 Then install command-line tools:
 
         xcode-select --install
         sudo xcodebuild -license
     After the installation, make sure that you have agreed Apple's licence agreement.
+
+* Install [Homebrew package manager](http://brew.sh/):
+
+        /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+        
+* Install Python 2.x, Qt 5.7 and wget with Homebrew:
+        
+        brew install python qt@5.7 ffmpeg wget
 
 * Download PyQt 5.7.1 and SIP source packages:
 
@@ -80,6 +80,7 @@ The given installation steps were tried on Ubuntu 16.04.02 LTS (xenial).
         sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
         sudo apt-get update -qq
         sudo apt-get install -qq qtdeclarative5-dev libqt5svg5-dev qtmultimedia5-dev build-essential python-dev
+        sudo apt-get install -qq ffmpeg
         export QMAKE=/usr/lib/x86_64-linux-gnu/qt5/bin/qmake
 
 * Download PyQt 5.8 and SIP source packages:

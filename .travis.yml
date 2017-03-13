@@ -13,7 +13,6 @@ before_install:
 
   - "if [[ $TRAVIS_PYTHON_VERSION == '2.7_with_system_site_packages' ]]; then
       bash .travis/install_pyqt_python27.sh;
-      bash .travis/install_essentia_python27.sh;
     fi"
 
   - "if [[ $TRAVIS_PYTHON_VERSION == 3.5 ]]; then

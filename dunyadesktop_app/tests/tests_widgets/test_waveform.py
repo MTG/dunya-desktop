@@ -10,7 +10,7 @@ import numpy as np
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtTest import QTest
 
-from cultures.makam.featureparsers import read_raw_audio
+from cultures.makam.featureparsers import read_raw_audio, mp3_to_wav_converter
 from widgets.waveformwidget import WaveformWidget
 
 mbid = 'f970f1e0-0be9-4914-8302-709a0eac088e'
@@ -23,9 +23,17 @@ app = QApplication(sys.argv)
 class WaveformWidgetTest(unittest.TestCase):
     def setUp(self):
         self.waveform = WaveformWidget()
-        audio_file = mbid + '.mp3'
-        audio_path = os.path.join(TESTDATA_PATH, audio_file)
-        raw_audio, len_audio, min_audio, max_audio = read_raw_audio(audio_path)
+        audio_file_mp3 = mbid + '.mp3'
+        audio_file_wav = mbid + '.wav'
+
+        audio_path_mp3 = os.path.join(TESTDATA_PATH, audio_file_mp3)
+        audio_path_wav = os.path.join(TESTDATA_PATH, audio_file_wav)
+
+        if not os.path.exists(audio_path_wav):
+            mp3_to_wav_converter(audio_path_mp3)
+
+        raw_audio, len_audio, min_audio, max_audio = read_raw_audio(
+            audio_path_wav)
 
         self.waveform.plot_waveform(raw_audio)
         self.max_length = np.size(raw_audio)

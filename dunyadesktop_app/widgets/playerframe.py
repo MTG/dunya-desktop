@@ -14,7 +14,8 @@ from scoredialog import ScoreDialog
 from cultures.makam.featureparsers import (read_raw_audio, load_pitch, load_pd,
                                            load_tonic, get_feature_paths,
                                            load_notes, get_sections,
-                                           generate_score_map)
+                                           generate_score_map,
+                                           mp3_to_wav_converter)
 
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
@@ -46,7 +47,7 @@ class PlayerFrame(QFrame):
 
         # initializing playback class
         self.playback = Playback()
-        self.playback.set_source(self.feature_paths['audio_path'])
+        self.playback.set_source(self.feature_paths['audio_path_wav'])
 
         # flags
         self.score_visible = False
@@ -125,8 +126,10 @@ class PlayerFrame(QFrame):
         """
         Reads the audio and plots the waveform.
         """
+        if not os.path.exists(self.feature_paths['audio_path_wav']):
+            mp3_to_wav_converter(self.feature_paths['audio_path_mp3'])
         (raw_audio, len_audio, min_audio,
-         max_audio) = read_raw_audio(self.feature_paths['audio_path'])
+         max_audio) = read_raw_audio(self.feature_paths['audio_path_wav'])
         self.waveform_widget.min_raw_audio = min_audio
         self.__set_slider(len_audio)
         self.waveform_widget.plot_waveform(raw_audio)
