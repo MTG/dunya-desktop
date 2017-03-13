@@ -5,16 +5,27 @@ dist: trusty
 language: python
 
 python:
-- 2.7_with_system_site_packages
+  - '2.7_with_system_site_packages'
+  #- '3.5'
 
 before_install:
-- bash .travis/install_qt.sh
-- bash .travis/install_essentia.sh
+  - bash .travis/install_qt.sh
+
+  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7_with_system_site_packages' ]]; then
+      bash .travis/install_pyqt_python27.sh;
+      bash .travis/install_essentia_python27.sh;
+    fi"
+
+  - "if [[ $TRAVIS_PYTHON_VERSION == 3.5 ]]; then
+      bash .travis/install_pyqt_python35.sh;
+    fi"
 
 install:
-- sudo pip install codecov
-- sudo pip install -r requirements
-- sudo pip install flake8
+  - sudo pip install codecov
+  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7_with_system_site_packages' ]]; then
+      sudo pip install -r requirements;
+    fi"
+  - sudo pip install flake8
 
 env:
   global:
@@ -26,8 +37,12 @@ before_script:
   - sleep 3
 
 script:
-- export DUNYA_TOKEN=$DUNYA_TOKEN
-- nosetests dunyadesktop_app/tests --with-coverage
+  - export DUNYA_TOKEN=$DUNYA_TOKEN
+  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7_with_system_site_packages' ]]; then
+      nosetests dunyadesktop_app/tests --with-coverage;
+    fi"
 
 after_success:
-- codecov
+  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7_with_system_site_packages' ]]; then
+      codecov;
+    fi"
