@@ -5,16 +5,17 @@ dist: trusty
 language: python
 
 python:
-- 2.7_with_system_site_packages
+  - 2.7_with_system_site_packages
+  - 3.5_with_system_site_packages
 
 before_install:
-- bash .travis/install_qt.sh
-- bash .travis/install_essentia.sh
+  - bash .travis/install_qt.sh
+  - bash .travis/install_essentia.sh
 
 install:
-- sudo pip install codecov
-- sudo pip install -r requirements
-- sudo pip install flake8
+  - sudo pip install codecov
+  - sudo pip install -r requirements
+  - sudo pip install flake8
 
 env:
   global:
@@ -25,9 +26,9 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3
 
-script:
-- export DUNYA_TOKEN=$DUNYA_TOKEN
-- nosetests dunyadesktop_app/tests --with-coverage
+#script:
+#- export DUNYA_TOKEN=$DUNYA_TOKEN
+#- nosetests dunyadesktop_app/tests --with-coverage
 
-after_success:
-- codecov
+#after_success:
+#- codecov
