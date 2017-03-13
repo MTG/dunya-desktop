@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+sudo apt-get install libpulse-dev
+
 # Install PyQt5 for Python 3
 pip3 install PyQt5
 
