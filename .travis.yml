@@ -10,7 +10,7 @@ python:
 
 before_install:
   - bash .travis/install_qt.sh
-  - 'if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then
+  - 'if [ $TRAVIS_PYTHON_VERSION == '2.7' ]; then
         bash .travis/install_pyqt_python27.sh;
         bash .travis/install_essentia_python27.sh;
     else
