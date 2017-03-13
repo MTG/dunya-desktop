@@ -23,3 +23,5 @@ python3 -c 'from PyQt5 import QtSvg'
 
 echo 'QtMultimedia'
 python3 -c 'from PyQt5 import QtMultimedia'
+
+echo 'Ended'
