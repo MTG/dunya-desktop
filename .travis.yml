@@ -5,13 +5,13 @@ dist: trusty
 language: python
 
 python:
-  - '2.7'
-  - '3.5'
+  - '2.7_with_system_site_packages'
+  #- '3.5'
 
 before_install:
   - bash .travis/install_qt.sh
 
-  - "if [[ $TRAVIS_PYTHON_VERSION == 2.7 ]]; then
+  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7_with_system_site_packages' ]]; then
       bash .travis/install_pyqt_python27.sh;
       bash .travis/install_essentia_python27.sh;
     fi"
@@ -20,23 +20,29 @@ before_install:
       bash .travis/install_pyqt_python35.sh;
     fi"
 
-#install:
-#  - sudo pip install codecov
-#  - sudo pip install -r requirements
-#  - sudo pip install flake8
+install:
+  - sudo pip install codecov
+  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7_with_system_site_packages' ]]; then
+      sudo pip install -r requirements;
+    fi"
+  - sudo pip install flake8
 
 env:
   global:
     secure: ZFixsmLDjbeHZP4Dz3euWJwtEiv/vyHw0qg90oGjsEFMVb5Jcw9d/MlvDUKvPEV8gnq28z5hArgCxG4i5Z9MWSvuKJPdi4yUIUnJmG0Pl37uUE+H1zr6eSzHV1qj55nttG8JGmG0p7ukCHHkGQp+KNpGKgJQdgnSKzBABnURgOE0xvnIZkAIbEhN6WiUIXB4KR4JxyAA0WDws3TurhOc8/lnbzYG7t2z6hHKf2xC8YqcD4ru7KpEykwouhGZqZUhu40vpe+oHZNEznO0wC5F2Ko+JPOxb5KtwKj9rj1gUGFxRpdFXu2JnsAE6D/xJKPXu6p3NzTZF+PT9bX2n+f5BJzD6lQYEghgEyvTEj8FCa4hsHPzPtDXoFPXhLIZn4P8zrmDukRAshkAthXfF26t4TUxdnr+w/U3pb/LrgOdnvYx3LI9Z6AYZ00EEjUF4nZ4NobfSAiRXfTpt1E5924vHHgJj/n1Nxq3oF0J8RMNx9pNavxrjGZcjXFvX/RHMzrK9tCnkIloRwce2iisFM3kE+3NDQUQnQfsgRtRzHrqKgMwVcOlrkVDtnXKBkcP6nLOzEEDdewg0NFV9aHHPQz3sJPIP3/eRg1KdJetFnTptXoJRmmDdBhGR7vTTcvuDYzoH7ee/MtZjcbZM0YKMyq/IBfBSCwDTBStrBMSd1bIEnQ=
 
-#before_script:
-#  - "export DISPLAY=:99.0"
-#  - "sh -e /etc/init.d/xvfb start"
-#  - sleep 3
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3
 
-#script:
-#- export DUNYA_TOKEN=$DUNYA_TOKEN
-#- nosetests dunyadesktop_app/tests --with-coverage
+script:
+  - export DUNYA_TOKEN=$DUNYA_TOKEN
+  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7_with_system_site_packages' ]]; then
+      nosetests dunyadesktop_app/tests --with-coverage;
+    fi"
 
-#after_success:
-#- codecov
+after_success:
+  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7_with_system_site_packages' ]]; then
+      codecov;
+    fi"
