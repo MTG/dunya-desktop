@@ -51,9 +51,6 @@ Then install command-line tools:
         make
         sudo make install
 
-* __dunya-desktop__ uses some modules in Essentia. Follow the [instructions](essentia.upf.edu/documentation/installing.html) to install the library.
-
-
 * Create a virtual environment (virtualenv) and install requirements.
         
         pip install virtualenv
@@ -104,9 +101,6 @@ The given installation steps were tried on Ubuntu 16.04.02 LTS (xenial).
         python configure.py --confirm-license --qmake=/usr/lib/x86_64-linux-gnu/qt5/bin/qmake
         make
         sudo make install
-
-* __dunya-desktop__ uses some modules in Essentia. Follow the [instructions](http://essentia.upf.edu/documentation/installing.html) to install the library.
-
 
 * Create a virtual environment (virtualenv) and install requirements.
         
