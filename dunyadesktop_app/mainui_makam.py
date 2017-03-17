@@ -189,8 +189,14 @@ class MainWindowMakam(MainWindowMakamDesign):
             recid = self.recordings[model_index.row()]
 
             try:
-                player = PlayerMainWindow(docid=recid, parent=self)
-                player.show()
+                fname = recid + '.mp3'
+                path = os.path.join(DOCS_PATH, recid, fname)
+                if os.path.exists(path):
+                    player = PlayerMainWindow(docid=recid, parent=self)
+                    player.show()
+                else:
+                    QMessageBox.information(self, "QMessageBox.information()",
+                                            "Download the selected item.")
             except RuntimeError:
                 QMessageBox.information(self, "QMessageBox.information()",
                                         "Download the selected item.")
