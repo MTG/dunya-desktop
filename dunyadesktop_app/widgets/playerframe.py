@@ -180,6 +180,7 @@ class PlayerFrame(QFrame):
             if hasattr(self.ts_widget, 'zoom_selection'):
                 self.ts_widget.hopsize = hopsize
                 self.ts_widget.samplerate = samplerate
+                self.ts_widget.pitch_plot = pitch_plot
                 self.ts_widget.plot_pitch(pitch_plot=pitch_plot,
                                           x_start=x_min,
                                           x_end=x_max,
