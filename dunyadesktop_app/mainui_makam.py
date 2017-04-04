@@ -245,7 +245,7 @@ class MainWindowMakam(MainWindowMakamDesign):
             pass
 
 
-app = QApplication(sys.argv)
-mainwindow_makam = MainWindowMakam()
-mainwindow_makam.show()
-app.exec_()
+#app = QApplication(sys.argv)
+#mainwindow_makam = MainWindowMakam()
+#mainwindow_makam.show()
+#app.exec_()
