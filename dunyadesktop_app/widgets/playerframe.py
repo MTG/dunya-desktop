@@ -6,11 +6,11 @@ import pyqtgraph.dockarea as pgdock
 from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import QVBoxLayout, QFrame
 
-from playbackframe import PlaybackFrame
-from timeserieswidget import TimeSeriesWidget
+from .playbackframe import PlaybackFrame
+from .timeserieswidget import TimeSeriesWidget
+from .waveformwidget import WaveformWidget
+from .scoredialog import ScoreDialog
 from utilities.playback import Playback
-from waveformwidget import WaveformWidget
-from scoredialog import ScoreDialog
 from cultures.makam.featureparsers import (read_raw_audio, load_pitch, load_pd,
                                            load_tonic, get_feature_paths,
                                            load_notes, get_sections,

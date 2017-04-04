@@ -1,8 +1,13 @@
+import sys
 import os
 import os.path
 import json
 import fnmatch
-import urllib
+
+if sys.version_info[0] == 2:
+    import urllib
+else:
+    import urllib.request as urllib
 
 from compmusic.dunya.makam import (get_makams, get_forms, get_usuls,
                                    get_composers, get_artists, get_instruments)

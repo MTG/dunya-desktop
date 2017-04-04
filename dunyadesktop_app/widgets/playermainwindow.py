@@ -6,9 +6,9 @@ from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QDockWidget,
                              QDialog)
 from PyQt5.QtCore import Qt, QMetaObject
 
-from treewidget import FeatureTreeWidget, MetadataTreeMakam
-from playerframe import PlayerFrame
-from scoredialog import ScoreWidget
+from .treewidget import FeatureTreeWidget, MetadataTreeMakam
+from .playerframe import PlayerFrame
+from .scoredialog import ScoreWidget
 
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
@@ -109,7 +109,7 @@ class PlayerMainWindow(QMainWindow):
                 dlg.setLayout(layout)
                 dlg.show()
             else:
-                print 'unchecked'
+                print('unchecked')
 
         if item == 'sections':
             if is_checked:

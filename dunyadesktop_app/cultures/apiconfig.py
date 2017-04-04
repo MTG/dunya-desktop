@@ -1,11 +1,16 @@
+import sys
 import os.path
-import ConfigParser
+
+if sys.version_info[0] == 2:
+    import ConfigParser as configparser
+else:
+    import configparser
 
 import compmusic.dunya.conn
 
 
 def _get_option(option):
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
     config.read(os.path.join(os.path.dirname(__file__), 'config.cfg'))
     return config.get('dunya', option)
 
