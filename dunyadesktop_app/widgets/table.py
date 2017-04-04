@@ -1,6 +1,7 @@
 import os
 import platform
 import json
+import sys
 
 from PyQt5.QtWidgets import (QToolButton, QTableView, QAbstractItemView,
                              QAction, QHeaderView, QTableWidget,
@@ -324,7 +325,10 @@ class TableWidget(QTableWidget, TableView):
         index = self.indexAt(click_me.pos())
         if index.isValid():
             row = index.row()
-            docid = convert_str(self.item(row, 1).text())
+            if sys.version_info[0] == 2:
+                docid = convert_str(self.item(row, 1).text())
+            else:
+                docid = self.item(row, 1).text()
 
             self.set_status(row, 0)
             self.indexes[docid] = row

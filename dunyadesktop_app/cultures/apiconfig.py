@@ -6,7 +6,7 @@ if sys.version_info[0] == 2:
 else:
     import configparser
 
-import compmusic.dunya.conn
+import cultures.dunya.conn
 
 
 def _get_option(option):
@@ -17,9 +17,9 @@ def _get_option(option):
 
 def set_token():
     DUNYA_TOKEN = _get_option('token')
-    compmusic.dunya.conn.set_token(DUNYA_TOKEN)
+    cultures.dunya.conn.set_token(DUNYA_TOKEN)
 
 
 def set_hostname():
     DUNYA_HOSTNAME = _get_option('hostname')
-    compmusic.dunya.conn.set_hostname(DUNYA_HOSTNAME)
+    cultures.dunya.conn.set_hostname(DUNYA_HOSTNAME)

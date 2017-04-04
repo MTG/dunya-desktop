@@ -9,10 +9,10 @@ if sys.version_info[0] == 2:
 else:
     import urllib.request as urllib
 
-from compmusic.dunya.makam import (get_makams, get_forms, get_usuls,
+from ..dunya.makam import (get_makams, get_forms, get_usuls,
                                    get_composers, get_artists, get_instruments)
-from compmusic.dunya.docserver import (document, get_document_as_json, get_mp3)
-from compmusic.dunya.conn import HTTPError
+from ..dunya.docserver import (document, get_document_as_json, get_mp3)
+from ..dunya.conn import HTTPError
 from PyQt5.QtCore import QObject, QThread, pyqtSignal
 import numpy as np
 
@@ -56,11 +56,11 @@ def get_filenames_in_dir(dir_name, keyword='*.mp3', skip_foldername='',
                        fnmatch.fnmatch(f.lower(), keyword.lower()))
             if has_key and skip_foldername not in path.split(os.sep)[1:]:
                 try:
-                    folders.append(unicode(path, 'utf-8'))
+                    folders.append(str(path))
                 except TypeError:  # already unicode
                     folders.append(path)
                 try:
-                    names.append(unicode(f, 'utf-8'))
+                    names.append(str(f))
                 except TypeError:  # already unicode
                     names.append(path)
                 fullnames.append(os.path.join(path, f))
@@ -149,7 +149,7 @@ class DocThread(QThread):
                     # for now, all tokens have permission to download
                     # audio files
                     mp3 = get_mp3(docid)
-                    open(m_path, 'w').write(mp3)
+                    open(m_path, 'wb').write(mp3)
             except:
                 pass
 

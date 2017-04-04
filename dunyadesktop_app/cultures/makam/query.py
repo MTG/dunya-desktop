@@ -1,4 +1,4 @@
-from compmusic.dunya import makam
+from ..dunya import makam
 from PyQt5.QtCore import QThread, QObject, pyqtSignal
 
 
