@@ -13,6 +13,5 @@ logger.setLevel(logging.INFO)
 
 def test_dunya_api():
     makams = makam.get_makams()
-    print makams
     logger.info(makams)
     assert makams
