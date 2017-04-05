@@ -5,11 +5,8 @@ dist: trusty
 language: python
 
 python:
-  - '2.7'
-  - '3.2'
-
-virtualenv:
-  system_site_packages: true
+  - '2.7_with_system_site_packages'
+  - '3.2_with_system_site_packages'
 
 before_install:
   - bash .travis/install_qt.sh
@@ -18,7 +15,7 @@ before_install:
       bash .travis/install_pyqt_python27.sh;
     fi"
 
-  - "if [[ $TRAVIS_PYTHON_VERSION == 3.2 ]]; then
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.2_with_system_site_packages' ]]; then
       bash .travis/install_pyqt_python35.sh;
       sudo apt-get install -qq python3-pip;
     fi"
@@ -31,7 +28,7 @@ install:
       sudo pip install flake8;
     fi"
 
-  - "if [[ $TRAVIS_PYTHON_VERSION == 3.2 ]]; then
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.2_with_system_site_packages' ]]; then
       sudo pip3 install -r requirements;
       sudo pip3 install flake8;
     fi"
@@ -52,11 +49,15 @@ script:
       nosetests dunyadesktop_app/tests --with-coverage;
     fi"
 
-  - "if [[ $TRAVIS_PYTHON_VERSION == 3.2 ]]; then
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.2_with_system_site_packages' ]]; then
       nosetests dunyadesktop_app/tests --with-coverage;
     fi"
 
 after_success:
   - "if [[ $TRAVIS_PYTHON_VERSION == '2.7_with_system_site_packages' ]]; then
+      codecov;
+    fi"
+
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.2_with_system_site_packages' ]]; then
       codecov;
     fi"
