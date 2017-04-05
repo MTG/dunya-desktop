@@ -5,7 +5,7 @@ language: python
 
 python:
   - '2.7'
-  - '3.5'
+  - '3.4'
 
 before_install:
   - bash .travis/install_qt.sh
@@ -14,7 +14,7 @@ before_install:
       bash .travis/install_pyqt_python27.sh;
      fi"
 
-  - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then
       bash .travis/install_pyqt_python35.sh;
       sudo apt-get install -qq python3-numpy python3-scipy python3-pip;
     fi"
@@ -27,7 +27,7 @@ install:
       sudo pip install flake8;
     fi"
 
-  - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then
       sudo pip3 install -r requirements;
       sudo pip3 install flake8;
     fi"
@@ -48,7 +48,7 @@ script:
       nosetests dunyadesktop_app/tests --with-coverage;
     fi"
 
-  - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then
       nosetests dunyadesktop_app/tests --with-coverage;
     fi"
 
@@ -57,6 +57,6 @@ after_success:
       codecov;
     fi"
 
-  - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then
       codecov;
     fi"
