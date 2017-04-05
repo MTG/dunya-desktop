@@ -1,8 +1,7 @@
 import os
 import sys
 
-SOURCE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                           '..', '..'))
+SOURCE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, SOURCE_PATH)
 
 
