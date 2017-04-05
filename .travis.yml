@@ -15,7 +15,7 @@ before_install:
       bash .travis/install_pyqt_python27.sh;
     fi"
 
-  - "if [[ $TRAVIS_PYTHON_VERSION == 3.5 ]]; then
+  - "if [[ $TRAVIS_PYTHON_VERSION == 3.2 ]]; then
       bash .travis/install_pyqt_python35.sh;
       sudo apt-get install -qq python3-numpy python3-scipy python3-pip;
     fi"
@@ -28,7 +28,7 @@ install:
       sudo pip install flake8;
     fi"
 
-  - "if [[ $TRAVIS_PYTHON_VERSION == 3.5 ]]; then
+  - "if [[ $TRAVIS_PYTHON_VERSION == 3.2 ]]; then
       sudo pip3 install requests;
       sudo pip3 install pyqtgraph;
       sudo pip3 install flake8;
@@ -50,7 +50,7 @@ script:
       nosetests dunyadesktop_app/tests --with-coverage;
     fi"
 
-  - "if [[ $TRAVIS_PYTHON_VERSION == 3.5 ]]; then
+  - "if [[ $TRAVIS_PYTHON_VERSION == 3.2 ]]; then
       nosetests dunyadesktop_app/tests --with-coverage;
     fi"
 
