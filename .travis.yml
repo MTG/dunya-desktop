@@ -21,16 +21,8 @@ before_install:
 
 install:
   - sudo pip install codecov
-
-  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7_with_system_site_packages' ]]; then
-      sudo pip install -r requirements;
-      sudo pip install flake8;
-    fi"
-
-  - "if [[ $TRAVIS_PYTHON_VERSION == 3.5 ]]; then
-      sudo pip3 install -r requirements;
-      sudo pip3 install flake8;
-    fi"
+  - sudo pip install -r requirements
+  - sudo pip install flake8
 
 env:
   global:
