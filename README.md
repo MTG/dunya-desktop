@@ -30,7 +30,7 @@ Dunya-desktop mainly uses [PyQt5](https://www.riverbankcomputing.com/software/py
 
 Installation
 ============
-Installing dependencies on Mac OS X
+Installing dependencies on Mac OS X for Python 2.7
 -------
 
 The given installation steps were tried on OS X El Capitan (v10.11.06) and OS X El Sierra (v10.12.1).
@@ -88,7 +88,7 @@ Then install command-line tools:
 
         pip install -r requirements
 
-Installing dependencies on Ubuntu 16.04
+Installing dependencies on Ubuntu 16.04 for Python 2.7
 -------
 
 The given installation steps were tried on Ubuntu 16.04.02 LTS (xenial).
