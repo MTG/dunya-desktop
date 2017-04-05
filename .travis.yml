@@ -8,14 +8,13 @@ python:
   - '3.5'
 
 before_install:
-  -bash .travis/install_qt.sh
+  - bash .travis/install_qt.sh
 
   - "if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then
       bash .travis/install_pyqt_python27.sh;
-    fi"
+     fi"
 
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then
-      export PATH=$(echo $PATH | tr ':' "\n" | sed '/\/opt\/python/d' | tr "\n" ":" | sed "s|::|:|g");
       bash .travis/install_pyqt_python35.sh;
       sudo apt-get install -qq python3-numpy python3-scipy python3-pip;
     fi"
