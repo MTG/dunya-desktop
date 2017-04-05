@@ -1,34 +1,34 @@
-sudo: required
-
 dist: trusty
+sudo: required
 
 language: python
 
 python:
-  - '2.7_with_system_site_packages'
-  - '3.2_with_system_site_packages'
+  - '2.7'
+  - '3.5'
 
 before_install:
   - bash .travis/install_qt.sh
 
-  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7_with_system_site_packages' ]]; then
+  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then
       bash .travis/install_pyqt_python27.sh;
     fi"
 
-  - "if [[ $TRAVIS_PYTHON_VERSION == '3.2_with_system_site_packages' ]]; then
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then
+      export PATH=$(echo $PATH | tr ':' "\n" | sed '/\/opt\/python/d' | tr "\n" ":" | sed "s|::|:|g");
       bash .travis/install_pyqt_python35.sh;
-      sudo apt-get install -qq python3-pip;
+      sudo apt-get install -qq python3-numpy python3-scipy python3-pip;
     fi"
 
 install:
   - sudo pip install codecov
 
-  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7_with_system_site_packages' ]]; then
+  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then
       sudo pip install -r requirements;
       sudo pip install flake8;
     fi"
 
-  - "if [[ $TRAVIS_PYTHON_VERSION == '3.2_with_system_site_packages' ]]; then
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then
       sudo pip3 install -r requirements;
       sudo pip3 install flake8;
     fi"
@@ -45,19 +45,19 @@ before_script:
 script:
   - export DUNYA_TOKEN=$DUNYA_TOKEN
 
-  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7_with_system_site_packages' ]]; then
+  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then
       nosetests dunyadesktop_app/tests --with-coverage;
     fi"
 
-  - "if [[ $TRAVIS_PYTHON_VERSION == '3.2_with_system_site_packages' ]]; then
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then
       nosetests dunyadesktop_app/tests --with-coverage;
     fi"
 
 after_success:
-  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7_with_system_site_packages' ]]; then
+  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then
       codecov;
     fi"
 
-  - "if [[ $TRAVIS_PYTHON_VERSION == '3.2_with_system_site_packages' ]]; then
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then
       codecov;
     fi"
