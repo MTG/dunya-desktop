@@ -28,7 +28,7 @@ install:
     fi"
 
   - "if [[ $TRAVIS_PYTHON_VERSION == 3.5 ]]; then
-      sudo apt-get -y install python3-pip;
+      sudo apt-get -y install python-numpy python-scipy python3-pip;
       sudo pip3 install -r requirements;
       sudo pip3 install flake8;
     fi"
