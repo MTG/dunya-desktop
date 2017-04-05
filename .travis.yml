@@ -29,7 +29,8 @@ install:
 
   - "if [[ $TRAVIS_PYTHON_VERSION == 3.5 ]]; then
       sudo apt-get -y install python3-numpy python3-scipy python3-pip;
-      sudo pip3 install requests pyqtgraph
+      sudo pip3 install requests;
+      sudo pip3 install pyqtgraph;
       sudo pip3 install flake8;
     fi"
 
