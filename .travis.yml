@@ -8,6 +8,9 @@ python:
   - '2.7_with_system_site_packages'
   - '3.5'
 
+virtualenv:
+  system_site_packages: true
+
 before_install:
   - bash .travis/install_qt.sh
 
@@ -17,7 +20,8 @@ before_install:
 
   - "if [[ $TRAVIS_PYTHON_VERSION == 3.5 ]]; then
       bash .travis/install_pyqt_python35.sh;
-    fi"
+      sudo apt-get install -qq python3-numpy python3-scipy python3-pip;
+    fi" 
 
 install:
   - sudo pip install codecov
@@ -28,7 +32,6 @@ install:
     fi"
 
   - "if [[ $TRAVIS_PYTHON_VERSION == 3.5 ]]; then
-      sudo apt-get -y install python3-numpy python3-scipy python3-pip;
       sudo pip3 install requests;
       sudo pip3 install pyqtgraph;
       sudo pip3 install flake8;
