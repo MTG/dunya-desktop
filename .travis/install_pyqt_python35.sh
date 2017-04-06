@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-sudo apt-get install libpulse-dev
+sudo apt-get install -qq libpulse-dev
 
 # Install PyQt5 for Python 3
-pip3 install pyqt5
+sudo apt-get install -qq python3-pyqt5
 
 echo 'QtWidgets'
 python3 -c 'from PyQt5 import QtWidgets'
