@@ -3,7 +3,7 @@
 sudo apt-get install -qq libpulse-dev
 
 # Install PyQt5 for Python 3
-sudo apt-get install -qq python3-pyqt5
+sudo apt-get install -qq python3-pyqt5 python3-pyqt5.qtopengl
 
 echo 'QtWidgets'
 python3 -c 'from PyQt5 import QtWidgets'
