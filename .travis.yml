@@ -49,4 +49,4 @@ script:
   - nosetests dunyadesktop_app/tests --with-coverage
 
 after_success:
-      codecov
+  - codecov
