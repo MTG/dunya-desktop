@@ -32,6 +32,7 @@ install:
 
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then
       sudo pip3 install -r requirements;
+      sudo pip3 install PyQt5;
       sudo pip3 install flake8;
     fi"
 
