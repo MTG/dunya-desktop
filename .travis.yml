@@ -18,22 +18,14 @@ before_install:
      fi"
 
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then
-      bash .travis/install_pyqt_python35.sh;
+      bash .travis/install_pyqt_python34.sh;
       sudo apt-get install -qq python3-numpy python3-scipy python3-pip;
     fi"
 
 install:
   - sudo pip install codecov
-
-  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then
-      sudo pip install -r requirements;
-      sudo pip install flake8;
-    fi"
-
-  - "if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then
-      sudo pip3 install -r requirements;
-      sudo pip3 install flake8;
-    fi"
+  - sudo pip install -r requirements;
+  - sudo pip install flake8;
 
 env:
   global:
@@ -46,20 +38,7 @@ before_script:
 
 script:
   - export DUNYA_TOKEN=$DUNYA_TOKEN
-
-  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then
-      nosetests dunyadesktop_app/tests --with-coverage;
-    fi"
-
-  - "if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then
-      nosetests dunyadesktop_app/tests --with-coverage;
-    fi"
+  - nosetests dunyadesktop_app/tests --with-coverage
 
 after_success:
-  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then
-      codecov;
-    fi"
-
-  - "if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then
-      codecov;
-    fi"
+      codecov
