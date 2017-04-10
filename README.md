@@ -1,15 +1,36 @@
-# dunya-desktop
-[![Build Status](https://travis-ci.org/MTG/dunya-desktop.svg?branch=master)](https://travis-ci.org/MTG/dunya-desktop) [![Code Climate](https://codeclimate.com/github/MTG/dunya-desktop/badges/gpa.svg)](https://codeclimate.com/github/MTG/dunya-desktop) [![codecov](https://codecov.io/gh/MTG/dunya-desktop/branch/master/graph/badge.svg)](https://codecov.io/gh/MTG/dunya-desktop) [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](http://www.gnu.org/licenses/agpl-3.0) [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+<p align="center">
+    <img src="https://github.com/MTG/dunya-desktop/blob/python3-comp/dunyadesktop_app/ui_files/icons/dunya-desktop-github.png" width="200">    
+</p>
+
+<p align="center">
+    <a>
+		<img alt="travis" src="https://travis-ci.org/MTG/dunya-desktop.svg?branch=master"/>
+	</a>    
+	<a>
+		<img alt="code-climate" src="https://codeclimate.com/github/MTG/dunya-desktop/badges/gpa.svg"/>
+	</a>        
+	<a>
+		<img alt="codecov" src="https://codecov.io/gh/MTG/dunya-desktop/branch/master/graph/badge.svg"/>
+	</a>            
+	<a>
+		<img alt="AGPL" src="https://img.shields.io/badge/License-AGPL%20v3-blue.svg"/>
+	</a>                
+	<a>
+		<img alt="CCBYNC" src="https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg"/>
+	</a>
+</p>
 
 **Dunya-desktop** is a desktop application, developed for accessing  and visualizing music data such as music scores, audio recordings, extracted features and analysis  results. It is a modular and extendable desktop application that the users can customise according to their needs.
 
-![dunya-desktop-gif](https://github.com/MTG/dunya-desktop/blob/master/resources/dunya-desktop-demo.gif)
+<p align="center">
+    <img src="https://github.com/MTG/dunya-desktop/blob/master/resources/dunya-desktop-demo.gif">    
+</p>
 
 Dunya-desktop mainly uses [PyQt5](https://www.riverbankcomputing.com/software/pyqt/download5), Python bindings for [Qt5](https://www.qt.io/developers/) application framework, for the user interface design and [pycompmusic](https://github.com/MTG/pycompmusic) module for reaching the backend of the [Dunya](http://dunya.compmusic.upf.edu).
 
 Installation
 ============
-Installing dependencies on Mac OS X
+Installing dependencies on Mac OS X for Python 2.7
 -------
 
 The given installation steps were tried on OS X El Capitan (v10.11.06) and OS X El Sierra (v10.12.1).
@@ -67,7 +88,7 @@ Then install command-line tools:
 
         pip install -r requirements
 
-Installing dependencies on Ubuntu 16.04
+Installing dependencies on Ubuntu 16.04 for Python 2.7
 -------
 
 The given installation steps were tried on Ubuntu 16.04.02 LTS (xenial).

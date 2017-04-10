@@ -6,7 +6,7 @@ from PyQt5 import QtCore
 
 from widgets.widgetutilities import set_css
 
-import ui_files.resources_rc
+import ui_files.resources_rc_2
 
 ICON_COMPMUSIC = os.path.join(os.path.dirname(__file__), 'ui_files',
                                 'icons', 'compmusic-logo-white.svg')

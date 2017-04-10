@@ -1,3 +1,5 @@
+import sys
+
 from PyQt5.QtWidgets import (QFrame, QGridLayout, QVBoxLayout, QLabel,
                              QLineEdit, QSizePolicy)
 from PyQt5.QtCore import QMetaObject, Qt
@@ -9,7 +11,8 @@ from .audioattframe import AudioAttFrame
 from .models.recordingmodel import RecordingModel
 from .models.proxymodel import SortFilterProxyModel
 
-import ui_files.resources_rc
+if sys.version_info[0] == 2:
+    import ui_files.resources_rc_2
 
 DUNYA_ICON = ":/compmusic/icons/dunya.svg"
 QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"

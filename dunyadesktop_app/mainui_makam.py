@@ -1,6 +1,10 @@
 import sys
 import os
-import Queue
+
+if sys.version_info[0] == 2:
+    import Queue as queue
+else:
+    import queue
 
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QMessageBox
@@ -36,7 +40,7 @@ class MainWindowMakam(MainWindowMakamDesign):
             self.progress_number = 0
             self.d_threads = []
             self.q_threads = []
-            self.queue = Queue.Queue()
+            self.queue = queue.Queue()
 
             # signals
             self.online_status = True
@@ -245,7 +249,7 @@ class MainWindowMakam(MainWindowMakamDesign):
             pass
 
 
-app = QApplication(sys.argv)
-mainwindow_makam = MainWindowMakam()
-mainwindow_makam.show()
-app.exec_()
+#app = QApplication(sys.argv)
+#mainwindow_makam = MainWindowMakam()
+#mainwindow_makam.show()
+#app.exec_()
