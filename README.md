@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://github.com/MTG/dunya-desktop/blob/python3-comp/dunyadesktop_app/ui_files/icons/dunya-desktop-github.png" width="200">    
+    <img src="https://github.com/MTG/dunya-desktop/blob/master/dunyadesktop_app/ui_files/icons/dunya-desktop-github.png" width="200">
 </p>
 
 <p align="center">
