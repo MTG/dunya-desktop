@@ -1,7 +1,15 @@
+import os
+
 from PyQt5.QtWidgets import (QFrame, QHBoxLayout, QToolButton,
-                             QSlider, QSizePolicy)
-from PyQt5.QtGui import QIcon, QPixmap
+                             QSlider, QSizePolicy, QVBoxLayout)
+from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize, Qt
+
+
+PLAY_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
+                          'icons', 'playback', 'play-button_gray.svg')
+PAUSE_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
+                          'icons', 'playback', 'pause_gray.svg')
 
 
 class PlaybackFrame(QFrame):
@@ -11,8 +19,10 @@ class PlaybackFrame(QFrame):
         self._set_size_policy()
         self._set_visualization()
 
-        self.horizontalLayout = QHBoxLayout(self)
-        self.setMaximumHeight(40)
+        vertical_layout = QVBoxLayout(self)
+        # self.hor_layout_top = QHBoxLayout()
+        self.hor_layout_bottom = QHBoxLayout()
+        # self.setMaximumHeight(40)
 
         self.toolbutton_play = QToolButton(self)
         self.toolbutton_pause = QToolButton(self)
@@ -20,6 +30,9 @@ class PlaybackFrame(QFrame):
 
         self.slider = QSlider(self)
         self._set_slider()
+
+        #vertical_layout.addLayout(self.hor_layout_top)
+        vertical_layout.addLayout(self.hor_layout_bottom)
 
     def _set_size_policy(self):
         size_policy = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
@@ -48,13 +61,11 @@ class PlaybackFrame(QFrame):
                                            "}\n"
                                            "\n"
                                            "")
-        icon = QIcon()
-        icon.addPixmap(QPixmap(":/compmusic/icons/play.png"),
-                       QIcon.Normal, QIcon.Off)
-        self.toolbutton_play.setIcon(icon)
+
+        self.toolbutton_play.setIcon(QIcon(PLAY_ICON))
         self.toolbutton_play.setIconSize(QSize(20, 20))
         self.toolbutton_play.setObjectName("toolButton_play")
-        self.horizontalLayout.addWidget(self.toolbutton_play)
+        self.hor_layout_bottom.addWidget(self.toolbutton_play)
 
         self.toolbutton_pause.setMinimumSize(QSize(50, 15))
         self.toolbutton_pause.setStyleSheet("QToolButton {\n"
@@ -63,12 +74,9 @@ class PlaybackFrame(QFrame):
                                             "}\n"
                                             "")
 
-        icon1 = QIcon()
-        icon1.addPixmap(QPixmap(":/compmusic/icons/pause.png"),
-                        QIcon.Normal, QIcon.Off)
-        self.toolbutton_pause.setIcon(icon1)
+        self.toolbutton_pause.setIcon(QIcon(PAUSE_ICON))
         self.toolbutton_pause.setIconSize(QSize(20, 20))
-        self.horizontalLayout.addWidget(self.toolbutton_pause)
+        self.hor_layout_bottom.addWidget(self.toolbutton_pause)
 
     def _set_slider(self):
         self.slider.setStyleSheet(
@@ -89,4 +97,4 @@ class PlaybackFrame(QFrame):
             "}")
 
         self.slider.setOrientation(Qt.Horizontal)
-        self.horizontalLayout.addWidget(self.slider)
+        self.hor_layout_bottom.addWidget(self.slider)
