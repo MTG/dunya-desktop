@@ -2,7 +2,7 @@ import os
 
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QStatusBar, \
     QSizePolicy, QFrame
-from PyQt5.QtGui import QPixmap, QFont, QIcon
+from PyQt5.QtGui import QFont, QIcon
 from PyQt5 import QtCore
 
 from widgets.dockwidget import DockWidget, DockWidgetContentsLeft, \
@@ -19,8 +19,8 @@ CSS_FRAME_QUERY = os.path.join(os.path.dirname(__file__), 'ui_files', 'css',
 CSS_STATUSBAR = os.path.join(os.path.dirname(__file__), 'ui_files', 'css',
                              'statusbar.css')
 
-DUNYA_ICON = ":/compmusic/icons/dunya.svg"
-QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"
+DUNYA_ICON = os.path.join(os.path.dirname(__file__), 'ui_files', 'icons',
+                          'dunya-desktop.svg')
 
 
 class GeneralMainDesign(QMainWindow):
@@ -79,9 +79,7 @@ class GeneralMainDesign(QMainWindow):
         self.setMinimumSize(QtCore.QSize(1000, 750))
 
         # main window icon
-        icon_dunya = QIcon()
-        icon_dunya.addPixmap(QPixmap(DUNYA_ICON), QIcon.Normal, QIcon.Off)
-        self.setWindowIcon(icon_dunya)
+        self.setWindowIcon(QIcon(DUNYA_ICON))
         self.setWindowTitle('Dunya Desktop')
 
     def _set_frame(self):
