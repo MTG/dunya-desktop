@@ -33,7 +33,7 @@ QToolTip
 QWidget
 {
     color: #eff0f1;
-    background-color: #31363b;
+    background-color: #222222;
     selection-background-color:#3daee9;
     selection-color: #eff0f1;
     background-clip: border;
@@ -301,7 +301,7 @@ QMenu::right-arrow {
 QWidget:disabled
 {
     color: #454545;
-    background-color: #31363b;
+    background-color: #222222;
 }
 
 QAbstractItemView
@@ -746,7 +746,7 @@ QTabWidget::pane {
 }
 
 QTabWidget::tab-bar {
-    left: 5px; /* move to the right by 5px */
+    alignment: center;
 }
 
 QTabBar
