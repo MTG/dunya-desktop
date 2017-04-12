@@ -6,9 +6,9 @@ if sys.version_info[0] == 2:
 else:
     import queue
 
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox, QApplication
 
-
+import ui_files.style_rc
 from cultures import apiconfig
 from cultures.makam import utilities
 from cultures.makam.query import QueryThread
