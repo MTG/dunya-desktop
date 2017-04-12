@@ -1,13 +1,13 @@
-import sys
 import os
+import sys
 
 if sys.version_info[0] == 2:
     import Queue as queue
 else:
     import queue
 
-from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QMessageBox
+
 
 from cultures import apiconfig
 from cultures.makam import utilities
@@ -16,14 +16,11 @@ from mainui_design_makam import MainWindowMakamDesign
 from widgets.playermainwindow import PlayerMainWindow
 from utilities import database
 
-import pyqt5_style_rc
-
 apiconfig.set_token()
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
                          'documents')
-SS = os.path.join(os.path.dirname(__file__), 'ui_files', 'css',
-                  'style.qss')
+SS = os.path.join(os.path.dirname(__file__), 'ui_files', 'style.qss')
 
 
 
