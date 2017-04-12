@@ -9,15 +9,7 @@ from widgets.dockwidget import DockWidget, DockWidgetContentsLeft, \
     DockWidgetContentsTop
 from widgets.queryframe import QueryFrame
 from widgets.progressbar import ProgressBar
-from widgets.widgetutilities import set_css
 
-
-CSS_MAIN = os.path.join(os.path.dirname(__file__), 'ui_files', 'css',
-                        'mainui.css')
-CSS_FRAME_QUERY = os.path.join(os.path.dirname(__file__), 'ui_files', 'css',
-                               'frame_query.css')
-CSS_STATUSBAR = os.path.join(os.path.dirname(__file__), 'ui_files', 'css',
-                             'statusbar.css')
 
 DUNYA_ICON = os.path.join(os.path.dirname(__file__), 'ui_files', 'icons',
                           'dunya-desktop.svg')
@@ -28,8 +20,6 @@ class GeneralMainDesign(QMainWindow):
     def __init__(self, QWidgetParent=None):
         QMainWindow.__init__(self, QWidgetParent)
         self._set_main_window()
-        set_css(self, CSS_MAIN)
-
         self.centralwidget = QWidget(self)
 
         layout = QVBoxLayout(self.centralwidget)
@@ -38,7 +28,6 @@ class GeneralMainDesign(QMainWindow):
 
         # query frame
         self.frame_query = QueryFrame()
-        set_css(self.frame_query, CSS_FRAME_QUERY)
         self._set_frame()
         layout.addWidget(self.frame_query)
 
@@ -46,7 +35,6 @@ class GeneralMainDesign(QMainWindow):
 
         # status bar
         self.statusbar = QStatusBar(self)
-        set_css(self.statusbar, CSS_STATUSBAR)
         self._set_status_bar()
         self.setStatusBar(self.statusbar)
 

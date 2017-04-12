@@ -4,7 +4,6 @@ import platform
 from PyQt5.QtWidgets import QComboBox, QToolButton, QStyle
 from PyQt5.QtGui import QIcon, QFont
 
-from .widgetutilities import set_css
 from .filteringdialog import FilteringDialog
 
 if platform.system() == 'Linux':
@@ -21,11 +20,6 @@ else:
 ICON_PATH_CANCEL = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                                 'icons', 'cancel-music.svg')
 
-CSS_BUTTON = '''QToolButton {border: 0px;
-                             padding: 0px;}
-                QToolButton:hover{background-color: #c7dde0;
-                                  border-radius: 5px;}'''
-
 
 class ComboBox(QComboBox):
     """Combobox of the attributes."""
@@ -39,7 +33,6 @@ class ComboBox(QComboBox):
         else:
             self.setFixedHeight(25)
 
-        set_css(self, CSS_PATH)
         self._set_cancel_button()
 
         # signals
@@ -54,7 +47,6 @@ class ComboBox(QComboBox):
 
     def _set_cancel_button(self):
         self.cancel_button = QToolButton(self)
-        self.cancel_button.setStyleSheet(CSS_BUTTON)
         self.cancel_button.setIcon(QIcon(ICON_PATH_CANCEL))
         self.cancel_button.setVisible(False)
 
@@ -135,8 +127,7 @@ class ComboBox(QComboBox):
     def change_background(self, color=''):
         """Changes the background color of the combobox according to the query
         results of """
-        self.lineEdit().setStyleSheet("background-color: {0};"
-                                      "color: black;".format(color))
+        pass
 
     def check_lineedit_status(self):
         """Checks the lineedit widget and set the cancel button as

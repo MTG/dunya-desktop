@@ -72,7 +72,6 @@ class PlayerFrame(QFrame):
         self.setWindowTitle('Player')
         self.resize(1200, 550)
         self.setMinimumSize(QSize(850, 500))
-        self.setStyleSheet("background-color: rgb(30, 30, 30);")
 
         self.dock_area = DockAreaWidget()
 

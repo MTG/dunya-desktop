@@ -4,7 +4,6 @@ import json
 from PyQt5.QtWidgets import QListWidget, QListWidgetItem, QAbstractItemView
 from PyQt5.QtCore import pyqtSignal
 
-from .widgetutilities import set_css
 
 CSS_LISTVIEW = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                             'css', 'listwidget.css')
@@ -16,7 +15,6 @@ DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
 class DockListWidget(QListWidget):
     def __init__(self, parent=None):
         QListWidget.__init__(self, parent)
-        set_css(self, CSS_LISTVIEW)
 
         self.setViewMode(QListWidget.ListMode)
 

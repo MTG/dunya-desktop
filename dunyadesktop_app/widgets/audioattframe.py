@@ -3,11 +3,10 @@ import platform
 
 from PyQt5.QtWidgets import (QFrame, QGridLayout, QSizePolicy, QLayout,
                              QHBoxLayout, QToolButton, QSpacerItem)
-from PyQt5.QtGui import QCursor, QIcon, QPixmap
+from PyQt5.QtGui import QCursor, QIcon
 from PyQt5.QtCore import Qt, QSize
 
 from .combobox import ComboBox
-from .widgetutilities import set_css
 
 # platform dependent margins/spacings
 if platform.system() == 'Linux':
@@ -20,11 +19,8 @@ else:  # now, only for mac
     SPACE = 7
 
 # css paths
-QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"
-CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
-                        'audioattframe.css')
-CSS_BUTTON = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
-                          'toolbutton.css')
+QUERY_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
+                          'icons', 'magnifying-glass.png')
 
 
 class AudioAttFrame(QFrame):
@@ -39,9 +35,6 @@ class AudioAttFrame(QFrame):
         self._set_layout(layout)
         self._retranslate_status_tips()
 
-        if platform.system() != 'Linux':
-            set_css(self, CSS_PATH)
-        set_css(self.toolButton_query, CSS_BUTTON)
         self.toolButton_query.setDisabled(True)
 
         # signals
@@ -122,9 +115,7 @@ class AudioAttFrame(QFrame):
 
         self.toolButton_query = QToolButton(self)
         self.toolButton_query.setFixedSize(QSize(50, 50))
-        icon_query = QIcon()
-        icon_query.addPixmap(QPixmap(QUERY_ICON), QIcon.Normal, QIcon.Off)
-        self.toolButton_query.setIcon(icon_query)
+        self.toolButton_query.setIcon(QIcon(QUERY_ICON))
         self.toolButton_query.setIconSize(QSize(25, 25))
         self.horizontalLayout_query.addWidget(self.toolButton_query)
         layout.addLayout(self.horizontalLayout_query, 0, 6, 2, 1)

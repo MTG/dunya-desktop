@@ -16,17 +16,24 @@ from mainui_design_makam import MainWindowMakamDesign
 from widgets.playermainwindow import PlayerMainWindow
 from utilities import database
 
+import pyqt5_style_rc
+
 apiconfig.set_token()
-# apiconfig.set_hostname()
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
                          'documents')
+SS = os.path.join(os.path.dirname(__file__), 'ui_files', 'css',
+                  'style.qss')
+
 
 
 class MainWindowMakam(MainWindowMakamDesign):
     """The main window of makam"""
     def __init__(self):
         MainWindowMakamDesign.__init__(self)
+
+        with open(SS) as f:
+            self.setStyleSheet(f.read())
 
         # check if dunya is up or not
         if utilities.is_dunya_up():
@@ -247,9 +254,3 @@ class MainWindowMakam(MainWindowMakamDesign):
             self.frame_query.tableView_results.model().sourceModel().set_checked([row])
         except:
             pass
-
-
-#app = QApplication(sys.argv)
-#mainwindow_makam = MainWindowMakam()
-#mainwindow_makam.show()
-#app.exec_()

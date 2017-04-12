@@ -1,14 +1,8 @@
-import os
-
 from PyQt5.QtWidgets import (QDialog, QGridLayout, QLineEdit, QMessageBox,
                              QLabel, QDialogButtonBox, QSizePolicy, QTextEdit)
 from PyQt5.QtCore import pyqtSignal, QSize
 
 import utilities.database as database
-from .widgetutilities import set_css
-
-CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
-                        'newcollectiondialog.css')
 
 
 class NewCollectionDialog(QDialog):
@@ -44,8 +38,6 @@ class NewCollectionDialog(QDialog):
         self.label_description = QLabel(self)
         self.label_description.setText('Description')
         layout.addWidget(self.label_description, 2, 0, 1, 1)
-
-        set_css(self, CSS_PATH)
 
         self.buttonBox.rejected.connect(self.clicked_cancel)
         self.buttonBox.accepted.connect(self.clicked_ok)
@@ -90,5 +82,4 @@ class NewCollectionDialog(QDialog):
             msg_box = QMessageBox()
             msg_box.setText('Given collection name is not valid!')
             msg_box.setWindowTitle('')
-            self._set_css(msg_box, CSS_PATH)
             msg_box.exec_()
