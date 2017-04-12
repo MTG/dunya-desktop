@@ -1010,10 +1010,15 @@ QSlider::handle:vertical {
 
 QToolButton {
     background-color: transparent;
-    border: 1px transparent #76797C;
+    border: 1px solid #76797C;
     border-radius: 2px;
-    margin: 3px;
-    padding: 5px;
+    /*margin: 3px;*/
+    padding: 3px;
+}
+
+QToolButton#toolbutton_play
+{
+    background-color: red;
 }
 
 QToolButton[popupMode="1"] { /* only for MenuButtonPopup */

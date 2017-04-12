@@ -1,3 +1,5 @@
+import os
+
 from PyQt5.QtWidgets import (QDockWidget, QSizePolicy, QWidget, QVBoxLayout,
                              QFrame, QLabel, QToolButton, QHBoxLayout,
                              QSpacerItem)
@@ -8,6 +10,10 @@ from .table import TableWidget
 from .listwidget import CollectionsWidget
 from .newcollectiondialog import NewCollectionDialog
 from utilities import database
+
+
+COMPMUSIC_LOGO = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
+                              'icons', 'compmusic_white.png')
 
 
 class DockWidget(QDockWidget):
@@ -63,7 +69,7 @@ class DockWidgetContentsLeft(QWidget):
         # toolbutton
         self.toolButton_collection = QToolButton(self)
         self._set_toolbutton()
-        layout.addWidget(self.toolButton_collection)
+        layout_3.addWidget(self.toolButton_collection)
 
         self.frame_downloaded = QFrame(self)
         self._set_frame_downloaded()
@@ -204,25 +210,30 @@ class DockWidgetContentsTop(QWidget):
         layout.setContentsMargins(2, 0, 4, 0)
         layout.setSpacing(5)  # check it
 
-        spacer = QSpacerItem(20, 0, QSizePolicy.Expanding, QSizePolicy.Fixed)
+        spacer = QSpacerItem(20, 50, QSizePolicy.Expanding, QSizePolicy.Fixed)
         layout.addItem(spacer)
 
-        self.label_corpus = QLabel(self)
+        compmusic_logo = QLabel()
+        compmusic_logo.setText('''<img src='{0}' width=40>'''.format(COMPMUSIC_LOGO))
+
+        layout.addWidget(compmusic_logo)
+
+        self.label_corpus = QLabel()
         self._set_label_corpus()
         layout.addWidget(self.label_corpus)
 
         spacer2 = QSpacerItem(20, 0, QSizePolicy.Expanding, QSizePolicy.Fixed)
         layout.addItem(spacer2)
 
-        self.label_username = QLabel(self)
+        self.label_username = QLabel()
         self.label_username.setContextMenuPolicy(Qt.NoContextMenu)
         layout.addWidget(self.label_username)
 
-        self.line = QFrame(self)
+        self.line = QFrame()
         self._set_line()
         layout.addWidget(self.line)
 
-        self.label_status = QLabel(self)
+        self.label_status = QLabel()
         self._set_labelstatus()
         layout.addWidget(self.label_status)
         self.retranslate_ui()
