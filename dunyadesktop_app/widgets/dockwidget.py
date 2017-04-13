@@ -13,7 +13,7 @@ from utilities import database
 
 
 COMPMUSIC_LOGO = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
-                              'icons', 'compmusic_white.png')
+                              'icons', 'compmusic_white.svg')
 
 
 class DockWidget(QDockWidget):
@@ -44,18 +44,18 @@ class DockWidgetContentsLeft(QWidget):
 
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
-        self._set_widget()
+        #self._set_widget()
 
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(4, 0, 0, 0)
-        layout.setSpacing(0)  # check it
+        layout.setContentsMargins(8, 15, 15, 15)
+        #layout.setSpacing(10)  # check it
 
         self.frame_collection = QFrame(self)
         self._set_frame()
 
         layout_3 = QVBoxLayout(self.frame_collection)
         layout_3.setContentsMargins(2, 5, 3, 2)
-        layout_3.setSpacing(7)  # check it
+        layout_3.setSpacing(4)  # check it
 
         self.label_collections = QLabel(self.frame_collection)
         self.label_collections.setIndent(15)  # check it
@@ -102,16 +102,16 @@ class DockWidgetContentsLeft(QWidget):
         """Sets the size policies of the frame."""
         size_policy = QSizePolicy(QSizePolicy.MinimumExpanding,
                                   QSizePolicy.Preferred)
-        size_policy.setHorizontalStretch(0)
-        size_policy.setVerticalStretch(0)
-        size_policy.setHeightForWidth(
-            self.frame_collection.sizePolicy().hasHeightForWidth())
+        #size_policy.setHorizontalStretch(0)
+        #size_policy.setVerticalStretch(0)
+        #size_policy.setHeightForWidth(
+        #    self.frame_collection.sizePolicy().hasHeightForWidth())
         self.frame_collection.setSizePolicy(size_policy)
-        self.frame_collection.setMinimumSize(QSize(0, 200))
-        self.frame_collection.setMaximumSize(QSize(16777215, 200))
-        self.frame_collection.setBaseSize(QSize(0, 0))
-        self.frame_collection.setFrameShape(QFrame.StyledPanel)
-        self.frame_collection.setFrameShadow(QFrame.Raised)
+        #self.frame_collection.setMinimumSize(QSize(0, 200))
+        #self.frame_collection.setMaximumSize(QSize(16777215, 200))
+        #self.frame_collection.setBaseSize(QSize(10, 10))
+        self.frame_collection.setFrameShape(QFrame.Box)
+        #self.frame_collection.setFrameShadow(QFrame.Raised)
 
     def _set_toolbutton(self):
         """Sets the size policies of the new collection button."""
@@ -214,7 +214,7 @@ class DockWidgetContentsTop(QWidget):
         layout.addItem(spacer)
 
         compmusic_logo = QLabel()
-        compmusic_logo.setText('''<img src='{0}' width=40>'''.format(COMPMUSIC_LOGO))
+        compmusic_logo.setText('''<img src='{0}' width=70>'''.format(COMPMUSIC_LOGO))
 
         layout.addWidget(compmusic_logo)
 

@@ -23,7 +23,6 @@ DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
 SS = os.path.join(os.path.dirname(__file__), 'ui_files', 'style.qss')
 
 
-
 class MainWindowMakam(MainWindowMakamDesign):
     """The main window of makam"""
     def __init__(self):
