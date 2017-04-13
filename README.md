@@ -3,19 +3,19 @@
 </p>
 
 <p align="center">
-    <a>
+    <a href='https://travis-ci.org/MTG/dunya-desktop'>
 		<img alt="travis" src="https://travis-ci.org/MTG/dunya-desktop.svg?branch=master"/>
 	</a>    
-	<a>
+	<a href='https://codeclimate.com/github/MTG/dunya-desktop'>
 		<img alt="code-climate" src="https://codeclimate.com/github/MTG/dunya-desktop/badges/gpa.svg"/>
 	</a>        
-	<a>
+	<a href='https://codecov.io/gh/MTG/dunya-desktop'>
 		<img alt="codecov" src="https://codecov.io/gh/MTG/dunya-desktop/branch/master/graph/badge.svg"/>
 	</a>            
-	<a>
+	<a href='https://www.gnu.org/licenses/agpl-3.0.html'>
 		<img alt="AGPL" src="https://img.shields.io/badge/License-AGPL%20v3-blue.svg"/>
 	</a>                
-	<a>
+	<a href='https://creativecommons.org/licenses/by-nc/4.0/legalcode'>
 		<img alt="CCBYNC" src="https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg"/>
 	</a>
 </p>
