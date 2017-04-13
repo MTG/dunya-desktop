@@ -61,8 +61,8 @@ class PlayerFrame(QFrame):
         self.waveform_widget.region_wf.clicked.connect(
             self.wf_region_item_clicked)
 
-        self.frame_playback.toolbutton_play.clicked.connect(self.playback_play)
-        self.frame_playback.toolbutton_pause.clicked.connect(
+        self.frame_playback.button_play.clicked.connect(self.playback_play)
+        self.frame_playback.button_pause.clicked.connect(
             self.playback_pause)
 
     def __set_design(self):
@@ -97,11 +97,11 @@ class PlayerFrame(QFrame):
                                     closable=False, autoOrientation=False)
         # initializing playback frame
         self.frame_playback = PlaybackFrame(self)
-        self.frame_playback.toolbutton_pause.setDisabled(True)
+        self.frame_playback.button_pause.setDisabled(True)
 
         # adding playback frame to playback dock
         dock_playback.addWidget(self.frame_playback)
-        dock_playback.setFixedHeight(60)
+        dock_playback.setFixedHeight(100)
         dock_playback.setAcceptDrops(False)
 
         # adding playback dock to dock area
@@ -197,13 +197,13 @@ class PlayerFrame(QFrame):
             self.ts_widget.add_tonic(tonic_values)
 
     def playback_play(self):
-        self.frame_playback.toolbutton_play.setDisabled(True)
-        self.frame_playback.toolbutton_pause.setEnabled(True)
+        self.frame_playback.button_play.setDisabled(True)
+        self.frame_playback.button_pause.setEnabled(True)
         self.playback.play()
 
     def playback_pause(self):
-        self.frame_playback.toolbutton_play.setEnabled(True)
-        self.frame_playback.toolbutton_pause.setDisabled(True)
+        self.frame_playback.button_play.setEnabled(True)
+        self.frame_playback.button_pause.setDisabled(True)
         self.playback.pause()
 
     def wf_region_changed(self):

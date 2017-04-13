@@ -10,6 +10,12 @@ PLAY_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                           'icons', 'playback', 'play-button_gray.svg')
 PAUSE_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                           'icons', 'playback', 'pause_gray.svg')
+REWIND_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
+                           'icons', 'playback', 'rewind_gray.svg')
+NEXT_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
+                         'icons', 'playback', 'next_gray.svg')
+REPLAY_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
+                           'icons', 'playback', 'replay_gray.svg')
 
 
 class PlaybackFrame(QFrame):
@@ -20,18 +26,29 @@ class PlaybackFrame(QFrame):
         self._set_visualization()
 
         vertical_layout = QVBoxLayout(self)
-        # self.hor_layout_top = QHBoxLayout()
+        self.hor_layout_top = QHBoxLayout()
         self.hor_layout_bottom = QHBoxLayout()
-        # self.setMaximumHeight(40)
+        self.setMaximumHeight(150)
 
-        self.toolbutton_play = QToolButton(self)
-        self.toolbutton_pause = QToolButton(self)
+        self.button_play = QToolButton()
+        self.button_pause = QToolButton()
+        self.button_rewind = QToolButton()
+        self.button_next = QToolButton()
+        self.button_replay = QToolButton()
+
+
+        self.hor_layout_top.addWidget(self.button_rewind)
+        self.hor_layout_top.addWidget(self.button_play)
+        self.hor_layout_top.addWidget(self.button_pause)
+        self.hor_layout_top.addWidget(self.button_next)
+        self.hor_layout_top.addWidget(self.button_replay)
+
         self._set_buttons()
 
-        self.slider = QSlider(self)
+        self.slider = QSlider()
         self._set_slider()
 
-        #vertical_layout.addLayout(self.hor_layout_top)
+        vertical_layout.addLayout(self.hor_layout_top)
         vertical_layout.addLayout(self.hor_layout_bottom)
 
     def _set_size_policy(self):
@@ -47,18 +64,11 @@ class PlaybackFrame(QFrame):
         self.setFrameShadow(QFrame.Raised)
 
     def _set_buttons(self):
-        self.toolbutton_play.setMinimumSize(QSize(50, 15))
-
-        self.toolbutton_play.setIcon(QIcon(PLAY_ICON))
-        self.toolbutton_play.setIconSize(QSize(20, 20))
-        self.toolbutton_play.setObjectName("toolButton_play")
-        self.hor_layout_bottom.addWidget(self.toolbutton_play)
-
-        self.toolbutton_pause.setMinimumSize(QSize(50, 15))
-
-        self.toolbutton_pause.setIcon(QIcon(PAUSE_ICON))
-        self.toolbutton_pause.setIconSize(QSize(20, 20))
-        self.hor_layout_bottom.addWidget(self.toolbutton_pause)
+        self.button_play.setIcon(QIcon(PLAY_ICON))
+        self.button_pause.setIcon(QIcon(PAUSE_ICON))
+        self.button_rewind.setIcon(QIcon(REWIND_ICON))
+        self.button_next.setIcon(QIcon(NEXT_ICON))
+        self.button_replay.setIcon(QIcon(REPLAY_ICON))
 
     def _set_slider(self):
         self.slider.setOrientation(Qt.Horizontal)
