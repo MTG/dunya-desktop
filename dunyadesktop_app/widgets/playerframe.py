@@ -29,9 +29,16 @@ COLORS_RGB = [(77, 157, 224, 70), (255, 217, 79, 70), (224, 76, 114, 70),
 class DockAreaWidget(pgdock.DockArea):
     def __init__(self, temporary=False, home=None):
         pgdock.DockArea.__init__(self, temporary=temporary, home=home)
+        self.allowedAreas = ['top', 'bottom']
 
     def floatDock(self, dock):
         pass
+
+
+class Dock1D(pgdock.Dock):
+    def __init__(self, name, area, closable):
+        pgdock.Dock.__init__(self, name=name, area=area, closable=closable)
+        self.allowedAreas = ['top', 'bottom']
 
 
 class PlayerFrame(QFrame):
@@ -151,7 +158,7 @@ class PlayerFrame(QFrame):
     def __add_ts_widget(self):
         self.ts_widget = TimeSeriesWidget(self)
         self.ts_widget.add_1d_view()
-        dock_ts = pgdock.Dock(name='Time Series', area='bottom', closable=True)
+        dock_ts = Dock1D(name='Time Series', area='bottom', closable=True)
         dock_ts.addWidget(self.ts_widget)
         self.dock_area.addDock(dock_ts)
 
