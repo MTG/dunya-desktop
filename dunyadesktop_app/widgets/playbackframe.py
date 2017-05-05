@@ -1,7 +1,7 @@
 import os
 
-from PyQt5.QtWidgets import (QFrame, QHBoxLayout, QToolButton,
-                             QSlider, QSizePolicy, QVBoxLayout)
+from PyQt5.QtWidgets import (QFrame, QHBoxLayout, QToolButton, QSlider,
+                             QSizePolicy, QVBoxLayout, QSpacerItem)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize, Qt
 
@@ -30,18 +30,23 @@ class PlaybackFrame(QFrame):
         self.hor_layout_bottom = QHBoxLayout()
         self.setMaximumHeight(150)
 
+        spacer_left = QSpacerItem(0, 0, QSizePolicy.Expanding,
+                                  QSizePolicy.Fixed)
+        spacer_right = QSpacerItem(0, 0, QSizePolicy.Expanding,
+                                   QSizePolicy.Fixed)
         self.button_play = QToolButton()
         self.button_pause = QToolButton()
         self.button_rewind = QToolButton()
         self.button_next = QToolButton()
         self.button_replay = QToolButton()
 
-
+        self.hor_layout_top.addItem(spacer_left)
         self.hor_layout_top.addWidget(self.button_rewind)
         self.hor_layout_top.addWidget(self.button_play)
         self.hor_layout_top.addWidget(self.button_pause)
         self.hor_layout_top.addWidget(self.button_next)
         self.hor_layout_top.addWidget(self.button_replay)
+        self.hor_layout_top.addItem(spacer_right)
 
         self._set_buttons()
 
