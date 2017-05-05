@@ -63,10 +63,6 @@ class PlayerFrame(QFrame):
         self.waveform_widget.region_wf.clicked.connect(
             self.wf_region_item_clicked)
 
-        #self.frame_playback.button_play.clicked.connect(self.playback_play)
-        #self.frame_playback.button_pause.clicked.connect(
-        #    self.playback_pause)
-
     def __set_design(self):
         """
         Sets general settings of frame widget, adds dock area and dock widgets.
@@ -94,24 +90,6 @@ class PlayerFrame(QFrame):
         dock_waveform.setAcceptDrops(False)
         # adding waveform dock to dock area
         self.dock_area.addDock(dock_waveform, position='top')
-
-        # dock playback
-        #dock_playback = pgdock.Dock(name='Playback', area='bottom',
-        #                            closable=False, autoOrientation=False)
-        #dock_playback.layout.setSizeConstraint(QLayout.SetMinimumSize)
-        #dock_playback.widgetArea.setSizePolicy(QSizePolicy(QSizePolicy.Minimum,
-        #                                                   QSizePolicy.Minimum))
-        # initializing playback frame
-        #self.frame_playback = PlaybackFrame(self)
-        #self.frame_playback.button_pause.setDisabled(True)
-
-        # adding playback frame to playback dock
-        #dock_playback.addWidget(self.frame_playback)
-        #dock_playback.setFixedHeight(100)
-        #dock_playback.setAcceptDrops(False)
-
-        # adding playback dock to dock area
-        #self.dock_area.addDock(dock_playback, position='bottom')
 
         # adding dock area to frame
         layout = QVBoxLayout(self)
