@@ -43,12 +43,14 @@ class GeneralMainDesign(QMainWindow):
         self.progress_bar.setVisible(False)
 
         self.dw_top = DockWidget(460, 90, 20000, 50)
+        self.dw_top.setTitleBarWidget(QWidget())
         self.dwc_top = DockWidgetContentsTop()
         self.dw_top.setWidget(self.dwc_top)
         self.addDockWidget(QtCore.Qt.TopDockWidgetArea, self.dw_top)
 
         # dockwidget collection (left side)
         self.dw_collections = DockWidget(350, 620, 700, 20000)
+        self.dw_collections.setTitleBarWidget(QWidget())
         self.dwc_left = DockWidgetContentsLeft(self)
         self.dw_collections.setWidget(self.dwc_left)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea,
