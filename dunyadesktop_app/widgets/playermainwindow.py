@@ -40,6 +40,7 @@ class PlayerMainWindow(QMainWindow):
 
         # dock widget for features
         self.dw_features = QDockWidget(self)
+        self.dw_features.setTitleBarWidget(QWidget())
         self.dw_features.setMinimumSize(QtCore.QSize(100, 130))
         self.dw_features.setMaximumSize(QtCore.QSize(400, 524287))
         self.dw_features.setFloating(False)
@@ -49,7 +50,7 @@ class PlayerMainWindow(QMainWindow):
 
         self.dw_contents_features = QWidget()
         layout3 = QVBoxLayout(self.dw_contents_features)
-        layout3.setContentsMargins(0, 0, 0, 0)
+        layout3.setContentsMargins(3, 3, 3, 3)
         layout2 = QVBoxLayout()
 
         self.feature_tree = FeatureTreeWidget(self.dw_contents_features)
@@ -61,6 +62,7 @@ class PlayerMainWindow(QMainWindow):
 
         # dock widget for playlist
         self.dw_playlist = QDockWidget(self.central_widget)
+        self.dw_playlist.setTitleBarWidget(QWidget())
         self.dw_playlist.setMinimumSize(QtCore.QSize(100, 130))
         self.dw_playlist.setMaximumSize(QtCore.QSize(400, 524287))
         self.dw_playlist.setFloating(False)
@@ -70,13 +72,15 @@ class PlayerMainWindow(QMainWindow):
 
         # dock widget for playback
         self.dw_playback = QDockWidget(self.central_widget)
-        self.dw_playback.setFixedHeight(100)
+        self.dw_playback.setTitleBarWidget(QWidget())
+        self.dw_playback.setFixedHeight(90)
         self.dw_playback.setFloating(False)
         self.dw_playback.setAllowedAreas(QtCore.Qt.BottomDockWidgetArea)
         self.dw_playback.setFeatures(QtWidgets.QDockWidget.NoDockWidgetFeatures)
 
         dw_contents = QWidget()
         layout4 = QHBoxLayout(dw_contents)
+        layout4.setContentsMargins(3, 3, 3, 3)
         ply_frame = PlaybackFrame(dw_contents)
         layout4.addWidget(ply_frame)
         self.dw_playback.setWidget(dw_contents)

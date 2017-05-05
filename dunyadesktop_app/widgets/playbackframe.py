@@ -30,6 +30,9 @@ class PlaybackFrame(QFrame):
         self.hor_layout_bottom = QHBoxLayout()
         self.setMaximumHeight(150)
 
+        self.hor_layout_top.setContentsMargins(3, 3, 3, 3)
+        self.hor_layout_bottom.setContentsMargins(3, 3, 3, 3)
+
         spacer_left = QSpacerItem(0, 0, QSizePolicy.Expanding,
                                   QSizePolicy.Fixed)
         spacer_right = QSpacerItem(0, 0, QSizePolicy.Expanding,
