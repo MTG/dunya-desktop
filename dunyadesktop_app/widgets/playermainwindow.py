@@ -3,12 +3,13 @@ import json
 
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QDockWidget,
-                             QDialog)
+                             QDialog, QHBoxLayout)
 from PyQt5.QtCore import Qt, QMetaObject
 
 from .treewidget import FeatureTreeWidget, MetadataTreeMakam
 from .playerframe import PlayerFrame
 from .scoredialog import ScoreWidget
+from .playerframe import PlaybackFrame
 
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
@@ -37,30 +38,53 @@ class PlayerMainWindow(QMainWindow):
 
         self.setCentralWidget(self.central_widget)
 
-        self.features_dw = QDockWidget(self)
-        self.features_dw.setMinimumSize(QtCore.QSize(100, 130))
-        self.features_dw.setMaximumSize(QtCore.QSize(400, 524287))
-        self.features_dw.setFloating(False)
-        self.features_dw.setFeatures(
+        # dock widget for features
+        self.dw_features = QDockWidget(self)
+        self.dw_features.setMinimumSize(QtCore.QSize(100, 130))
+        self.dw_features.setMaximumSize(QtCore.QSize(400, 524287))
+        self.dw_features.setFloating(False)
+        self.dw_features.setFeatures(
             QtWidgets.QDockWidget.NoDockWidgetFeatures)
-        self.features_dw.setAllowedAreas(QtCore.Qt.LeftDockWidgetArea)
-        self.features_dw.setWindowTitle("")
-        self.features_dw.setObjectName("dockWidget")
+        self.dw_features.setAllowedAreas(QtCore.Qt.LeftDockWidgetArea)
 
-        self.dockWidgetContents = QWidget()
-        layout3 = QVBoxLayout(self.dockWidgetContents)
+        self.dw_contents_features = QWidget()
+        layout3 = QVBoxLayout(self.dw_contents_features)
         layout3.setContentsMargins(0, 0, 0, 0)
         layout2 = QVBoxLayout()
 
-        self.feature_tree = FeatureTreeWidget(self.dockWidgetContents)
+        self.feature_tree = FeatureTreeWidget(self.dw_contents_features)
         self.feature_tree.get_feature_list(docid=str(docid))
 
         layout2.addWidget(self.feature_tree)
         layout3.addLayout(layout2)
+        self.dw_features.setWidget(self.dw_contents_features)
 
-        self.features_dw.setWidget(self.dockWidgetContents)
+        # dock widget for playlist
+        self.dw_playlist = QDockWidget(self.central_widget)
+        self.dw_playlist.setMinimumSize(QtCore.QSize(100, 130))
+        self.dw_playlist.setMaximumSize(QtCore.QSize(400, 524287))
+        self.dw_playlist.setFloating(False)
+        self.dw_playlist.setFeatures(
+            QtWidgets.QDockWidget.NoDockWidgetFeatures)
+        self.dw_playlist.setAllowedAreas(QtCore.Qt.RightDockWidgetArea)
 
-        self.addDockWidget(Qt.LeftDockWidgetArea, self.features_dw)
+        # dock widget for playback
+        self.dw_playback = QDockWidget(self.central_widget)
+        self.dw_playback.setFixedHeight(100)
+        self.dw_playback.setFloating(False)
+        self.dw_playback.setAllowedAreas(QtCore.Qt.BottomDockWidgetArea)
+        self.dw_playback.setFeatures(QtWidgets.QDockWidget.NoDockWidgetFeatures)
+
+        dw_contents = QWidget()
+        layout4 = QHBoxLayout(dw_contents)
+        ply_frame = PlaybackFrame(dw_contents)
+        layout4.addWidget(ply_frame)
+        self.dw_playback.setWidget(dw_contents)
+
+        # add dock widgets to main window
+        self.addDockWidget(Qt.LeftDockWidgetArea, self.dw_features)
+        self.addDockWidget(Qt.RightDockWidgetArea, self.dw_playlist)
+        self.addDockWidget(Qt.BottomDockWidgetArea, self.dw_playback)
 
     def closeEvent(self, close_event):
         self.player_frame.closeEvent(close_event)
