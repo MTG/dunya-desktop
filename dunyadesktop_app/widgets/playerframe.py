@@ -3,7 +3,6 @@ import json
 
 import numpy as np
 import pyqtgraph.dockarea as pgdock
-from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import QVBoxLayout, QFrame, QLayout, QSizePolicy
 from PyQt5.Qt import pyqtSignal
 
@@ -37,17 +36,6 @@ class DockAreaWidget(pgdock.DockArea):
         pass
 
 
-class Dock1D(pgdock.Dock):
-    def __init__(self, name, area, closable):
-        pgdock.Dock.__init__(self, name=name, area=area, closable=closable)
-        self.allowedAreas = ['top', 'bottom']
-        self.widgetArea.setSizePolicy(QSizePolicy(QSizePolicy.Minimum,
-                                                  QSizePolicy.Minimum))
-
-    def close(self):
-        super(Dock1D, self).close()
-
-
 class PlayerFrame(QFrame):
     samplerate = 44100.
 
@@ -75,9 +63,9 @@ class PlayerFrame(QFrame):
         self.waveform_widget.region_wf.clicked.connect(
             self.wf_region_item_clicked)
 
-        self.frame_playback.button_play.clicked.connect(self.playback_play)
-        self.frame_playback.button_pause.clicked.connect(
-            self.playback_pause)
+        #self.frame_playback.button_play.clicked.connect(self.playback_play)
+        #self.frame_playback.button_pause.clicked.connect(
+        #    self.playback_pause)
 
     def __set_design(self):
         """
@@ -108,36 +96,26 @@ class PlayerFrame(QFrame):
         self.dock_area.addDock(dock_waveform, position='top')
 
         # dock playback
-        dock_playback = pgdock.Dock(name='Playback', area='bottom',
-                                    closable=False, autoOrientation=False)
-        dock_playback.layout.setSizeConstraint(QLayout.SetMinimumSize)
-        dock_playback.widgetArea.setSizePolicy(QSizePolicy(QSizePolicy.Minimum,
-                                                           QSizePolicy.Minimum))
+        #dock_playback = pgdock.Dock(name='Playback', area='bottom',
+        #                            closable=False, autoOrientation=False)
+        #dock_playback.layout.setSizeConstraint(QLayout.SetMinimumSize)
+        #dock_playback.widgetArea.setSizePolicy(QSizePolicy(QSizePolicy.Minimum,
+        #                                                   QSizePolicy.Minimum))
         # initializing playback frame
-        self.frame_playback = PlaybackFrame(self)
-        self.frame_playback.button_pause.setDisabled(True)
+        #self.frame_playback = PlaybackFrame(self)
+        #self.frame_playback.button_pause.setDisabled(True)
 
         # adding playback frame to playback dock
-        dock_playback.addWidget(self.frame_playback)
-        dock_playback.setFixedHeight(100)
-        dock_playback.setAcceptDrops(False)
+        #dock_playback.addWidget(self.frame_playback)
+        #dock_playback.setFixedHeight(100)
+        #dock_playback.setAcceptDrops(False)
 
         # adding playback dock to dock area
-        self.dock_area.addDock(dock_playback, position='bottom')
+        #self.dock_area.addDock(dock_playback, position='bottom')
 
         # adding dock area to frame
         layout = QVBoxLayout(self)
         layout.addWidget(self.dock_area)
-
-    def __set_slider(self, len_audio):
-        """
-        Sets the slider according to the given audio recording.
-        :param len_audio:
-        """
-        self.frame_playback.slider.setMinimum(0)
-        self.frame_playback.slider.setMaximum(len_audio)
-        self.frame_playback.slider.setTickInterval(10)
-        self.frame_playback.slider.setSingleStep(1)
 
     def __set_waveform(self):
         """
@@ -148,7 +126,6 @@ class PlayerFrame(QFrame):
         (raw_audio, len_audio, min_audio,
          max_audio) = read_raw_audio(self.feature_paths['audio_path_wav'])
         self.waveform_widget.min_raw_audio = min_audio
-        self.__set_slider(len_audio)
         self.waveform_widget.plot_waveform(raw_audio)
 
     def wf_region_item_clicked(self):
@@ -222,13 +199,9 @@ class PlayerFrame(QFrame):
             self.ts_widget.add_tonic(tonic_values)
 
     def playback_play(self):
-        self.frame_playback.button_play.setDisabled(True)
-        self.frame_playback.button_pause.setEnabled(True)
         self.playback.play()
 
     def playback_pause(self):
-        self.frame_playback.button_play.setEnabled(True)
-        self.frame_playback.button_pause.setDisabled(True)
         self.playback.pause()
 
     def wf_region_changed(self):
@@ -243,7 +216,7 @@ class PlayerFrame(QFrame):
             pos_ms = x_min * 1000.
             pos_sample = x_min * self.samplerate
             self.playback.setPosition(pos_ms)
-            self.frame_playback.slider.setValue(pos_sample)
+            #self.parent().playback_frame.slider.setValue(pos_sample)
             self.waveform_widget.update_wf_vline(pos_sample)
 
         if hasattr(self, 'ts_widget'):
@@ -266,7 +239,7 @@ class PlayerFrame(QFrame):
             playback_pos_sample = playback_pos_sec * self.samplerate
 
             self.waveform_widget.update_wf_vline(playback_pos_sample)
-            self.frame_playback.slider.setValue(playback_pos_sample)
+            #self.parent().playback_frame.slider.setValue(playback_pos_sample)
 
             # checks the position of linear region item. If the position of
             # waveform cursor is

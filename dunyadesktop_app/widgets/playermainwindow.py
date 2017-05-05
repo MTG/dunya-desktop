@@ -8,8 +8,10 @@ from PyQt5.QtCore import Qt, QMetaObject
 
 from .treewidget import FeatureTreeWidget, MetadataTreeMakam
 from .playerframe import PlayerFrame
+from utilities.playback import Playback
 from .scoredialog import ScoreWidget
 from .playerframe import PlaybackFrame
+from cultures.makam.featureparsers import get_feature_paths
 
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
@@ -26,9 +28,15 @@ class PlayerMainWindow(QMainWindow):
         # signals
         self.feature_tree.item_checked.connect(self.evaluate_checked_signal)
 
+        # signals
+        self.playback_frame.button_play.clicked.connect(
+            self.player_frame.playback_play)
+        self.playback_frame.button_pause.clicked.connect(
+            self.player_frame.playback_pause)
+
     def _set_design(self, docid):
         self.resize(710, 550)
-        self.central_widget = QWidget(self)
+        self.central_widget = QWidget()
 
         layout = QVBoxLayout(self.central_widget)
         layout.setContentsMargins(2, 2, 2, 2)
@@ -81,14 +89,24 @@ class PlayerMainWindow(QMainWindow):
         dw_contents = QWidget()
         layout4 = QHBoxLayout(dw_contents)
         layout4.setContentsMargins(3, 3, 3, 3)
-        ply_frame = PlaybackFrame(dw_contents)
-        layout4.addWidget(ply_frame)
+        self.playback_frame = PlaybackFrame(dw_contents)
+        layout4.addWidget(self.playback_frame)
         self.dw_playback.setWidget(dw_contents)
 
         # add dock widgets to main window
         self.addDockWidget(Qt.LeftDockWidgetArea, self.dw_features)
         self.addDockWidget(Qt.RightDockWidgetArea, self.dw_playlist)
         self.addDockWidget(Qt.BottomDockWidgetArea, self.dw_playback)
+
+    def __set_slider(self, len_audio):
+        """
+        Sets the slider according to the given audio recording.
+        :param len_audio:
+        """
+        self.playback_frame.slider.setMinimum(0)
+        self.playback_frame.slider.setMaximum(len_audio)
+        self.playback_frame.slider.setTickInterval(10)
+        self.playback_frame.slider.setSingleStep(1)
 
     def closeEvent(self, close_event):
         self.player_frame.closeEvent(close_event)
