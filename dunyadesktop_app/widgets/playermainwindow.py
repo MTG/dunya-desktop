@@ -147,14 +147,14 @@ class PlayerMainWindow(QMainWindow):
                                                item=item)
                 metadata = json.load(open(m_path))
 
-                dlg = QDialog(self)
-                layout = QVBoxLayout(dlg)
+                self.metadata_dialog = QDialog(self)
+                layout = QVBoxLayout(self.metadata_dialog)
                 mt = MetadataTreeMakam(metadata)
                 layout.addWidget(mt)
-                dlg.setLayout(layout)
-                dlg.show()
+                self.metadata_dialog.setLayout(layout)
+                self.metadata_dialog.show()
             else:
-                dlg.close()
+                self.metadata_dialog.close()
 
         if item == 'sections':
             if is_checked:
