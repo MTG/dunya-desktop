@@ -58,6 +58,10 @@ def load_tonic(tonic_path):
 
 
 def get_feature_paths(recid):
+    FEATURES =  ['melodic_progression', 'metadata', 'note_models', 'pitch'
+                 'pitch_class_distribution', 'pitch_distribution',
+                 'pitch_filtered', 'tonic', 'notes', 'sections']
+
     doc_folder = os.path.join(DOCS_PATH, recid)
     (full_names, folders, names) = \
         utilities.get_filenames_in_dir(dir_name=doc_folder, keyword='*.json')
@@ -66,7 +70,8 @@ def get_feature_paths(recid):
              'audio_path_wav': os.path.join(doc_folder, recid + '.wav')}
 
     for xx, name in enumerate(names):
-        paths[name.split('.json')[0]] = full_names[xx]
+        if name.split('.json')[0].split('--')[1] in FEATURES:
+            paths[name.split('.json')[0]] = full_names[xx]
     return paths
 
 

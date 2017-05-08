@@ -12,7 +12,7 @@ class ScoreWidget(QSvgWidget):
         self.svg_path = ''
 
     def __set_design(self):
-        self.setStyleSheet("background-color: rgb(253, 255, 222);")
+        pass
 
     def set_svg(self, path):
         self.svg_path = path
@@ -43,7 +43,6 @@ class ScoreDialog(QDialog):
     def __init__(self, parent=None):
         QDialog.__init__(self, parent=parent)
         self.setFixedSize(900, 600)
-        self.setStyleSheet("background-color: rgb(253, 255, 222);")
         layout = QVBoxLayout(self)
         self.score_widget = ScoreWidget(self)
         layout.addWidget(self.score_widget)

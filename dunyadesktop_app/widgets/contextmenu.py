@@ -4,10 +4,6 @@ from PyQt5.QtWidgets import QAction, QMenu
 from PyQt5.QtGui import QIcon
 from utilities import database
 
-from .widgetutilities import set_css
-
-CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
-                        'menu.css')
 DUNYA_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                           'icons', 'dunya.svg')
 
@@ -24,7 +20,6 @@ class CollectionAction(QAction):
 class RCMenu(QMenu):
     def __init__(self, parent=None):
         QMenu.__init__(self, parent)
-        set_css(self, CSS_PATH)
         self._add_actions()
 
 

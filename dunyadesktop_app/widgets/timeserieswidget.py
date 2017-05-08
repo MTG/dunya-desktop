@@ -200,6 +200,7 @@ class TimeSeriesWidget(pg.GraphicsLayoutWidget):
         self.hline_histogram.setPos(pos=[0, self.pitch_plot[pos_sample]])
 
     def update_notes(self, xmin, xmax):
+        pen=(225, 224, 181, 175)
         start_ind = self.find_nearest_index(self.notes_start, xmin)
         end_ind = self.find_nearest_index(self.notes_end, xmax)
 
@@ -209,7 +210,7 @@ class TimeSeriesWidget(pg.GraphicsLayoutWidget):
         for i in range(start_ind, end_ind):
             temp_note = self.notes[i]
             roi = pg.ROI(pos=[temp_note[0], temp_note[2]],
-                         size=[temp_note[1] - temp_note[0], 5])
+                         size=[temp_note[1] - temp_note[0], 5], pen=pen)
             roi.addScaleHandle(pos=[0, 0], center=[0.5, 0.5])
             roi.addScaleHandle(pos=[1, 1], center=[0.5, 0.5])
             self.zoom_selection.addItem(roi)

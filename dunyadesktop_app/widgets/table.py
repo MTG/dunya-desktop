@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import (QToolButton, QTableView, QAbstractItemView,
                              QAction, QHeaderView, QTableWidget,
                              QTableWidgetItem, QLabel, QPushButton, qApp)
 from PyQt5.QtCore import pyqtSignal, Qt, QPersistentModelIndex
-from PyQt5.QtGui import QFont, QCursor, QIcon, QPixmap
+from PyQt5.QtGui import QFont, QCursor, QIcon, QPixmap, QPalette, QBrush
 
 from utilities import database, corpusbasestatistics
 from cultures.makam import utilities as makam_utilities
@@ -21,9 +21,6 @@ if platform.system() == 'Linux':
 else:
     FONT_SIZE = 12
 
-CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
-                        'tableview.css')
-
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
                          'documents')
 
@@ -36,7 +33,8 @@ QUEUE_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                           'icons', 'add-to-queue-button.svg')
 DOWNLOAD_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                              'icons', 'download.svg')
-
+COMPMUSIC_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
+                             'icons', 'compmusic_white.png')
 
 class DownloadButton(QToolButton):
     def __init__(self, parent=None):
@@ -77,7 +75,6 @@ class TableView(QTableView):
         self._last_index = QPersistentModelIndex()
         self.viewport().installEventFilter(self)
 
-        set_css(self, CSS_PATH)
         self._set_font()
 
     def _set_font(self):

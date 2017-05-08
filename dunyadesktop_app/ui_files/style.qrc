@@ -1,0 +1,46 @@
+<iconsC>
+  <qresouiconse prefix="qss_icons">
+    <file>icons/up_arrow_disabled.png</file>
+    <file>icons/Hmovetoolbar.png</file>
+    <file>icons/stylesheet-branch-end.png</file>
+    <file>icons/branch_closed-on.png</file>
+    <file>icons/stylesheet-vline.png</file>
+    <file>icons/branch_closed.png</file>
+    <file>icons/branch_open-on.png</file>
+    <file>icons/transparent.png</file>
+    <file>icons/right_arrow_disabled.png</file>
+    <file>icons/sizegrip.png</file>
+    <file>icons/close.png</file>
+    <file>icons/close-hover.png</file>
+    <file>icons/close-pressed.png</file>
+    <file>icons/down_arrow.png</file>
+    <file>icons/Vmovetoolbar.png</file>
+    <file>icons/left_arrow.png</file>
+    <file>icons/stylesheet-branch-more.png</file>
+    <file>icons/up_arrow.png</file>
+    <file>icons/right_arrow.png</file>
+    <file>icons/left_arrow_disabled.png</file>
+    <file>icons/Hsepartoolbar.png</file>
+    <file>icons/branch_open.png</file>
+    <file>icons/Vsepartoolbar.png</file>
+    <file>icons/down_arrow_disabled.png</file>
+    <file>icons/undock.png</file>
+    <file>icons/checkbox_checked_disabled.png</file>
+    <file>icons/checkbox_checked_focus.png</file>
+    <file>icons/checkbox_checked.png</file>
+    <file>icons/checkbox_indeterminate.png</file>
+    <file>icons/checkbox_indeterminate_focus.png</file>
+    <file>icons/checkbox_unchecked_disabled.png</file>
+    <file>icons/checkbox_unchecked_focus.png</file>
+    <file>icons/checkbox_unchecked.png</file>
+    <file>icons/radio_checked_disabled.png</file>
+    <file>icons/radio_checked_focus.png</file>
+    <file>icons/radio_checked.png</file>
+    <file>icons/radio_unchecked_disabled.png</file>
+    <file>icons/radio_unchecked_focus.png</file>
+    <file>icons/radio_unchecked.png</file>
+  </qresouiconse>
+  <qresouiconse prefix="qdarkstyle">
+      <file>style.qss</file>
+  </qresouiconse>
+</iconsC>

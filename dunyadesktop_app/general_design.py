@@ -2,25 +2,17 @@ import os
 
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QStatusBar, \
     QSizePolicy, QFrame
-from PyQt5.QtGui import QPixmap, QFont, QIcon
+from PyQt5.QtGui import QFont, QIcon
 from PyQt5 import QtCore
 
 from widgets.dockwidget import DockWidget, DockWidgetContentsLeft, \
     DockWidgetContentsTop
 from widgets.queryframe import QueryFrame
 from widgets.progressbar import ProgressBar
-from widgets.widgetutilities import set_css
 
 
-CSS_MAIN = os.path.join(os.path.dirname(__file__), 'ui_files', 'css',
-                        'mainui.css')
-CSS_FRAME_QUERY = os.path.join(os.path.dirname(__file__), 'ui_files', 'css',
-                               'frame_query.css')
-CSS_STATUSBAR = os.path.join(os.path.dirname(__file__), 'ui_files', 'css',
-                             'statusbar.css')
-
-DUNYA_ICON = ":/compmusic/icons/dunya.svg"
-QUERY_ICON = ":/compmusic/icons/magnifying-glass.png"
+DUNYA_ICON = os.path.join(os.path.dirname(__file__), 'ui_files', 'icons',
+                          'dunya-desktop.svg')
 
 
 class GeneralMainDesign(QMainWindow):
@@ -28,8 +20,6 @@ class GeneralMainDesign(QMainWindow):
     def __init__(self, QWidgetParent=None):
         QMainWindow.__init__(self, QWidgetParent)
         self._set_main_window()
-        set_css(self, CSS_MAIN)
-
         self.centralwidget = QWidget(self)
 
         layout = QVBoxLayout(self.centralwidget)
@@ -38,7 +28,6 @@ class GeneralMainDesign(QMainWindow):
 
         # query frame
         self.frame_query = QueryFrame()
-        set_css(self.frame_query, CSS_FRAME_QUERY)
         self._set_frame()
         layout.addWidget(self.frame_query)
 
@@ -46,7 +35,6 @@ class GeneralMainDesign(QMainWindow):
 
         # status bar
         self.statusbar = QStatusBar(self)
-        set_css(self.statusbar, CSS_STATUSBAR)
         self._set_status_bar()
         self.setStatusBar(self.statusbar)
 
@@ -54,17 +42,19 @@ class GeneralMainDesign(QMainWindow):
         self.statusbar.addPermanentWidget(self.progress_bar)
         self.progress_bar.setVisible(False)
 
+        self.dw_top = DockWidget(460, 90, 20000, 50)
+        self.dw_top.setTitleBarWidget(QWidget())
+        self.dwc_top = DockWidgetContentsTop()
+        self.dw_top.setWidget(self.dwc_top)
+        self.addDockWidget(QtCore.Qt.TopDockWidgetArea, self.dw_top)
+
         # dockwidget collection (left side)
-        self.dw_collections = DockWidget(300, 500, 400, 20000)
+        self.dw_collections = DockWidget(350, 620, 700, 20000)
+        self.dw_collections.setTitleBarWidget(QWidget())
         self.dwc_left = DockWidgetContentsLeft(self)
         self.dw_collections.setWidget(self.dwc_left)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea,
                            self.dw_collections)
-
-        self.dw_top = DockWidget(460, 50, 20000, 50)
-        self.dwc_top = DockWidgetContentsTop()
-        self.dw_top.setWidget(self.dwc_top)
-        self.addDockWidget(QtCore.Qt.TopDockWidgetArea, self.dw_top)
 
         QtCore.QMetaObject.connectSlotsByName(self)
 
@@ -79,9 +69,7 @@ class GeneralMainDesign(QMainWindow):
         self.setMinimumSize(QtCore.QSize(1000, 750))
 
         # main window icon
-        icon_dunya = QIcon()
-        icon_dunya.addPixmap(QPixmap(DUNYA_ICON), QIcon.Normal, QIcon.Off)
-        self.setWindowIcon(icon_dunya)
+        self.setWindowIcon(QIcon(DUNYA_ICON))
         self.setWindowTitle('Dunya Desktop')
 
     def _set_frame(self):

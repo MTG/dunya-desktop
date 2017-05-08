@@ -6,36 +6,14 @@ from PyQt5.QtWidgets import (QDockWidget, QSizePolicy, QWidget, QVBoxLayout,
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import QSize, Qt
 
-from .widgetutilities import set_css
 from .table import TableWidget
 from .listwidget import CollectionsWidget
 from .newcollectiondialog import NewCollectionDialog
 from utilities import database
 
-CSS_DOCKWIDGET = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
-                              'css', 'dockwidget.css')
 
-CSS_LABEL_COLLECTION = os.path.join(os.path.dirname(__file__), '..',
-                                    'ui_files', 'css', 'label_collection.css')
-
-CSS_FRAME_QUERY = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
-                               'css', 'frame_query.css')
-
-CSS_FRAME_DOWNLOADED = os.path.join(os.path.dirname(__file__), '..',
-                                    'ui_files', 'css', 'frame_downloaded.css')
-
-CSS_FRAME_COLLECTION = os.path.join(os.path.dirname(__file__), '..',
-                                    'ui_files', 'css', 'frame_collection.css')
-
-CSS_LISTVIEW = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
-                            'css', 'listwidget.css')
-
-CSS_TOOLBUTTON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
-                              'css', 'toolbutton_collection.css')
-
-CSS_TABLEVIEW_DOWNLOADED = os.path.join(os.path.dirname(__file__), '..',
-                                        'ui_files', 'css',
-                                        'tableview_downloaded.css')
+COMPMUSIC_LOGO = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
+                              'icons', 'compmusic_white.svg')
 
 
 class DockWidget(QDockWidget):
@@ -66,23 +44,22 @@ class DockWidgetContentsLeft(QWidget):
 
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
-        self._set_widget()
+        #self._set_widget()
 
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(4, 0, 0, 0)
-        layout.setSpacing(0)  # check it
+        layout.setContentsMargins(8, 15, 15, 15)
+        #layout.setSpacing(10)  # check it
 
         self.frame_collection = QFrame(self)
         self._set_frame()
 
         layout_3 = QVBoxLayout(self.frame_collection)
         layout_3.setContentsMargins(2, 5, 3, 2)
-        layout_3.setSpacing(7)  # check it
+        layout_3.setSpacing(4)  # check it
 
         self.label_collections = QLabel(self.frame_collection)
         self.label_collections.setIndent(15)  # check it
         self.label_collections.setTextInteractionFlags(Qt.NoTextInteraction)
-        set_css(self.label_collections, CSS_LABEL_COLLECTION)
         layout_3.addWidget(self.label_collections)
 
         self.listView_collections = CollectionsWidget()
@@ -92,7 +69,7 @@ class DockWidgetContentsLeft(QWidget):
         # toolbutton
         self.toolButton_collection = QToolButton(self)
         self._set_toolbutton()
-        layout.addWidget(self.toolButton_collection)
+        layout_3.addWidget(self.toolButton_collection)
 
         self.frame_downloaded = QFrame(self)
         self._set_frame_downloaded()
@@ -125,17 +102,16 @@ class DockWidgetContentsLeft(QWidget):
         """Sets the size policies of the frame."""
         size_policy = QSizePolicy(QSizePolicy.MinimumExpanding,
                                   QSizePolicy.Preferred)
-        size_policy.setHorizontalStretch(0)
-        size_policy.setVerticalStretch(0)
-        size_policy.setHeightForWidth(
-            self.frame_collection.sizePolicy().hasHeightForWidth())
+        #size_policy.setHorizontalStretch(0)
+        #size_policy.setVerticalStretch(0)
+        #size_policy.setHeightForWidth(
+        #    self.frame_collection.sizePolicy().hasHeightForWidth())
         self.frame_collection.setSizePolicy(size_policy)
-        self.frame_collection.setMinimumSize(QSize(0, 200))
-        self.frame_collection.setMaximumSize(QSize(16777215, 200))
-        self.frame_collection.setBaseSize(QSize(0, 0))
-        set_css(self.frame_collection, CSS_FRAME_COLLECTION)
-        self.frame_collection.setFrameShape(QFrame.StyledPanel)
-        self.frame_collection.setFrameShadow(QFrame.Raised)
+        #self.frame_collection.setMinimumSize(QSize(0, 200))
+        #self.frame_collection.setMaximumSize(QSize(16777215, 200))
+        #self.frame_collection.setBaseSize(QSize(10, 10))
+        self.frame_collection.setFrameShape(QFrame.Box)
+        #self.frame_collection.setFrameShadow(QFrame.Raised)
 
     def _set_toolbutton(self):
         """Sets the size policies of the new collection button."""
@@ -147,7 +123,6 @@ class DockWidgetContentsLeft(QWidget):
         self.toolButton_collection.setSizePolicy(size_policy)
         self.toolButton_collection.setMinimumSize(QSize(0, 30))
         self.toolButton_collection.setMaximumSize(QSize(16777215, 30))
-        set_css(self.toolButton_collection, CSS_TOOLBUTTON)
 
         self.toolButton_collection.setToolButtonStyle(
             Qt.ToolButtonTextBesideIcon)
@@ -166,7 +141,6 @@ class DockWidgetContentsLeft(QWidget):
         self.frame_downloaded.setSizePolicy(size_policy)
         self.frame_downloaded.setMinimumSize(QSize(0, 150))
         self.frame_downloaded.setBaseSize(QSize(0, 100))
-        set_css(self.frame_downloaded, CSS_FRAME_DOWNLOADED)
         self.frame_downloaded.setFrameShape(QFrame.StyledPanel)
         self.frame_downloaded.setFrameShadow(QFrame.Raised)
 
@@ -176,7 +150,6 @@ class DockWidgetContentsLeft(QWidget):
         font.setFamily("Garuda")
         self.label_downloaded.setFont(font)
         self.label_downloaded.setIndent(15)
-        set_css(self.label_downloaded, CSS_LABEL_COLLECTION)
 
     def retranslateUi(self):
         self.label_collections.setText("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD "
@@ -216,7 +189,6 @@ class DockWidgetContentsLeft(QWidget):
         self._set_label_downloaded()
         self.label_collections.setIndent(15)  # check it
         self.label_collections.setTextInteractionFlags(Qt.NoTextInteraction)
-        set_css(self.label_collections, CSS_LABEL_COLLECTION)
 
     def update_collection_widget(self):
         conn, c = database.connect(add_main=True)
@@ -238,25 +210,30 @@ class DockWidgetContentsTop(QWidget):
         layout.setContentsMargins(2, 0, 4, 0)
         layout.setSpacing(5)  # check it
 
-        spacer = QSpacerItem(20, 0, QSizePolicy.Expanding, QSizePolicy.Fixed)
+        spacer = QSpacerItem(20, 50, QSizePolicy.Expanding, QSizePolicy.Fixed)
         layout.addItem(spacer)
 
-        self.label_corpus = QLabel(self)
+        compmusic_logo = QLabel()
+        compmusic_logo.setText('''<img src='{0}' width=70>'''.format(COMPMUSIC_LOGO))
+
+        layout.addWidget(compmusic_logo)
+
+        self.label_corpus = QLabel()
         self._set_label_corpus()
         layout.addWidget(self.label_corpus)
 
         spacer2 = QSpacerItem(20, 0, QSizePolicy.Expanding, QSizePolicy.Fixed)
         layout.addItem(spacer2)
 
-        self.label_username = QLabel(self)
+        self.label_username = QLabel()
         self.label_username.setContextMenuPolicy(Qt.NoContextMenu)
         layout.addWidget(self.label_username)
 
-        self.line = QFrame(self)
+        self.line = QFrame()
         self._set_line()
         layout.addWidget(self.line)
 
-        self.label_status = QLabel(self)
+        self.label_status = QLabel()
         self._set_labelstatus()
         layout.addWidget(self.label_status)
         self.retranslate_ui()

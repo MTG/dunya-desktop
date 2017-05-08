@@ -1,20 +1,9 @@
-import sys
-import os
-
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLineEdit, QDialogButtonBox
 from PyQt5.QtCore import pyqtSignal, Qt
 
 from .table import TableView
 from .models.filteringmodel import FilteringModel
 from .models.proxymodel import SortFilterProxyModel
-
-from .widgetutilities import set_css
-
-if sys.version_info[0] == 2:
-    import ui_files.resources_rc_2
-
-CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'css',
-                        'filteringdialog.css')
 
 
 class FilteringDialog(QDialog):
@@ -25,7 +14,6 @@ class FilteringDialog(QDialog):
         QDialog.__init__(self, parent)
         self.attribute = None
         self.setFixedSize(200, 300)
-        set_css(self, CSS_PATH)
 
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.Popup)
 
