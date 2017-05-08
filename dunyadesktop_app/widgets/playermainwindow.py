@@ -5,14 +5,13 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QDockWidget,
                              QDialog, QHBoxLayout)
 from PyQt5.QtCore import Qt, QMetaObject
+import pyqtgraph
 
 from .treewidget import FeatureTreeWidget, MetadataTreeMakam
 from .playerframe import PlayerFrame
-from utilities.playback import Playback
-from .scoredialog import ScoreWidget
 from .playerframe import PlaybackFrame
-from cultures.makam.featureparsers import get_feature_paths
-
+from .histogram import HistogramDialog
+from cultures.makam.featureparsers import load_pd
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
                          'documents')
@@ -155,7 +154,7 @@ class PlayerMainWindow(QMainWindow):
                 dlg.setLayout(layout)
                 dlg.show()
             else:
-                print('unchecked')
+                dlg.close()
 
         if item == 'sections':
             if is_checked:
@@ -164,6 +163,17 @@ class PlayerMainWindow(QMainWindow):
                 self.player_frame.add_sections_to_waveform(s_path)
             else:
                 self.player_frame.waveform_widget.remove_sections()
+
+        if item == 'pitch_distribution':
+            if is_checked:
+                s_path = self.get_feature_path(self.docid, type=type,
+                                               item=item)
+                vals, bins = load_pd(s_path)
+                self.hist_dialog = HistogramDialog()
+                self.hist_dialog.plot_histogram(bins, vals)
+                self.hist_dialog.show()
+            else:
+                self.hist_dialog.close()
 
     @staticmethod
     def get_feature_path(mbid, type, item):
