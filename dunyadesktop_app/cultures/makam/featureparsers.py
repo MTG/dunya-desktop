@@ -59,8 +59,8 @@ def load_tonic(tonic_path):
 
 def get_feature_paths(recid):
     FEATURES =  ['melodic_progression', 'metadata', 'note_models', 'pitch'
-                 'pitch_class_distribution', 'pitch_distribution',
-                 'pitch_filtered', 'tonic', 'notes', 'sections']
+                 'pitch_distribution', 'pitch_filtered', 'tonic', 'notes',
+                 'sections']
 
     doc_folder = os.path.join(DOCS_PATH, recid)
     (full_names, folders, names) = \
