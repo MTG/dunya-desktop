@@ -3,7 +3,7 @@ import numpy as np
 
 from PyQt5.QtCore import pyqtSignal
 
-from .widgetutilities import downsample_plot
+from .widgetutilities import downsample_plot, cursor_pos_sample, current_pitch
 
 # Enable OpenGL and Weave to improve the performance of plotting functions.
 pg.setConfigOptions(useOpenGL=True)
@@ -18,6 +18,7 @@ SHADOW_PEN = pg.mkPen((70, 70, 30), width=5, cosmetic=True)
 
 class TimeSeriesWidget(pg.GraphicsLayoutWidget):
     sample_rate = 44100
+    hopsize = 128
     wheel_event = pyqtSignal(object)
 
     def __init__(self, parent=None):
@@ -196,8 +197,9 @@ class TimeSeriesWidget(pg.GraphicsLayoutWidget):
         Sets the position of histogram in y-axis.
         :param pos: (int or float) Playback position in seconds.
         """
-        pos_sample = np.int(pos * self.samplerate / self.hopsize)
-        self.hline_histogram.setPos(pos=[0, self.pitch_plot[pos_sample]])
+        pos_sample = cursor_pos_sample(pos, self.sample_rate, self.hopsize)
+        pitch = current_pitch(pos_sample, self.pitch_plot)
+        self.hline_histogram.setPos(pos=[0, pitch])
 
     def update_notes(self, xmin, xmax):
         pen=(225, 224, 181, 175)

@@ -1,6 +1,10 @@
+import numpy
+
 from PyQt5.QtWidgets import QDialog, QVBoxLayout
 from PyQt5.QtCore import QSize
 import pyqtgraph as pg
+
+CURSOR_PEN = pg.mkPen((255, 40, 35, 150), cosmetic=True, width=3)
 
 
 class HistogramDialog(QDialog):
@@ -16,8 +20,16 @@ class HistogramDialog(QDialog):
 
     def plot_histogram(self, bins, vals):
         self.hist_widget.plot(bins, vals, fillLevel=0, brush=(0,0,255,150))
+        self.max_val = numpy.max(vals)
         self.__set_plot()
 
     def __set_plot(self):
         self.hist_widget.setMouseEnabled(x=False, y=False)
         self.hist_widget.setMenuEnabled(False)
+
+        self.hline_histogram = pg.ROI(pos=[0, 0], size=[0, self.max_val], angle=0,
+                                      pen=CURSOR_PEN)
+        self.hist_widget.addItem(self.hline_histogram)
+
+    def update_histogram(self, pitch):
+        self.hline_histogram.setPos(pitch, 0)

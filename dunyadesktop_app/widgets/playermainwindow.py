@@ -172,8 +172,14 @@ class PlayerMainWindow(QMainWindow):
                 self.hist_dialog = HistogramDialog()
                 self.hist_dialog.plot_histogram(bins, vals)
                 self.hist_dialog.show()
+                self.player_frame.hist_visible= True
+
+                self.player_frame.update_histogram.connect(
+                    self.hist_dialog.update_histogram)
+
             else:
                 self.hist_dialog.close()
+                self.player_frame.hist_visible = False
 
     @staticmethod
     def get_feature_path(mbid, type, item):

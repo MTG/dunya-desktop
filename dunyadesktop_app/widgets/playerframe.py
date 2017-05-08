@@ -10,6 +10,7 @@ from .playbackframe import PlaybackFrame
 from .timeserieswidget import TimeSeriesWidget
 from .waveformwidget import WaveformWidget
 from .scoredialog import ScoreDialog
+from .widgetutilities import cursor_pos_sample, current_pitch
 from utilities.playback import Playback
 from cultures.makam.featureparsers import (read_raw_audio, load_pitch, load_pd,
                                            load_tonic, get_feature_paths,
@@ -38,11 +39,15 @@ class DockAreaWidget(pgdock.DockArea):
 
 class PlayerFrame(QFrame):
     samplerate = 44100.
+    update_histogram = pyqtSignal(float)
 
     def __init__(self, recid, parent=None):
         QFrame.__init__(self, parent=parent)
         self.recid = recid
         self.__set_design()
+
+        ftr = 'audioanalysis' + '--' + 'pitch_filtered' + '.json'
+        self.__load_pitch(ftr)
 
         self.feature_paths = get_feature_paths(recid)
         self.__set_waveform()
@@ -53,6 +58,7 @@ class PlayerFrame(QFrame):
 
         # flags
         self.score_visible = False
+        self.hist_visible = False
         self.index = 0
 
         # signals
@@ -62,6 +68,12 @@ class PlayerFrame(QFrame):
             self.wf_region_changed)
         self.waveform_widget.region_wf.clicked.connect(
             self.wf_region_item_clicked)
+
+    def __load_pitch(self, feature):
+        feature_path = os.path.join(DOCS_PATH, self.recid, feature)
+
+        (self.time_stamps, self.pitch_plot, self.max_pitch, self.min_pitch,
+         self.samplerate, self.hopsize) = load_pitch(feature_path)
 
     def __set_design(self):
         """
@@ -152,18 +164,16 @@ class PlayerFrame(QFrame):
         feature_path = os.path.join(DOCS_PATH, self.recid, ftr)
 
         if feature == 'pitch' or feature == 'pitch_filtered':
-            (time_stamps, pitch_plot, max_pitch, min_pitch, samplerate,
-             hopsize) = load_pitch(feature_path)
-            self.hop_size = hopsize
+            self.__load_pitch(ftr)
+
             x_min, x_max = self.waveform_widget.get_waveform_region
             if hasattr(self.ts_widget, 'zoom_selection'):
-                self.ts_widget.hopsize = hopsize
-                self.ts_widget.samplerate = samplerate
-                self.ts_widget.pitch_plot = pitch_plot
-                self.ts_widget.plot_pitch(pitch_plot=pitch_plot,
-                                          x_start=x_min,
-                                          x_end=x_max,
-                                          hop_size=hopsize)
+                self.ts_widget.hopsize = self.hopsize
+                self.ts_widget.samplerate = self.samplerate
+                self.ts_widget.pitch_plot = self.pitch_plot
+                self.ts_widget.plot_pitch(pitch_plot=self.pitch_plot,
+                                          x_start=x_min, x_end=x_max,
+                                          hop_size=self.hopsize)
                 self.is_pitch_plotted = True
 
                 histogram = \
@@ -201,7 +211,7 @@ class PlayerFrame(QFrame):
             if hasattr(self.ts_widget, 'zoom_selection'):
                 if self.ts_widget.is_pitch_plotted:
                     self.ts_widget.update_plot(start=x_min, stop=x_max,
-                                               hop_size=self.hop_size)
+                                               hop_size=self.hopsize)
                     self.ts_widget.vline.setPos([x_min, 0])
                 if self.ts_widget.is_notes_added:
                     self.ts_widget.update_notes(x_min, x_max)
@@ -235,8 +245,15 @@ class PlayerFrame(QFrame):
                 if hasattr(self.ts_widget, 'hline_histogram'):
                     if self.ts_widget.pitch_plot is not None:
                         self.ts_widget.set_hist_cursor_pos(playback_pos_sec)
+
             if self.score_visible:
                 self.__update_score(playback_pos_sec)
+
+            pos_sample = cursor_pos_sample(playback_pos_sec, self.samplerate,
+                                           self.hopsize)
+            if self.hist_visible:
+                pitch = current_pitch(pos_sample, self.pitch_plot)
+                self.update_histogram.emit(pitch)
 
     def __update_score(self, playback_pos_sec):
         index = self.find_current_note_index(self.ts_widget.notes_start,
