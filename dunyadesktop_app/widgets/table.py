@@ -188,8 +188,6 @@ class TableWidget(QTableWidget, TableView):
         self.recordings = []
         self.indexes = {}
         self.coll = ''
-        
-        self.setSelectionMode(QAbstractItemView.SingleSelection)
 
     def _set_columns(self):
         self.setColumnCount(2)
