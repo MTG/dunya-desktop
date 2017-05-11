@@ -1,6 +1,6 @@
 import os
 
-from PyQt5.QtGui import QStandardItemModel, QStandardItem, QIcon
+from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtCore import pyqtSignal, Qt
 
 DUNYA_ICON = os.path.join(os.path.dirname(__file__), '..', '..', 'ui_files',
