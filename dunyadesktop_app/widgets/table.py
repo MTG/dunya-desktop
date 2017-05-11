@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import (QToolButton, QTableView, QAbstractItemView,
                              QAction, QHeaderView, QTableWidget,
                              QTableWidgetItem, QLabel, QPushButton, qApp)
 from PyQt5.QtCore import pyqtSignal, Qt, QPersistentModelIndex
-from PyQt5.QtGui import QFont, QCursor, QIcon, QPixmap, QPalette, QBrush
+from PyQt5.QtGui import QFont, QCursor, QIcon, QPixmap
 
 from utilities import database, corpusbasestatistics
 from cultures.makam import utilities as makam_utilities
@@ -168,6 +168,16 @@ class TableViewResults(TableView):
         self.horizontal_header.setStretchLastSection(True)
         self.horizontal_header.hide()
         self.horizontal_header.setResizeMode(QHeaderView.Fixed)
+
+
+class TableViewCollections(TableView):
+    def __index__(self, parent=None):
+        TableView.__init__(self)
+        self.setSortingEnabled(True)
+        self.setDragDropMode(QAbstractItemView.NoDragDrop)
+
+        self.horizontal_header = self.horizontalHeader()
+        self.setSelectionMode(QAbstractItemView.SingleSelection)
 
 
 class TableWidget(QTableWidget, TableView):

@@ -2,11 +2,11 @@ import os
 
 from PyQt5.QtWidgets import (QDockWidget, QSizePolicy, QWidget, QVBoxLayout,
                              QFrame, QLabel, QToolButton, QHBoxLayout,
-                             QSpacerItem)
+                             QSpacerItem, QDialog)
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import QSize, Qt
 
-from .table import TableWidget
+from .table import TableWidget, TableViewCollections
 from .listwidget import CollectionsWidget
 from .newcollectiondialog import NewCollectionDialog
 from utilities import database
@@ -95,6 +95,17 @@ class DockWidgetContentsLeft(QWidget):
 
         # signals
         self.toolButton_collection.clicked.connect(self.new_collection)
+        self.button_colltable.clicked.connect(self._open_coll_table)
+
+    def _open_coll_table(self):
+        self.coll_dialog = QDialog(self)
+
+        layout = QVBoxLayout(self.coll_dialog)
+
+        self.coll_table = TableViewCollections()
+        layout.addWidget(self.coll_table)
+        self.coll_dialog.setLayout(layout)
+        self.coll_dialog.show()
 
     def _set_widget(self):
         """Sets the size policies."""
