@@ -7,6 +7,14 @@ import pyqtgraph as pg
 CURSOR_PEN = pg.mkPen((255, 40, 35, 150), cosmetic=True, width=3)
 
 
+class NoteModelAxis(pg.AxisItem):
+    def __init__(self, note_models, *args, **kwargs):
+        pg.AxisItem.__init__(self, *args, **kwargs)
+
+    def tickStrings(self, values, scale, spacing):
+        super(pg.AxisItem, self).tickStrings(values, scale, spacing)
+
+
 class HistogramDialog(QDialog):
     def __init__(self):
         super(HistogramDialog, self).__init__()
@@ -19,7 +27,9 @@ class HistogramDialog(QDialog):
         l.setContentsMargins(0, 0, 0, 0)
 
     def plot_histogram(self, bins, vals):
-        self.hist_widget.plot(bins, vals, fillLevel=0, brush=(0,0,255,150))
+        axis = NoteModelAxis('bottom')
+        self.hist_widget.plot(bins, vals, fillLevel=0, brush=(0,0,255,150),
+                              axisItems = {'bottom':axis})
         self.max_val = numpy.max(vals)
         self.__set_plot()
 

@@ -168,18 +168,30 @@ class PlayerMainWindow(QMainWindow):
             if is_checked:
                 s_path = self.get_feature_path(self.docid, type=type,
                                                item=item)
-                vals, bins = load_pd(s_path)
-                self.hist_dialog = HistogramDialog()
-                self.hist_dialog.plot_histogram(bins, vals)
-                self.hist_dialog.show()
-                self.player_frame.hist_visible= True
-
-                self.player_frame.update_histogram.connect(
-                    self.hist_dialog.update_histogram)
-
+                self.__plot_histogram(s_path)
             else:
                 self.hist_dialog.close()
                 self.player_frame.hist_visible = False
+
+        if item == 'note_models':
+            if is_checked:
+                if hasattr(self, 'hist_dialog'):
+                    pass
+                else:
+                    s_path = self.get_feature_path(self.docid, type=type,
+                                                   item='pitch_distribution')
+                    self.__plot_histogram(s_path)
+
+
+    def __plot_histogram(self, s_path):
+        vals, bins = load_pd(s_path)
+        self.hist_dialog = HistogramDialog()
+        self.hist_dialog.plot_histogram(bins, vals)
+        self.hist_dialog.show()
+        self.player_frame.hist_visible = True
+
+        self.player_frame.update_histogram.connect(
+            self.hist_dialog.update_histogram)
 
     @staticmethod
     def get_feature_path(mbid, type, item):
