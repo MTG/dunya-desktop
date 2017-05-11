@@ -18,7 +18,7 @@ class RecordingModel(QStandardItemModel):
         self.set_columns()
 
     def set_columns(self):
-        self.setHorizontalHeaderLabels(['', 'Title', 'Artists'])
+        self.setHorizontalHeaderLabels(['', 'Title', 'Composer', 'Artists'])
 
     def clear_items(self):
         self.clear()
@@ -30,6 +30,11 @@ class RecordingModel(QStandardItemModel):
             check_item.setCheckable(True)
             title = QStandardItem(rec['title'])
 
+            composers = ''
+            for composer in work['composers']:
+                composers += composer['name'] + ","
+            composers_item = QStandardItem(composers)
+
             artists = ''
             rec['artists'] = [dict(tupleized) for tupleized in
                               set(tuple(element.items())
@@ -40,9 +45,6 @@ class RecordingModel(QStandardItemModel):
 
             artists = artists[:-2]
             artist_item = QStandardItem(artists)
-
-            dunya = QStandardItem()
-            dunya.setIcon(QIcon(DUNYA_ICON))
 
             mbid = rec['mbid']
             self.rec_fetched.emit(mbid)
@@ -62,7 +64,8 @@ class RecordingModel(QStandardItemModel):
             self.insertRow(self.rowCount())
             self.setItem(self.rowCount() - 1, 0, check_item)
             self.setItem(self.rowCount() - 1, 1, title)
-            self.setItem(self.rowCount() - 1, 2, artist_item)
+            self.setItem(self.rowCount() - 1, 2, composers_item)
+            self.setItem(self.rowCount() - 1, 3, artist_item)
 
     def set_checked(self, rows):
         for row in rows:
