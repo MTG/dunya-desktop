@@ -68,7 +68,7 @@ class DockWidgetContentsLeft(QWidget):
 
         # toolbutton
         self.toolButton_collection = QToolButton(self)
-        self._set_toolbutton_collections()
+        self._set_toolbutton(self.toolButton_collection)
         layout_3.addWidget(self.toolButton_collection)
 
         self.frame_downloaded = QFrame(self)
@@ -79,7 +79,7 @@ class DockWidgetContentsLeft(QWidget):
 
         layout_5 = QHBoxLayout()
         self.button_colltable = QToolButton(self)
-        self._set_toolbutton_colltable()
+        self._set_toolbutton(self.button_colltable)
         self.button_colltable.setText('Open Table')
         self.label_downloaded = QLabel(self.frame_downloaded)
         self._set_label_downloaded()
@@ -121,37 +121,19 @@ class DockWidgetContentsLeft(QWidget):
         self.frame_collection.setFrameShape(QFrame.Box)
         #self.frame_collection.setFrameShadow(QFrame.Raised)
 
-    def _set_toolbutton_collections(self):
+    def _set_toolbutton(self, button):
         """Sets the size policies of the new collection button."""
         size_policy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
         size_policy.setHorizontalStretch(0)
         size_policy.setVerticalStretch(0)
-        size_policy.setHeightForWidth(
-            self.toolButton_collection.sizePolicy().hasHeightForWidth())
-        self.toolButton_collection.setSizePolicy(size_policy)
-        self.toolButton_collection.setMinimumSize(QSize(0, 30))
-        self.toolButton_collection.setMaximumSize(QSize(16777215, 30))
+        size_policy.setHeightForWidth(button.sizePolicy().hasHeightForWidth())
+        button.setSizePolicy(size_policy)
+        button.setMinimumSize(QSize(0, 30))
+        button.setMaximumSize(QSize(16777215, 30))
 
-        self.toolButton_collection.setToolButtonStyle(
-            Qt.ToolButtonTextBesideIcon)
-        self.toolButton_collection.setAutoRaise(True)
-        self.toolButton_collection.setArrowType(Qt.NoArrow)
-
-    def _set_toolbutton_colltable(self):
-        """Sets the size policies of the new collection button."""
-        size_policy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
-        size_policy.setHorizontalStretch(0)
-        size_policy.setVerticalStretch(0)
-        size_policy.setHeightForWidth(
-            self.button_colltable.sizePolicy().hasHeightForWidth())
-        self.button_colltable.setSizePolicy(size_policy)
-        self.button_colltable.setMinimumSize(QSize(0, 30))
-        self.button_colltable.setMaximumSize(QSize(16777215, 30))
-
-        self.button_colltable.setToolButtonStyle(
-            Qt.ToolButtonTextBesideIcon)
-        self.button_colltable.setAutoRaise(True)
-        self.button_colltable.setArrowType(Qt.NoArrow)
+        button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        button.setAutoRaise(True)
+        button.setArrowType(Qt.NoArrow)
 
     def _set_frame_downloaded(self):
         """Sets the size policies of the downloaded features frame."""
