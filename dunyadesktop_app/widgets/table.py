@@ -154,6 +154,8 @@ class TableViewResults(TableView):
         self.add_maincoll = QAction("Add to main collection", self)
         self.setColumnWidth(0, 10)
 
+        self.setSelectionMode(QAbstractItemView.SingleSelection)
+
     def _set_menu(self):
         self.add_maincoll = QAction("Add to main collection", self)
 
@@ -186,6 +188,8 @@ class TableWidget(QTableWidget, TableView):
         self.recordings = []
         self.indexes = {}
         self.coll = ''
+        
+        self.setSelectionMode(QAbstractItemView.SingleSelection)
 
     def _set_columns(self):
         self.setColumnCount(2)
