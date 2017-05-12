@@ -41,7 +41,7 @@ class ComboBox(QComboBox):
         self.lineEdit().textEdited.connect(lambda:
                                            self.cancel_button.setVisible(True))
         self.lineEdit().editingFinished.connect(self.check_lineedit_status)
-        self.dialog_filtering = FilteringDialog()
+        self.dialog_filtering = FilteringDialog(self)
         self.dialog_filtering.ok_button_clicked.connect(
             lambda: self.set_selection(self.dialog_filtering.selection))
 
