@@ -17,6 +17,7 @@ from .progressbar import ProgressBar
 from .contextmenu import RCMenu
 from .widgetutilities import set_css, convert_str
 from .models.recordingmodel import CollectionTableModel
+from .models.proxymodel import SortFilterProxyModel
 
 if platform.system() == 'Linux':
     FONT_SIZE = 9
@@ -368,14 +369,27 @@ class DialogCollTable(QDialog):
         self.setMinimumSize(QSize(1200, 600))
         layout = QVBoxLayout(self)
 
+        self.label_collection = QLabel()
+        self.label_collection.setAlignment(Qt.AlignCenter)
+        layout.addWidget(self.label_collection)
+
         self.lineedit_filter = QLineEdit(self)
-        layout.addWidget(self.filtering_label)
+        layout.addWidget(self.lineedit_filter)
 
         self.coll_table = TableViewCollections(self)
         layout.addWidget(self.coll_table)
 
         self.model = CollectionTableModel()
-        self.coll_table.setModel(self.model)
+
+        self.proxy_model = SortFilterProxyModel()
+        self.proxy_model.setSourceModel(self.model)
+        self.proxy_model.setFilterKeyColumn(-1)
+
+        self.coll_table.setModel(self.proxy_model)
+
+        # signals
+        self.lineedit_filter.textChanged.connect(lambda:
+            self.proxy_model.filter_table(self.lineedit_filter.text()))
 
     def _set_line_edit(self):
         self.lineedit_filter.setPlaceholderText('Type here to filter')

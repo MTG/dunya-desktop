@@ -100,11 +100,11 @@ class DockWidgetContentsLeft(QWidget):
         current_coll = self.listView_collections.currentItem()
         if current_coll:
             self.coll_dialog = DialogCollTable(self)
+            self.coll_dialog.label_collection.setText(current_coll.text())
 
             conn, c = database.connect()
             collection = database.fetch_collection(c, current_coll.text())
-            collection_model = self.coll_dialog.coll_table.model()
-            collection_model.add_recording(collection)
+            self.coll_dialog.model.add_recording(collection)
             conn.close()
 
             self.coll_dialog.show()
