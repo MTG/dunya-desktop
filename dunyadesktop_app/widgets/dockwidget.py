@@ -6,11 +6,10 @@ from PyQt5.QtWidgets import (QDockWidget, QSizePolicy, QWidget, QVBoxLayout,
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import QSize, Qt
 
-from .table import TableWidget, TableViewCollections
+from .table import TableWidget, TableViewCollections, DialogCollTable
 from .listwidget import CollectionsWidget
 from .newcollectiondialog import NewCollectionDialog
 from utilities import database
-
 
 COMPMUSIC_LOGO = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                               'icons', 'compmusic_white.svg')
@@ -44,11 +43,11 @@ class DockWidgetContentsLeft(QWidget):
 
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
-        #self._set_widget()
+        # self._set_widget()
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(8, 15, 15, 15)
-        #layout.setSpacing(10)  # check it
+        # layout.setSpacing(10)  # check it
 
         self.frame_collection = QFrame(self)
         self._set_frame()
@@ -98,13 +97,7 @@ class DockWidgetContentsLeft(QWidget):
         self.button_colltable.clicked.connect(self._open_coll_table)
 
     def _open_coll_table(self):
-        self.coll_dialog = QDialog(self)
-
-        layout = QVBoxLayout(self.coll_dialog)
-
-        self.coll_table = TableViewCollections()
-        layout.addWidget(self.coll_table)
-        self.coll_dialog.setLayout(layout)
+        self.coll_dialog = DialogCollTable(self)
         self.coll_dialog.show()
 
     def _set_widget(self):
@@ -121,16 +114,16 @@ class DockWidgetContentsLeft(QWidget):
         """Sets the size policies of the frame."""
         size_policy = QSizePolicy(QSizePolicy.MinimumExpanding,
                                   QSizePolicy.Preferred)
-        #size_policy.setHorizontalStretch(0)
-        #size_policy.setVerticalStretch(0)
-        #size_policy.setHeightForWidth(
+        # size_policy.setHorizontalStretch(0)
+        # size_policy.setVerticalStretch(0)
+        # size_policy.setHeightForWidth(
         #    self.frame_collection.sizePolicy().hasHeightForWidth())
         self.frame_collection.setSizePolicy(size_policy)
-        #self.frame_collection.setMinimumSize(QSize(0, 200))
-        #self.frame_collection.setMaximumSize(QSize(16777215, 200))
-        #self.frame_collection.setBaseSize(QSize(10, 10))
+        # self.frame_collection.setMinimumSize(QSize(0, 200))
+        # self.frame_collection.setMaximumSize(QSize(16777215, 200))
+        # self.frame_collection.setBaseSize(QSize(10, 10))
         self.frame_collection.setFrameShape(QFrame.Box)
-        #self.frame_collection.setFrameShadow(QFrame.Raised)
+        # self.frame_collection.setFrameShadow(QFrame.Raised)
 
     def _set_toolbutton(self, button):
         """Sets the size policies of the new collection button."""
@@ -202,7 +195,8 @@ class DockWidgetContentsLeft(QWidget):
     def change_downloaded_text(self, name):
         self.label_downloaded.setText("<html><head/><body><p><span style=\" "
                                       "font-size:10pt; color:#878787;\">{"
-                                      "0}</span></p></body></html>".format(name))
+                                      "0}</span></p></body></html>".format(
+            name))
         self._set_label_downloaded()
         self.label_collections.setIndent(15)  # check it
         self.label_collections.setTextInteractionFlags(Qt.NoTextInteraction)
@@ -231,7 +225,8 @@ class DockWidgetContentsTop(QWidget):
         layout.addItem(spacer)
 
         compmusic_logo = QLabel()
-        compmusic_logo.setText('''<img src='{0}' width=70>'''.format(COMPMUSIC_LOGO))
+        compmusic_logo.setText(
+            '''<img src='{0}' width=70>'''.format(COMPMUSIC_LOGO))
 
         layout.addWidget(compmusic_logo)
 

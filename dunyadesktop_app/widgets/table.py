@@ -4,8 +4,9 @@ import json
 import sys
 
 from PyQt5.QtWidgets import (QToolButton, QTableView, QAbstractItemView,
-                             QAction, QHeaderView, QTableWidget,
-                             QTableWidgetItem, QLabel, QPushButton, qApp)
+                             QAction, QHeaderView, QTableWidget, QDialog,
+                             QTableWidgetItem, QLabel, QPushButton, qApp,
+                             QHBoxLayout)
 from PyQt5.QtCore import pyqtSignal, Qt, QPersistentModelIndex
 from PyQt5.QtGui import QFont, QCursor, QIcon, QPixmap
 
@@ -358,3 +359,12 @@ class TableWidget(QTableWidget, TableView):
                 self.set_result_checked.emit(docid)
             else:
                 self.set_status(row, 2)
+
+
+class DialogCollTable(QDialog):
+    def __init__(self, parent):
+        QDialog.__init__(self, parent=parent)
+
+        layout = QHBoxLayout(self)
+        self.coll_table = TableViewCollections(self)
+        layout.addWidget(self.coll_table)
