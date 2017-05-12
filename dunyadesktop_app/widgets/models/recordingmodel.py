@@ -81,6 +81,7 @@ class CollectionTableModel(QStandardItemModel):
     def __init__(self):
         QStandardItemModel.__init__(self)
         self.set_columns()
+        self.items = {}
 
     def set_columns(self):
         self.setHorizontalHeaderLabels(['Title', 'Artists', 'Makam', 'Usul',
@@ -89,15 +90,17 @@ class CollectionTableModel(QStandardItemModel):
     def clear_items(self):
         self.clear()
         self.set_columns()
+        self.items = {}
 
     def add_recording(self, recording):
-        for mbid in recording:
-            self._get_metadata(mbid[0])
+        for index, mbid in enumerate(recording):
+            self._get_metadata(mbid[0], index)
 
-    def _get_metadata(self, mbid):
+    def _get_metadata(self, mbid, index):
         path = os.path.join(DOCS_PATH, mbid, 'audioanalysis--metadata.json')
         self.metadata = json.load(open(path))
 
+        mbid = self.metadata['mbid']
         title = self.metadata['title']
         artists = self._parse_artists()
         makam = self._parse_mattribute('makam')
@@ -110,7 +113,8 @@ class CollectionTableModel(QStandardItemModel):
         self.setItem(self.rowCount() - 1, 2, self._make_item(makam))
         self.setItem(self.rowCount() - 1, 3, self._make_item(usul))
         self.setItem(self.rowCount() - 1, 4, self._make_item(form))
-    
+        self.items[index] = mbid
+
     def _make_item(self, text):
         return QStandardItem(text)
 

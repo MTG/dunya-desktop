@@ -372,3 +372,6 @@ class DialogCollTable(QDialog):
 
         self.model = CollectionTableModel()
         self.coll_table.setModel(self.model)
+
+    def closeEvent(self, QCloseEvent):
+        self.model.clear_items()
