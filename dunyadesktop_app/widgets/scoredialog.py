@@ -46,3 +46,5 @@ class ScoreDialog(QDialog):
         layout = QVBoxLayout(self)
         self.score_widget = ScoreWidget(self)
         layout.addWidget(self.score_widget)
+
+        self.setStyleSheet('background-color: #F4ECD7;')
