@@ -1,4 +1,5 @@
 import os
+import json
 
 from PyQt5.QtCore import pyqtSignal, Qt
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
@@ -82,11 +83,51 @@ class CollectionTableModel(QStandardItemModel):
         self.set_columns()
 
     def set_columns(self):
-        self.setHorizontalHeaderLabels(['Title', 'Composer', 'Artists'])
+        self.setHorizontalHeaderLabels(['Title', 'Artists', 'Makam', 'Usul',
+                                        'Form'])
 
     def clear_items(self):
         self.clear()
         self.set_columns()
 
     def add_recording(self, recording):
-        print(recording)
+        for mbid in recording:
+            self._get_metadata(mbid[0])
+
+    def _get_metadata(self, mbid):
+        path = os.path.join(DOCS_PATH, mbid, 'audioanalysis--metadata.json')
+        self.metadata = json.load(open(path))
+
+        title = self.metadata['title']
+        artists = self._parse_artists()
+        makam = self._parse_mattribute('makam')
+        usul = self._parse_mattribute('usul')
+        form = self._parse_mattribute('form')
+
+        self.insertRow(self.rowCount())
+        self.setItem(self.rowCount() - 1, 0, self._make_item(title))
+        self.setItem(self.rowCount() - 1, 1, self._make_item(artists))
+        self.setItem(self.rowCount() - 1, 2, self._make_item(makam))
+        self.setItem(self.rowCount() - 1, 3, self._make_item(usul))
+        self.setItem(self.rowCount() - 1, 4, self._make_item(form))
+    
+    def _make_item(self, text):
+        return QStandardItem(text)
+
+    def _parse_artists(self):
+        values = self.metadata['artists']
+        v = []
+        return_s = ''
+        for k in values:
+            v.append(k['name'])
+        for a in v:
+            return_s += a + ', '
+        return return_s[:-2]
+
+    def _parse_mattribute(self, key):
+        for value in self.metadata[key]:
+            try:
+                mattribute = value['mb_attribute']
+                return mattribute
+            except KeyError:
+                pass
