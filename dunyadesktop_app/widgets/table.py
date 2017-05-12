@@ -388,8 +388,10 @@ class DialogCollTable(QDialog):
         self.coll_table.setModel(self.proxy_model)
 
         # signals
-        self.lineedit_filter.textChanged.connect(lambda:
-            self.proxy_model.filter_table(self.lineedit_filter.text()))
+        self.lineedit_filter.textChanged.connect(self._lineedit_changed)
+
+    def _lineedit_changed(self):
+        self.proxy_model.filter_table(self.lineedit_filter.text())
 
     def _set_line_edit(self):
         self.lineedit_filter.setPlaceholderText('Type here to filter')
