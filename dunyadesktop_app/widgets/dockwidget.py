@@ -97,8 +97,14 @@ class DockWidgetContentsLeft(QWidget):
         self.button_colltable.clicked.connect(self._open_coll_table)
 
     def _open_coll_table(self):
-        self.coll_dialog = DialogCollTable(self)
-        self.coll_dialog.show()
+        current_coll = self.listView_collections.currentItem()
+        if current_coll:
+            self.coll_dialog = DialogCollTable(self)
+            conn, c = database.connect()
+            collection = database.fetch_collection(c, current_coll.text())
+            collection_model = self.coll_dialog.coll_table.model()
+            collection_model.add_recording(collection)
+            self.coll_dialog.show()
 
     def _set_widget(self):
         """Sets the size policies."""

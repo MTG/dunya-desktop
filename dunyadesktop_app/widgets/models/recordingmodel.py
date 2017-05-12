@@ -1,7 +1,7 @@
 import os
 
-from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtCore import pyqtSignal, Qt
+from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
 DUNYA_ICON = os.path.join(os.path.dirname(__file__), '..', '..', 'ui_files',
                           'icons', 'dunya.svg')
@@ -74,3 +74,19 @@ class RecordingModel(QStandardItemModel):
             check_item.setEnabled(False)
             check_item.setToolTip('Already added to main collection...')
             self.setItem(row, 0, check_item)
+
+
+class CollectionTableModel(QStandardItemModel):
+    def __init__(self):
+        QStandardItemModel.__init__(self)
+        self.set_columns()
+
+    def set_columns(self):
+        self.setHorizontalHeaderLabels(['Title', 'Composer', 'Artists'])
+
+    def clear_items(self):
+        self.clear()
+        self.set_columns()
+
+    def add_recording(self, recording):
+        print(recording)

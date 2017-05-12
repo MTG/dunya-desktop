@@ -16,6 +16,7 @@ from widgets.playerframe import load_pd, load_tonic
 from .progressbar import ProgressBar
 from .contextmenu import RCMenu
 from .widgetutilities import set_css, convert_str
+from .models.recordingmodel import CollectionTableModel
 
 if platform.system() == 'Linux':
     FONT_SIZE = 9
@@ -368,3 +369,6 @@ class DialogCollTable(QDialog):
         layout = QHBoxLayout(self)
         self.coll_table = TableViewCollections(self)
         layout.addWidget(self.coll_table)
+
+        self.model = CollectionTableModel()
+        self.coll_table.setModel(self.model)
