@@ -84,7 +84,7 @@ class CollectionTableModel(QStandardItemModel):
         self.items = {}
 
     def set_columns(self):
-        self.setHorizontalHeaderLabels(['Title', 'Artists', 'Makam', 'Usul',
+        self.setHorizontalHeaderLabels(['', 'Title', 'Artists', 'Makam', 'Usul',
                                         'Form'])
 
     def clear_items(self):
@@ -108,11 +108,12 @@ class CollectionTableModel(QStandardItemModel):
         form = self._parse_mattribute('form')
 
         self.insertRow(self.rowCount())
-        self.setItem(self.rowCount() - 1, 0, self._make_item(title))
-        self.setItem(self.rowCount() - 1, 1, self._make_item(artists))
-        self.setItem(self.rowCount() - 1, 2, self._make_item(makam))
-        self.setItem(self.rowCount() - 1, 3, self._make_item(usul))
-        self.setItem(self.rowCount() - 1, 4, self._make_item(form))
+        self.setItem(self.rowCount() - 1, 0, self._make_item(str(self.rowCount())))
+        self.setItem(self.rowCount() - 1, 1, self._make_item(title))
+        self.setItem(self.rowCount() - 1, 2, self._make_item(artists))
+        self.setItem(self.rowCount() - 1, 3, self._make_item(makam))
+        self.setItem(self.rowCount() - 1, 4, self._make_item(usul))
+        self.setItem(self.rowCount() - 1, 5, self._make_item(form))
         self.items[index] = mbid
 
     def _make_item(self, text):

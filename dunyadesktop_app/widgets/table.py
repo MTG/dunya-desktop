@@ -6,8 +6,8 @@ import sys
 from PyQt5.QtWidgets import (QToolButton, QTableView, QAbstractItemView,
                              QAction, QHeaderView, QTableWidget, QDialog,
                              QTableWidgetItem, QLabel, QPushButton, qApp,
-                             QHBoxLayout)
-from PyQt5.QtCore import pyqtSignal, Qt, QPersistentModelIndex
+                             QVBoxLayout, QLineEdit)
+from PyQt5.QtCore import pyqtSignal, Qt, QPersistentModelIndex, QSize
 from PyQt5.QtGui import QFont, QCursor, QIcon, QPixmap
 
 from utilities import database, corpusbasestatistics
@@ -365,13 +365,20 @@ class TableWidget(QTableWidget, TableView):
 class DialogCollTable(QDialog):
     def __init__(self, parent):
         QDialog.__init__(self, parent=parent)
+        self.setMinimumSize(QSize(1200, 600))
+        layout = QVBoxLayout(self)
 
-        layout = QHBoxLayout(self)
+        self.lineedit_filter = QLineEdit(self)
+        layout.addWidget(self.filtering_label)
+
         self.coll_table = TableViewCollections(self)
         layout.addWidget(self.coll_table)
 
         self.model = CollectionTableModel()
         self.coll_table.setModel(self.model)
+
+    def _set_line_edit(self):
+        self.lineedit_filter.setPlaceholderText('Type here to filter')
 
     def closeEvent(self, QCloseEvent):
         self.model.clear_items()
