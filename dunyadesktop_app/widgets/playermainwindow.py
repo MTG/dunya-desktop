@@ -11,6 +11,7 @@ from .treewidget import FeatureTreeWidget, MetadataTreeMakam
 from .playerframe import PlayerFrame
 from .playerframe import PlaybackFrame
 from .histogram import HistogramDialog
+from .table import TablePlaylist
 from cultures.makam.featureparsers import load_pd
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
@@ -76,6 +77,12 @@ class PlayerMainWindow(QMainWindow):
         self.dw_playlist.setFeatures(
             QtWidgets.QDockWidget.NoDockWidgetFeatures)
         self.dw_playlist.setAllowedAreas(QtCore.Qt.RightDockWidgetArea)
+
+        self.dw_playlist_widgets = QWidget(self)
+        layout5 = QHBoxLayout(self.dw_playlist_widgets)
+        self.playlist_table = TablePlaylist()
+        layout5.addWidget(self.playlist_table)
+        self.dw_playlist.setWidget(self.dw_playlist_widgets)
 
         # dock widget for playback
         self.dw_playback = QDockWidget(self.central_widget)

@@ -398,3 +398,10 @@ class DialogCollTable(QDialog):
 
     def closeEvent(self, QCloseEvent):
         self.model.clear_items()
+
+
+class TablePlaylist(TableViewCollections):
+
+    def __init__(self):
+        TableViewCollections.__init__(self)
+
