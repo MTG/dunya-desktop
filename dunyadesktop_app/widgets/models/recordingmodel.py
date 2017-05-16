@@ -3,6 +3,8 @@ import json
 
 from PyQt5.QtCore import pyqtSignal, Qt
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
+from PyQt5.QtWidgets import QPushButton
+
 
 DUNYA_ICON = os.path.join(os.path.dirname(__file__), '..', '..', 'ui_files',
                           'icons', 'dunya.svg')
@@ -94,27 +96,32 @@ class CollectionTableModel(QStandardItemModel):
 
     def add_recording(self, recording):
         for index, mbid in enumerate(recording):
-            self._get_metadata(mbid[0], index)
+            metadata = self._get_metadata(mbid[0], index)
+            self._add_item(metadata)
 
     def _get_metadata(self, mbid, index):
         path = os.path.join(DOCS_PATH, mbid, 'audioanalysis--metadata.json')
         self.metadata = json.load(open(path))
 
+        metadata_dict = {}
         mbid = self.metadata['mbid']
-        title = self.metadata['title']
-        artists = self._parse_artists()
-        makam = self._parse_mattribute('makam')
-        usul = self._parse_mattribute('usul')
-        form = self._parse_mattribute('form')
-
-        self.insertRow(self.rowCount())
-        self.setItem(self.rowCount() - 1, 0, self._make_item(str(self.rowCount())))
-        self.setItem(self.rowCount() - 1, 1, self._make_item(title))
-        self.setItem(self.rowCount() - 1, 2, self._make_item(artists))
-        self.setItem(self.rowCount() - 1, 3, self._make_item(makam))
-        self.setItem(self.rowCount() - 1, 4, self._make_item(usul))
-        self.setItem(self.rowCount() - 1, 5, self._make_item(form))
+        metadata_dict['title'] = self.metadata['title']
+        metadata_dict['artists'] = self._parse_artists()
+        metadata_dict['makam'] = self._parse_mattribute('makam')
+        metadata_dict['usul'] = self._parse_mattribute('usul')
+        metadata_dict['form'] = self._parse_mattribute('form')
         self.items[index] = mbid
+
+        return metadata_dict
+
+    def _add_item(self, metadata):
+        self.insertRow(self.rowCount())
+        self.setItem(self.rowCount()-1, 0, self._make_item(str(self.rowCount())))
+        self.setItem(self.rowCount()-1, 1, self._make_item(metadata['title']))
+        self.setItem(self.rowCount()-1, 2, self._make_item(metadata['artists']))
+        self.setItem(self.rowCount()-1, 3, self._make_item(metadata['makam']))
+        self.setItem(self.rowCount()-1, 4, self._make_item(metadata['usul']))
+        self.setItem(self.rowCount()-1, 5, self._make_item(metadata['form']))
 
     def _make_item(self, text):
         return QStandardItem(text)
