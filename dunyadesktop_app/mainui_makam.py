@@ -25,6 +25,7 @@ SS = os.path.join(os.path.dirname(__file__), 'ui_files', 'style.qss')
 
 class MainWindowMakam(MainWindowMakamDesign):
     """The main window of makam"""
+
     def __init__(self):
         MainWindowMakamDesign.__init__(self)
 
@@ -181,14 +182,12 @@ class MainWindowMakam(MainWindowMakamDesign):
     def open_player_collection(self, index):
         coll = str(self.dwc_left.listView_collections.currentItem().text())
         conn, c = database.connect()
-        try:
-            docid = database.get_nth_row(c, coll, index.row())[0]
-            conn.close()
-            player = PlayerMainWindow(docid=str(docid), parent=self)
-            player.show()
-        except:
-            QMessageBox.information(self, "QMessageBox.information()",
-                                    "Cannot open the player!")
+
+        # add trt/except
+        docid = database.get_nth_row(c, coll, index.row())[0]
+        conn.close()
+        player = PlayerMainWindow(docid=str(docid), parent=self)
+        player.show()
 
     def open_player(self, index):
         if not self.q_threads:
@@ -196,15 +195,10 @@ class MainWindowMakam(MainWindowMakamDesign):
             recid = self.recordings[model_index.row()]
 
             try:
-                fname = recid + '.mp3'
-                path = os.path.join(DOCS_PATH, recid, fname)
-                if os.path.exists(path):
-                    player = PlayerMainWindow(docid=recid, parent=self)
-                    player.show()
-                else:
-                    QMessageBox.information(self, "QMessageBox.information()",
-                                            "Download the selected item.")
-            except RuntimeError:
+                player = PlayerMainWindow(docid=recid, parent=self)
+                player.show()
+
+            except FileNotFoundError:
                 QMessageBox.information(self, "QMessageBox.information()",
                                         "Download the selected item.")
         else:
