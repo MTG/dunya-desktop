@@ -53,8 +53,7 @@ class GeneralMainDesign(QMainWindow):
         self.dw_collections.setTitleBarWidget(QWidget())
         self.dwc_left = DockWidgetContentsLeft(self)
         self.dw_collections.setWidget(self.dwc_left)
-        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea,
-                           self.dw_collections)
+        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dw_collections)
 
         QtCore.QMetaObject.connectSlotsByName(self)
 
