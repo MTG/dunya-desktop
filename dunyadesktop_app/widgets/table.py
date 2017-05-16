@@ -19,15 +19,15 @@ from .widgetutilities import set_css, convert_str
 from .models.recordingmodel import CollectionTableModel
 from .models.proxymodel import SortFilterProxyModel
 
+
 if platform.system() == 'Linux':
     FONT_SIZE = 9
 else:
     FONT_SIZE = 12
 
+
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
                          'documents')
-
-
 DUNYA_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                           'icons', 'dunya.svg')
 CHECK_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
@@ -37,7 +37,8 @@ QUEUE_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
 DOWNLOAD_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                              'icons', 'download.svg')
 COMPMUSIC_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
-                             'icons', 'compmusic_white.png')
+                              'icons', 'compmusic_white.png')
+
 
 class DownloadButton(QToolButton):
     def __init__(self, parent=None):
@@ -400,8 +401,68 @@ class DialogCollTable(QDialog):
         self.model.clear_items()
 
 
-class TablePlaylist(TableViewCollections):
+class TablePlaylist(QTableWidget, TableViewCollections):
 
     def __init__(self):
+        QTableWidget.__init__(self)
         TableViewCollections.__init__(self)
+        self.setDragDropMode(QAbstractItemView.NoDragDrop)
+        self._set_columns()
 
+        self.items = {}
+
+    def _set_columns(self):
+        self.setColumnCount(3)
+        self.setHorizontalHeaderLabels(['', 'Title', 'Artists'])
+        self.horizontalHeader().setResizeMode(QHeaderView.Fixed)
+
+    def add_recordings(self, recording):
+        for index, mbid in enumerate(recording):
+            metadata = self._get_metadata(mbid[0], index)
+            self._add_item(metadata)
+
+    def _get_metadata(self, mbid, index):
+        path = os.path.join(DOCS_PATH, mbid, 'audioanalysis--metadata.json')
+        self.metadata = json.load(open(path))
+
+        metadata_dict = {}
+        mbid = self.metadata['mbid']
+
+        metadata_dict['title'] = self.metadata['title']
+        metadata_dict['artists'] = self._parse_artists()
+        metadata_dict['makam'] = self._parse_mattribute('makam')
+        metadata_dict['usul'] = self._parse_mattribute('usul')
+        metadata_dict['form'] = self._parse_mattribute('form')
+        self.items[index] = mbid
+
+        return metadata_dict
+
+    def _add_item(self, metadata):
+        self.insertRow(self.rowCount())
+
+        # add play button
+        play_button = QPushButton(self)
+        self.setCellWidget(self.rowCount()-1, 0, play_button)
+        self.setItem(self.rowCount()-1, 1, self._make_item(metadata['title']))
+        self.setItem(self.rowCount()-1, 2, self._make_item(metadata['artists']))
+
+    def _make_item(self, text):
+        return QTableWidgetItem(text)
+
+    def _parse_artists(self):
+        values = self.metadata['artists']
+        v = []
+        return_s = ''
+        for k in values:
+            v.append(k['name'])
+        for a in v:
+            return_s += a + ', '
+        return return_s[:-2]
+
+    def _parse_mattribute(self, key):
+        for value in self.metadata[key]:
+            try:
+                mattribute = value['mb_attribute']
+                return mattribute
+            except KeyError:
+                pass

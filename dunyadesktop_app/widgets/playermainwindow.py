@@ -3,9 +3,8 @@ import json
 
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QDockWidget,
-                             QDialog, QHBoxLayout)
+                             QDialog, QHBoxLayout, QLabel)
 from PyQt5.QtCore import Qt, QMetaObject
-import pyqtgraph
 
 from .treewidget import FeatureTreeWidget, MetadataTreeMakam
 from .playerframe import PlayerFrame
@@ -13,6 +12,7 @@ from .playerframe import PlaybackFrame
 from .histogram import HistogramDialog
 from .table import TablePlaylist
 from cultures.makam.featureparsers import load_pd
+from utilities import database
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
                          'documents')
@@ -79,9 +79,14 @@ class PlayerMainWindow(QMainWindow):
         self.dw_playlist.setAllowedAreas(QtCore.Qt.RightDockWidgetArea)
 
         self.dw_playlist_widgets = QWidget(self)
-        layout5 = QHBoxLayout(self.dw_playlist_widgets)
+        layout5 = QVBoxLayout()
         self.playlist_table = TablePlaylist()
+        collection = self.parent().dwc_left.listView_collections.currentItem()
+        coll_label = QLabel(collection.text())
+        self._set_playlist_table(collection)
+        layout5.addWidget(coll_label)
         layout5.addWidget(self.playlist_table)
+        self.dw_playlist_widgets.setLayout(layout5)
         self.dw_playlist.setWidget(self.dw_playlist_widgets)
 
         # dock widget for playback
@@ -103,6 +108,11 @@ class PlayerMainWindow(QMainWindow):
         self.addDockWidget(Qt.LeftDockWidgetArea, self.dw_features)
         self.addDockWidget(Qt.RightDockWidgetArea, self.dw_playlist)
         self.addDockWidget(Qt.BottomDockWidgetArea, self.dw_playback)
+
+    def _set_playlist_table(self, coll_name):
+        conn, c = database.connect()
+        collection = database.fetch_collection(c,coll_name.text())
+        self.playlist_table.add_recordings(collection)
 
     def __set_slider(self, len_audio):
         """
