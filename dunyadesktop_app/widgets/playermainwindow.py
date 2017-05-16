@@ -69,7 +69,7 @@ class PlayerMainWindow(QMainWindow):
         self.dw_features.setWidget(self.dw_contents_features)
 
         # dock widget for playlist
-        self.dw_playlist = QDockWidget(self.central_widget)
+        self.dw_playlist = QDockWidget(self)
         self.dw_playlist.setTitleBarWidget(QWidget())
         self.dw_playlist.setMinimumSize(QtCore.QSize(100, 130))
         self.dw_playlist.setMaximumSize(QtCore.QSize(400, 524287))
