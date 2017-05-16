@@ -3,7 +3,6 @@ import json
 
 from PyQt5.QtCore import pyqtSignal, Qt
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
-from PyQt5.QtWidgets import QPushButton
 
 
 DUNYA_ICON = os.path.join(os.path.dirname(__file__), '..', '..', 'ui_files',
@@ -86,8 +85,8 @@ class CollectionTableModel(QStandardItemModel):
         self.items = {}
 
     def set_columns(self):
-        self.setHorizontalHeaderLabels(['', 'Title', 'Artists', 'Makam', 'Usul',
-                                        'Form'])
+        self.setHorizontalHeaderLabels(['', 'Title', 'Artists', 'Makam',
+                                        'Usul', 'Form'])
 
     def clear_items(self):
         self.clear()
@@ -96,38 +95,46 @@ class CollectionTableModel(QStandardItemModel):
 
     def add_recording(self, recording):
         for index, mbid in enumerate(recording):
-            metadata = self._get_metadata(mbid[0], index)
+            metadata = CollectionTableModel._get_metadata(self, mbid[0], index)
             self._add_item(metadata)
 
+    @staticmethod
     def _get_metadata(self, mbid, index):
         path = os.path.join(DOCS_PATH, mbid, 'audioanalysis--metadata.json')
-        self.metadata = json.load(open(path))
+        metadata = json.load(open(path))
 
         metadata_dict = {}
-        mbid = self.metadata['mbid']
-        metadata_dict['title'] = self.metadata['title']
-        metadata_dict['artists'] = self._parse_artists()
-        metadata_dict['makam'] = self._parse_mattribute('makam')
-        metadata_dict['usul'] = self._parse_mattribute('usul')
-        metadata_dict['form'] = self._parse_mattribute('form')
+        mbid = metadata['mbid']
+        metadata_dict['title'] = metadata['title']
+        metadata_dict['artists'] = CollectionTableModel.parse_artists(metadata)
+        metadata_dict['makam'] = \
+            CollectionTableModel.parse_mattribute(metadata, 'makam')
+        metadata_dict['usul'] = \
+            CollectionTableModel.parse_mattribute(metadata, 'usul')
+        metadata_dict['form'] = \
+            CollectionTableModel.parse_mattribute(metadata, 'form')
         self.items[index] = mbid
 
         return metadata_dict
 
     def _add_item(self, metadata):
         self.insertRow(self.rowCount())
-        self.setItem(self.rowCount()-1, 0, self._make_item(str(self.rowCount())))
+        self.setItem(self.rowCount()-1, 0,
+                     self._make_item(str(self.rowCount())))
         self.setItem(self.rowCount()-1, 1, self._make_item(metadata['title']))
-        self.setItem(self.rowCount()-1, 2, self._make_item(metadata['artists']))
+        self.setItem(self.rowCount()-1, 2,
+                     self._make_item(metadata['artists']))
         self.setItem(self.rowCount()-1, 3, self._make_item(metadata['makam']))
         self.setItem(self.rowCount()-1, 4, self._make_item(metadata['usul']))
         self.setItem(self.rowCount()-1, 5, self._make_item(metadata['form']))
 
-    def _make_item(self, text):
+    @staticmethod
+    def _make_item(text):
         return QStandardItem(text)
 
-    def _parse_artists(self):
-        values = self.metadata['artists']
+    @staticmethod
+    def parse_artists(metadata):
+        values = metadata['artists']
         v = []
         return_s = ''
         for k in values:
@@ -136,8 +143,9 @@ class CollectionTableModel(QStandardItemModel):
             return_s += a + ', '
         return return_s[:-2]
 
-    def _parse_mattribute(self, key):
-        for value in self.metadata[key]:
+    @staticmethod
+    def parse_mattribute(metadata, key):
+        for value in metadata[key]:
             try:
                 mattribute = value['mb_attribute']
                 return mattribute

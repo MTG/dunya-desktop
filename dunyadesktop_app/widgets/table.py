@@ -38,6 +38,8 @@ DOWNLOAD_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                              'icons', 'download.svg')
 COMPMUSIC_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                               'icons', 'compmusic_white.png')
+CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
+                        'style.qss')
 
 
 class DownloadButton(QToolButton):
@@ -408,7 +410,7 @@ class TablePlaylist(QTableWidget, TableViewCollections):
         TableViewCollections.__init__(self)
         self.setDragDropMode(QAbstractItemView.NoDragDrop)
         self._set_columns()
-
+        set_css(self, CSS_PATH)
         self.items = {}
 
     def _set_columns(self):
@@ -418,24 +420,8 @@ class TablePlaylist(QTableWidget, TableViewCollections):
 
     def add_recordings(self, recording):
         for index, mbid in enumerate(recording):
-            metadata = self._get_metadata(mbid[0], index)
+            metadata = CollectionTableModel._get_metadata(self, mbid[0], index)
             self._add_item(metadata)
-
-    def _get_metadata(self, mbid, index):
-        path = os.path.join(DOCS_PATH, mbid, 'audioanalysis--metadata.json')
-        self.metadata = json.load(open(path))
-
-        metadata_dict = {}
-        mbid = self.metadata['mbid']
-
-        metadata_dict['title'] = self.metadata['title']
-        metadata_dict['artists'] = self._parse_artists()
-        metadata_dict['makam'] = self._parse_mattribute('makam')
-        metadata_dict['usul'] = self._parse_mattribute('usul')
-        metadata_dict['form'] = self._parse_mattribute('form')
-        self.items[index] = mbid
-
-        return metadata_dict
 
     def _add_item(self, metadata):
         self.insertRow(self.rowCount())
@@ -448,21 +434,3 @@ class TablePlaylist(QTableWidget, TableViewCollections):
 
     def _make_item(self, text):
         return QTableWidgetItem(text)
-
-    def _parse_artists(self):
-        values = self.metadata['artists']
-        v = []
-        return_s = ''
-        for k in values:
-            v.append(k['name'])
-        for a in v:
-            return_s += a + ', '
-        return return_s[:-2]
-
-    def _parse_mattribute(self, key):
-        for value in self.metadata[key]:
-            try:
-                mattribute = value['mb_attribute']
-                return mattribute
-            except KeyError:
-                pass
