@@ -38,6 +38,8 @@ DOWNLOAD_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                              'icons', 'download.svg')
 COMPMUSIC_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                               'icons', 'compmusic_white.png')
+PLAY_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
+                              'icons', 'playback', 'play-button_gray.svg')
 CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                         'style.qss')
 
@@ -403,11 +405,12 @@ class DialogCollTable(QDialog):
         self.model.clear_items()
 
 
-class TablePlaylist(QTableWidget, TableViewCollections):
+class TablePlaylist(TableWidget, TableViewCollections):
 
     def __init__(self):
-        QTableWidget.__init__(self)
+        TableWidget.__init__(self)
         TableViewCollections.__init__(self)
+        self.setEnabled(True)
         self.setDragDropMode(QAbstractItemView.NoDragDrop)
         self._set_columns()
         set_css(self, CSS_PATH)
@@ -427,7 +430,8 @@ class TablePlaylist(QTableWidget, TableViewCollections):
         self.insertRow(self.rowCount())
 
         # add play button
-        play_button = QPushButton(self)
+        play_button = QToolButton(self)
+        play_button.setIcon(QIcon(PLAY_ICON))
         self.setCellWidget(self.rowCount()-1, 0, play_button)
         self.setItem(self.rowCount()-1, 1, self._make_item(metadata['title']))
         self.setItem(self.rowCount()-1, 2, self._make_item(metadata['artists']))
