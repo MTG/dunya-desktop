@@ -16,9 +16,9 @@ class MainWindowMakamDesign(GeneralMainDesign):
         self.dwc_top.label_corpus.setText('<html><head/><body><p '
                                           'align="center"><span style=" '
                                           'font-size:15pt; '
-                                          'color:#C1C1C1;">Ottoman-Turkish '
-                                          'Makam Music '
-                                          'Corpus</span></p></body></html>')
+                                          'color:#C1C1C1;">'
+                                          'Adaptive Synthesis for SymbTr Collection'
+                                          '</span></p></body></html>')
 
     def _retranslate_ui_elements(self):
         """Changes the names of comboboxes and tabs"""
