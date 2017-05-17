@@ -103,8 +103,6 @@ class TableView(QTableView):
             menu.popup(QCursor.pos())
 
             self.selected_indexes = menu.return_selected_row_indexes()
-            menu.overall_hist_action.triggered.connect(
-                self._compute_overall_histograms)
         except UnboundLocalError:
             pass
 

@@ -41,10 +41,6 @@ class RCMenu(QMenu):
             collections_menu.addAction(act)
         conn.close()
 
-        self.addSeparator()
-        self.overall_hist_action = QAction("Compute oveall histograms", self)
-        self.addAction(self.overall_hist_action)
-
     def _send_request_to_parent(self, coll):
         self.parent().send_to_db(str(coll))
 
