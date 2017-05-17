@@ -99,8 +99,6 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.frame_query.frame_attributes.\
             comboBox_composer.add_items(self.composers)
         self.frame_query.frame_attributes.\
-            comboBox_performer.add_items(self.performers)
-        self.frame_query.frame_attributes.\
             comboBox_instrument.add_items(self.instruments)
 
     def _set_collections(self):
@@ -125,14 +123,12 @@ class MainWindowMakam(MainWindowMakamDesign):
         fid = self.frame_query.frame_attributes.comboBox_form.get_attribute_id()
         uid = self.frame_query.frame_attributes.comboBox_rhythm.get_attribute_id()
         cmbid = self.frame_query.frame_attributes.comboBox_composer.get_attribute_id()
-        ambid = self.frame_query.frame_attributes.comboBox_performer.get_attribute_id()
 
         q_thread = QueryThread(parent=self)
         q_thread.mid = mid
         q_thread.fid = fid
         q_thread.uid = uid
         q_thread.cmbid = cmbid
-        q_thread.ambid = ambid
 
         self.q_threads.append(q_thread)
 
@@ -165,8 +161,6 @@ class MainWindowMakam(MainWindowMakamDesign):
             color=color_palette[combobox_status[2]])
         self.frame_query.frame_attributes.comboBox_composer.change_background(
             color=color_palette[combobox_status[3]])
-        self.frame_query.frame_attributes.comboBox_performer.change_background(
-            color=color_palette[combobox_status[4]])
 
     def query_finished(self):
         self.progress_bar.setVisible(False)

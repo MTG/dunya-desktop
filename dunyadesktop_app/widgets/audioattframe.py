@@ -42,8 +42,6 @@ class AudioAttFrame(QFrame):
         self.comboBox_form.currentIndexChanged.connect(self.set_toolbutton)
         self.comboBox_rhythm.currentIndexChanged.connect(self.set_toolbutton)
         self.comboBox_composer.currentIndexChanged.connect(self.set_toolbutton)
-        self.comboBox_performer.currentIndexChanged.connect(
-            self.set_toolbutton)
         self.comboBox_instrument.currentIndexChanged.connect(
             self.set_toolbutton)
 
@@ -69,29 +67,24 @@ class AudioAttFrame(QFrame):
         # combo boxes
         # melodic structure
         self.comboBox_melodic = ComboBox(self)
-        layout.addWidget(self.comboBox_melodic, 0, 0, 1, 1)
+        layout.addWidget(self.comboBox_melodic, 0, 0, 1, 2)
 
         # form structure
         self.comboBox_form = ComboBox(self)
-        layout.addWidget(self.comboBox_form, 0, 2, 1, 1)
+        layout.addWidget(self.comboBox_form, 0, 2, 1, 2)
 
         # rhythmic structure
         self.comboBox_rhythm = ComboBox(self)
-        layout.addWidget(self.comboBox_rhythm, 0, 4, 1, 1)
+        layout.addWidget(self.comboBox_rhythm, 0, 4, 1, 2)
 
         # composer
         self.comboBox_composer = ComboBox(self)
-        layout.addWidget(self.comboBox_composer, 1, 0, 1, 1)
+        layout.addWidget(self.comboBox_composer, 1, 0, 1, 3)
         self.comboBox_composer.set_placeholder_text('Composer')
-
-        # performer
-        self.comboBox_performer = ComboBox(self)
-        layout.addWidget(self.comboBox_performer, 1, 2, 1, 1)
-        self.comboBox_performer.set_placeholder_text('Performer')
 
         # instrument
         self.comboBox_instrument = ComboBox(self)
-        layout.addWidget(self.comboBox_instrument, 1, 4, 1, 1)
+        layout.addWidget(self.comboBox_instrument, 1, 3, 1, 3)
         self.comboBox_instrument.set_placeholder_text('Instrument')
 
         # spacers between the comboboxes
@@ -126,7 +119,6 @@ class AudioAttFrame(QFrame):
         self.comboBox_form.setStatusTip("Select form attribute")
         self.comboBox_rhythm.setStatusTip("Select rhythm attribute")
         self.comboBox_composer.setStatusTip("Select composer")
-        self.comboBox_performer.setStatusTip("Select performer")
         self.comboBox_instrument.setStatusTip("Select instrument")
         self.toolButton_query.setStatusTip("Query your selection")
 
@@ -136,12 +128,10 @@ class AudioAttFrame(QFrame):
         index_form = self.comboBox_form.currentIndex()
         index_rhythm = self.comboBox_rhythm.currentIndex()
         index_composer = self.comboBox_composer.currentIndex()
-        index_performer = self.comboBox_performer.currentIndex()
         index_instrument = self.comboBox_instrument.currentIndex()
 
         if index_melodic is -1 and index_form is -1 and index_rhythm is -1 \
-                and index_composer is -1 and index_performer is -1 and \
-                        index_instrument is -1:
+                and index_composer is -1 and index_instrument is -1:
             self.toolButton_query.setDisabled(True)
         else:
             self.toolButton_query.setEnabled(True)
