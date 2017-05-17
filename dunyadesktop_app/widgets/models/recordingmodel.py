@@ -27,46 +27,27 @@ class RecordingModel(QStandardItemModel):
         self.set_columns()
 
     def add_recording(self, work):
-        for rec in work['recordings']:
-            check_item = QStandardItem()
-            check_item.setCheckable(True)
-            title = QStandardItem(rec['title'])
+        check_item = QStandardItem()
+        check_item.setCheckable(True)
 
-            composers = ''
-            for composer in work['composers']:
-                composers += composer['name'] + ","
-            composers_item = QStandardItem(composers)
+        title = QStandardItem(work['title'])
 
-            artists = ''
-            rec['artists'] = [dict(tupleized) for tupleized in
-                              set(tuple(element.items())
-                                  for element in rec['artists'])]
+        composers = ''
+        for composer in work['composers']:
+            composers += composer['name'] + ","
+        composers_item = QStandardItem(composers)
 
-            for artist in rec['artists']:
-                artists += artist['name'] + ", "
+        mbid = work['mbid']
+        self.rec_fetched.emit(mbid)
 
-            artists = artists[:-2]
-            artist_item = QStandardItem(artists)
+        if os.path.isdir(os.path.join(DOCS_PATH, str(work['mbid']))):
+            check_item.setCheckState(Qt.Checked)
+            check_item.setEnabled(False)
 
-            mbid = rec['mbid']
-            self.rec_fetched.emit(mbid)
-
-            if os.path.isdir(os.path.join(DOCS_PATH, str(rec['mbid']))):
-                check_item.setCheckState(Qt.Checked)
-                check_item.setEnabled(False)
-
-                # brush = QtGui.QBrush(QtGui.QColor(210, 220, 210))
-                # check_item.setBackground(brush)
-                # check_item.setEnabled(False)
-                # title.setBackground(brush)
-                # title.setEnabled(False)
-                # artist_item.setBackground(brush)
-                # artist_item.setEnabled(False)
-
-            self.insertRow(self.rowCount())
-            self.setItem(self.rowCount() - 1, 0, check_item)
-            self.setItem(self.rowCount() - 1, 1, title)
-            self.setItem(self.rowCount() - 1, 2, composers_item)
+        self.insertRow(self.rowCount())
+        self.setItem(self.rowCount() - 1, 0, check_item)
+        self.setItem(self.rowCount() - 1, 1, title)
+        self.setItem(self.rowCount() - 1, 2, composers_item)
 
     def set_checked(self, rows):
         for row in rows:
