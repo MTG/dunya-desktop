@@ -20,7 +20,7 @@ class RecordingModel(QStandardItemModel):
         self.set_columns()
 
     def set_columns(self):
-        self.setHorizontalHeaderLabels(['', 'Title', 'Composer', 'Artists'])
+        self.setHorizontalHeaderLabels(['', 'Title', 'Composer'])
 
     def clear_items(self):
         self.clear()
@@ -67,7 +67,6 @@ class RecordingModel(QStandardItemModel):
             self.setItem(self.rowCount() - 1, 0, check_item)
             self.setItem(self.rowCount() - 1, 1, title)
             self.setItem(self.rowCount() - 1, 2, composers_item)
-            self.setItem(self.rowCount() - 1, 3, artist_item)
 
     def set_checked(self, rows):
         for row in rows:
