@@ -66,7 +66,7 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.frame_query.frame_attributes.toolButton_query.clicked.connect(
             self.query)
 
-        self.frame_query.recording_model.rec_fetched.connect(
+        self.frame_query.work_model.work_fetched.connect(
             self.append_work)
 
         # filtering the results
@@ -113,7 +113,7 @@ class MainWindowMakam(MainWindowMakamDesign):
     def query(self):
         self.works = []
         self.work_count = 0
-        self.frame_query.recording_model.clear_items()
+        self.frame_query.work_model.clear_items()
         self.frame_query.frame_attributes.toolButton_query.setEnabled(False)
         self.frame_query.lineEdit_filter.setEnabled(True)
         self.frame_query.tableView_results.setEnabled(True)
@@ -146,7 +146,7 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.work_count += 1
         self.progress_bar.update_progress_bar(self.work_count,
                                               self.progress_number)
-        self.frame_query.recording_model.add_score(work.work)
+        self.frame_query.work_model.add_score(work.work)
         self.frame_query.tableView_results.resizeColumnToContents(1)
         self.frame_query.tableView_results.setColumnWidth(0, 28)
 
