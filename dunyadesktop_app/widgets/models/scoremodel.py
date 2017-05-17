@@ -4,6 +4,7 @@ import json
 from PyQt5.QtCore import pyqtSignal, Qt
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
+from cultures.makam.utilities import has_symbtr
 
 DUNYA_ICON = os.path.join(os.path.dirname(__file__), '..', '..', 'ui_files',
                           'icons', 'dunya.svg')
@@ -27,27 +28,28 @@ class ScoreModel(QStandardItemModel):
         self.set_columns()
 
     def add_score(self, work):
-        check_item = QStandardItem()
-        check_item.setCheckable(True)
+        if has_symbtr(work['mbid']):
+            check_item = QStandardItem()
+            check_item.setCheckable(True)
 
-        title = QStandardItem(work['title'])
+            title = QStandardItem(work['title'])
 
-        composers = ''
-        for composer in work['composers']:
-            composers += composer['name'] + ","
-        composers_item = QStandardItem(composers)
+            composers = ''
+            for composer in work['composers']:
+                composers += composer['name'] + ","
+            composers_item = QStandardItem(composers)
 
-        mbid = work['mbid']
-        self.work_fetched.emit(mbid)
+            mbid = work['mbid']
+            self.work_fetched.emit(mbid)
 
-        if os.path.isdir(os.path.join(DOCS_PATH, str(work['mbid']))):
-            check_item.setCheckState(Qt.Checked)
-            check_item.setEnabled(False)
+            if os.path.isdir(os.path.join(DOCS_PATH, str(work['mbid']))):
+                check_item.setCheckState(Qt.Checked)
+                check_item.setEnabled(False)
 
-        self.insertRow(self.rowCount())
-        self.setItem(self.rowCount() - 1, 0, check_item)
-        self.setItem(self.rowCount() - 1, 1, title)
-        self.setItem(self.rowCount() - 1, 2, composers_item)
+            self.insertRow(self.rowCount())
+            self.setItem(self.rowCount() - 1, 0, check_item)
+            self.setItem(self.rowCount() - 1, 1, title)
+            self.setItem(self.rowCount() - 1, 2, composers_item)
 
     def set_checked(self, rows):
         for row in rows:

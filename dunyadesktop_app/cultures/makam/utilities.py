@@ -19,6 +19,17 @@ import numpy as np
 FOLDER = os.path.join(os.path.dirname(__file__), '..', 'documents')
 
 
+def has_symbtr(workid):
+    print(workid)
+    try:
+        doc = document(workid)
+        if 'score' in doc['derivedfiles'].keys():
+            return True
+        else:
+            return False
+    except HTTPError:
+        return False
+
 def is_dunya_up():
     try:
         status = urllib.urlopen("http://dunya.compmusic.upf.edu/").getcode()
