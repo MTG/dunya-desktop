@@ -16,7 +16,7 @@ from widgets.playerframe import load_pd, load_tonic
 from .progressbar import ProgressBar
 from .contextmenu import RCMenu
 from .widgetutilities import set_css, convert_str
-from .models.recordingmodel import CollectionTableModel
+from .models.scoremodel import CollectionTableModel
 from .models.proxymodel import SortFilterProxyModel
 
 

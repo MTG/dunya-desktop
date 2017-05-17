@@ -6,7 +6,7 @@ from PyQt5.QtGui import QFont
 from .table import TableViewResults
 from .tabwidget import TabWidget
 from .audioattframe import AudioAttFrame
-from .models.recordingmodel import RecordingModel
+from .models.scoremodel import ScoreModel
 from .models.proxymodel import SortFilterProxyModel
 
 
@@ -42,10 +42,10 @@ class QueryFrame(QFrame):
         self.tableView_results = TableViewResults(self.tabWidget.tab_audio)
         layout_v.addWidget(self.tableView_results)
 
-        self.recording_model = RecordingModel()
+        self.work_model = ScoreModel()
 
         self.proxy_model = SortFilterProxyModel()
-        self.proxy_model.setSourceModel(self.recording_model)
+        self.proxy_model.setSourceModel(self.work_model)
         self.proxy_model.setFilterKeyColumn(-1)
 
         self.tableView_results.setModel(self.proxy_model)

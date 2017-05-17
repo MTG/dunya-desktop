@@ -104,7 +104,7 @@ class DockWidgetContentsLeft(QWidget):
 
             conn, c = database.connect()
             collection = database.fetch_collection(c, current_coll.text())
-            self.coll_dialog.model.add_recording(collection)
+            self.coll_dialog.model.add_score(collection)
             conn.close()
 
             self.coll_dialog.show()

@@ -67,7 +67,7 @@ class MainWindowMakam(MainWindowMakamDesign):
             self.query)
 
         self.frame_query.recording_model.rec_fetched.connect(
-            self.append_recording)
+            self.append_work)
 
         # filtering the results
         self.frame_query.lineEdit_filter.textChanged.connect(
@@ -138,7 +138,7 @@ class MainWindowMakam(MainWindowMakamDesign):
     def set_progress_number(self, progress_number):
         self.progress_number = progress_number.status
 
-    def append_recording(self, rec_mbid):
+    def append_work(self, rec_mbid):
         self.works.append(str(rec_mbid))
         self.dwc_left.tableView_downloaded.recordings = self.works
 
@@ -146,7 +146,7 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.work_count += 1
         self.progress_bar.update_progress_bar(self.work_count,
                                               self.progress_number)
-        self.frame_query.recording_model.add_recording(work.work)
+        self.frame_query.recording_model.add_score(work.work)
         self.frame_query.tableView_results.resizeColumnToContents(1)
         self.frame_query.tableView_results.setColumnWidth(0, 28)
 
@@ -171,7 +171,7 @@ class MainWindowMakam(MainWindowMakamDesign):
 
     def download_related_features(self, index):
         source_index = self.frame_query.tableView_results.model().mapToSource(index)
-        self.recid = self.works[source_index.row()]
+        self.workid = self.works[source_index.row()]
 
     def open_player_collection(self, index):
         coll = str(self.dwc_left.listView_collections.currentItem().text())
@@ -186,10 +186,10 @@ class MainWindowMakam(MainWindowMakamDesign):
     def open_player(self, index):
         if not self.q_threads:
             model_index = self.frame_query.tableView_results.model().mapToSource(index)
-            recid = self.works[model_index.row()]
+            workid = self.works[model_index.row()]
 
             try:
-                player = PlayerMainWindow(docid=recid, parent=self)
+                player = PlayerMainWindow(docid=workid, parent=self)
                 player.show()
 
             except FileNotFoundError:

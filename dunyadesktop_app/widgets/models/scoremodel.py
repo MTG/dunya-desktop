@@ -11,9 +11,9 @@ DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', '..', 'cultures',
                          'documents')
 
 
-class RecordingModel(QStandardItemModel):
+class ScoreModel(QStandardItemModel):
     """Recording model is for the results of queries."""
-    rec_fetched = pyqtSignal(str)
+    work_fetched = pyqtSignal(str)
 
     def __init__(self, parent=None):
         QStandardItemModel.__init__(self, parent)
@@ -26,7 +26,7 @@ class RecordingModel(QStandardItemModel):
         self.clear()
         self.set_columns()
 
-    def add_recording(self, work):
+    def add_score(self, work):
         check_item = QStandardItem()
         check_item.setCheckable(True)
 
@@ -38,7 +38,7 @@ class RecordingModel(QStandardItemModel):
         composers_item = QStandardItem(composers)
 
         mbid = work['mbid']
-        self.rec_fetched.emit(mbid)
+        self.work_fetched.emit(mbid)
 
         if os.path.isdir(os.path.join(DOCS_PATH, str(work['mbid']))):
             check_item.setCheckState(Qt.Checked)
