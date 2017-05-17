@@ -94,4 +94,4 @@ class QueryFrame(QFrame):
 
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.tabWidget.tab_audio),
-            "Audio Collection")
+            "Score Collection")
