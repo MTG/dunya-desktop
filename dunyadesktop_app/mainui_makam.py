@@ -39,7 +39,7 @@ class MainWindowMakam(MainWindowMakamDesign):
              self.performers, self.instruments) = utilities.get_attributes()
             self._set_combobox_attributes()
             self.frame_query.frame_attributes.comboBox_instrument.setDisabled(True)
-            self.recordings = []
+            self.works = []
             self.work_count = 0
             self.progress_number = 0
             self.d_threads = []
@@ -111,7 +111,7 @@ class MainWindowMakam(MainWindowMakamDesign):
         conn.close()
 
     def query(self):
-        self.recordings = []
+        self.works = []
         self.work_count = 0
         self.frame_query.recording_model.clear_items()
         self.frame_query.frame_attributes.toolButton_query.setEnabled(False)
@@ -139,8 +139,8 @@ class MainWindowMakam(MainWindowMakamDesign):
         self.progress_number = progress_number.status
 
     def append_recording(self, rec_mbid):
-        self.recordings.append(str(rec_mbid))
-        self.dwc_left.tableView_downloaded.recordings = self.recordings
+        self.works.append(str(rec_mbid))
+        self.dwc_left.tableView_downloaded.recordings = self.works
 
     def work_received(self, work):
         self.work_count += 1
@@ -171,7 +171,7 @@ class MainWindowMakam(MainWindowMakamDesign):
 
     def download_related_features(self, index):
         source_index = self.frame_query.tableView_results.model().mapToSource(index)
-        self.recid = self.recordings[source_index.row()]
+        self.recid = self.works[source_index.row()]
 
     def open_player_collection(self, index):
         coll = str(self.dwc_left.listView_collections.currentItem().text())
@@ -186,7 +186,7 @@ class MainWindowMakam(MainWindowMakamDesign):
     def open_player(self, index):
         if not self.q_threads:
             model_index = self.frame_query.tableView_results.model().mapToSource(index)
-            recid = self.recordings[model_index.row()]
+            recid = self.works[model_index.row()]
 
             try:
                 player = PlayerMainWindow(docid=recid, parent=self)
@@ -210,10 +210,10 @@ class MainWindowMakam(MainWindowMakamDesign):
     def add_received_doc(self, coll, index):
         conn, c = database.connect()
         source_index = self.frame_query.tableView_results.model().mapToSource(index)
-        docid = self.recordings[source_index.row()]
+        docid = self.works[source_index.row()]
         if database.add_doc_to_coll(conn, c, docid, coll):
             self.dwc_left.tableView_downloaded.add_item(docid)
-            self.dwc_left.tableView_downloaded.indexes[self.recordings[source_index.row()]] = \
+            self.dwc_left.tableView_downloaded.indexes[self.works[source_index.row()]] = \
                 self.dwc_left.tableView_downloaded.rowCount() - 1
             self.check_new_doc([docid])
 
@@ -234,7 +234,7 @@ class MainWindowMakam(MainWindowMakamDesign):
 
     def check_query_table(self, docid):
         try:
-            row = self.recordings.index(docid)
+            row = self.works.index(docid)
             self.frame_query.tableView_results.model().sourceModel().set_checked([row])
         except:
             pass
