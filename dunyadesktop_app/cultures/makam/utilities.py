@@ -30,6 +30,7 @@ def has_symbtr(workid):
     except HTTPError:
         return False
 
+
 def is_dunya_up():
     try:
         status = urllib.urlopen("http://dunya.compmusic.upf.edu/").getcode()
@@ -122,7 +123,7 @@ class DocThread(QThread):
     """Downloads the available features from Dunya-backend related with the
     given docid"""
 
-    FOLDER = os.path.join(os.path.dirname(__file__), '..', 'documents')
+    FOLDER = os.path.join(os.path.dirname(__file__), '..', 'scores')
     step_completed = pyqtSignal(object)
 
     # checking existance of documents folder in culture
@@ -143,9 +144,9 @@ class DocThread(QThread):
 
     def download(self, docid):
         if docid:
-            doc_folder = os.path.join(self.FOLDER, docid)
-            if not os.path.exists(doc_folder):
-                os.makedirs(doc_folder)
+            self.doc_folder = os.path.join(self.FOLDER, docid)
+            if not os.path.exists(self.doc_folder):
+                os.makedirs(self.doc_folder)
 
             # feature list
             try:
@@ -154,30 +155,31 @@ class DocThread(QThread):
                 print(docid, 'is not found')
                 return
 
-            try:
-                m_path = os.path.join(doc_folder, docid + '.mp3')
-                if not os.path.exists(m_path):
-                    # for now, all tokens have permission to download
-                    # audio files
-                    mp3 = get_mp3(docid)
-                    open(m_path, 'wb').write(mp3)
-            except:
-                pass
+            #try:
+            #    m_path = os.path.join(doc_folder, docid + '.mp3')
+            #    if not os.path.exists(m_path):
+            #        # for now, all tokens have permission to download
+            #        # audio files
+            #        mp3 = get_mp3(docid)
+            #        open(m_path, 'wb').write(mp3)
+            #except:
+            #    pass
 
             num_f = 0
             download_list = []
-            if 'audioanalysis' in features:
-                num_f += len(features['audioanalysis'])
-                download_list.append('audioanalysis')
-            if 'jointanalysis' in features:
-                num_f += len(features['jointanalysis'])
+            if 'score' in features:
                 self.download_score(docid)
-                download_list.append('jointanalysis')
+
+            if 'scoreanalysis' in features:
+                self._download_metadata(docid)
+
+            if 'synthesis' in features:
+                download_list.append('synthesis')
 
             count = 0
             for thetype in download_list:
                 for subtype in features[thetype]:
-                    f_path = os.path.join(doc_folder,
+                    f_path = os.path.join(self.doc_folder,
                                           thetype + '--' + subtype + '.json')
                     if not os.path.exists(f_path):
                         try:
@@ -189,6 +191,25 @@ class DocThread(QThread):
                             pass
                     count += 1
                     self.step_completed.emit(ResultObj(docid, count, num_f))
+
+    def _download_synthesis(self, docid):
+        parts = document(docid)['derivedfiles']['score']['score']['numparts']
+        for i in np.arange(1, parts + 1):
+            mp3 = get_document_as_json(docid, 'score', 'score', part=i)
+            mp3_file = 'scoresvg--' + str(i) + '.svg'
+            #score_path = os.path.join(self., score_file)
+            #open(score_path, 'w').write(score)
+
+    def _download_metadata(self, docid):
+        f_path = os.path.join(self.doc_folder, 'scoreanalysis--metadata.json')
+        if not os.path.exists(f_path):
+            try:
+                feature = get_document_as_json(docid, 'scoreanalysis',
+                                               'metadata')
+                if feature:
+                    json.dump(feature, open(f_path, 'w'))
+            except:
+                pass
 
     def download_score(self, docid):
         SCORE_FOLDER = os.path.join(FOLDER, '..', 'scores')
