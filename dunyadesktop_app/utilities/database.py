@@ -3,7 +3,7 @@ import sqlite3
 
 DB_PATH = os.path.join(os.path.dirname(__file__), '..', 'db.sqlite')
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
-                         'documents')
+                         'scores')
 
 
 if not os.path.exists(DOCS_PATH):

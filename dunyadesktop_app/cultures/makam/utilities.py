@@ -16,7 +16,7 @@ from ..dunya.conn import HTTPError
 from PyQt5.QtCore import QObject, QThread, pyqtSignal
 import numpy as np
 
-FOLDER = os.path.join(os.path.dirname(__file__), '..', 'documents')
+FOLDER = os.path.join(os.path.dirname(__file__), '..', 'scores')
 
 
 def has_symbtr(workid):
@@ -155,50 +155,29 @@ class DocThread(QThread):
                 print(docid, 'is not found')
                 return
 
-            #try:
-            #    m_path = os.path.join(doc_folder, docid + '.mp3')
-            #    if not os.path.exists(m_path):
-            #        # for now, all tokens have permission to download
-            #        # audio files
-            #        mp3 = get_mp3(docid)
-            #        open(m_path, 'wb').write(mp3)
-            #except:
-            #    pass
-
-            num_f = 0
-            download_list = []
             if 'score' in features:
-                self.download_score(docid)
+                self._download_score(docid)
 
             if 'scoreanalysis' in features:
                 self._download_metadata(docid)
 
             if 'synthesis' in features:
-                download_list.append('synthesis')
+                self._download_synthesis(docid)
 
-            count = 0
-            for thetype in download_list:
-                for subtype in features[thetype]:
-                    f_path = os.path.join(self.doc_folder,
-                                          thetype + '--' + subtype + '.json')
-                    if not os.path.exists(f_path):
-                        try:
-                            feature = get_document_as_json(docid, thetype,
-                                                           subtype)
-                            if feature:
-                                json.dump(feature, open(f_path, 'w'))
-                        except:
-                            pass
-                    count += 1
-                    self.step_completed.emit(ResultObj(docid, count, num_f))
+            self.step_completed.emit(ResultObj(docid, 0, 0))
 
     def _download_synthesis(self, docid):
-        parts = document(docid)['derivedfiles']['score']['score']['numparts']
+        parts = document(docid)['derivedfiles']['synthesis']['mp3']['numparts']
         for i in np.arange(1, parts + 1):
-            mp3 = get_document_as_json(docid, 'score', 'score', part=i)
-            mp3_file = 'scoresvg--' + str(i) + '.svg'
-            #score_path = os.path.join(self., score_file)
-            #open(score_path, 'w').write(score)
+            mp3 = get_document_as_json(docid, 'synthesis', 'mp3', part=i)
+            mp3_file = 'synthesis--' + str(i) + '.mp3'
+            synthesis_path = os.path.join(self.doc_folder, mp3_file)
+            open(synthesis_path, 'wb').write(mp3)
+
+        onset_feature = get_document_as_json(docid, 'synthesis', 'onsets')
+        onset_file = 'onsets.json'
+        onset_path = os.path.join(self.doc_folder, onset_file)
+        json.dump(onset_feature, open(onset_path, 'w'))
 
     def _download_metadata(self, docid):
         f_path = os.path.join(self.doc_folder, 'scoreanalysis--metadata.json')
@@ -207,59 +186,40 @@ class DocThread(QThread):
                 feature = get_document_as_json(docid, 'scoreanalysis',
                                                'metadata')
                 if feature:
-                    json.dump(feature, open(f_path, 'w'))
+                    json.dump(feature, open(f_path, 'w'), indent=4)
             except:
                 pass
 
-    def download_score(self, docid):
-        SCORE_FOLDER = os.path.join(FOLDER, '..', 'scores')
+    def _download_score(self, docid):
+        try:
+            parts = \
+                document(docid)['derivedfiles']['score']['score']['numparts']
 
-        if not os.path.exists(SCORE_FOLDER):
-            os.makedirs(SCORE_FOLDER)
-
-        works = get_document_as_json(docid, 'audioanalysis',
-                                     'metadata')['works']
-        for work in works:
-            DOC_FOLDER = os.path.join(SCORE_FOLDER, work['mbid'])
-            try:
-                parts = document(work['mbid'])['derivedfiles']['score']['score']['numparts']
-
-                if not os.path.exists(DOC_FOLDER):
-                    os.makedirs(DOC_FOLDER)
-
-                for i in np.arange(1, parts + 1):
-                    score = get_document_as_json(work['mbid'], 'score',
-                                                 'score', part=i)
-                    score_file = 'scoresvg--' + str(i) + '.svg'
-                    score_path = os.path.join(DOC_FOLDER, score_file)
-                    open(score_path, 'w').write(score)
-            except:
-                pass
+            for i in np.arange(1, parts + 1):
+                score = get_document_as_json(docid, 'score', 'score', part=i)
+                score_file = 'scoresvg--' + str(i) + '.svg'
+                score_path = os.path.join(self.doc_folder, score_file)
+                open(score_path, 'w').write(score)
+        except:
+            pass
 
 
 def check_doc(docid):
     """Checks if all the features are downloaded correctly or not"""
     docid = str(docid)
-    if os.path.exists(os.path.join(FOLDER, docid)):
-        docid = str(docid)
-        fullnames, folders, names = \
-            get_filenames_in_dir(os.path.join(FOLDER, docid), '*.json')
+    score_folder = os.path.join(FOLDER, '..', 'scores', docid)
+    if os.path.exists(score_folder):
+        fullnames_mp3, folders, names = get_filenames_in_dir(score_folder,
+                                                             '*.mp3')
 
-        features = {}
-        for name in names:
-            try:
-                features[name.split('--')[0]].append(name.split('--')[1])
-            except KeyError:
-                features[name.split('--')[0]] = []
-                features[name.split('--')[0]].append(name.split('--')[1])
+        fullnames_svg, folders, names = get_filenames_in_dir(score_folder,
+                                                             '*.svg')
 
-        try:
-            num_features = sum([len(features[key]) for key in features])
-            if num_features == 10 or num_features == 22:
-                return True
-            else:
-                return False
-        except:
+        fullnames_json, folders, names = get_filenames_in_dir(score_folder,
+                                                              '*.json')
+        if fullnames_mp3 and fullnames_svg and fullnames_json:
+            return True
+        else:
             return False
     else:
         return False
