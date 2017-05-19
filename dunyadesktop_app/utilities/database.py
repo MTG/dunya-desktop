@@ -6,6 +6,10 @@ DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
                          'documents')
 
 
+if not os.path.exists(DOCS_PATH):
+    os.makedirs(DOCS_PATH)
+
+
 def add_collection(conn, c, list_name):
     """Adds collection to the db"""
     try:
