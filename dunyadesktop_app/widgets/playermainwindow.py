@@ -82,8 +82,12 @@ class PlayerMainWindow(QMainWindow):
         layout5 = QVBoxLayout()
         self.playlist_table = TablePlaylist()
         collection = self.parent().dwc_left.listView_collections.currentItem()
-        coll_label = QLabel(collection.text())
-        self._set_playlist_table(collection)
+        if collection:
+            coll_name = collection.text()
+        else:
+            coll_name = 'MainCollection'
+        coll_label = QLabel(coll_name)
+        self._set_playlist_table(coll_name)
         layout5.addWidget(coll_label)
         layout5.addWidget(self.playlist_table)
         self.dw_playlist_widgets.setLayout(layout5)
@@ -111,7 +115,7 @@ class PlayerMainWindow(QMainWindow):
 
     def _set_playlist_table(self, coll_name):
         conn, c = database.connect()
-        collection = database.fetch_collection(c,coll_name.text())
+        collection = database.fetch_collection(c, coll_name)
         self.playlist_table.add_recordings(collection)
 
     def __set_slider(self, len_audio):
