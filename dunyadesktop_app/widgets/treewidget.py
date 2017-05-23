@@ -4,7 +4,7 @@ import webbrowser
 
 from PyQt5.QtWidgets import (QTreeWidget, QTreeWidgetItem, QPushButton,
                              QDialog, QRadioButton, QWidget, QVBoxLayout,
-                             QApplication, QLabel)
+                             QGroupBox, QLabel)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt, pyqtSignal
 
@@ -203,17 +203,12 @@ class FeatureDialogAdaptive(QWidget):
     def __init__(self, mbid, parent=None):
         QWidget.__init__(self, parent=parent)
         self.mbid = mbid
+        self.group_box = QGroupBox('Synthesis', self)
         self._set_design()
 
     def _set_design(self):
-        layout = QVBoxLayout(self)
-
-        label = QLabel()
-        label.setText('Synthesis')
-        layout.addWidget(label)
-
         layout_synthesis = self._add_synthesis()
-        layout.addLayout(layout_synthesis)
+        self.group_box.setLayout(layout_synthesis)
 
     def _add_synthesis(self):
         layout = QVBoxLayout()
@@ -224,6 +219,7 @@ class FeatureDialogAdaptive(QWidget):
         for name in names:
             radio_button = QRadioButton(self)
             radio_button.setText(name.split('.mp3')[0])
+            radio_button.setChecked(True)
             layout.addWidget(radio_button)
-
+        layout.addStretch(1)
         return layout
