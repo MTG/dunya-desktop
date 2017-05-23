@@ -415,8 +415,8 @@ class TablePlaylist(TableWidget, TableViewCollections):
         self.items = {}
 
     def _set_columns(self):
-        self.setColumnCount(4)
-        self.setHorizontalHeaderLabels(['', '', 'Title', 'Artists'])
+        self.setColumnCount(3)
+        self.setHorizontalHeaderLabels(['', '', 'Title'])
         self.horizontalHeader().setResizeMode(QHeaderView.Fixed)
 
     def add_recordings(self, recording):
@@ -435,8 +435,6 @@ class TablePlaylist(TableWidget, TableViewCollections):
                      self._make_item(str(self.rowCount())))
         self.setCellWidget(self.rowCount()-1, 1, play_button)
         self.setItem(self.rowCount()-1, 2, self._make_item(metadata['title']))
-        self.setItem(self.rowCount()-1, 3,
-                     self._make_item(metadata['artists']))
 
         self.setColumnWidth(0, 23)
         self.setColumnWidth(1, 28)
