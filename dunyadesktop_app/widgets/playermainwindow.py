@@ -6,7 +6,8 @@ from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QDockWidget,
                              QDialog, QHBoxLayout, QLabel)
 from PyQt5.QtCore import Qt, QMetaObject
 
-from .treewidget import FeatureTreeWidget, MetadataTreeMakam
+from .treewidget import (FeatureTreeWidget, MetadataTreeMakam,
+                         FeatureDialogAdaptive)
 from .playerframe import PlayerFrame
 from .playerframe import PlaybackFrame
 from .histogram import HistogramDialog
@@ -15,7 +16,7 @@ from cultures.makam.featureparsers import load_pd
 from utilities import database
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
-                         'documents')
+                         'scores')
 
 
 class PlayerMainWindow(QMainWindow):
@@ -26,13 +27,13 @@ class PlayerMainWindow(QMainWindow):
         QMetaObject.connectSlotsByName(self)
 
         # signals
-        self.feature_tree.item_checked.connect(self.evaluate_checked_signal)
+        #self.feature_tree.item_checked.connect(self.evaluate_checked_signal)
 
         # signals
-        self.playback_frame.button_play.clicked.connect(
-            self.player_frame.playback_play)
-        self.playback_frame.button_pause.clicked.connect(
-            self.player_frame.playback_pause)
+        #self.playback_frame.button_play.clicked.connect(
+        #    self.player_frame.playback_play)
+        #self.playback_frame.button_pause.clicked.connect(
+        #    self.player_frame.playback_pause)
 
     def _set_design(self, docid):
         self.resize(710, 550)
@@ -40,9 +41,6 @@ class PlayerMainWindow(QMainWindow):
 
         layout = QVBoxLayout(self.central_widget)
         layout.setContentsMargins(2, 2, 2, 2)
-
-        self.player_frame = PlayerFrame(recid=docid, parent=self)
-        layout.addWidget(self.player_frame)
 
         self.setCentralWidget(self.central_widget)
 
@@ -56,16 +54,7 @@ class PlayerMainWindow(QMainWindow):
             QtWidgets.QDockWidget.NoDockWidgetFeatures)
         self.dw_features.setAllowedAreas(QtCore.Qt.LeftDockWidgetArea)
 
-        self.dw_contents_features = QWidget()
-        layout3 = QVBoxLayout(self.dw_contents_features)
-        layout3.setContentsMargins(3, 3, 3, 3)
-        layout2 = QVBoxLayout()
-
-        self.feature_tree = FeatureTreeWidget(self.dw_contents_features)
-        self.feature_tree.get_feature_list(docid=str(docid))
-
-        layout2.addWidget(self.feature_tree)
-        layout3.addLayout(layout2)
+        self.dw_contents_features = FeatureDialogAdaptive(docid, self)
         self.dw_features.setWidget(self.dw_contents_features)
 
         # dock widget for playlist
@@ -83,7 +72,11 @@ class PlayerMainWindow(QMainWindow):
         self.playlist_table = TablePlaylist()
         collection = self.parent().dwc_left.listView_collections.currentItem()
         coll_label = QLabel(collection.text())
-        self._set_playlist_table(collection)
+        if collection:
+            coll_name = collection.text()
+        else:
+            coll_name = 'MainCollection'
+        self._set_playlist_table(coll_name)
         layout5.addWidget(coll_label)
         layout5.addWidget(self.playlist_table)
         self.dw_playlist_widgets.setLayout(layout5)
@@ -111,7 +104,7 @@ class PlayerMainWindow(QMainWindow):
 
     def _set_playlist_table(self, coll_name):
         conn, c = database.connect()
-        collection = database.fetch_collection(c,coll_name.text())
+        collection = database.fetch_collection(c, coll_name)
         self.playlist_table.add_recordings(collection)
 
     def __set_slider(self, len_audio):
@@ -125,7 +118,7 @@ class PlayerMainWindow(QMainWindow):
         self.playback_frame.slider.setSingleStep(1)
 
     def closeEvent(self, close_event):
-        self.player_frame.closeEvent(close_event)
+        pass
 
     def evaluate_checked_signal(self, type, item, is_checked):
         if item == 'pitch' or item == 'pitch_filtered':
