@@ -9,7 +9,7 @@ from cultures.makam.utilities import has_symbtr
 DUNYA_ICON = os.path.join(os.path.dirname(__file__), '..', '..', 'ui_files',
                           'icons', 'dunya.svg')
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', '..', 'cultures',
-                         'documents')
+                         'scores')
 
 
 class ScoreModel(QStandardItemModel):
@@ -82,13 +82,14 @@ class CollectionTableModel(QStandardItemModel):
 
     @staticmethod
     def _get_metadata(self, mbid, index):
-        path = os.path.join(DOCS_PATH, mbid, 'audioanalysis--metadata.json')
+        path = os.path.join(DOCS_PATH, mbid, 'scoreanalysis--metadata.json')
         metadata = json.load(open(path))
 
         metadata_dict = {}
-        mbid = metadata['mbid']
-        metadata_dict['title'] = metadata['title']
-        metadata_dict['artists'] = CollectionTableModel.parse_artists(metadata)
+        mbid = metadata['work']['mbid']
+        metadata_dict['title'] = metadata['work']['title']
+        #metadata_dict['artists'] = CollectionTableModel.parse_artists(
+        # metadata)
         metadata_dict['makam'] = \
             CollectionTableModel.parse_mattribute(metadata, 'makam')
         metadata_dict['usul'] = \
@@ -127,9 +128,9 @@ class CollectionTableModel(QStandardItemModel):
 
     @staticmethod
     def parse_mattribute(metadata, key):
-        for value in metadata[key]:
-            try:
-                mattribute = value['mb_attribute']
-                return mattribute
-            except KeyError:
-                pass
+        value = metadata[key]
+        try:
+            mattribute = value['mb_attribute']
+            return mattribute
+        except KeyError:
+            pass
