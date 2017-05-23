@@ -1,14 +1,17 @@
+import sys
 import os
 import webbrowser
 
-from PyQt5.QtWidgets import (QTreeWidget, QTreeWidgetItem, QPushButton)
+from PyQt5.QtWidgets import (QTreeWidget, QTreeWidgetItem, QPushButton,
+                             QDialog, QRadioButton, QWidget, QVBoxLayout,
+                             QApplication, QLabel)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt, pyqtSignal
 
 from cultures.makam.utilities import get_filenames_in_dir
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
-                         'documents')
+                         'scores')
 MB_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                        'icons', 'mb-icon-large.svg')
 
@@ -193,3 +196,34 @@ class MetadataTreeMakam(QTreeWidget):
     @staticmethod
     def __set_item_widget(widget, col, item, key):
         widget.setData(col, Qt.EditRole, item[key].title())
+
+
+class FeatureDialogAdaptive(QWidget):
+
+    def __init__(self, mbid, parent=None):
+        QWidget.__init__(self, parent=parent)
+        self.mbid = mbid
+        self._set_design()
+
+    def _set_design(self):
+        layout = QVBoxLayout(self)
+
+        label = QLabel()
+        label.setText('Synthesis')
+        layout.addWidget(label)
+
+        layout_synthesis = self._add_synthesis()
+        layout.addLayout(layout_synthesis)
+
+    def _add_synthesis(self):
+        layout = QVBoxLayout()
+
+        fullnames, folders, names = get_filenames_in_dir(os.path.join(
+            DOCS_PATH, self.mbid))
+
+        for name in names:
+            radio_button = QRadioButton(self)
+            radio_button.setText(name.split('.mp3')[0])
+            layout.addWidget(radio_button)
+
+        return layout
