@@ -109,6 +109,28 @@ def generate_score_map(mbid):
     return notes
 
 
+def generate_score_onsets(mbid):
+    SCORE_PATH = os.path.join(os.path.dirname(__file__), '..', 'scores', mbid)
+
+    score_indexes = []
+    starts = []
+    ends = []
+
+    onsets = json.load(open(os.path.join(SCORE_PATH, 'onsets.json')))
+    for i in range(len(onsets)-1):
+        onset = onsets[i]
+        next_note = onsets[i+1][2]
+
+        score_indexes.append(onset[1])
+        starts.append(onset[2])
+        ends.append(next_note)
+    starts.append(onsets[-1][2])
+    ends.append(onsets[-1][2])
+    score_indexes.append(onsets[-1][1])
+
+    return np.array(starts), np.array(ends), np.array(score_indexes)
+
+
 def mp3_to_wav_converter(audio_path):
     input_f = audio_path
     output_f = audio_path[:-4] + '.wav'
