@@ -198,7 +198,7 @@ class MetadataTreeMakam(QTreeWidget):
         widget.setData(col, Qt.EditRole, item[key].title())
 
 
-class FeatureDialogAdaptive(QWidget):
+class FeatureWidgetAdaptive(QWidget):
 
     def __init__(self, mbid, parent=None):
         QWidget.__init__(self, parent=parent)
