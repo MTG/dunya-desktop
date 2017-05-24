@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QDockWidget,
 from PyQt5.QtCore import Qt, QMetaObject
 
 from .treewidget import (FeatureTreeWidget, MetadataTreeMakam,
-                         FeatureDialogAdaptive)
+                         FeatureWidgetAdaptive)
 from .playerframe import PlayerFrame
 from .playerframe import PlaybackFrame
 from .histogram import HistogramDialog
@@ -54,7 +54,7 @@ class PlayerMainWindow(QMainWindow):
             QtWidgets.QDockWidget.NoDockWidgetFeatures)
         self.dw_features.setAllowedAreas(QtCore.Qt.LeftDockWidgetArea)
 
-        self.dw_contents_features = FeatureDialogAdaptive(docid, self)
+        self.dw_contents_features = FeatureWidgetAdaptive(docid, self)
         self.dw_features.setWidget(self.dw_contents_features)
 
         # dock widget for playlist
