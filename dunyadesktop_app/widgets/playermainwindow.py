@@ -30,10 +30,10 @@ class PlayerMainWindow(QMainWindow):
         #self.feature_tree.item_checked.connect(self.evaluate_checked_signal)
 
         # signals
-        #self.playback_frame.button_play.clicked.connect(
-        #    self.player_frame.playback_play)
-        #self.playback_frame.button_pause.clicked.connect(
-        #    self.player_frame.playback_pause)
+        self.playback_frame.button_play.clicked.connect(
+            self.player_frame.playback_play)
+        self.playback_frame.button_pause.clicked.connect(
+            self.player_frame.playback_pause)
 
     def _set_design(self, docid):
         self.resize(710, 550)
@@ -121,7 +121,7 @@ class PlayerMainWindow(QMainWindow):
         self.playback_frame.slider.setSingleStep(1)
 
     def closeEvent(self, close_event):
-        pass
+        self.player_frame.playback.pause()
 
     def evaluate_checked_signal(self, type, item, is_checked):
         if item == 'pitch' or item == 'pitch_filtered':

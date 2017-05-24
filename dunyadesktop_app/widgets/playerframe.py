@@ -8,14 +8,15 @@ from PyQt5.Qt import pyqtSignal
 
 from .timeserieswidget import TimeSeriesWidget
 from .waveformwidget import WaveformWidget
-from .scoredialog import ScoreDialog
+from .scoredialog import ScoreWidget
 from .widgetutilities import cursor_pos_sample, current_pitch
 from utilities.playback import Playback
 from cultures.makam.featureparsers import (read_raw_audio, load_pitch, load_pd,
                                            load_tonic, get_feature_paths,
                                            load_notes, get_sections,
                                            generate_score_map,
-                                           mp3_to_wav_converter)
+                                           mp3_to_wav_converter,
+                                           generate_score_onsets)
 
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
@@ -52,15 +53,14 @@ class PlayerFrame(QFrame):
 
         # initializing playback class
         self.playback = Playback()
-        #self.playback.set_source(self.feature_paths['audio_path_wav'])
+        self.playback.set_source(self.current_synth_wav)
 
         # flags
         self.score_visible = False
-        #self.hist_visible = False
         self.index = 0
 
         # signals
-        #self.playback.positionChanged.connect(self.player_pos_changed)
+        self.playback.positionChanged.connect(self.player_pos_changed)
 
         #self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
         #    self.wf_region_changed)
@@ -77,7 +77,6 @@ class PlayerFrame(QFrame):
     def get_current_synthesis(self):
         main_window = self.parent()
         return main_window.dw_contents_features.current_synthesis()
-
 
     def __load_pitch(self, feature):
         feature_path = os.path.join(DOCS_PATH, self.docid, feature)
@@ -112,6 +111,15 @@ class PlayerFrame(QFrame):
         dock_waveform.setAcceptDrops(False)
         # adding waveform dock to dock area
         self.dock_area.addDock(dock_waveform, position='top')
+
+        dock_score = pgdock.Dock(name='Score', area='bottom', closable=False,
+                                 autoOrientation=False)
+        self.score_widget = ScoreWidget(self)
+        dock_score.addWidget(self.score_widget)
+        dock_score.setAcceptDrops(False)
+        self.dock_area.addDock(dock_score, position='bottom')
+
+        self._prepare_score_widget(self.docid)
 
         # adding dock area to frame
         layout = QVBoxLayout(self)
@@ -237,6 +245,8 @@ class PlayerFrame(QFrame):
             playback_pos_sample = playback_pos_sec * self.samplerate
 
             self.waveform_widget.update_wf_vline(playback_pos_sample)
+
+            # TODO
             #self.parent().playback_frame.slider.setValue(playback_pos_sample)
 
             # checks the position of linear region item. If the position of
@@ -248,33 +258,20 @@ class PlayerFrame(QFrame):
                 x_end = x_start + (xmax - xmin)
                 self.waveform_widget.change_wf_region(x_start, x_end)
 
-            # checks if time series widget is initialized or not
-            if hasattr(self, 'ts_widget'):
-                self.ts_widget.vline.setPos([playback_pos_sec, 0])
-                # checks if horizontal line of y-axis exists
-                if hasattr(self.ts_widget, 'hline_histogram'):
-                    if self.ts_widget.pitch_plot is not None:
-                        self.ts_widget.set_hist_cursor_pos(playback_pos_sec)
-
-            if self.score_visible:
-                self.__update_score(playback_pos_sec)
-
-            pos_sample = cursor_pos_sample(playback_pos_sec, self.samplerate,
-                                           self.hopsize)
-            if self.hist_visible:
-                pitch = current_pitch(pos_sample, self.pitch_plot)
-                self.update_histogram.emit(pitch)
+            #if self.score_visible:
+            self.__update_score(playback_pos_sec)
 
     def __update_score(self, playback_pos_sec):
-        index = self.find_current_note_index(self.ts_widget.notes_start,
-                                             self.ts_widget.notes_end,
+        index = self.find_current_note_index(self.onsets_starts,
+                                             self.onsets_ends,
+                                             self.onsets_indexes,
                                              playback_pos_sec)
         if index:
-            workid = self.metadata[index][0]
-            score_index = self.metadata[index][1]
+            #workid = self.metadata[index][0]
+            #score_index = self.metadata[index][1]
 
-            svg_path = self.notes_map[workid][str(score_index)]
-            self.score_dialog.score_widget.update_note(svg_path, score_index)
+            svg_path = self.notes_map[self.docid][str(index)]
+            self.score_widget.update_note(svg_path, index)
 
     def add_1d_roi_items(self, f_type, item):
         """
@@ -331,28 +328,31 @@ class PlayerFrame(QFrame):
                                                  section['title'],
                                                  color)
 
-    def open_score_dialog(self, mbid):
-        metadata_path = os.path.join(DOCS_PATH, mbid,
-                                     'audioanalysis--metadata.json')
-        works = json.load(open(metadata_path))['works']
-
+    def _prepare_score_widget(self, mbid):
         notes_map = {}
-        for work in works:
-            notes_array = generate_score_map(work['mbid'])
-            notes_map[work['mbid']] = notes_array
+
+        # generating note map
+        notes_array = generate_score_map(mbid)
+        notes_map[mbid] = notes_array
+
+        # getting onsets
+        self.onsets_starts, self.onsets_ends, self.onsets_indexes = \
+            generate_score_onsets(mbid)
+
         self.notes_map = notes_map
-        self.score_dialog = ScoreDialog(self)
-        self.score_dialog.show()
         self.score_visible = True
 
-    def find_current_note_index(self, n_array_start, n_array_end, value):
+    def find_current_note_index(self, n_array_start, n_array_end, n_array_indexes,
+                                value):
         index = (np.abs(n_array_start - value)).argmin()
+
+        array_index = n_array_indexes[index]
         val_start = n_array_start[index]
         val_end = n_array_end[index]
 
-        if self.index != index:
+        if self.index != array_index:
             if val_start < value < val_end:
-                self.index = index
-                return index + 1 # score indexes starts with 1
+                self.index = n_array_indexes[index]
+                return n_array_indexes[index] # score indexes starts with 1
         else:
             return None
