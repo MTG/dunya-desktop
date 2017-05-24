@@ -237,3 +237,13 @@ class FeatureWidgetAdaptive(QWidget):
 
     def _synthesis_changed(self, name):
         print(name)
+
+    def current_synthesis(self):
+        children = self.group_box.children()
+
+        for child in children:
+            try:
+                if child.isChecked() and child.text():
+                    return child.text()
+            except AttributeError:
+                pass
