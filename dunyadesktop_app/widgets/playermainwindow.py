@@ -9,7 +9,7 @@ from PyQt5.QtCore import Qt, QMetaObject
 from .treewidget import (FeatureTreeWidget, MetadataTreeMakam,
                          FeatureWidgetAdaptive)
 from .playerframe import PlayerFrame
-from .playerframe import PlaybackFrame
+from .playbackframe import PlaybackFrame
 from .histogram import HistogramDialog
 from .table import TablePlaylist
 from cultures.makam.featureparsers import load_pd
@@ -96,6 +96,9 @@ class PlayerMainWindow(QMainWindow):
         self.playback_frame = PlaybackFrame(dw_contents)
         layout4.addWidget(self.playback_frame)
         self.dw_playback.setWidget(dw_contents)
+
+        self.player_frame = PlayerFrame(self.docid, parent=self)
+        layout.addWidget(self.player_frame)
 
         # add dock widgets to main window
         self.addDockWidget(Qt.LeftDockWidgetArea, self.dw_features)

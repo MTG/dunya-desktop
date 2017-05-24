@@ -6,7 +6,6 @@ import pyqtgraph.dockarea as pgdock
 from PyQt5.QtWidgets import QVBoxLayout, QFrame, QLayout, QSizePolicy
 from PyQt5.Qt import pyqtSignal
 
-from .playbackframe import PlaybackFrame
 from .timeserieswidget import TimeSeriesWidget
 from .waveformwidget import WaveformWidget
 from .scoredialog import ScoreDialog
@@ -20,7 +19,7 @@ from cultures.makam.featureparsers import (read_raw_audio, load_pitch, load_pd,
 
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
-                         'documents')
+                         'scores')
 COLORS_RGB = [(77, 157, 224, 70), (255, 217, 79, 70), (224, 76, 114, 70),
               (250, 240, 202, 70), (255, 89, 100, 70), (255, 196, 165, 70),
               (102, 0, 17, 70), (201, 149, 18, 70), (58, 1, 92, 70),
@@ -41,36 +40,47 @@ class PlayerFrame(QFrame):
     samplerate = 44100.
     update_histogram = pyqtSignal(float)
 
-    def __init__(self, recid, parent=None):
+    def __init__(self, docid, parent=None):
         QFrame.__init__(self, parent=parent)
-        self.recid = recid
+        self.docid = docid
         self.__set_design()
 
-        ftr = 'audioanalysis' + '--' + 'pitch_filtered' + '.json'
-        self.__load_pitch(ftr)
-
-        self.feature_paths = get_feature_paths(recid)
+        self.current_folder = os.path.join(DOCS_PATH, self.docid)
+        current_synthesis = self.get_current_synthesis()
+        self.get_synt_path(current_synthesis)
         self.__set_waveform()
 
         # initializing playback class
         self.playback = Playback()
-        self.playback.set_source(self.feature_paths['audio_path_wav'])
+        #self.playback.set_source(self.feature_paths['audio_path_wav'])
 
         # flags
         self.score_visible = False
-        self.hist_visible = False
+        #self.hist_visible = False
         self.index = 0
 
         # signals
-        self.playback.positionChanged.connect(self.player_pos_changed)
+        #self.playback.positionChanged.connect(self.player_pos_changed)
 
-        self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
-            self.wf_region_changed)
-        self.waveform_widget.region_wf.clicked.connect(
-            self.wf_region_item_clicked)
+        #self.waveform_widget.region_wf.sigRegionChangeFinished.connect(
+        #    self.wf_region_changed)
+        #self.waveform_widget.region_wf.clicked.connect(
+        #    self.wf_region_item_clicked)
+
+    def get_synt_path(self, current_synth):
+        path = os.path.join(self.current_folder,
+                                  self.get_current_synthesis())
+        self.current_synth_mp3 = path + '.mp3'
+        self.current_synth_wav = path + '.wav'
+        print(self.current_synth_mp3)
+
+    def get_current_synthesis(self):
+        main_window = self.parent()
+        return main_window.dw_contents_features.current_synthesis()
+
 
     def __load_pitch(self, feature):
-        feature_path = os.path.join(DOCS_PATH, self.recid, feature)
+        feature_path = os.path.join(DOCS_PATH, self.docid, feature)
 
         (self.time_stamps, self.pitch_plot, self.max_pitch, self.min_pitch,
          self.samplerate, self.hopsize) = load_pitch(feature_path)
@@ -111,10 +121,10 @@ class PlayerFrame(QFrame):
         """
         Reads the audio and plots the waveform.
         """
-        if not os.path.exists(self.feature_paths['audio_path_wav']):
-            mp3_to_wav_converter(self.feature_paths['audio_path_mp3'])
+        if not os.path.exists(self.current_synth_wav):
+            mp3_to_wav_converter(self.current_synth_mp3)
         (raw_audio, len_audio, min_audio,
-         max_audio) = read_raw_audio(self.feature_paths['audio_path_wav'])
+         max_audio) = read_raw_audio(self.current_synth_wav)
         self.waveform_widget.min_raw_audio = min_audio
         self.waveform_widget.plot_waveform(raw_audio)
 
@@ -161,7 +171,7 @@ class PlayerFrame(QFrame):
             self.__add_ts_widget()
 
         ftr = f_type + '--' + feature + '.json'
-        feature_path = os.path.join(DOCS_PATH, self.recid, ftr)
+        feature_path = os.path.join(DOCS_PATH, self.docid, ftr)
 
         if feature == 'pitch' or feature == 'pitch_filtered':
             self.__load_pitch(ftr)
@@ -177,7 +187,7 @@ class PlayerFrame(QFrame):
                 self.is_pitch_plotted = True
 
                 histogram = \
-                    os.path.join(DOCS_PATH, self.recid,
+                    os.path.join(DOCS_PATH, self.docid,
                                  'audioanalysis--pitch_distribution.json')
                 vals, bins = load_pd(histogram)
                 self.ts_widget.plot_histogram_raxis(vals, bins)
@@ -277,7 +287,7 @@ class PlayerFrame(QFrame):
 
         if item == 'notes':
             ftr = f_type + '--' + item + '.json'
-            feature_path = os.path.join(DOCS_PATH, self.recid, ftr)
+            feature_path = os.path.join(DOCS_PATH, self.docid, ftr)
             notes_dict = load_notes(feature_path)
 
             notes = []
