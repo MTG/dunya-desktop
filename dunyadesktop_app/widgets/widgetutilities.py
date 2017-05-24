@@ -57,7 +57,6 @@ def downsample_plot(plot_array, ds_limit):
             visible[1+target_ptr:1+target_ptr+chunk.shape[0] * 2:2] = chunk_max
             target_ptr += chunk.shape[0] * 2
         plot_y = visible[:target_ptr]
-        plot_y[-1] = np.nan
     return plot_y
 
 
