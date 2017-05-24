@@ -198,6 +198,17 @@ class MetadataTreeMakam(QTreeWidget):
         widget.setData(col, Qt.EditRole, item[key].title())
 
 
+class RadioButtonAdaptive(QRadioButton):
+    def __init__(self, parent):
+        QRadioButton.__init__(self, parent)
+        self.clicked.connect(self._button_clicked)
+
+    def _button_clicked(self):
+        name_synthesis = self.text()
+        parent = self.parent().parent()
+        parent._synthesis_changed(name_synthesis)
+
+
 class FeatureWidgetAdaptive(QWidget):
 
     def __init__(self, mbid, parent=None):
@@ -217,9 +228,12 @@ class FeatureWidgetAdaptive(QWidget):
             DOCS_PATH, self.mbid))
 
         for name in names:
-            radio_button = QRadioButton(self)
+            radio_button = RadioButtonAdaptive(self)
             radio_button.setText(name.split('.mp3')[0])
             radio_button.setChecked(True)
             layout.addWidget(radio_button)
         layout.addStretch(1)
         return layout
+
+    def _synthesis_changed(self, name):
+        print(name)
