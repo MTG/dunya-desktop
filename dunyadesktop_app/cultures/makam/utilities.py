@@ -10,8 +10,9 @@ else:
     import urllib.request as urllib
 
 from ..dunya.makam import (get_makams, get_forms, get_usuls,
-                                   get_composers, get_artists, get_instruments)
-from ..dunya.docserver import (document, get_document_as_json, get_mp3)
+                           get_composers, get_artists, get_instruments)
+from ..dunya.docserver import (document, get_document_as_json, get_mp3,
+                               file_for_document)
 from ..dunya.conn import HTTPError
 from PyQt5.QtCore import QObject, QThread, pyqtSignal
 import numpy as np
@@ -169,7 +170,7 @@ class DocThread(QThread):
     def _download_synthesis(self, docid):
         parts = document(docid)['derivedfiles']['synthesis']['mp3']['numparts']
         for i in np.arange(1, parts + 1):
-            mp3 = get_document_as_json(docid, 'synthesis', 'mp3', part=i)
+            mp3 = file_for_document(docid, 'synthesis', 'mp3', part=i)
             mp3_file = 'synthesis--' + str(i) + '.mp3'
             synthesis_path = os.path.join(self.doc_folder, mp3_file)
             open(synthesis_path, 'wb').write(mp3)
