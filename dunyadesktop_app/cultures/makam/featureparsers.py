@@ -9,19 +9,16 @@ from cultures.makam import utilities
 from cultures.makam import svgparser
 
 
-DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'documents')
+DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'scores')
 
 
 def read_raw_audio(audio_path):
     rate, data = scipy.io.wavfile.read(audio_path)
-    c_0 = data[:, 0]
-    c_1 = data[:, 1]
-    c_mono = (c_0 + c_1) / 2.
 
-    len_audio = np.size(c_mono)
-    min_audio = np.min(c_mono)
-    max_audio = np.min(c_mono)
-    return c_mono, len_audio, min_audio, max_audio
+    len_audio = np.size(data)
+    min_audio = np.min(data)
+    max_audio = np.min(data)
+    return data, len_audio, min_audio, max_audio
 
 
 def load_pitch(pitch_path):
