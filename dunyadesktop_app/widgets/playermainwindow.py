@@ -12,7 +12,8 @@ from .playerframe import PlayerFrame
 from .playbackframe import PlaybackFrame
 from .histogram import HistogramDialog
 from .table import TablePlaylist
-from cultures.makam.featureparsers import load_pd
+from cultures.makam.featureparsers import load_pd, mp3_to_wav_converter
+from cultures.makam.utilities import get_filenames_in_dir
 from utilities import database
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
@@ -24,6 +25,7 @@ class PlayerMainWindow(QMainWindow):
         QMainWindow.__init__(self, parent=parent)
         self.docid = docid
         self._set_design(docid)
+        self._convert_mp3_to_wav()
         QMetaObject.connectSlotsByName(self)
 
         # signals
@@ -35,9 +37,18 @@ class PlayerMainWindow(QMainWindow):
         self.playback_frame.button_pause.clicked.connect(
             self.player_frame.playback_pause)
 
+    def _convert_mp3_to_wav(self):
+        PATH = os.path.join(DOCS_PATH, self.docid)
+        fullnames, folders, names = get_filenames_in_dir(PATH)
+
+        for mp3 in fullnames:
+            wav = mp3[:-4] + '.wav'
+            if not os.path.exists(wav):
+                mp3_to_wav_converter(mp3)
+
     def _set_design(self, docid):
         self.resize(710, 550)
-        self.central_widget = QWidget()
+        self.central_widget = QWidget(self)
 
         layout = QVBoxLayout(self.central_widget)
         layout.setContentsMargins(2, 2, 2, 2)

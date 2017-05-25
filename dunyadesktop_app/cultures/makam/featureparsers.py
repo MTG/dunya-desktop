@@ -5,8 +5,7 @@ import json
 import numpy as np
 import scipy.io.wavfile
 
-from cultures.makam import utilities
-from cultures.makam import svgparser
+from cultures.makam import utilities, svgparser
 
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'scores')
