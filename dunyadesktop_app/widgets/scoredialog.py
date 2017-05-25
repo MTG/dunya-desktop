@@ -38,8 +38,9 @@ class ScoreWidget(QSvgWidget):
             self.load(self.svg_path)
 
     def close_event(self):
-        change_color(self.svg_path, self.tree, self.root, self.note_index,
-                     'black')
+        if hasattr(self, 'tree'):
+            change_color(self.svg_path, self.tree, self.root, self.note_index,
+                         'black')
 
 
 class ScoreDialog(QDialog):
