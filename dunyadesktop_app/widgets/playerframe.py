@@ -114,7 +114,8 @@ class PlayerFrame(QFrame):
 
         dock_score = pgdock.Dock(name='Score', area='bottom', closable=False,
                                  autoOrientation=False)
-        self.score_widget = ScoreWidget(self)
+        dock_score.setStyleSheet('background-color: #F4ECD7;')
+        self.score_widget = ScoreWidget()
         dock_score.addWidget(self.score_widget)
         dock_score.setAcceptDrops(False)
         self.dock_area.addDock(dock_score, position='bottom')
