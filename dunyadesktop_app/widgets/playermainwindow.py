@@ -133,6 +133,7 @@ class PlayerMainWindow(QMainWindow):
 
     def closeEvent(self, close_event):
         self.player_frame.playback.pause()
+        self.player_frame.score_widget.close_event()
 
     def evaluate_checked_signal(self, type, item, is_checked):
         if item == 'pitch' or item == 'pitch_filtered':

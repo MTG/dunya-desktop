@@ -13,6 +13,7 @@ class ScoreWidget(QSvgWidget):
 
     def __set_design(self):
         self.setStyleSheet('background-color: #F4ECD7;')
+        self.setFixedSize(900, 600)
 
     def set_svg(self, path):
         self.svg_path = path
@@ -20,11 +21,13 @@ class ScoreWidget(QSvgWidget):
         self.load(self.svg_path)
 
     def update_note(self, svg_path, note_index):
+        if not hasattr(self, 'tree'):
+            self.set_svg(svg_path)
+
         if self.svg_path != svg_path:
-            self.svg_path = svg_path
-            self.set_svg(self.svg_path)
             change_color(self.svg_path, self.tree, self.root, self.note_index,
                          'black')
+            self.set_svg(svg_path)
 
         if self.note_index != note_index:
             change_color(self.svg_path, self.tree, self.root, self.note_index,
@@ -34,7 +37,7 @@ class ScoreWidget(QSvgWidget):
                          'red')
             self.load(self.svg_path)
 
-    def closeEvent(self, QCloseEvent):
+    def close_event(self):
         change_color(self.svg_path, self.tree, self.root, self.note_index,
                      'black')
 

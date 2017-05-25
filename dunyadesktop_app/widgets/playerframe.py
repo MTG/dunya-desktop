@@ -259,7 +259,6 @@ class PlayerFrame(QFrame):
                 x_end = x_start + (xmax - xmin)
                 self.waveform_widget.change_wf_region(x_start, x_end)
 
-            #if self.score_visible:
             self.__update_score(playback_pos_sec)
 
     def __update_score(self, playback_pos_sec):
@@ -268,9 +267,6 @@ class PlayerFrame(QFrame):
                                              self.onsets_indexes,
                                              playback_pos_sec)
         if index:
-            #workid = self.metadata[index][0]
-            #score_index = self.metadata[index][1]
-
             svg_path = self.notes_map[self.docid][str(index)]
             self.score_widget.update_note(svg_path, index)
 
