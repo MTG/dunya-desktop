@@ -210,6 +210,7 @@ class RadioButtonAdaptive(QRadioButton):
 
 
 class FeatureWidgetAdaptive(QWidget):
+    synthesis_changed = pyqtSignal(str)
 
     def __init__(self, mbid, parent=None):
         QWidget.__init__(self, parent=parent)
@@ -236,7 +237,7 @@ class FeatureWidgetAdaptive(QWidget):
         return layout
 
     def _synthesis_changed(self, name):
-        print(name)
+        self.synthesis_changed.emit(name)
 
     def current_synthesis(self):
         children = self.group_box.children()

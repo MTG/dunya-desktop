@@ -67,12 +67,18 @@ class PlayerFrame(QFrame):
         #self.waveform_widget.region_wf.clicked.connect(
         #    self.wf_region_item_clicked)
 
+    def _change_synthesis(self, synthesis):
+        self.playback_pause()
+        self.get_synt_path(synthesis)
+        current_pos = self.playback.position()
+        self.playback.set_source(self.current_synth_wav)
+        self.playback.setPosition(current_pos)
+        self.playback_play()
+
     def get_synt_path(self, current_synth):
-        path = os.path.join(self.current_folder,
-                                  self.get_current_synthesis())
+        path = os.path.join(self.current_folder, current_synth)
         self.current_synth_mp3 = path + '.mp3'
         self.current_synth_wav = path + '.wav'
-        print(self.current_synth_mp3)
 
     def get_current_synthesis(self):
         main_window = self.parent()

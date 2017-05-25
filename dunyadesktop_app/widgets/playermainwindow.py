@@ -36,6 +36,8 @@ class PlayerMainWindow(QMainWindow):
             self.player_frame.playback_play)
         self.playback_frame.button_pause.clicked.connect(
             self.player_frame.playback_pause)
+        self.dw_contents_features.synthesis_changed.connect(
+            self.player_frame._change_synthesis)
 
     def _convert_mp3_to_wav(self):
         PATH = os.path.join(DOCS_PATH, self.docid)
