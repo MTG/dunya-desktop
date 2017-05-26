@@ -83,8 +83,11 @@ class CollectionTableModel(QStandardItemModel):
     @staticmethod
     def _get_metadata(self, mbid, index):
         path = os.path.join(DOCS_PATH, mbid, 'scoreanalysis--metadata.json')
-        metadata = json.load(open(path))
 
+        if not os.path.exists(path):
+            return
+
+        metadata = json.load(open(path))
         metadata_dict = {}
         try:
             mbid = metadata['work']['mbid']
