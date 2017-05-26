@@ -422,7 +422,8 @@ class TablePlaylist(TableWidget, TableViewCollections):
     def add_recordings(self, recording):
         for index, mbid in enumerate(recording):
             metadata = CollectionTableModel._get_metadata(self, mbid[0], index)
-            self._add_item(metadata)
+            if metadata:
+                self._add_item(metadata)
 
     def _add_item(self, metadata):
         self.insertRow(self.rowCount())

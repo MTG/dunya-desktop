@@ -86,7 +86,10 @@ class CollectionTableModel(QStandardItemModel):
         metadata = json.load(open(path))
 
         metadata_dict = {}
-        mbid = metadata['work']['mbid']
+        try:
+            mbid = metadata['work']['mbid']
+        except KeyError:
+            return
         metadata_dict['title'] = metadata['work']['title']
         #metadata_dict['artists'] = CollectionTableModel.parse_artists(
         # metadata)
