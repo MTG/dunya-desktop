@@ -343,6 +343,6 @@ class PlayerFrame(QFrame):
         if self.index != index:
             if val_start < value < val_end:
                 self.index = index
-                return index + 1 # score indexes starts with 1
+                return index  # score indexes starts with 1
         else:
             return None
