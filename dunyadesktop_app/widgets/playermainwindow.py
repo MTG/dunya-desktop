@@ -80,15 +80,15 @@ class PlayerMainWindow(QMainWindow):
 
         self.dw_playlist_widgets = QWidget(self)
         layout5 = QVBoxLayout()
-        self.playlist_table = TablePlaylist()
+        self.playlist_table = TablePlaylist(self)
         collection = self.parent().dwc_left.listView_collections.currentItem()
         if collection:
             coll_name = collection.text()
         else:
             coll_name = 'MainCollection'
-        coll_label = QLabel(coll_name)
+        self.coll_label = QLabel(coll_name, parent=self.dw_playlist_widgets)
         self._set_playlist_table(coll_name)
-        layout5.addWidget(coll_label)
+        layout5.addWidget(self.coll_label)
         layout5.addWidget(self.playlist_table)
         self.dw_playlist_widgets.setLayout(layout5)
         self.dw_playlist.setWidget(self.dw_playlist_widgets)
@@ -112,6 +112,12 @@ class PlayerMainWindow(QMainWindow):
         self.addDockWidget(Qt.LeftDockWidgetArea, self.dw_features)
         self.addDockWidget(Qt.RightDockWidgetArea, self.dw_playlist)
         self.addDockWidget(Qt.BottomDockWidgetArea, self.dw_playback)
+
+        # signals
+        self.playlist_table.item_changed.connect(self._item_changed)
+
+    def _item_changed(self, mbid):
+        print(mbid)
 
     def _set_playlist_table(self, coll_name):
         conn, c = database.connect()

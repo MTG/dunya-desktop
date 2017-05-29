@@ -60,8 +60,8 @@ class TableView(QTableView):
     open_dunya_triggered = pyqtSignal(object)
     add_to_collection = pyqtSignal(str, object)
 
-    def __init__(self, *__args):
-        QTableView.__init__(self, *__args)
+    def __init__(self, parent=None):
+        QTableView.__init__(self, parent=parent)
 
         # setting the table for no edit and row selection
         self.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -193,9 +193,9 @@ class TableWidget(QTableWidget, TableView):
     open_dunya_triggered = pyqtSignal(object)
     set_result_checked = pyqtSignal(str)
 
-    def __init__(self):
-        QTableWidget.__init__(self)
-        TableView.__init__(self)
+    def __init__(self, parent=None):
+        QTableWidget.__init__(self, parent=parent)
+        TableView.__init__(self, parent=parent)
         self.setDragDropMode(QAbstractItemView.DropOnly)
         self.setAcceptDrops(True)
         self.setDragDropOverwriteMode(False)
@@ -406,15 +406,28 @@ class DialogCollTable(QDialog):
 
 
 class TablePlaylist(TableWidget, TableViewCollections):
+    item_changed = pyqtSignal(str)
 
-    def __init__(self):
+    def __init__(self, parent=None):
         TableWidget.__init__(self)
-        TableViewCollections.__init__(self)
+        TableViewCollections.__init__(self, parent=parent)
         self.setEnabled(True)
         self.setDragDropMode(QAbstractItemView.NoDragDrop)
         self._set_columns()
         set_css(self, CSS_PATH)
         self.items = {}
+
+        self.itemClicked.connect(self._item_clicked)
+
+    def _item_clicked(self, item):
+        current_index = self.currentIndex().row()
+        conn, c = database.connect()
+
+        coll_label = self.parent().findChildren(QLabel)[0]
+        coll_name = coll_label.text()
+
+        mbid = database.get_nth_row(c, coll_name, current_index)[0]
+        self.item_changed.emit(mbid)
 
     def _set_columns(self):
         self.setColumnCount(4)
@@ -445,3 +458,6 @@ class TablePlaylist(TableWidget, TableViewCollections):
 
     def _make_item(self, text):
         return QTableWidgetItem(text)
+
+    def _button_clicked(self):
+        print('meh')
