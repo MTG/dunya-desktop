@@ -45,12 +45,9 @@ class PlayerFrame(QFrame):
         QFrame.__init__(self, parent=parent)
         self.recid = recid
         self.__set_design()
+        self.playback = Playback()
 
         self.load_file(self.recid)
-
-        # initializing playback class
-        self.playback = Playback()
-        self.playback.set_source(self.feature_paths['audio_path_wav'])
 
         # flags
         self.score_visible = False
@@ -66,11 +63,15 @@ class PlayerFrame(QFrame):
             self.wf_region_item_clicked)
 
     def load_file(self, mbid):
+
         ftr = 'audioanalysis' + '--' + 'pitch_filtered' + '.json'
         self.__load_pitch(ftr)
 
         self.feature_paths = get_feature_paths(mbid)
         self.__set_waveform()
+
+        self.playback.pause()
+        self.playback.set_source(self.feature_paths['audio_path_wav'])
 
     def __load_pitch(self, feature):
         feature_path = os.path.join(DOCS_PATH, self.recid, feature)
