@@ -84,17 +84,18 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
         :param raw_audio: (list of numpy array) List of floats.
         """
 
-        # add a new plot
-        self.waveform = self.centralWidget.addPlot()
+        if not hasattr(self, 'waveform'):
+            # add a new plot
+            self.waveform = self.centralWidget.addPlot()
 
-        # hide x and y axis
-        self.waveform.hideAxis(axis='bottom')
-        self.waveform.hideAxis(axis='left')
+            # hide x and y axis
+            self.waveform.hideAxis(axis='bottom')
+            self.waveform.hideAxis(axis='left')
 
-        # disable the mouse events and menu events
-        self.waveform.setMouseEnabled(x=False, y=False)
-        self.waveform.setMenuEnabled(False)
-
+            # disable the mouse events and menu events
+            self.waveform.setMouseEnabled(x=False, y=False)
+            self.waveform.setMenuEnabled(False)
+        self.waveform.clear()
         # downsampling the given plot array
         self.visible = downsample_plot(raw_audio, self.limit)
 
@@ -121,17 +122,16 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
         # Create a waveform region item and add it to waveform plot
         pos_wf_x_max = len_plot * 0.05  # Region item focuses on the 5% of
         # waveform plot.
+
         self.region_wf = WaveformRegionItem(values=[0, pos_wf_x_max],
                                             brush=WAVEFORM_BRUSH,
                                             bounds=[0., len_plot])
+        self.waveform.addItem(self.region_wf)
 
         # Creating a cursor with pyqtgraph.ROI
         self.vline_wf = pg.ROI(pos=[0, min_audio],
                                size=[0, max_audio - min_audio],
                                angle=0, pen=WAVEFORM_VLINE)
-
-        # add items to waveform plot
-        self.waveform.addItem(self.region_wf)
         self.waveform.addItem(self.vline_wf)
 
         # text item

@@ -46,11 +46,7 @@ class PlayerFrame(QFrame):
         self.recid = recid
         self.__set_design()
 
-        ftr = 'audioanalysis' + '--' + 'pitch_filtered' + '.json'
-        self.__load_pitch(ftr)
-
-        self.feature_paths = get_feature_paths(recid)
-        self.__set_waveform()
+        self.load_file(self.recid)
 
         # initializing playback class
         self.playback = Playback()
@@ -68,6 +64,13 @@ class PlayerFrame(QFrame):
             self.wf_region_changed)
         self.waveform_widget.region_wf.clicked.connect(
             self.wf_region_item_clicked)
+
+    def load_file(self, mbid):
+        ftr = 'audioanalysis' + '--' + 'pitch_filtered' + '.json'
+        self.__load_pitch(ftr)
+
+        self.feature_paths = get_feature_paths(mbid)
+        self.__set_waveform()
 
     def __load_pitch(self, feature):
         feature_path = os.path.join(DOCS_PATH, self.recid, feature)

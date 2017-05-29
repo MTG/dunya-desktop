@@ -117,7 +117,8 @@ class PlayerMainWindow(QMainWindow):
         self.playlist_table.item_changed.connect(self._item_changed)
 
     def _item_changed(self, mbid):
-        print(mbid)
+        self.docid = mbid
+        self.player_frame.load_file(mbid)
 
     def _set_playlist_table(self, coll_name):
         conn, c = database.connect()
