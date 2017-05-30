@@ -45,16 +45,9 @@ class PlayerFrame(QFrame):
         QFrame.__init__(self, parent=parent)
         self.recid = recid
         self.__set_design()
-
-        ftr = 'audioanalysis' + '--' + 'pitch_filtered' + '.json'
-        self.__load_pitch(ftr)
-
-        self.feature_paths = get_feature_paths(recid)
-        self.__set_waveform()
-
-        # initializing playback class
         self.playback = Playback()
-        self.playback.set_source(self.feature_paths['audio_path_wav'])
+
+        self.load_file(self.recid)
 
         # flags
         self.score_visible = False
@@ -68,6 +61,25 @@ class PlayerFrame(QFrame):
             self.wf_region_changed)
         self.waveform_widget.region_wf.clicked.connect(
             self.wf_region_item_clicked)
+
+    def load_file(self, mbid):
+        ftr = 'audioanalysis' + '--' + 'pitch_filtered' + '.json'
+        self.__load_pitch(ftr)
+
+        self.feature_paths = get_feature_paths(mbid)
+        self.__set_waveform()
+
+        self.playback.pause()
+        self.playback.set_source(self.feature_paths['audio_path_wav'])
+
+        if hasattr(self, 'ts_widget'):
+            self.ts_widget.zoom_selection.clearPlots()
+            self.ts_widget.right_axis.clearPlots()
+
+            histogram = os.path.join(DOCS_PATH, self.recid,
+                                     'audioanalysis--pitch_distribution.json')
+            vals, bins = load_pd(histogram)
+            self.ts_widget.plot_histogram_raxis(vals, bins)
 
     def __load_pitch(self, feature):
         feature_path = os.path.join(DOCS_PATH, self.recid, feature)
