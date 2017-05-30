@@ -58,3 +58,20 @@ class RCMenu(QMenu):
             return user_rows
         except:
             return
+
+
+class RCMenuCollTable(RCMenu):
+    def __init__(self, parent=None):
+        RCMenu.__init__(self, parent=parent)
+        self._add_db_actions()
+
+        # signals
+        self.remove_doc.triggered.connect(self._remove_triggerred)
+
+    def _add_db_actions(self):
+        self.addSeparator()
+        self.remove_doc = QAction("Remove document", self)
+        self.addAction(self.remove_doc)
+
+    def _remove_triggerred(self):
+        self.parent()._rc_remove_triggerred()

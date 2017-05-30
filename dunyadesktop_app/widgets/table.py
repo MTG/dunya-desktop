@@ -14,7 +14,7 @@ from utilities import database, corpusbasestatistics
 from cultures.makam import utilities as makam_utilities
 from widgets.playerframe import load_pd, load_tonic
 from .progressbar import ProgressBar
-from .contextmenu import RCMenu
+from .contextmenu import RCMenu, RCMenuCollTable
 from .widgetutilities import set_css, convert_str
 from .models.recordingmodel import CollectionTableModel
 from .models.proxymodel import SortFilterProxyModel
@@ -94,11 +94,7 @@ class TableView(QTableView):
     def contextMenuEvent(self, event):
         """Pops up the context menu when the right button is clicked."""
         try:
-            if self.selectionModel().selection().indexes():
-                for index in self.selectionModel().selection().indexes():
-                    row, column = index.row(), index.column()
-            self.index = index
-
+            index = self._get_current_index()
             menu = RCMenu(self)
             menu.popup(QCursor.pos())
 
@@ -107,6 +103,13 @@ class TableView(QTableView):
                 self._compute_overall_histograms)
         except UnboundLocalError:
             pass
+
+    def _get_current_index(self):
+        if self.selectionModel().selection().indexes():
+            for index in self.selectionModel().selection().indexes():
+                row, column = index.row(), index.column()
+        self.index = index
+        return index
 
     def _compute_overall_histograms(self):
         coll_widget =  self.parent().parent().listView_collections
@@ -186,6 +189,30 @@ class TableViewCollections(TableView):
 
         self.horizontal_header = self.horizontalHeader()
         self.setSelectionMode(QAbstractItemView.SingleSelection)
+
+    def contextMenuEvent(self, QContextMenuEvent):
+        menu = RCMenuCollTable(self)
+        menu.popup(QCursor.pos())
+
+    def _rc_remove_triggerred(self):
+        index = self._get_current_index()
+        model = self.model().sourceModel()
+        docid = model.items[index.row()]
+        coll_name = self._get_current_coll_name()
+
+        # removing the selected item
+        conn, c = database.connect()
+        database.delete_nth_row(conn, c, coll_name, docid)
+
+        # refreshing the model
+        model.clear_items()
+        collection = database.fetch_collection(c, coll_name)
+        model.add_recording(collection)
+        conn.close()
+
+    def _get_current_coll_name(self):
+        coll_label = self.parent().findChildren(QLabel)[0]
+        return coll_label.text()
 
 
 class TableWidget(QTableWidget, TableView):
@@ -439,6 +466,8 @@ class TablePlaylist(TableWidget, TableViewCollections):
             metadata = CollectionTableModel._get_metadata(self, mbid[0], index)
             if metadata:
                 self._add_item(metadata)
+            else:
+                self.setItem(self.rowCount() - 1, 2, self._make_item(mbid[0]))
 
     def _add_item(self, metadata):
         self.insertRow(self.rowCount())
