@@ -73,3 +73,8 @@ def fetch_collection(c, coll):
 def get_nth_row(c, coll, row):
     c.execute('''SELECT DOCID FROM {0} LIMIT ?, 1;'''.format(coll), (row,))
     return c.fetchone()
+
+
+def delete_nth_row(conn, c, coll, row):
+    c.execute('''DELETE FROM {0} WHERE DOCID=?'''.format(coll), (row,))
+    conn.commit()
