@@ -96,26 +96,31 @@ class CollectionTableModel(QStandardItemModel):
     def add_recording(self, recording):
         for index, mbid in enumerate(recording):
             metadata = CollectionTableModel._get_metadata(self, mbid[0], index)
-            self._add_item(metadata)
+            if metadata:
+                self._add_item(metadata)
 
     @staticmethod
     def _get_metadata(self, mbid, index):
         path = os.path.join(DOCS_PATH, mbid, 'audioanalysis--metadata.json')
-        metadata = json.load(open(path))
 
-        metadata_dict = {}
-        mbid = metadata['mbid']
-        metadata_dict['title'] = metadata['title']
-        metadata_dict['artists'] = CollectionTableModel.parse_artists(metadata)
-        metadata_dict['makam'] = \
-            CollectionTableModel.parse_mattribute(metadata, 'makam')
-        metadata_dict['usul'] = \
-            CollectionTableModel.parse_mattribute(metadata, 'usul')
-        metadata_dict['form'] = \
-            CollectionTableModel.parse_mattribute(metadata, 'form')
-        self.items[index] = mbid
+        try:
+            metadata = json.load(open(path))
 
-        return metadata_dict
+            metadata_dict = {}
+            mbid = metadata['mbid']
+            metadata_dict['title'] = metadata['title']
+            metadata_dict['artists'] = CollectionTableModel.parse_artists(metadata)
+            metadata_dict['makam'] = \
+                CollectionTableModel.parse_mattribute(metadata, 'makam')
+            metadata_dict['usul'] = \
+                CollectionTableModel.parse_mattribute(metadata, 'usul')
+            metadata_dict['form'] = \
+                CollectionTableModel.parse_mattribute(metadata, 'form')
+            self.items[index] = mbid
+            return metadata_dict
+
+        except FileNotFoundError:
+            return
 
     def _add_item(self, metadata):
         self.insertRow(self.rowCount())
