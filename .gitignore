@@ -15,3 +15,5 @@ pitchfilter.egg-info/
 dunyadesktop_app/cultures/documents
 dunyadesktop_app/cultures/scores
 db.sqlite
+
+docs/build
