@@ -17,3 +17,4 @@ dunyadesktop_app/cultures/scores
 db.sqlite
 
 docs_source/build
+resources/bootstrap-sphinx.css
