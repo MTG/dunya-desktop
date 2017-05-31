@@ -37,7 +37,7 @@
   </head>
   <body>
 
-  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
         <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
@@ -76,8 +76,21 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Dunya-desktop Documentation</a></li>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#installing-dependencies-on-mac-os-x-for-python-2-7">Installing dependencies on Mac OS X for Python 2.7</a></li>
+<li><a class="reference internal" href="#installing-dependencies-on-ubuntu-16-04-for-python-2-7">Installing dependencies on Ubuntu 16.04 for Python 2.7</a></li>
 <li><a class="reference internal" href="#module-mainui_makam">Main UI</a></li>
-<li><a class="reference internal" href="#module-widgets.combobox">Widgets</a></li>
+<li><a class="reference internal" href="#widgets">Widgets</a><ul>
+<li><a class="reference internal" href="#module-widgets.combobox">Combobox</a></li>
+<li><a class="reference internal" href="#module-widgets.playerframe">Player Frame</a></li>
+<li><a class="reference internal" href="#module-widgets.timeserieswidget">Time Series Widget</a></li>
+<li><a class="reference internal" href="#module-widgets.waveformwidget">Waveform Widget</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#license">License</a></li>
+<li><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 </ul>
@@ -140,8 +153,163 @@ module for reaching the backend of the
 <div class="toctree-wrapper compound">
 </div>
 </div>
+<div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installing-dependencies-on-mac-os-x-for-python-2-7">
+<h2>Installing dependencies on Mac OS X for Python 2.7<a class="headerlink" href="#installing-dependencies-on-mac-os-x-for-python-2-7" title="Permalink to this headline">¶</a></h2>
+<p>The given installation steps were tried on OS X El Capitan (v10.11.06) and
+OS X El Sierra (v10.12.1).</p>
+<ul>
+<li><p class="first">Install Xcode (can be installed via <a class="reference external" href="https://itunes.apple.com/en/app/xcode/id497799835?mt=12">Mac App Store</a>. Then install command-line tools:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>xcode-select --install
+sudo xcodebuild -license
+</pre></div>
+</div>
+<p>After the installation, make sure that you have agreed Apple’s licence agreement.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Install <a class="reference external" href="http://brew.sh/">Homebrew package manager</a>:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>/usr/bin/ruby -e <span class="s2">&quot;</span><span class="k">$(</span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install<span class="k">)</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Install Python 2.x, Qt 5.7, ffmpeg and wget with Homebrew:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>brew install python qt@5.7 ffmpeg wget
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Download PyQt 5.7.1 and SIP source packages:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>wget https://sourceforge.net/projects/pyqt/files/sip/sip-4.19/sip-4.19.tar.gz
+wget https://sourceforge.net/projects/pyqt/files/PyQt5/PyQt-5.7.1/PyQt5_gpl-5.7.1.tar.gz
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Untar and compile PyQt 5.7.1 and SIP:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># compile sip</span>
+tar -xvf sip-4.19.tar.gz
+<span class="nb">cd</span> sip-4.19
+python configure.py -d /usr/local/lib/python2.7/site-packages/
+make
+sudo make install
+
+<span class="c1"># compile PyQt5</span>
+<span class="nb">cd</span> ..
+tar -xvf PyQt5_gpl-5.7.1.tar.gz
+<span class="nb">cd</span> PyQt5_gpl-5.7.1
+python configure.py --confirm-license -d /usr/local/lib/python2.7/site-packages/ --qmake<span class="o">=</span>/usr/local/Cellar/qt<span class="se">\@</span><span class="m">5</span>.7/5.7.1/bin/qmake --sip<span class="o">=</span>../sip-4.19/sipgen/sip --sip-incdir<span class="o">=</span>../sip-4.19/siplib
+make
+sudo make install
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Create a virtual environment (virtualenv) and install requirements.</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>pip install virtualenv
+virtualenv --system-site-packages env
+<span class="nb">source</span> env/bin/activate
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Go to directory of where dunya-desktop is downloaded.</p>
+<blockquote>
+<div><p><strong>IMPORTANT:</strong> Don’t forget to change ‘path/to/dunya-desktop’ with the
+actual directory name.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> path/to/dunya-desktop
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Finally, install the package requirements.</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>pip install -r requirements
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="installing-dependencies-on-ubuntu-16-04-for-python-2-7">
+<h2>Installing dependencies on Ubuntu 16.04 for Python 2.7<a class="headerlink" href="#installing-dependencies-on-ubuntu-16-04-for-python-2-7" title="Permalink to this headline">¶</a></h2>
+<p>The given installation steps were tried on Ubuntu 16.04.02 LTS (xenial).</p>
+<ul>
+<li><p class="first">Install Python 2.x, Qt 5.x:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
+sudo apt-get update -qq
+sudo apt-get install -qq qtdeclarative5-dev libqt5svg5-dev qtmultimedia5-dev build-essential python-dev
+sudo apt-get install -qq ffmpeg
+<span class="nb">export</span> <span class="nv">QMAKE</span><span class="o">=</span>/usr/lib/x86_64-linux-gnu/qt5/bin/qmake
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Download PyQt 5.8 and SIP source packages:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>wget https://sourceforge.net/projects/pyqt/files/sip/sip-4.19.1/sip-4.19.1.tar.gz
+wget https://sourceforge.net/projects/pyqt/files/PyQt5/PyQt-5.8/PyQt5_gpl-5.8.tar.gz
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Untar and compile PyQt 5.8 and SIP:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># compile sip</span>
+tar -xzf sip-4.19.1.tar.gz
+<span class="nb">cd</span> sip-4.19.1/
+python configure.py
+make
+sudo make install
+<span class="nb">cd</span> ..
+
+<span class="c1"># compile PyQt5</span>
+tar -xzf PyQt5_gpl-5.8.tar.gz
+<span class="nb">cd</span> PyQt5_gpl-5.8/
+python configure.py --confirm-license --qmake<span class="o">=</span>/usr/lib/x86_64-linux-gnu/qt5/bin/qmake
+make
+sudo make install
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Create a virtual environment (virtualenv) and install requirements.</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>pip install virtualenv
+virtualenv --system-site-packages env
+<span class="nb">source</span> env/bin/activate
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Go to directory of where dunya-desktop is downloaded.</p>
+<blockquote>
+<div><p><strong>IMPORTANT:</strong> Don’t forget to change ‘path/to/dunya-desktop’ with the
+actual directory name.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> path/to/dunya-desktop
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Finally, install the package requirements.</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>pip install -r requirements
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</div>
 <div class="section" id="module-mainui_makam">
-<span id="main-ui"></span><h1>Main UI<a class="headerlink" href="#module-mainui_makam" title="Permalink to this headline">¶</a></h1>
+<span id="main-ui"></span><h2>Main UI<a class="headerlink" href="#module-mainui_makam" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="mainui_makam.MainWindowMakam">
 <em class="property">class </em><code class="descclassname">mainui_makam.</code><code class="descname">MainWindowMakam</code><a class="reference internal" href="_modules/mainui_makam.html#MainWindowMakam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mainui_makam.MainWindowMakam" title="Permalink to this definition">¶</a></dt>
@@ -149,8 +317,10 @@ module for reaching the backend of the
 </dd></dl>
 
 </div>
+<div class="section" id="widgets">
+<h2>Widgets<a class="headerlink" href="#widgets" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="module-widgets.combobox">
-<span id="widgets"></span><h1>Widgets<a class="headerlink" href="#module-widgets.combobox" title="Permalink to this headline">¶</a></h1>
+<span id="combobox"></span><h3>Combobox<a class="headerlink" href="#module-widgets.combobox" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="widgets.combobox.ComboBox">
 <em class="property">class </em><code class="descclassname">widgets.combobox.</code><code class="descname">ComboBox</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/combobox.html#ComboBox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.combobox.ComboBox" title="Permalink to this definition">¶</a></dt>
@@ -219,7 +389,10 @@ visible/invisible</p>
 
 </dd></dl>
 
-<span class="target" id="module-widgets.playerframe"></span><dl class="class">
+</div>
+<div class="section" id="module-widgets.playerframe">
+<span id="player-frame"></span><h3>Player Frame<a class="headerlink" href="#module-widgets.playerframe" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
 <dt id="widgets.playerframe.PlayerFrame">
 <em class="property">class </em><code class="descclassname">widgets.playerframe.</code><code class="descname">PlayerFrame</code><span class="sig-paren">(</span><em>recid</em>, <em>parent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/playerframe.html#PlayerFrame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.playerframe.PlayerFrame" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
@@ -254,7 +427,10 @@ Changes the waveform region item according to the position of playback.
 
 </dd></dl>
 
-<span class="target" id="module-widgets.timeserieswidget"></span><dl class="class">
+</div>
+<div class="section" id="module-widgets.timeserieswidget">
+<span id="time-series-widget"></span><h3>Time Series Widget<a class="headerlink" href="#module-widgets.timeserieswidget" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
 <dt id="widgets.timeserieswidget.TimeSeriesWidget">
 <em class="property">class </em><code class="descclassname">widgets.timeserieswidget.</code><code class="descname">TimeSeriesWidget</code><span class="sig-paren">(</span><em>parent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/timeserieswidget.html#TimeSeriesWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.timeserieswidget.TimeSeriesWidget" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
@@ -324,7 +500,75 @@ seconds.
 
 </dd></dl>
 
-<span class="target" id="module-widgets.waveformwidget"></span></div>
+</div>
+<div class="section" id="module-widgets.waveformwidget">
+<span id="waveform-widget"></span><h3>Waveform Widget<a class="headerlink" href="#module-widgets.waveformwidget" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="widgets.waveformwidget.WaveformWidget">
+<em class="property">class </em><code class="descclassname">widgets.waveformwidget.</code><code class="descname">WaveformWidget</code><a class="reference internal" href="_modules/widgets/waveformwidget.html#WaveformWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.waveformwidget.WaveformWidget" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="widgets.waveformwidget.WaveformWidget.change_wf_region">
+<code class="descname">change_wf_region</code><span class="sig-paren">(</span><em>x_start</em>, <em>x_end</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/waveformwidget.html#WaveformWidget.change_wf_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.waveformwidget.WaveformWidget.change_wf_region" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the position of the waveform region item on the waveform widget.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x_start</strong> – Start point of the region item in seconds.</li>
+<li><strong>x_end</strong> – End point of the region item in seconds.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="widgets.waveformwidget.WaveformWidget.get_waveform_region">
+<code class="descname">get_waveform_region</code><a class="headerlink" href="#widgets.waveformwidget.WaveformWidget.get_waveform_region" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current position of the waveform region item in seconds if
+the waveform region item exists.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.waveformwidget.WaveformWidget.plot_waveform">
+<code class="descname">plot_waveform</code><span class="sig-paren">(</span><em>raw_audio</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/waveformwidget.html#WaveformWidget.plot_waveform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.waveformwidget.WaveformWidget.plot_waveform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the given raw audio.
+:param raw_audio: (list of numpy array) List of floats.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.waveformwidget.WaveformWidget.update_wf_vline">
+<code class="descname">update_wf_vline</code><span class="sig-paren">(</span><em>playback_pos_sample</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/waveformwidget.html#WaveformWidget.update_wf_vline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.waveformwidget.WaveformWidget.update_wf_vline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updated the position of vertical line.
+:param playback_pos_sample: (int) Position of playback in samples.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+<div class="section" id="license">
+<h1>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h1>
+<p>The source code hosted in this repository is licenced under the terms of the
+GNU Affero General Public License (v3 or later). Any data (the audio
+recordings, music scores, features, figures, outputs etc.) are licenced under
+Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.</p>
+</div>
+<div class="section" id="acknowledgements">
+<h1>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h1>
+<p>Dunya-desktop is supported by the European Research Council under the European Union’s Seventh Framework Program, as part of the CompMusic project (ERC grant agreement 267583).</p>
+</div>
 <div class="section" id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">

@@ -46,7 +46,7 @@ Then install command-line tools:
 
         /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
         
-* Install Python 2.x, Qt 5.7 and wget with Homebrew:
+* Install Python 2.x, Qt 5.7, ffmpeg and wget with Homebrew:
         
         brew install python qt@5.7 ffmpeg wget
 
