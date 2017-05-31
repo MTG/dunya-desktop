@@ -37,10 +37,10 @@ Dunya-desktop Documentation
 Installation
 ============
 
-Installing dependencies on Mac OS X for Python 2.7
---------------------------------------------------
-The given installation steps were tried on OS X El Capitan (v10.11.06) and
-OS X El Sierra (v10.12.1).
+Installing dependencies on MacOS for Python 2.7
+-----------------------------------------------
+The given installation steps were tried on OS El Capitan (v10.11.06) and OS El
+Sierra (v10.12.1).
 
 * Install Xcode (can be installed via `Mac App Store <https://itunes.apple.com/en/app/xcode/id497799835?mt=12>`_. Then install command-line tools:
 
