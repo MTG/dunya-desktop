@@ -214,4 +214,7 @@ table.field-list {
   }
 }
 
-
+.compound{
+    margin: 20px;
+    font-size: 18px;
+}

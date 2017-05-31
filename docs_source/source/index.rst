@@ -3,12 +3,26 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Dunya-desktop's documentation!
-=========================================
+Dunya-desktop Documentation
+===========================
+
+.. image:: ../../dunyadesktop_app/ui_files/icons/dunya-desktop-github.png
+    :target: https://github.com/MTG/dunya-desktop
+    :scale: 60 %
+    :align: center
+
+.. compound::
+    **Dunya-desktop** is a desktop application, developed for accessing and
+    visualizing music data such as music scores, audio recordings, extracted
+    features and analysis  results. It is a modular and extendable desktop
+    application that the users can customise according to their needs.
+
+.. image:: ../../resources/dunya-desktop-demo.gif
+    :align: center
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+    :maxdepth: 2
+    :caption: Contents:
 
 
 Main UI
