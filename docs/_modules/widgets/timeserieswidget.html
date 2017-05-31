@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>widgets.timeserieswidget &#8212; Dunya-desktop 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          Dunya-desktop</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for widgets.timeserieswidget</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pyqtgraph</span> <span class="k">as</span> <span class="nn">pg</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="k">import</span> <span class="n">pyqtSignal</span>
+
+<span class="kn">from</span> <span class="nn">.widgetutilities</span> <span class="k">import</span> <span class="n">downsample_plot</span><span class="p">,</span> <span class="n">cursor_pos_sample</span><span class="p">,</span> <span class="n">current_pitch</span>
+
+<span class="c1"># Enable OpenGL and Weave to improve the performance of plotting functions.</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">setConfigOptions</span><span class="p">(</span><span class="n">useOpenGL</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">setConfigOptions</span><span class="p">(</span><span class="n">useWeave</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># pg.setConfigOptions(crashWarning=True)</span>
+
+<span class="n">CURSOR_PEN</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">mkPen</span><span class="p">((</span><span class="mi">255</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">150</span><span class="p">),</span> <span class="n">cosmetic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">YAXIS_BRUSH</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">mkBrush</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">45</span><span class="p">))</span>
+<span class="n">PITCH_PEN</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">mkPen</span><span class="p">(</span><span class="n">cosmetic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">216</span><span class="p">,))</span>
+<span class="n">SHADOW_PEN</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">mkPen</span><span class="p">((</span><span class="mi">70</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">cosmetic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="TimeSeriesWidget"><a class="viewcode-back" href="../../index.html#widgets.timeserieswidget.TimeSeriesWidget">[docs]</a><span class="k">class</span> <span class="nc">TimeSeriesWidget</span><span class="p">(</span><span class="n">pg</span><span class="o">.</span><span class="n">GraphicsLayoutWidget</span><span class="p">):</span>
+    <span class="n">sample_rate</span> <span class="o">=</span> <span class="mi">44100</span>
+    <span class="n">hopsize</span> <span class="o">=</span> <span class="mi">128</span>
+    <span class="n">wheel_event</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">pg</span><span class="o">.</span><span class="n">GraphicsLayoutWidget</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
+
+        <span class="c1"># Set 0 margin 0 spacing to cover the whole area.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">setContentsMargins</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">setSpacing</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">limit</span> <span class="o">=</span> <span class="mi">600</span>  <span class="c1"># maximum number of samples to be plotted</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rois</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># flags</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_pitch_plotted</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_notes_added</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">wheelEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ev</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wheel_event</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">ev</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TimeSeriesWidget.add_1d_view"><a class="viewcode-back" href="../../index.html#widgets.timeserieswidget.TimeSeriesWidget.add_1d_view">[docs]</a>    <span class="k">def</span> <span class="nf">add_1d_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds a 1d view to TimeSeriesWidget where you can plot and add items</span>
+<span class="sd">        on it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># To customize the plot axises, create new ones.</span>
+        <span class="n">x_axis</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">AxisItem</span><span class="p">(</span><span class="s1">&#39;bottom&#39;</span><span class="p">)</span>  <span class="c1"># x-axis</span>
+        <span class="n">x_axis</span><span class="o">.</span><span class="n">enableAutoSIPrefix</span><span class="p">(</span><span class="n">enable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># Prevent automatic SI</span>
+        <span class="c1"># prefix scaling on this axis.</span>
+        <span class="n">x_axis</span><span class="o">.</span><span class="n">setGrid</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>  <span class="c1"># the alpha value of grids on x-axis</span>
+
+        <span class="n">y_axis</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">AxisItem</span><span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>  <span class="c1"># x-axis</span>
+        <span class="n">y_axis</span><span class="o">.</span><span class="n">enableAutoSIPrefix</span><span class="p">(</span><span class="n">enable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># Prevent automatic SI</span>
+        <span class="c1"># prefix scaling on this axis.</span>
+        <span class="n">axis_items</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="n">y_axis</span><span class="p">,</span> <span class="s1">&#39;bottom&#39;</span><span class="p">:</span> <span class="n">x_axis</span><span class="p">}</span>
+
+        <span class="c1"># add plot</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom_selection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">addPlot</span><span class="p">(</span><span class="n">axisItems</span><span class="o">=</span><span class="n">axis_items</span><span class="p">)</span>
+
+        <span class="c1"># disable the mouse events and menu events</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom_selection</span><span class="o">.</span><span class="n">setMouseEnabled</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom_selection</span><span class="o">.</span><span class="n">setMenuEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># initialize a cursor object. Height of cursor is 20000.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vline</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">ROI</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20000</span><span class="p">],</span> <span class="n">angle</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                            <span class="n">pen</span><span class="o">=</span><span class="n">CURSOR_PEN</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom_selection</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vline</span><span class="p">)</span>  <span class="c1"># add item to plot area</span>
+
+        <span class="c1"># add y-axis region</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_axis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">addPlot</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># disable the mouse events and menu events</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_axis</span><span class="o">.</span><span class="n">setMouseEnabled</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_axis</span><span class="o">.</span><span class="n">setMenuEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_axis</span><span class="o">.</span><span class="n">setMaximumWidth</span><span class="p">(</span><span class="mi">125</span><span class="p">)</span>  <span class="c1"># maximum width 125</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_axis</span><span class="o">.</span><span class="n">setContentsMargins</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>  <span class="c1"># set 40 left margin</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_axis</span><span class="o">.</span><span class="n">hideAxis</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>  <span class="c1"># hide left-axis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_axis</span><span class="o">.</span><span class="n">hideAxis</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;bottom&quot;</span><span class="p">)</span>  <span class="c1"># hide botton-axis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_axis</span><span class="o">.</span><span class="n">setYRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20000</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># show right axis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_axis</span><span class="o">.</span><span class="n">setLabel</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Frequency (Hz)&quot;</span><span class="p">)</span>
+
+        <span class="c1"># initialize a linear region item</span>
+        <span class="n">orientation</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">LinearRegionItem</span><span class="o">.</span><span class="n">Horizontal</span>  <span class="c1"># set the item horizontal</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">region_yaxis</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">LinearRegionItem</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20000</span><span class="p">],</span>
+                                                <span class="n">brush</span><span class="o">=</span><span class="n">YAXIS_BRUSH</span><span class="p">,</span>
+                                                <span class="n">orientation</span><span class="o">=</span><span class="n">orientation</span><span class="p">,</span>
+                                                <span class="n">bounds</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20000</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_axis</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">region_yaxis</span><span class="p">)</span>  <span class="c1"># add item to right axis</span>
+
+        <span class="c1"># set region changed signal to set y axis range in the plot</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">region_yaxis</span><span class="o">.</span><span class="n">sigRegionChangeFinished</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">change_yaxis_range</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TimeSeriesWidget.plot_pitch"><a class="viewcode-back" href="../../index.html#widgets.timeserieswidget.TimeSeriesWidget.plot_pitch">[docs]</a>    <span class="k">def</span> <span class="nf">plot_pitch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pitch_plot</span><span class="p">,</span> <span class="n">x_start</span><span class="p">,</span> <span class="n">x_end</span><span class="p">,</span> <span class="n">hop_size</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots the given pitch_plot array.</span>
+<span class="sd">        :param pitch_plot: (numpy array or list) List of pitch values.</span>
+<span class="sd">        Ex: [234.5, 234,3, 234.0, ...]</span>
+<span class="sd">        :param x_start: (int or float) Time stamp of starting point in</span>
+<span class="sd">        seconds.</span>
+<span class="sd">        :param x_end: (int or float) Time stamp of ending point in seconds.</span>
+<span class="sd">        :param hop_size: (int) Hop size in samples. Ex: 128</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_pitch_plotted</span><span class="p">:</span>  <span class="c1"># if pitch is not plotted yet</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ratio</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="n">hop_size</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_plot</span> <span class="o">=</span> <span class="n">pitch_plot</span>
+
+            <span class="c1"># downsample the plot in given time stamps</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_plot</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">x_start</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="n">x_end</span><span class="p">,</span> <span class="n">hop_size</span><span class="o">=</span><span class="n">hop_size</span><span class="p">)</span>
+            <span class="c1"># set the flag as true after plot the pitch</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_pitch_plotted</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># downsample the plot in given time stamps</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_plot</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">x_start</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="n">x_end</span><span class="p">,</span> <span class="n">hop_size</span><span class="o">=</span><span class="n">hop_size</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TimeSeriesWidget.update_plot"><a class="viewcode-back" href="../../index.html#widgets.timeserieswidget.TimeSeriesWidget.update_plot">[docs]</a>    <span class="k">def</span> <span class="nf">update_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">hop_size</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the view of the plot region with given time stamps.</span>
+<span class="sd">        :param start: (int or float) Time stamp of starting point in seconds.</span>
+<span class="sd">        :param stop: (int or float) Time stamp of ending point in seconds.</span>
+<span class="sd">        :param hop_size: (int) Hop size in samples. Ex: 128</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># convert the given time stamps into samples to specify the plot array</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">start</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">ratio</span><span class="p">)</span>
+        <span class="n">stop</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">stop</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">ratio</span><span class="p">)</span>
+        <span class="n">plot_y</span> <span class="o">=</span> <span class="n">downsample_plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pitch_plot</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">stop</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">limit</span><span class="p">)</span>
+
+        <span class="c1"># create time stamps array for x-axis</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">(</span><span class="n">start</span><span class="p">)</span> <span class="o">*</span> <span class="n">hop_size</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_rate</span>
+        <span class="n">stop</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">(</span><span class="n">stop</span><span class="p">)</span> <span class="o">*</span> <span class="n">hop_size</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_rate</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="p">(</span><span class="n">stop</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">plot_y</span><span class="p">))</span>
+        <span class="n">plot_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">step</span><span class="p">)</span>
+        <span class="c1"># Sometimes the dimensions of plot_x and plot_y are not same. To fix</span>
+        <span class="c1"># this situation, take plot_x with the same dimension of plot_y</span>
+        <span class="n">plot_x</span> <span class="o">=</span> <span class="n">plot_x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">plot_y</span><span class="p">)]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom_selection</span><span class="o">.</span><span class="n">clearPlots</span><span class="p">()</span>  <span class="c1"># clears the current plots</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom_selection</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">plot_x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">plot_y</span><span class="p">)],</span> <span class="n">y</span><span class="o">=</span><span class="n">plot_y</span><span class="p">,</span>
+                                 <span class="n">connect</span><span class="o">=</span><span class="s1">&#39;finite&#39;</span><span class="p">,</span> <span class="n">pen</span><span class="o">=</span><span class="n">PITCH_PEN</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TimeSeriesWidget.plot_histogram_raxis"><a class="viewcode-back" href="../../index.html#widgets.timeserieswidget.TimeSeriesWidget.plot_histogram_raxis">[docs]</a>    <span class="k">def</span> <span class="nf">plot_histogram_raxis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vals</span><span class="p">,</span> <span class="n">bins</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots histogram to the right axis.</span>
+<span class="sd">        :param vals: (list or numpy array) List of valley values of histogram.</span>
+<span class="sd">        :param bins: (list or numpy array) List of bins values of histogram</span>
+<span class="sd">        in Hz</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># shadow pen is the properties of shadow around the lines</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">vals</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">shadowPen</span><span class="o">=</span><span class="n">SHADOW_PEN</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_axis</span><span class="o">.</span><span class="n">setXRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">vals</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># cursor in the histogram plot.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hline_histogram</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">ROI</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">angle</span><span class="o">=-</span><span class="mi">90</span><span class="p">,</span>
+                                      <span class="n">pen</span><span class="o">=</span><span class="n">CURSOR_PEN</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_axis</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hline_histogram</span><span class="p">)</span>
+
+        <span class="c1"># Link the y-axises of pitch and histogram plots</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom_selection</span><span class="o">.</span><span class="n">setYLink</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right_axis</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TimeSeriesWidget.change_yaxis_range"><a class="viewcode-back" href="../../index.html#widgets.timeserieswidget.TimeSeriesWidget.change_yaxis_range">[docs]</a>    <span class="k">def</span> <span class="nf">change_yaxis_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Changes the y-axis range according to the selected region in y-axis.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pos_y_min</span><span class="p">,</span> <span class="n">pos_y_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">region_yaxis</span><span class="o">.</span><span class="n">getRegion</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom_selection</span><span class="o">.</span><span class="n">setYRange</span><span class="p">(</span><span class="n">pos_y_min</span><span class="p">,</span> <span class="n">pos_y_max</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_axis</span><span class="o">.</span><span class="n">setYRange</span><span class="p">(</span><span class="n">pos_y_min</span><span class="p">,</span> <span class="n">pos_y_max</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TimeSeriesWidget.add_tonic"><a class="viewcode-back" href="../../index.html#widgets.timeserieswidget.TimeSeriesWidget.add_tonic">[docs]</a>    <span class="k">def</span> <span class="nf">add_tonic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds tonic lines on the pitch plot.</span>
+<span class="sd">        :param values: (list or numpy array) A sequence of tonic values in Hz.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># label options for the tonic values on the tonic line</span>
+        <span class="n">label_opts</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;position&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+                      <span class="s1">&#39;fill&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="s1">&#39;movable&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;tonic_lines&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tonic_lines</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+            <span class="c1"># create infinite line</span>
+            <span class="n">t_line</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">InfiniteLine</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">movable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                     <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Tonic=</span><span class="si">%.2f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">value</span><span class="p">,</span>
+                                     <span class="n">labelOpts</span><span class="o">=</span><span class="n">label_opts</span><span class="p">)</span>
+            <span class="c1"># take tonic lines in a list to remove in the future</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tonic_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t_line</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zoom_selection</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="n">t_line</span><span class="p">)</span>  <span class="c1"># add item to zoom selection</span></div>
+
+<div class="viewcode-block" id="TimeSeriesWidget.set_hist_cursor_pos"><a class="viewcode-back" href="../../index.html#widgets.timeserieswidget.TimeSeriesWidget.set_hist_cursor_pos">[docs]</a>    <span class="k">def</span> <span class="nf">set_hist_cursor_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the position of histogram in y-axis.</span>
+<span class="sd">        :param pos: (int or float) Playback position in seconds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pos_sample</span> <span class="o">=</span> <span class="n">cursor_pos_sample</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hopsize</span><span class="p">)</span>
+        <span class="n">pitch</span> <span class="o">=</span> <span class="n">current_pitch</span><span class="p">(</span><span class="n">pos_sample</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pitch_plot</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hline_histogram</span><span class="o">.</span><span class="n">setPos</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">pitch</span><span class="p">])</span></div>
+
+    <span class="k">def</span> <span class="nf">update_notes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">):</span>
+        <span class="n">pen</span><span class="o">=</span><span class="p">(</span><span class="mi">225</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">181</span><span class="p">,</span> <span class="mi">175</span><span class="p">)</span>
+        <span class="n">start_ind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_nearest_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">notes_start</span><span class="p">,</span> <span class="n">xmin</span><span class="p">)</span>
+        <span class="n">end_ind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_nearest_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">notes_end</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_given_items</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zoom_selection</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rois</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rois</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start_ind</span><span class="p">,</span> <span class="n">end_ind</span><span class="p">):</span>
+            <span class="n">temp_note</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">notes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">roi</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">ROI</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">[</span><span class="n">temp_note</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">temp_note</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span>
+                         <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="n">temp_note</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">temp_note</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">5</span><span class="p">],</span> <span class="n">pen</span><span class="o">=</span><span class="n">pen</span><span class="p">)</span>
+            <span class="n">roi</span><span class="o">.</span><span class="n">addScaleHandle</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+            <span class="n">roi</span><span class="o">.</span><span class="n">addScaleHandle</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zoom_selection</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="n">roi</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rois</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">roi</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TimeSeriesWidget.remove_given_items"><a class="viewcode-back" href="../../index.html#widgets.timeserieswidget.TimeSeriesWidget.remove_given_items">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">remove_given_items</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes the given items from the given object</span>
+<span class="sd">        :param obj: pyqtgraph.GraphicsWidget object</span>
+<span class="sd">        :param items: (list) Sequence of pyqtgraph.GraphicsObject object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">removeItem</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">find_nearest_index</span><span class="p">(</span><span class="n">n_array</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">n_array</span> <span class="o">-</span> <span class="n">value</span><span class="p">))</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">n_array</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">val</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">index</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, MTG-UPF.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

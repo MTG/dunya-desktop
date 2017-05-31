@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>widgets.playerframe &#8212; Dunya-desktop 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          Dunya-desktop</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for widgets.playerframe</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pyqtgraph.dockarea</span> <span class="k">as</span> <span class="nn">pgdock</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="k">import</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QFrame</span><span class="p">,</span> <span class="n">QLayout</span><span class="p">,</span> <span class="n">QSizePolicy</span>
+<span class="kn">from</span> <span class="nn">PyQt5.Qt</span> <span class="k">import</span> <span class="n">pyqtSignal</span>
+
+<span class="kn">from</span> <span class="nn">.playbackframe</span> <span class="k">import</span> <span class="n">PlaybackFrame</span>
+<span class="kn">from</span> <span class="nn">.timeserieswidget</span> <span class="k">import</span> <span class="n">TimeSeriesWidget</span>
+<span class="kn">from</span> <span class="nn">.waveformwidget</span> <span class="k">import</span> <span class="n">WaveformWidget</span>
+<span class="kn">from</span> <span class="nn">.scoredialog</span> <span class="k">import</span> <span class="n">ScoreDialog</span>
+<span class="kn">from</span> <span class="nn">.widgetutilities</span> <span class="k">import</span> <span class="n">cursor_pos_sample</span><span class="p">,</span> <span class="n">current_pitch</span>
+<span class="kn">from</span> <span class="nn">utilities.playback</span> <span class="k">import</span> <span class="n">Playback</span>
+<span class="kn">from</span> <span class="nn">cultures.makam.featureparsers</span> <span class="k">import</span> <span class="p">(</span><span class="n">read_raw_audio</span><span class="p">,</span> <span class="n">load_pitch</span><span class="p">,</span> <span class="n">load_pd</span><span class="p">,</span>
+                                           <span class="n">load_tonic</span><span class="p">,</span> <span class="n">get_feature_paths</span><span class="p">,</span>
+                                           <span class="n">load_notes</span><span class="p">,</span> <span class="n">get_sections</span><span class="p">,</span>
+                                           <span class="n">generate_score_map</span><span class="p">,</span>
+                                           <span class="n">mp3_to_wav_converter</span><span class="p">)</span>
+
+
+<span class="n">DOCS_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;cultures&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;documents&#39;</span><span class="p">)</span>
+<span class="n">COLORS_RGB</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">77</span><span class="p">,</span> <span class="mi">157</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">70</span><span class="p">),</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">217</span><span class="p">,</span> <span class="mi">79</span><span class="p">,</span> <span class="mi">70</span><span class="p">),</span> <span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">70</span><span class="p">),</span>
+              <span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="mi">240</span><span class="p">,</span> <span class="mi">202</span><span class="p">,</span> <span class="mi">70</span><span class="p">),</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">89</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">70</span><span class="p">),</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">196</span><span class="p">,</span> <span class="mi">165</span><span class="p">,</span> <span class="mi">70</span><span class="p">),</span>
+              <span class="p">(</span><span class="mi">102</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">70</span><span class="p">),</span> <span class="p">(</span><span class="mi">201</span><span class="p">,</span> <span class="mi">149</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">70</span><span class="p">),</span> <span class="p">(</span><span class="mi">58</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">92</span><span class="p">,</span> <span class="mi">70</span><span class="p">),</span>
+              <span class="p">(</span><span class="mi">117</span><span class="p">,</span> <span class="mi">112</span><span class="p">,</span> <span class="mi">201</span><span class="p">,</span> <span class="mi">70</span><span class="p">)]</span>
+
+
+<span class="k">class</span> <span class="nc">DockAreaWidget</span><span class="p">(</span><span class="n">pgdock</span><span class="o">.</span><span class="n">DockArea</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temporary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">home</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">pgdock</span><span class="o">.</span><span class="n">DockArea</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temporary</span><span class="o">=</span><span class="n">temporary</span><span class="p">,</span> <span class="n">home</span><span class="o">=</span><span class="n">home</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allowedAreas</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">setSizeConstraint</span><span class="p">(</span><span class="n">QLayout</span><span class="o">.</span><span class="n">SetMinimumSize</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">floatDock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dock</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="PlayerFrame"><a class="viewcode-back" href="../../index.html#widgets.playerframe.PlayerFrame">[docs]</a><span class="k">class</span> <span class="nc">PlayerFrame</span><span class="p">(</span><span class="n">QFrame</span><span class="p">):</span>
+    <span class="n">samplerate</span> <span class="o">=</span> <span class="mf">44100.</span>
+    <span class="n">update_histogram</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recid</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">QFrame</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recid</span> <span class="o">=</span> <span class="n">recid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__set_design</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">playback</span> <span class="o">=</span> <span class="n">Playback</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recid</span><span class="p">)</span>
+
+        <span class="c1"># flags</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">score_visible</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hist_visible</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># signals</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">playback</span><span class="o">.</span><span class="n">positionChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player_pos_changed</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">waveform_widget</span><span class="o">.</span><span class="n">region_wf</span><span class="o">.</span><span class="n">sigRegionChangeFinished</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wf_region_changed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">waveform_widget</span><span class="o">.</span><span class="n">region_wf</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wf_region_item_clicked</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">load_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mbid</span><span class="p">):</span>
+        <span class="n">ftr</span> <span class="o">=</span> <span class="s1">&#39;audioanalysis&#39;</span> <span class="o">+</span> <span class="s1">&#39;--&#39;</span> <span class="o">+</span> <span class="s1">&#39;pitch_filtered&#39;</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__load_pitch</span><span class="p">(</span><span class="n">ftr</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_paths</span> <span class="o">=</span> <span class="n">get_feature_paths</span><span class="p">(</span><span class="n">mbid</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__set_waveform</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">playback</span><span class="o">.</span><span class="n">pause</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">playback</span><span class="o">.</span><span class="n">set_source</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_paths</span><span class="p">[</span><span class="s1">&#39;audio_path_wav&#39;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;ts_widget&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">zoom_selection</span><span class="o">.</span><span class="n">clearPlots</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">right_axis</span><span class="o">.</span><span class="n">clearPlots</span><span class="p">()</span>
+
+            <span class="n">histogram</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DOCS_PATH</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">recid</span><span class="p">,</span>
+                                     <span class="s1">&#39;audioanalysis--pitch_distribution.json&#39;</span><span class="p">)</span>
+            <span class="n">vals</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">load_pd</span><span class="p">(</span><span class="n">histogram</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">plot_histogram_raxis</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">bins</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__load_pitch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">):</span>
+        <span class="n">feature_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DOCS_PATH</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">recid</span><span class="p">,</span> <span class="n">feature</span><span class="p">)</span>
+
+        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_stamps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pitch_plot</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_pitch</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_pitch</span><span class="p">,</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hopsize</span><span class="p">)</span> <span class="o">=</span> <span class="n">load_pitch</span><span class="p">(</span><span class="n">feature_path</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__set_design</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets general settings of frame widget, adds dock area and dock widgets.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s1">&#39;Player&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">1200</span><span class="p">,</span> <span class="mi">550</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dock_area</span> <span class="o">=</span> <span class="n">DockAreaWidget</span><span class="p">()</span>
+
+        <span class="c1"># dock fixed waveform</span>
+        <span class="n">dock_waveform</span> <span class="o">=</span> <span class="n">pgdock</span><span class="o">.</span><span class="n">Dock</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Waveform&quot;</span><span class="p">,</span> <span class="n">area</span><span class="o">=</span><span class="s1">&#39;Top&#39;</span><span class="p">,</span>
+                                    <span class="n">hideTitle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">closable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                    <span class="n">autoOrientation</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">dock_waveform</span><span class="o">.</span><span class="n">setMinimumHeight</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">dock_waveform</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">setSizeConstraint</span><span class="p">(</span><span class="n">QLayout</span><span class="o">.</span><span class="n">SetMinimumSize</span><span class="p">)</span>
+        <span class="n">dock_waveform</span><span class="o">.</span><span class="n">widgetArea</span><span class="o">.</span><span class="n">setSizePolicy</span><span class="p">(</span><span class="n">QSizePolicy</span><span class="p">(</span><span class="n">QSizePolicy</span><span class="o">.</span><span class="n">Minimum</span><span class="p">,</span>
+                                                           <span class="n">QSizePolicy</span><span class="o">.</span><span class="n">Minimum</span><span class="p">))</span>
+
+        <span class="c1"># initializing waveform widget</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">waveform_widget</span> <span class="o">=</span> <span class="n">WaveformWidget</span><span class="p">()</span>
+
+        <span class="c1"># adding waveform widget to waveform dock</span>
+        <span class="n">dock_waveform</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">waveform_widget</span><span class="p">)</span>
+        <span class="n">dock_waveform</span><span class="o">.</span><span class="n">allowedAreas</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span>
+        <span class="n">dock_waveform</span><span class="o">.</span><span class="n">setAcceptDrops</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="c1"># adding waveform dock to dock area</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dock_area</span><span class="o">.</span><span class="n">addDock</span><span class="p">(</span><span class="n">dock_waveform</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
+
+        <span class="c1"># adding dock area to frame</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dock_area</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__set_waveform</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads the audio and plots the waveform.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_paths</span><span class="p">[</span><span class="s1">&#39;audio_path_wav&#39;</span><span class="p">]):</span>
+            <span class="n">mp3_to_wav_converter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_paths</span><span class="p">[</span><span class="s1">&#39;audio_path_mp3&#39;</span><span class="p">])</span>
+        <span class="p">(</span><span class="n">raw_audio</span><span class="p">,</span> <span class="n">len_audio</span><span class="p">,</span> <span class="n">min_audio</span><span class="p">,</span>
+         <span class="n">max_audio</span><span class="p">)</span> <span class="o">=</span> <span class="n">read_raw_audio</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_paths</span><span class="p">[</span><span class="s1">&#39;audio_path_wav&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">waveform_widget</span><span class="o">.</span><span class="n">min_raw_audio</span> <span class="o">=</span> <span class="n">min_audio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">waveform_widget</span><span class="o">.</span><span class="n">plot_waveform</span><span class="p">(</span><span class="n">raw_audio</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">wf_region_item_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">playback_pause</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">closeEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">QCloseEvent</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">QFrame</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">closeEvent</span><span class="p">(</span><span class="n">QCloseEvent</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;waveform_widget&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">waveform_widget</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">waveform_widget</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;ts_widget&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;playback&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">playback</span><span class="o">.</span><span class="n">pause</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__add_ts_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span> <span class="o">=</span> <span class="n">TimeSeriesWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">add_1d_view</span><span class="p">()</span>
+        <span class="n">dock_ts</span> <span class="o">=</span> <span class="n">pgdock</span><span class="o">.</span><span class="n">Dock</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Time Series&#39;</span><span class="p">,</span> <span class="n">area</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span> <span class="n">closable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">dock_ts</span><span class="o">.</span><span class="n">allowedAreas</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom&#39;</span><span class="p">]</span>
+        <span class="n">dock_ts</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="p">)</span>
+        <span class="n">dock_ts</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">setSizeConstraint</span><span class="p">(</span><span class="n">QLayout</span><span class="o">.</span><span class="n">SetMinimumSize</span><span class="p">)</span>
+
+        <span class="n">dock_ts</span><span class="o">.</span><span class="n">sigClosed</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__dock_ts_closed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dock_area</span><span class="o">.</span><span class="n">addDock</span><span class="p">(</span><span class="n">dock_ts</span><span class="p">)</span>
+
+        <span class="c1"># signals</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">wheel_event</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">waveform_widget</span><span class="o">.</span><span class="n">wheelEvent</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__dock_ts_closed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="PlayerFrame.plot_1d_data"><a class="viewcode-back" href="../../index.html#widgets.playerframe.PlayerFrame.plot_1d_data">[docs]</a>    <span class="k">def</span> <span class="nf">plot_1d_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f_type</span><span class="p">,</span> <span class="n">feature</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots 1D data.</span>
+<span class="sd">        :param f_type:</span>
+<span class="sd">        :param feature:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;ts_widget&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__add_ts_widget</span><span class="p">()</span>
+
+        <span class="n">ftr</span> <span class="o">=</span> <span class="n">f_type</span> <span class="o">+</span> <span class="s1">&#39;--&#39;</span> <span class="o">+</span> <span class="n">feature</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span>
+        <span class="n">feature_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DOCS_PATH</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">recid</span><span class="p">,</span> <span class="n">ftr</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">feature</span> <span class="o">==</span> <span class="s1">&#39;pitch&#39;</span> <span class="ow">or</span> <span class="n">feature</span> <span class="o">==</span> <span class="s1">&#39;pitch_filtered&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__load_pitch</span><span class="p">(</span><span class="n">ftr</span><span class="p">)</span>
+
+            <span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">waveform_widget</span><span class="o">.</span><span class="n">get_waveform_region</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="p">,</span> <span class="s1">&#39;zoom_selection&#39;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">hopsize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hopsize</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">samplerate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">pitch_plot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pitch_plot</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">plot_pitch</span><span class="p">(</span><span class="n">pitch_plot</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pitch_plot</span><span class="p">,</span>
+                                          <span class="n">x_start</span><span class="o">=</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_end</span><span class="o">=</span><span class="n">x_max</span><span class="p">,</span>
+                                          <span class="n">hop_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hopsize</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">is_pitch_plotted</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="n">histogram</span> <span class="o">=</span> \
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DOCS_PATH</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">recid</span><span class="p">,</span>
+                                 <span class="s1">&#39;audioanalysis--pitch_distribution.json&#39;</span><span class="p">)</span>
+                <span class="n">vals</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">load_pd</span><span class="p">(</span><span class="n">histogram</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">plot_histogram_raxis</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">bins</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">feature</span> <span class="o">==</span> <span class="s1">&#39;tonic&#39;</span><span class="p">:</span>
+            <span class="n">tonic_values</span> <span class="o">=</span> <span class="n">load_tonic</span><span class="p">(</span><span class="n">feature_path</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">add_tonic</span><span class="p">(</span><span class="n">tonic_values</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">playback_play</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">playback</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">playback_pause</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">playback</span><span class="o">.</span><span class="n">pause</span><span class="p">()</span>
+
+<div class="viewcode-block" id="PlayerFrame.wf_region_changed"><a class="viewcode-back" href="../../index.html#widgets.playerframe.PlayerFrame.wf_region_changed">[docs]</a>    <span class="k">def</span> <span class="nf">wf_region_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the plots according to the change in waveform region item.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">playback</span><span class="o">.</span><span class="n">position</span><span class="p">()</span> <span class="o">/</span> <span class="mf">1000.</span>  <span class="c1"># playback pos in seconds</span>
+        <span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">waveform_widget</span><span class="o">.</span><span class="n">get_waveform_region</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">x_min</span> <span class="o">&lt;</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="n">x_max</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">playback_pause</span><span class="p">()</span>
+            <span class="n">pos_ms</span> <span class="o">=</span> <span class="n">x_min</span> <span class="o">*</span> <span class="mf">1000.</span>
+            <span class="n">pos_sample</span> <span class="o">=</span> <span class="n">x_min</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">playback</span><span class="o">.</span><span class="n">setPosition</span><span class="p">(</span><span class="n">pos_ms</span><span class="p">)</span>
+            <span class="c1">#self.parent().playback_frame.slider.setValue(pos_sample)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">waveform_widget</span><span class="o">.</span><span class="n">update_wf_vline</span><span class="p">(</span><span class="n">pos_sample</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;ts_widget&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="p">,</span> <span class="s1">&#39;zoom_selection&#39;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">is_pitch_plotted</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">update_plot</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">x_min</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="n">x_max</span><span class="p">,</span>
+                                               <span class="n">hop_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hopsize</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">vline</span><span class="o">.</span><span class="n">setPos</span><span class="p">([</span><span class="n">x_min</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">is_notes_added</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">update_notes</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PlayerFrame.player_pos_changed"><a class="viewcode-back" href="../../index.html#widgets.playerframe.PlayerFrame.player_pos_changed">[docs]</a>    <span class="k">def</span> <span class="nf">player_pos_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">playback_pos</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the positions of cursors when playback position is changed.</span>
+<span class="sd">        Changes the waveform region item according to the position of playback.</span>
+<span class="sd">        :param playback_pos: (int) Position of player in milliseconds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">playback</span><span class="o">.</span><span class="n">state</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">playback_pos_sec</span> <span class="o">=</span> <span class="n">playback_pos</span> <span class="o">/</span> <span class="mf">1000.</span>
+            <span class="n">playback_pos_sample</span> <span class="o">=</span> <span class="n">playback_pos_sec</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">waveform_widget</span><span class="o">.</span><span class="n">update_wf_vline</span><span class="p">(</span><span class="n">playback_pos_sample</span><span class="p">)</span>
+            <span class="c1">#self.parent().playback_frame.slider.setValue(playback_pos_sample)</span>
+
+            <span class="c1"># checks the position of linear region item. If the position of</span>
+            <span class="c1"># waveform cursor is</span>
+            <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">waveform_widget</span><span class="o">.</span><span class="n">get_waveform_region</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">playback_pos_sec</span> <span class="o">&lt;=</span> <span class="n">xmax</span> <span class="o">-</span> <span class="n">diff</span><span class="p">:</span>
+                <span class="n">x_start</span> <span class="o">=</span> <span class="n">xmax</span> <span class="o">-</span> <span class="n">diff</span>
+                <span class="n">x_end</span> <span class="o">=</span> <span class="n">x_start</span> <span class="o">+</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">waveform_widget</span><span class="o">.</span><span class="n">change_wf_region</span><span class="p">(</span><span class="n">x_start</span><span class="p">,</span> <span class="n">x_end</span><span class="p">)</span>
+
+            <span class="c1"># checks if time series widget is initialized or not</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;ts_widget&#39;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">vline</span><span class="o">.</span><span class="n">setPos</span><span class="p">([</span><span class="n">playback_pos_sec</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+                <span class="c1"># checks if horizontal line of y-axis exists</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="p">,</span> <span class="s1">&#39;hline_histogram&#39;</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">pitch_plot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">set_hist_cursor_pos</span><span class="p">(</span><span class="n">playback_pos_sec</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">score_visible</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__update_score</span><span class="p">(</span><span class="n">playback_pos_sec</span><span class="p">)</span>
+
+            <span class="n">pos_sample</span> <span class="o">=</span> <span class="n">cursor_pos_sample</span><span class="p">(</span><span class="n">playback_pos_sec</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span><span class="p">,</span>
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">hopsize</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hist_visible</span><span class="p">:</span>
+                <span class="n">pitch</span> <span class="o">=</span> <span class="n">current_pitch</span><span class="p">(</span><span class="n">pos_sample</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pitch_plot</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_histogram</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">pitch</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__update_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">playback_pos_sec</span><span class="p">):</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_current_note_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">notes_start</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">notes_end</span><span class="p">,</span>
+                                             <span class="n">playback_pos_sec</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">index</span><span class="p">:</span>
+            <span class="n">workid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">score_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="n">svg_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">notes_map</span><span class="p">[</span><span class="n">workid</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">score_index</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">score_dialog</span><span class="o">.</span><span class="n">score_widget</span><span class="o">.</span><span class="n">update_note</span><span class="p">(</span><span class="n">svg_path</span><span class="p">,</span> <span class="n">score_index</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PlayerFrame.add_1d_roi_items"><a class="viewcode-back" href="../../index.html#widgets.playerframe.PlayerFrame.add_1d_roi_items">[docs]</a>    <span class="k">def</span> <span class="nf">add_1d_roi_items</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f_type</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds 1d roi item.</span>
+<span class="sd">        :param f_type: (str) Feature type</span>
+<span class="sd">        :param item: (str) Feature subtype</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;ts_widget&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__add_ts_widget</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">item</span> <span class="o">==</span> <span class="s1">&#39;notes&#39;</span><span class="p">:</span>
+            <span class="n">ftr</span> <span class="o">=</span> <span class="n">f_type</span> <span class="o">+</span> <span class="s1">&#39;--&#39;</span> <span class="o">+</span> <span class="n">item</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span>
+            <span class="n">feature_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DOCS_PATH</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">recid</span><span class="p">,</span> <span class="n">ftr</span><span class="p">)</span>
+            <span class="n">notes_dict</span> <span class="o">=</span> <span class="n">load_notes</span><span class="p">(</span><span class="n">feature_path</span><span class="p">)</span>
+
+            <span class="n">notes</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">workid</span> <span class="ow">in</span> <span class="n">notes_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">dic</span> <span class="ow">in</span> <span class="n">notes_dict</span><span class="p">[</span><span class="n">workid</span><span class="p">]:</span>
+                    <span class="n">interval</span> <span class="o">=</span> <span class="n">dic</span><span class="p">[</span><span class="s1">&#39;interval&#39;</span><span class="p">]</span>
+                    <span class="n">pitch</span> <span class="o">=</span> <span class="n">dic</span><span class="p">[</span><span class="s1">&#39;performed_pitch&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+                    <span class="n">notes</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">interval</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">interval</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">pitch</span><span class="p">])</span>
+                    <span class="n">metadata</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">workid</span><span class="p">,</span> <span class="n">dic</span><span class="p">[</span><span class="s1">&#39;index_in_score&#39;</span><span class="p">],</span>
+                                     <span class="n">dic</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">],</span> <span class="n">dic</span><span class="p">[</span><span class="s1">&#39;symbol&#39;</span><span class="p">]])</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">notes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">notes</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">notes_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">notes</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">notes_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">notes</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span>
+
+            <span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">waveform_widget</span><span class="o">.</span><span class="n">get_waveform_region</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">update_notes</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts_widget</span><span class="o">.</span><span class="n">is_notes_added</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+    <span class="k">def</span> <span class="nf">add_sections_to_waveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_path</span><span class="p">):</span>
+        <span class="n">sections</span> <span class="o">=</span> <span class="n">get_sections</span><span class="p">(</span><span class="n">feature_path</span><span class="p">)</span>
+
+        <span class="n">colors</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">color_index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">work</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">[</span><span class="n">work</span><span class="p">]:</span>
+                <span class="n">sec_name</span> <span class="o">=</span> <span class="n">section</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;--&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">color</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">sec_name</span><span class="p">]</span>
+
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="n">color</span> <span class="o">=</span> <span class="n">COLORS_RGB</span><span class="p">[</span><span class="n">color_index</span><span class="p">]</span>
+                    <span class="n">colors</span><span class="p">[</span><span class="n">sec_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">color</span>
+                    <span class="n">color_index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">waveform_widget</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">section</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]),</span>
+                                                 <span class="n">section</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+                                                 <span class="n">section</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">],</span>
+                                                 <span class="n">color</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">open_score_dialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mbid</span><span class="p">):</span>
+        <span class="n">metadata_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DOCS_PATH</span><span class="p">,</span> <span class="n">mbid</span><span class="p">,</span>
+                                     <span class="s1">&#39;audioanalysis--metadata.json&#39;</span><span class="p">)</span>
+        <span class="n">works</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">metadata_path</span><span class="p">))[</span><span class="s1">&#39;works&#39;</span><span class="p">]</span>
+
+        <span class="n">notes_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">work</span> <span class="ow">in</span> <span class="n">works</span><span class="p">:</span>
+            <span class="n">notes_array</span> <span class="o">=</span> <span class="n">generate_score_map</span><span class="p">(</span><span class="n">work</span><span class="p">[</span><span class="s1">&#39;mbid&#39;</span><span class="p">])</span>
+            <span class="n">notes_map</span><span class="p">[</span><span class="n">work</span><span class="p">[</span><span class="s1">&#39;mbid&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">notes_array</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notes_map</span> <span class="o">=</span> <span class="n">notes_map</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">score_dialog</span> <span class="o">=</span> <span class="n">ScoreDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">score_dialog</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">score_visible</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">find_current_note_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_array_start</span><span class="p">,</span> <span class="n">n_array_end</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">n_array_start</span> <span class="o">-</span> <span class="n">value</span><span class="p">))</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+        <span class="n">val_start</span> <span class="o">=</span> <span class="n">n_array_start</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">val_end</span> <span class="o">=</span> <span class="n">n_array_end</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">!=</span> <span class="n">index</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">val_start</span> <span class="o">&lt;</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">val_end</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">index</span>
+                <span class="k">return</span> <span class="n">index</span>  <span class="c1"># score indexes starts with 1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, MTG-UPF.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

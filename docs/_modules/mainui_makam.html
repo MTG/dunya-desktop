@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mainui_makam &#8212; Dunya-desktop 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          Dunya-desktop</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for mainui_makam</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">Queue</span> <span class="k">as</span> <span class="nn">queue</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">queue</span>
+
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="k">import</span> <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QApplication</span>
+
+<span class="kn">import</span> <span class="nn">ui_files.style_rc</span>
+<span class="kn">from</span> <span class="nn">cultures</span> <span class="k">import</span> <span class="n">apiconfig</span>
+<span class="kn">from</span> <span class="nn">cultures.makam</span> <span class="k">import</span> <span class="n">utilities</span>
+<span class="kn">from</span> <span class="nn">cultures.makam.query</span> <span class="k">import</span> <span class="n">QueryThread</span>
+<span class="kn">from</span> <span class="nn">mainui_design_makam</span> <span class="k">import</span> <span class="n">MainWindowMakamDesign</span>
+<span class="kn">from</span> <span class="nn">widgets.playermainwindow</span> <span class="k">import</span> <span class="n">PlayerMainWindow</span>
+<span class="kn">from</span> <span class="nn">utilities</span> <span class="k">import</span> <span class="n">database</span>
+
+<span class="n">apiconfig</span><span class="o">.</span><span class="n">set_token</span><span class="p">()</span>
+
+<span class="n">DOCS_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;cultures&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;documents&#39;</span><span class="p">)</span>
+<span class="n">SS</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;ui_files&#39;</span><span class="p">,</span> <span class="s1">&#39;style.qss&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="MainWindowMakam"><a class="viewcode-back" href="../index.html#mainui_makam.MainWindowMakam">[docs]</a><span class="k">class</span> <span class="nc">MainWindowMakam</span><span class="p">(</span><span class="n">MainWindowMakamDesign</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The main window of makam&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">MainWindowMakamDesign</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">SS</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+        <span class="c1"># check if dunya is up or not</span>
+        <span class="k">if</span> <span class="n">utilities</span><span class="o">.</span><span class="n">is_dunya_up</span><span class="p">():</span>
+            <span class="c1"># fetches the attributes and sets the comboboxes</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">makams</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">forms</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuls</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">composers</span><span class="p">,</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">performers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">instruments</span><span class="p">)</span> <span class="o">=</span> <span class="n">utilities</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_set_combobox_attributes</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">frame_attributes</span><span class="o">.</span><span class="n">comboBox_instrument</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">recordings</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">work_count</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">progress_number</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">d_threads</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">q_threads</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+
+            <span class="c1"># signals</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">online_status</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># working in offline mode</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">QMessageBox</span><span class="o">.</span><span class="n">information</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;QMessageBox.information()&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;Dunya-desktop is working in offline &quot;</span>
+                                    <span class="s2">&quot;mode.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dwc_top</span><span class="o">.</span><span class="n">label_status</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Offline&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">online_status</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># creating db</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_collections</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">download_queue</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># signals</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">frame_attributes</span><span class="o">.</span><span class="n">toolButton_query</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">recording_model</span><span class="o">.</span><span class="n">rec_fetched</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">append_recording</span><span class="p">)</span>
+
+        <span class="c1"># filtering the results</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">lineEdit_filter</span><span class="o">.</span><span class="n">textChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">proxy_model</span><span class="o">.</span><span class="n">filter_table</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">lineEdit_filter</span><span class="o">.</span><span class="n">text</span><span class="p">()))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">tableView_results</span><span class="o">.</span><span class="n">add_maincoll</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">download_related_features</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">tableView_results</span><span class="o">.</span><span class="n">index</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dwc_left</span><span class="o">.</span><span class="n">listView_collections</span><span class="o">.</span><span class="n">index_changed</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_coll_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dwc_left</span><span class="o">.</span><span class="n">tableView_downloaded</span><span class="o">.</span><span class="n">added_new_doc</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">check_new_doc</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">tableView_results</span><span class="o">.</span><span class="n">open_dunya_triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">open_player</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dwc_left</span><span class="o">.</span><span class="n">tableView_downloaded</span><span class="o">.</span><span class="n">open_dunya_triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">open_player_collection</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">tableView_results</span><span class="o">.</span><span class="n">add_to_collection</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_received_doc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dwc_left</span><span class="o">.</span><span class="n">tableView_downloaded</span><span class="o">.</span><span class="n">set_result_checked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">check_query_table</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_set_combobox_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">frame_attributes</span><span class="o">.</span>\
+            <span class="n">comboBox_melodic</span><span class="o">.</span><span class="n">add_items</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">makams</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">frame_attributes</span><span class="o">.</span><span class="n">comboBox_form</span><span class="o">.</span><span class="n">add_items</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">forms</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">frame_attributes</span><span class="o">.</span><span class="n">comboBox_rhythm</span><span class="o">.</span><span class="n">add_items</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">usuls</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">frame_attributes</span><span class="o">.</span>\
+            <span class="n">comboBox_composer</span><span class="o">.</span><span class="n">add_items</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">composers</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">frame_attributes</span><span class="o">.</span>\
+            <span class="n">comboBox_performer</span><span class="o">.</span><span class="n">add_items</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">performers</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">frame_attributes</span><span class="o">.</span>\
+            <span class="n">comboBox_instrument</span><span class="o">.</span><span class="n">add_items</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instruments</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_set_collections</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">conn</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">add_main</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">database</span><span class="o">.</span><span class="n">_add_docs_to_maincoll</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+
+        <span class="n">colls</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">get_collections</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dwc_left</span><span class="o">.</span><span class="n">listView_collections</span><span class="o">.</span><span class="n">add_collections</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">coll</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">coll</span> <span class="ow">in</span> <span class="n">colls</span><span class="p">])</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recordings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">work_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">recording_model</span><span class="o">.</span><span class="n">clear_items</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">frame_attributes</span><span class="o">.</span><span class="n">toolButton_query</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">lineEdit_filter</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">tableView_results</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">tableView_results</span><span class="o">.</span><span class="n">horizontal_header</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+        <span class="n">mid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">frame_attributes</span><span class="o">.</span><span class="n">comboBox_melodic</span><span class="o">.</span><span class="n">get_attribute_id</span><span class="p">()</span>
+        <span class="n">fid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">frame_attributes</span><span class="o">.</span><span class="n">comboBox_form</span><span class="o">.</span><span class="n">get_attribute_id</span><span class="p">()</span>
+        <span class="n">uid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">frame_attributes</span><span class="o">.</span><span class="n">comboBox_rhythm</span><span class="o">.</span><span class="n">get_attribute_id</span><span class="p">()</span>
+        <span class="n">cmbid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">frame_attributes</span><span class="o">.</span><span class="n">comboBox_composer</span><span class="o">.</span><span class="n">get_attribute_id</span><span class="p">()</span>
+        <span class="n">ambid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">frame_attributes</span><span class="o">.</span><span class="n">comboBox_performer</span><span class="o">.</span><span class="n">get_attribute_id</span><span class="p">()</span>
+
+        <span class="n">q_thread</span> <span class="o">=</span> <span class="n">QueryThread</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">q_thread</span><span class="o">.</span><span class="n">mid</span> <span class="o">=</span> <span class="n">mid</span>
+        <span class="n">q_thread</span><span class="o">.</span><span class="n">fid</span> <span class="o">=</span> <span class="n">fid</span>
+        <span class="n">q_thread</span><span class="o">.</span><span class="n">uid</span> <span class="o">=</span> <span class="n">uid</span>
+        <span class="n">q_thread</span><span class="o">.</span><span class="n">cmbid</span> <span class="o">=</span> <span class="n">cmbid</span>
+        <span class="n">q_thread</span><span class="o">.</span><span class="n">ambid</span> <span class="o">=</span> <span class="n">ambid</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">q_threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">q_thread</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">progress_bar</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">q_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">set_progress_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">progress_number</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">progress_number</span> <span class="o">=</span> <span class="n">progress_number</span><span class="o">.</span><span class="n">status</span>
+
+    <span class="k">def</span> <span class="nf">append_recording</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rec_mbid</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recordings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">rec_mbid</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dwc_left</span><span class="o">.</span><span class="n">tableView_downloaded</span><span class="o">.</span><span class="n">recordings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recordings</span>
+
+    <span class="k">def</span> <span class="nf">work_received</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">work</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">work_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">progress_bar</span><span class="o">.</span><span class="n">update_progress_bar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_count</span><span class="p">,</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">progress_number</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">recording_model</span><span class="o">.</span><span class="n">add_recording</span><span class="p">(</span><span class="n">work</span><span class="o">.</span><span class="n">work</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">tableView_results</span><span class="o">.</span><span class="n">resizeColumnToContents</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">tableView_results</span><span class="o">.</span><span class="n">setColumnWidth</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">change_combobox_backgrounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+        <span class="n">combobox_status</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="n">results</span>
+        <span class="n">color_palette</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;#D9F4DD&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;#F4D1D0&#39;</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">frame_attributes</span><span class="o">.</span><span class="n">comboBox_melodic</span><span class="o">.</span><span class="n">change_background</span><span class="p">(</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">color_palette</span><span class="p">[</span><span class="n">combobox_status</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">frame_attributes</span><span class="o">.</span><span class="n">comboBox_form</span><span class="o">.</span><span class="n">change_background</span><span class="p">(</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">color_palette</span><span class="p">[</span><span class="n">combobox_status</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">frame_attributes</span><span class="o">.</span><span class="n">comboBox_rhythm</span><span class="o">.</span><span class="n">change_background</span><span class="p">(</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">color_palette</span><span class="p">[</span><span class="n">combobox_status</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">frame_attributes</span><span class="o">.</span><span class="n">comboBox_composer</span><span class="o">.</span><span class="n">change_background</span><span class="p">(</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">color_palette</span><span class="p">[</span><span class="n">combobox_status</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">frame_attributes</span><span class="o">.</span><span class="n">comboBox_performer</span><span class="o">.</span><span class="n">change_background</span><span class="p">(</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">color_palette</span><span class="p">[</span><span class="n">combobox_status</span><span class="p">[</span><span class="mi">4</span><span class="p">]])</span>
+
+    <span class="k">def</span> <span class="nf">query_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">progress_bar</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">progress_bar</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">progress_bar</span><span class="o">.</span><span class="n">setFormat</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">frame_attributes</span><span class="o">.</span><span class="n">toolButton_query</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q_threads</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">download_related_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="n">source_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">tableView_results</span><span class="o">.</span><span class="n">model</span><span class="p">()</span><span class="o">.</span><span class="n">mapToSource</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recordings</span><span class="p">[</span><span class="n">source_index</span><span class="o">.</span><span class="n">row</span><span class="p">()]</span>
+
+    <span class="k">def</span> <span class="nf">open_player_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="n">coll</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dwc_left</span><span class="o">.</span><span class="n">listView_collections</span><span class="o">.</span><span class="n">currentItem</span><span class="p">()</span><span class="o">.</span><span class="n">text</span><span class="p">())</span>
+        <span class="n">conn</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+
+        <span class="c1"># add trt/except</span>
+        <span class="n">docid</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">get_nth_row</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">coll</span><span class="p">,</span> <span class="n">index</span><span class="o">.</span><span class="n">row</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">player</span> <span class="o">=</span> <span class="n">PlayerMainWindow</span><span class="p">(</span><span class="n">docid</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">docid</span><span class="p">),</span> <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">player</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">open_player</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_threads</span><span class="p">:</span>
+            <span class="n">model_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">tableView_results</span><span class="o">.</span><span class="n">model</span><span class="p">()</span><span class="o">.</span><span class="n">mapToSource</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+            <span class="n">recid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recordings</span><span class="p">[</span><span class="n">model_index</span><span class="o">.</span><span class="n">row</span><span class="p">()]</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">player</span> <span class="o">=</span> <span class="n">PlayerMainWindow</span><span class="p">(</span><span class="n">docid</span><span class="o">=</span><span class="n">recid</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+                <span class="n">player</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                <span class="n">QMessageBox</span><span class="o">.</span><span class="n">information</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;QMessageBox.information()&quot;</span><span class="p">,</span>
+                                        <span class="s2">&quot;Download the selected item.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">QMessageBox</span><span class="o">.</span><span class="n">information</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;QMessageBox.information()&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;Player can not be opened until querying &quot;</span>
+                                    <span class="s2">&quot;finishes&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">update_coll_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coll</span><span class="p">):</span>
+        <span class="n">conn</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+        <span class="n">raw</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">fetch_collection</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">coll</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dwc_left</span><span class="o">.</span><span class="n">tableView_downloaded</span><span class="o">.</span><span class="n">coll</span> <span class="o">=</span> <span class="n">coll</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dwc_left</span><span class="o">.</span><span class="n">tableView_downloaded</span><span class="o">.</span><span class="n">create_table</span><span class="p">([</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dwc_left</span><span class="o">.</span><span class="n">change_downloaded_text</span><span class="p">(</span><span class="n">coll</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">add_received_doc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coll</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="n">conn</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+        <span class="n">source_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">tableView_results</span><span class="o">.</span><span class="n">model</span><span class="p">()</span><span class="o">.</span><span class="n">mapToSource</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+        <span class="n">docid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recordings</span><span class="p">[</span><span class="n">source_index</span><span class="o">.</span><span class="n">row</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="n">database</span><span class="o">.</span><span class="n">add_doc_to_coll</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">docid</span><span class="p">,</span> <span class="n">coll</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dwc_left</span><span class="o">.</span><span class="n">tableView_downloaded</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">docid</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dwc_left</span><span class="o">.</span><span class="n">tableView_downloaded</span><span class="o">.</span><span class="n">indexes</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">recordings</span><span class="p">[</span><span class="n">source_index</span><span class="o">.</span><span class="n">row</span><span class="p">()]]</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">dwc_left</span><span class="o">.</span><span class="n">tableView_downloaded</span><span class="o">.</span><span class="n">rowCount</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">check_new_doc</span><span class="p">([</span><span class="n">docid</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">check_new_doc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">docs</span><span class="p">):</span>
+        <span class="n">download</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">docid</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DOCS_PATH</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">docid</span><span class="p">))):</span>
+                <span class="n">download</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">docid</span><span class="p">))</span>
+        <span class="n">d_thread</span> <span class="o">=</span> <span class="n">utilities</span><span class="o">.</span><span class="n">DocThread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="p">,</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">dwc_left</span><span class="o">.</span><span class="n">tableView_downloaded</span><span class="o">.</span><span class="n">set_progress_bar</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">download</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">d_threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d_thread</span><span class="p">)</span>
+            <span class="n">d_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">download</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>  <span class="c1"># tells the workers to shut down</span>
+
+    <span class="k">def</span> <span class="nf">check_query_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">docid</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recordings</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">docid</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frame_query</span><span class="o">.</span><span class="n">tableView_results</span><span class="o">.</span><span class="n">model</span><span class="p">()</span><span class="o">.</span><span class="n">sourceModel</span><span class="p">()</span><span class="o">.</span><span class="n">set_checked</span><span class="p">([</span><span class="n">row</span><span class="p">])</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, MTG-UPF.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
