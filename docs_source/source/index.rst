@@ -20,6 +20,15 @@ Dunya-desktop Documentation
 .. image:: ../../resources/dunya-desktop-demo.gif
     :align: center
 
+.. compound::
+    Dunya-desktop mainly uses
+    `PyQt5 <https://www.riverbankcomputing.com/software/pyqt/download5>`_
+    Python bindings for `Qt5 <https://www.qt.io/developers/>`_ application
+    framework, for the user interface design and
+    `pycompmusic <https://github.com/MTG/pycompmusic>`_
+    module for reaching the backend of the
+    `Dunya-web <http://dunya.compmusic.upf.edu>`_.
+
 .. toctree::
     :maxdepth: 2
     :caption: Contents:
