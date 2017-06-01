@@ -75,8 +75,7 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
         self.section_items = []
 
         self.limit = 900  # maximum number of samples to be plotted
-        self.samplerate = 44100.
-
+        self.samplerate = 44100
 
     def plot_waveform(self, raw_audio):
         """

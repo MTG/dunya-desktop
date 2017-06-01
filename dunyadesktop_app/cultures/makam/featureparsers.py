@@ -135,3 +135,19 @@ def mp3_to_wav_converter(audio_path):
     output_f = audio_path[:-4] + '.wav'
 
     os.system('ffmpeg -i {0} {1}'.format(input_f, output_f))
+
+
+def get_score_sections(metadata):
+    sections = {}
+    for sec in metadata['sections']:
+        duration = [sec['start_note'], sec['end_note']]
+        section_name = sec['name'] + '--' + sec['melodic_structure']
+
+        try:
+            dur_list = sections[section_name]
+            dur_list.append(duration)
+            sections[section_name] = dur_list
+        except KeyError:
+            sections[section_name] = [duration]
+
+    return sections

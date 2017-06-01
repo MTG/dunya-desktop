@@ -16,7 +16,8 @@ from cultures.makam.featureparsers import (read_raw_audio, load_pitch, load_pd,
                                            load_notes, get_sections,
                                            generate_score_map,
                                            mp3_to_wav_converter,
-                                           generate_score_onsets)
+                                           generate_score_onsets,
+                                           get_score_sections)
 
 
 DOCS_PATH = os.path.join(os.path.dirname(__file__), '..', 'cultures',
@@ -50,6 +51,7 @@ class PlayerFrame(QFrame):
         current_synthesis = self.get_current_synthesis()
         self.get_synt_path(current_synthesis)
         self.__set_waveform()
+        self.__add_sections()
 
         # initializing playback class
         self.playback = Playback()
@@ -66,6 +68,14 @@ class PlayerFrame(QFrame):
         #    self.wf_region_changed)
         #self.waveform_widget.region_wf.clicked.connect(
         #    self.wf_region_item_clicked)
+
+    def __add_sections(self):
+        metadata_path = os.path.join(DOCS_PATH, self.docid,
+                                     'scoreanalysis--metadata.json')
+        metadata = json.load(open(metadata_path))
+        sections = get_score_sections(metadata)
+
+        self.add_sections_to_waveform(sections)
 
     def _change_synthesis(self, synthesis):
         self.playback_pause()
@@ -310,26 +320,32 @@ class PlayerFrame(QFrame):
             self.ts_widget.update_notes(x_min, x_max)
             self.ts_widget.is_notes_added = True
 
-    def add_sections_to_waveform(self, feature_path):
-        sections = get_sections(feature_path)
-
+    def add_sections_to_waveform(self, sections):
         colors = {}
         color_index = 0
-        for work in sections:
-            for section in sections[work]:
-                sec_name = section['name'].split('--')[0]
+
+        for section in sections:
+            try:
+                color = colors[section]
+
+            except KeyError:
+                color = COLORS_RGB[color_index]
+                colors[section] = color
+                color_index += 1
+
+            durations = sections[section]
+
+            for duration in durations:
                 try:
-                    color = colors[sec_name]
+                    start = list(self.onsets_indexes).index(duration[0])
+                    end = list(self.onsets_indexes).index(duration[1])
 
-                except KeyError:
-                    color = COLORS_RGB[color_index]
-                    colors[sec_name] = color
-                    color_index += 1
-
-                self.waveform_widget.add_section(np.array(section['time']),
-                                                 section['name'],
-                                                 section['title'],
-                                                 color)
+                    self.waveform_widget.add_section(
+                        np.array([self.onsets_starts[start],
+                                  self.onsets_ends[end]]), section, section,
+                        color)
+                except ValueError:
+                    pass
 
     def _prepare_score_widget(self, mbid):
         notes_map = {}
