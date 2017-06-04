@@ -504,25 +504,52 @@ visible/invisible</p>
 <dd><dl class="method">
 <dt id="widgets.playerframe.PlayerFrame.add_1d_roi_items">
 <code class="descname">add_1d_roi_items</code><span class="sig-paren">(</span><em>f_type</em>, <em>item</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/playerframe.html#PlayerFrame.add_1d_roi_items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.playerframe.PlayerFrame.add_1d_roi_items" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds 1d roi item.
-:param f_type: (str) Feature type
-:param item: (str) Feature subtype</p>
+<dd><p>Adds 1d roi item.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>f_type</strong> – (str) Feature type</li>
+<li><strong>item</strong> – (str) Feature subtype</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.playerframe.PlayerFrame.player_pos_changed">
 <code class="descname">player_pos_changed</code><span class="sig-paren">(</span><em>playback_pos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/playerframe.html#PlayerFrame.player_pos_changed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.playerframe.PlayerFrame.player_pos_changed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the positions of cursors when playback position is changed.
-Changes the waveform region item according to the position of playback.
-:param playback_pos: (int) Position of player in milliseconds.</p>
+Changes the waveform region item according to the position of playback.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>playback_pos</strong> – (int) Position of player in milliseconds.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.playerframe.PlayerFrame.plot_1d_data">
 <code class="descname">plot_1d_data</code><span class="sig-paren">(</span><em>f_type</em>, <em>feature</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/playerframe.html#PlayerFrame.plot_1d_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.playerframe.PlayerFrame.plot_1d_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots 1D data.
-:param f_type:
-:param feature:</p>
+<dd><p>Plots 1D data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>f_type</strong> – </li>
+<li><strong>feature</strong> – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -542,15 +569,21 @@ Changes the waveform region item according to the position of playback.
 <dd><dl class="method">
 <dt id="widgets.timeserieswidget.TimeSeriesWidget.add_1d_view">
 <code class="descname">add_1d_view</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/timeserieswidget.html#TimeSeriesWidget.add_1d_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.timeserieswidget.TimeSeriesWidget.add_1d_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a 1d view to TimeSeriesWidget where you can plot and add items
-on it.</p>
+<dd><p>Adds a 1d view to TimeSeriesWidget where you can plot and add items on it.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.timeserieswidget.TimeSeriesWidget.add_tonic">
 <code class="descname">add_tonic</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/timeserieswidget.html#TimeSeriesWidget.add_tonic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.timeserieswidget.TimeSeriesWidget.add_tonic" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds tonic lines on the pitch plot.
-:param values: (list or numpy array) A sequence of tonic values in Hz.</p>
+<dd><p>Adds tonic lines on the pitch plot.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>values</strong> – (list or numpy array) A sequence of tonic values in Hz.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -562,46 +595,90 @@ on it.</p>
 <dl class="method">
 <dt id="widgets.timeserieswidget.TimeSeriesWidget.plot_histogram_raxis">
 <code class="descname">plot_histogram_raxis</code><span class="sig-paren">(</span><em>vals</em>, <em>bins</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/timeserieswidget.html#TimeSeriesWidget.plot_histogram_raxis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.timeserieswidget.TimeSeriesWidget.plot_histogram_raxis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots histogram to the right axis.
-:param vals: (list or numpy array) List of valley values of histogram.
-:param bins: (list or numpy array) List of bins values of histogram
-in Hz</p>
+<dd><p>Plots histogram to the right axis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>vals</strong> – (list or numpy array) List of valley values of histogram.</li>
+<li><strong>bins</strong> – (list or numpy array) List of bins values of histogram in Hz</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.timeserieswidget.TimeSeriesWidget.plot_pitch">
 <code class="descname">plot_pitch</code><span class="sig-paren">(</span><em>pitch_plot</em>, <em>x_start</em>, <em>x_end</em>, <em>hop_size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/timeserieswidget.html#TimeSeriesWidget.plot_pitch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.timeserieswidget.TimeSeriesWidget.plot_pitch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots the given pitch_plot array.
-:param pitch_plot: (numpy array or list) List of pitch values.
-Ex: [234.5, 234,3, 234.0, …]
-:param x_start: (int or float) Time stamp of starting point in
-seconds.
-:param x_end: (int or float) Time stamp of ending point in seconds.
-:param hop_size: (int) Hop size in samples. Ex: 128</p>
+<dd><p>Plots the given pitch_plot array.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pitch_plot</strong> – (numpy array or list) List of pitch values. Ex: [234.5, 234,3, 234.0, …]</li>
+<li><strong>x_start</strong> – (int or float) Time stamp of starting point in seconds.</li>
+<li><strong>x_end</strong> – (int or float) Time stamp of ending point in seconds.</li>
+<li><strong>hop_size</strong> – (int) Hop size in samples. Ex: 128.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="staticmethod">
 <dt id="widgets.timeserieswidget.TimeSeriesWidget.remove_given_items">
 <em class="property">static </em><code class="descname">remove_given_items</code><span class="sig-paren">(</span><em>obj</em>, <em>items</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/timeserieswidget.html#TimeSeriesWidget.remove_given_items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.timeserieswidget.TimeSeriesWidget.remove_given_items" title="Permalink to this definition">¶</a></dt>
-<dd><p>Removes the given items from the given object
-:param obj: pyqtgraph.GraphicsWidget object
-:param items: (list) Sequence of pyqtgraph.GraphicsObject object</p>
+<dd><p>Removes the given items from the given object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>obj</strong> – pyqtgraph.GraphicsWidget object</li>
+<li><strong>items</strong> – (list) Sequence of pyqtgraph.GraphicsObject object</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.timeserieswidget.TimeSeriesWidget.set_hist_cursor_pos">
 <code class="descname">set_hist_cursor_pos</code><span class="sig-paren">(</span><em>pos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/timeserieswidget.html#TimeSeriesWidget.set_hist_cursor_pos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.timeserieswidget.TimeSeriesWidget.set_hist_cursor_pos" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the position of histogram in y-axis.
-:param pos: (int or float) Playback position in seconds.</p>
+<dd><p>Sets the position of histogram in y-axis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pos</strong> – (int or float) Playback position in seconds.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.timeserieswidget.TimeSeriesWidget.update_plot">
 <code class="descname">update_plot</code><span class="sig-paren">(</span><em>start</em>, <em>stop</em>, <em>hop_size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/timeserieswidget.html#TimeSeriesWidget.update_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.timeserieswidget.TimeSeriesWidget.update_plot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the view of the plot region with given time stamps.
-:param start: (int or float) Time stamp of starting point in seconds.
-:param stop: (int or float) Time stamp of ending point in seconds.
-:param hop_size: (int) Hop size in samples. Ex: 128</p>
+<dd><p>Updates the view of the plot region with given time stamps.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>start</strong> – (int or float) Time stamp of starting point in seconds.</li>
+<li><strong>stop</strong> – (int or float) Time stamp of ending point in seconds.</li>
+<li><strong>hop_size</strong> – (int) Hop size in samples. Ex: 128.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
