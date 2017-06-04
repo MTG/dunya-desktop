@@ -8,7 +8,6 @@ from PyQt5.Qt import pyqtSignal
 
 from .waveformwidget import WaveformWidget
 from .scoredialog import ScoreWidget
-from .widgetutilities import cursor_pos_sample, current_pitch
 from utilities.playback import Playback
 from cultures.makam.featureparsers import (read_raw_audio, load_pitch, load_pd,
                                            load_tonic, get_feature_paths,

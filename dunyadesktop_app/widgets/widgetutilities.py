@@ -58,20 +58,3 @@ def downsample_plot(plot_array, ds_limit):
             target_ptr += chunk.shape[0] * 2
         plot_y = visible[:target_ptr]
     return plot_y
-
-
-def cursor_pos_sample(pos, samplerate, hopsize):
-    """
-    Returns the current index of sample.
-    :param pos: (int or float) Playback position in seconds.
-    """
-    return np.int(pos * samplerate / hopsize)
-
-
-def current_pitch(sample, pitch_plot):
-    """
-    Returns the current pitch value in Hz.
-    :param sample: 
-    :return: 
-    """
-    return pitch_plot[sample]
