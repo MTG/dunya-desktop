@@ -10,7 +10,6 @@ from .treewidget import (FeatureTreeWidget, MetadataTreeMakam,
                          FeatureWidgetAdaptive)
 from .playerframe import PlayerFrame
 from .playbackframe import PlaybackFrame
-from .histogram import HistogramDialog
 from .table import TablePlaylist
 from cultures.makam.featureparsers import load_pd, mp3_to_wav_converter
 from cultures.makam.utilities import get_filenames_in_dir

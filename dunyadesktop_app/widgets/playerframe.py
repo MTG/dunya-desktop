@@ -94,12 +94,6 @@ class PlayerFrame(QFrame):
         main_window = self.parent()
         return main_window.dw_contents_features.current_synthesis()
 
-    def __load_pitch(self, feature):
-        feature_path = os.path.join(DOCS_PATH, self.docid, feature)
-
-        (self.time_stamps, self.pitch_plot, self.max_pitch, self.min_pitch,
-         self.samplerate, self.hopsize) = load_pitch(feature_path)
-
     def __set_design(self):
         """
         Sets general settings of frame widget, adds dock area and dock widgets.
@@ -161,65 +155,9 @@ class PlayerFrame(QFrame):
         if hasattr(self, 'waveform_widget'):
             self.waveform_widget.clear()
             self.waveform_widget.close()
-        if hasattr(self, 'ts_widget'):
-            self.ts_widget.clear()
-            self.ts_widget.close()
         if hasattr(self, 'playback'):
             self.playback.pause()
         self.close()
-
-    def __add_ts_widget(self):
-        self.ts_widget = TimeSeriesWidget(self)
-        self.ts_widget.add_1d_view()
-        dock_ts = pgdock.Dock(name='Time Series', area='bottom', closable=True)
-        dock_ts.allowedAreas = ['top', 'bottom']
-        dock_ts.addWidget(self.ts_widget)
-        dock_ts.layout.setSizeConstraint(QLayout.SetMinimumSize)
-
-        dock_ts.sigClosed.connect(self.__dock_ts_closed)
-        self.dock_area.addDock(dock_ts)
-
-        # signals
-        self.ts_widget.wheel_event.connect(self.waveform_widget.wheelEvent)
-
-    def __dock_ts_closed(self):
-        pass
-
-    def plot_1d_data(self, f_type, feature):
-
-        """
-        Plots 1D data.
-        :param f_type:
-        :param feature:
-        """
-        if not hasattr(self, 'ts_widget'):
-            self.__add_ts_widget()
-
-        ftr = f_type + '--' + feature + '.json'
-        feature_path = os.path.join(DOCS_PATH, self.docid, ftr)
-
-        if feature == 'pitch' or feature == 'pitch_filtered':
-            self.__load_pitch(ftr)
-
-            x_min, x_max = self.waveform_widget.get_waveform_region
-            if hasattr(self.ts_widget, 'zoom_selection'):
-                self.ts_widget.hopsize = self.hopsize
-                self.ts_widget.samplerate = self.samplerate
-                self.ts_widget.pitch_plot = self.pitch_plot
-                self.ts_widget.plot_pitch(pitch_plot=self.pitch_plot,
-                                          x_start=x_min, x_end=x_max,
-                                          hop_size=self.hopsize)
-                self.is_pitch_plotted = True
-
-                histogram = \
-                    os.path.join(DOCS_PATH, self.docid,
-                                 'audioanalysis--pitch_distribution.json')
-                vals, bins = load_pd(histogram)
-                self.ts_widget.plot_histogram_raxis(vals, bins)
-
-        if feature == 'tonic':
-            tonic_values = load_tonic(feature_path)
-            self.ts_widget.add_tonic(tonic_values)
 
     def playback_play(self):
         self.playback.play()
@@ -285,40 +223,6 @@ class PlayerFrame(QFrame):
         if index:
             svg_path = self.notes_map[self.docid][str(index)]
             self.score_widget.update_note(svg_path, index)
-
-    def add_1d_roi_items(self, f_type, item):
-        """
-        Adds 1d roi item.
-        :param f_type: (str) Feature type
-        :param item: (str) Feature subtype
-        """
-        if not hasattr(self, 'ts_widget'):
-            self.__add_ts_widget()
-
-        if item == 'notes':
-            ftr = f_type + '--' + item + '.json'
-            feature_path = os.path.join(DOCS_PATH, self.docid, ftr)
-            notes_dict = load_notes(feature_path)
-
-            notes = []
-            metadata = []
-            for workid in notes_dict.keys():
-                for dic in notes_dict[workid]:
-                    interval = dic['interval']
-                    pitch = dic['performed_pitch']['value']
-                    notes.append([interval[0], interval[1], pitch])
-                    metadata.append([workid, dic['index_in_score'],
-                                     dic['label'], dic['symbol']])
-
-            self.ts_widget.notes = np.array(notes)
-            self.ts_widget.notes_start = self.ts_widget.notes[:, 0]
-            self.ts_widget.notes_end = self.ts_widget.notes[:, 1]
-
-            self.metadata = metadata
-
-            x_min, x_max = self.waveform_widget.get_waveform_region
-            self.ts_widget.update_notes(x_min, x_max)
-            self.ts_widget.is_notes_added = True
 
     def add_sections_to_waveform(self, sections):
         colors = {}
