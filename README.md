@@ -46,6 +46,7 @@ Then install command-line tools:
 
         xcode-select --install
         sudo xcodebuild -license
+    
     After the installation, make sure that you have agreed Apple's licence agreement.
 
 * Install [Homebrew package manager](http://brew.sh/):

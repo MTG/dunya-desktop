@@ -36,9 +36,12 @@ Dunya-desktop Documentation
 
 Installation
 ============
+The code is compatible with Python 2.7+ and Python 3. We highly recommend you
+to use the code with Python 3 and with a virtual environment.
 
-Installing dependencies on MacOS for Python 2.7
------------------------------------------------
+
+Installing dependencies on MacOS
+--------------------------------
 The given installation steps were tried on OS El Capitan (v10.11.06) and OS El
 Sierra (v10.12.1).
 
@@ -56,6 +59,42 @@ Sierra (v10.12.1).
     .. code-block:: bash
 
         /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+On Mac OS for Python 3.6
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Install Python 3.6+, Qt 5.7 and wget with Homebrew:
+
+    .. code-block:: bash
+
+        brew install python3 qt@5.7 ffmpeg wget
+
+* Create a virtual environment (virtualenv) and install requirements.
+
+    .. code-block:: bash
+
+        pyvenv env
+        source env/bin/activate
+
+* Go to directory of where dunya-desktop is downloaded.
+
+    **IMPORTANT:** Don't forget to change 'path/to/dunya-desktop' with the
+        actual directory name.
+
+    .. code-block:: bash
+
+        cd path/to/dunya-desktop
+
+    * Finally, install the package requirements.
+
+    .. code-block:: bash
+
+        pip3 install -r requirements
+        pip3 install PyQt5
+
+
+On Mac OS for Python 2.7
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 * Install Python 2.x, Qt 5.7, ffmpeg and wget with Homebrew:
 
@@ -113,20 +152,63 @@ Sierra (v10.12.1).
         pip install -r requirements
 
 
-Installing dependencies on Ubuntu 16.04 for Python 2.7
-------------------------------------------------------
+Installing dependencies on Ubuntu 16.04
+---------------------------------------
 
 The given installation steps were tried on Ubuntu 16.04.02 LTS (xenial).
 
-* Install Python 2.x, Qt 5.x:
+* Install Qt 5.x and ffmpeg:
 
     .. code-block:: bash
 
         sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
         sudo apt-get update -qq
-        sudo apt-get install -qq qtdeclarative5-dev libqt5svg5-dev qtmultimedia5-dev build-essential python-dev
+        sudo apt-get install -qq qtdeclarative5-dev libqt5svg5-dev qtmultimedia5-dev build-essential
         sudo apt-get install -qq ffmpeg
         export QMAKE=/usr/lib/x86_64-linux-gnu/qt5/bin/qmake
+
+
+On Ubuntu for Python 3.6
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Install Python 3.6
+
+    .. code-block:: bash
+
+        sudo apt-get install -qq python3-dev
+
+* Create a virtual environment (virtualenv) and install requirements.
+
+    .. code-block:: bash
+
+        pyvenv env
+        source env/bin/activate
+
+* Go to directory of where dunya-desktop is downloaded.
+
+    **IMPORTANT:** Don't forget to change 'path/to/dunya-desktop' with the
+        actual directory name.
+
+    .. code-block:: bash
+
+        cd path/to/dunya-desktop
+
+* Finally, install the package requirements.
+
+    .. code-block:: bash
+
+        pip3 install -r requirements
+        pip3 install PyQt5
+
+
+On Ubuntu for Python 2.7
+~~~~~~~~~~~~~~~~~~~~~~~~
+* Install Python 2.x
+
+    .. code-block:: bash
+
+        sudo apt-get install -qq python-dev
+
 
 * Download PyQt 5.8 and SIP source packages:
 
@@ -208,6 +290,12 @@ Waveform Widget
 .. automodule:: widgets.waveformwidget
 .. autoclass:: WaveformWidget
     :members:
+
+
+Extensions
+----------
+Adaptive Synthesis for SymbTr Score Collection
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 License

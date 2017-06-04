@@ -77,14 +77,26 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Dunya-desktop Documentation</a></li>
 <li><a class="reference internal" href="#installation">Installation</a><ul>
-<li><a class="reference internal" href="#installing-dependencies-on-macos-for-python-2-7">Installing dependencies on MacOS for Python 2.7</a></li>
-<li><a class="reference internal" href="#installing-dependencies-on-ubuntu-16-04-for-python-2-7">Installing dependencies on Ubuntu 16.04 for Python 2.7</a></li>
+<li><a class="reference internal" href="#installing-dependencies-on-macos">Installing dependencies on MacOS</a><ul>
+<li><a class="reference internal" href="#on-mac-os-for-python-3-6">On Mac OS for Python 3.6</a></li>
+<li><a class="reference internal" href="#on-mac-os-for-python-2-7">On Mac OS for Python 2.7</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#installing-dependencies-on-ubuntu-16-04">Installing dependencies on Ubuntu 16.04</a><ul>
+<li><a class="reference internal" href="#on-ubuntu-for-python-3-6">On Ubuntu for Python 3.6</a></li>
+<li><a class="reference internal" href="#on-ubuntu-for-python-2-7">On Ubuntu for Python 2.7</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-mainui_makam">Main UI</a></li>
 <li><a class="reference internal" href="#widgets">Widgets</a><ul>
 <li><a class="reference internal" href="#module-widgets.combobox">Combobox</a></li>
 <li><a class="reference internal" href="#module-widgets.playerframe">Player Frame</a></li>
 <li><a class="reference internal" href="#module-widgets.timeserieswidget">Time Series Widget</a></li>
 <li><a class="reference internal" href="#module-widgets.waveformwidget">Waveform Widget</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#extensions">Extensions</a><ul>
+<li><a class="reference internal" href="#adaptive-synthesis-for-symbtr-score-collection">Adaptive Synthesis for SymbTr Score Collection</a></li>
 </ul>
 </li>
 </ul>
@@ -155,8 +167,10 @@ module for reaching the backend of the
 </div>
 <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="installing-dependencies-on-macos-for-python-2-7">
-<h2>Installing dependencies on MacOS for Python 2.7<a class="headerlink" href="#installing-dependencies-on-macos-for-python-2-7" title="Permalink to this headline">¶</a></h2>
+<p>The code is compatible with Python 2.7+ and Python 3. We highly recommend you
+to use the code with Python 3 and with a virtual environment.</p>
+<div class="section" id="installing-dependencies-on-macos">
+<h2>Installing dependencies on MacOS<a class="headerlink" href="#installing-dependencies-on-macos" title="Permalink to this headline">¶</a></h2>
 <p>The given installation steps were tried on OS El Capitan (v10.11.06) and OS El
 Sierra (v10.12.1).</p>
 <ul>
@@ -176,6 +190,49 @@ sudo xcodebuild -license
 </div>
 </div></blockquote>
 </li>
+</ul>
+<div class="section" id="on-mac-os-for-python-3-6">
+<h3>On Mac OS for Python 3.6<a class="headerlink" href="#on-mac-os-for-python-3-6" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Install Python 3.6+, Qt 5.7 and wget with Homebrew:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>brew install python3 qt@5.7 ffmpeg wget
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Create a virtual environment (virtualenv) and install requirements.</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>pyvenv env
+<span class="nb">source</span> env/bin/activate
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Go to directory of where dunya-desktop is downloaded.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><strong>IMPORTANT:</strong> Don’t forget to change ‘path/to/dunya-desktop’ with the</dt>
+<dd><p class="first last">actual directory name.</p>
+</dd>
+</dl>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> path/to/dunya-desktop
+</pre></div>
+</div>
+<ul class="simple">
+<li>Finally, install the package requirements.</li>
+</ul>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>pip3 install -r requirements
+pip3 install PyQt5
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="on-mac-os-for-python-2-7">
+<h3>On Mac OS for Python 2.7<a class="headerlink" href="#on-mac-os-for-python-2-7" title="Permalink to this headline">¶</a></h3>
+<ul>
 <li><p class="first">Install Python 2.x, Qt 5.7, ffmpeg and wget with Homebrew:</p>
 <blockquote>
 <div><div class="highlight-bash"><div class="highlight"><pre><span></span>brew install python qt@5.7 ffmpeg wget
@@ -238,17 +295,69 @@ actual directory name.</p>
 </li>
 </ul>
 </div>
-<div class="section" id="installing-dependencies-on-ubuntu-16-04-for-python-2-7">
-<h2>Installing dependencies on Ubuntu 16.04 for Python 2.7<a class="headerlink" href="#installing-dependencies-on-ubuntu-16-04-for-python-2-7" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="installing-dependencies-on-ubuntu-16-04">
+<h2>Installing dependencies on Ubuntu 16.04<a class="headerlink" href="#installing-dependencies-on-ubuntu-16-04" title="Permalink to this headline">¶</a></h2>
 <p>The given installation steps were tried on Ubuntu 16.04.02 LTS (xenial).</p>
 <ul>
-<li><p class="first">Install Python 2.x, Qt 5.x:</p>
+<li><p class="first">Install Qt 5.x and ffmpeg:</p>
 <blockquote>
 <div><div class="highlight-bash"><div class="highlight"><pre><span></span>sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
 sudo apt-get update -qq
-sudo apt-get install -qq qtdeclarative5-dev libqt5svg5-dev qtmultimedia5-dev build-essential python-dev
+sudo apt-get install -qq qtdeclarative5-dev libqt5svg5-dev qtmultimedia5-dev build-essential
 sudo apt-get install -qq ffmpeg
 <span class="nb">export</span> <span class="nv">QMAKE</span><span class="o">=</span>/usr/lib/x86_64-linux-gnu/qt5/bin/qmake
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+<div class="section" id="on-ubuntu-for-python-3-6">
+<h3>On Ubuntu for Python 3.6<a class="headerlink" href="#on-ubuntu-for-python-3-6" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Install Python 3.6</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install -qq python3-dev
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Create a virtual environment (virtualenv) and install requirements.</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>pyvenv env
+<span class="nb">source</span> env/bin/activate
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Go to directory of where dunya-desktop is downloaded.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><strong>IMPORTANT:</strong> Don’t forget to change ‘path/to/dunya-desktop’ with the</dt>
+<dd><p class="first last">actual directory name.</p>
+</dd>
+</dl>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> path/to/dunya-desktop
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Finally, install the package requirements.</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>pip3 install -r requirements
+pip3 install PyQt5
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="on-ubuntu-for-python-2-7">
+<h3>On Ubuntu for Python 2.7<a class="headerlink" href="#on-ubuntu-for-python-2-7" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Install Python 2.x</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install -qq python-dev
 </pre></div>
 </div>
 </div></blockquote>
@@ -307,6 +416,7 @@ actual directory name.</p>
 </div></blockquote>
 </li>
 </ul>
+</div>
 </div>
 <div class="section" id="module-mainui_makam">
 <span id="main-ui"></span><h2>Main UI<a class="headerlink" href="#module-mainui_makam" title="Permalink to this headline">¶</a></h2>
@@ -569,6 +679,12 @@ the waveform region item exists.</p>
 
 </dd></dl>
 
+</div>
+</div>
+<div class="section" id="extensions">
+<h2>Extensions<a class="headerlink" href="#extensions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="adaptive-synthesis-for-symbtr-score-collection">
+<h3>Adaptive Synthesis for SymbTr Score Collection<a class="headerlink" href="#adaptive-synthesis-for-symbtr-score-collection" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 </div>
