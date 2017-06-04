@@ -170,7 +170,7 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
     def update_wf_vline(self, playback_pos_sample):
         """
         Updated the position of vertical line.
-        
+
         :param playback_pos_sample: (int) Position of playback in samples.
         """
         pos = playback_pos_sample/self.ratio
