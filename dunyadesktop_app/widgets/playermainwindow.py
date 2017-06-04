@@ -6,8 +6,7 @@ from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QDockWidget,
                              QDialog, QHBoxLayout, QLabel)
 from PyQt5.QtCore import Qt, QMetaObject
 
-from .treewidget import (FeatureTreeWidget, MetadataTreeMakam,
-                         FeatureWidgetAdaptive)
+from .treewidget import (MetadataTreeMakam, FeatureWidgetAdaptive)
 from .playerframe import PlayerFrame
 from .playbackframe import PlaybackFrame
 from .table import TablePlaylist
@@ -166,21 +165,6 @@ class PlayerMainWindow(QMainWindow):
                     self.player_frame.ts_widget.zoom_selection,
                     self.player_frame.ts_widget.rois)
                 self.player_frame.ts_widget.is_notes_added = False
-
-        if item == 'metadata':
-            if is_checked:
-                m_path = self.get_feature_path(self.docid, type=type,
-                                               item=item)
-                metadata = json.load(open(m_path))
-
-                self.metadata_dialog = QDialog(self)
-                layout = QVBoxLayout(self.metadata_dialog)
-                mt = MetadataTreeMakam(metadata)
-                layout.addWidget(mt)
-                self.metadata_dialog.setLayout(layout)
-                self.metadata_dialog.show()
-            else:
-                self.metadata_dialog.close()
 
         if item == 'sections':
             if is_checked:
