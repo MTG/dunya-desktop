@@ -26,12 +26,12 @@ install:
   - sudo pip install codecov
 
   - "if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then
-      sudo pip install -r ./travis/requirements;
+      sudo pip install -r .travis/requirements;
       sudo pip install flake8;
     fi"
 
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then
-      sudo pip3 install -r ./travis/requirements;
+      sudo pip3 install -r .travis/requirements;
       sudo pip3 install flake8;
     fi"
 
