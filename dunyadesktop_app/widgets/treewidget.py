@@ -32,6 +32,7 @@ class FeatureWidgetAdaptive(QWidget):
     def _set_design(self):
         layout_synthesis = self._add_synthesis()
         self.group_box.setLayout(layout_synthesis)
+        self.setMinimumWidth(150)
 
     def _add_synthesis(self):
         layout = QVBoxLayout()
