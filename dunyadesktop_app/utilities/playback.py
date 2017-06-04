@@ -1,5 +1,5 @@
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
-from PyQt5.QtCore import QUrl, QThread
+from PyQt5.QtCore import QUrl
 
 
 class Playback(QMediaPlayer):

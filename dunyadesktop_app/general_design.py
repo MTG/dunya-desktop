@@ -1,12 +1,12 @@
 import os
 
-from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QStatusBar, \
-    QSizePolicy, QFrame
+from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QStatusBar,
+                             QSizePolicy, QFrame)
 from PyQt5.QtGui import QFont, QIcon
 from PyQt5 import QtCore
 
-from widgets.dockwidget import DockWidget, DockWidgetContentsLeft, \
-    DockWidgetContentsTop
+from widgets.dockwidget import (DockWidget, DockWidgetContentsLeft,
+                                DockWidgetContentsTop)
 from widgets.queryframe import QueryFrame
 from widgets.progressbar import ProgressBar
 

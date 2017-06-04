@@ -17,7 +17,8 @@ class MainWindowMakamDesign(GeneralMainDesign):
                                           'align="center"><span style=" '
                                           'font-size:15pt; '
                                           'color:#C1C1C1;">'
-                                          'Adaptive Synthesis for SymbTr Collection'
+                                          'Adaptive Synthesis for SymbTr '
+                                          'Collection'
                                           '</span></p></body></html>')
 
     def _retranslate_ui_elements(self):
