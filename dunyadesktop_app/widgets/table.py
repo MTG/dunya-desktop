@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import (QToolButton, QTableView, QAbstractItemView,
 from PyQt5.QtCore import pyqtSignal, Qt, QPersistentModelIndex, QSize
 from PyQt5.QtGui import QFont, QCursor, QIcon, QPixmap
 
-from utilities import database, corpusbasestatistics
+from utilities import database
 from cultures.makam import utilities as makam_utilities
 from .progressbar import ProgressBar
 from .contextmenu import RCMenu
