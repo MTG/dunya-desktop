@@ -44,18 +44,6 @@ CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                         'style.qss')
 
 
-class DownloadButton(QToolButton):
-    def __init__(self, parent=None):
-        QToolButton.__init__(self, parent)
-        # self.clicked.connect(self.download_clicked)
-
-    def download_clicked(self):
-        pass
-        # print('clicked')
-        # print(self.parent())
-        # print(self.parent().pos())
-
-
 class TableView(QTableView):
     open_dunya_triggered = pyqtSignal(object)
     add_to_collection = pyqtSignal(str, object)
@@ -105,23 +93,6 @@ class TableView(QTableView):
             self.selected_indexes = menu.return_selected_row_indexes()
         except UnboundLocalError:
             pass
-
-    def _compute_overall_histograms(self):
-        coll_widget =  self.parent().parent().listView_collections
-        coll = str(coll_widget.currentItem().text())
-
-        conn, c = database.connect()
-        histograms = {}
-        for row in self.selected_indexes:
-            mbid = str(database.get_nth_row(c, coll, row)[0])
-            pd_path = os.path.join(DOCS_PATH, mbid,
-                                   'audioanalysis--pitch_distribution.json')
-            tnc_path = os.path.join(DOCS_PATH, mbid,
-                                   'audioanalysis--tonic.json')
-            vals, bins = load_pd(pd_path)
-            tonic = load_tonic(tnc_path)
-            histograms[mbid] = [[vals, bins], tonic]
-        corpusbasestatistics.compute_overall_histogram(histograms)
 
     def send_rec(self):
         """Emits 'open_dunya_triggered' signal and the current index to open
@@ -352,18 +323,6 @@ class TableWidget(QTableWidget, TableView):
     def refresh_row(self, docid):
         """checks the status and the title columns of given row"""
         row = self.indexes[docid]
-        #if self.item(row, 1):
-        #    if makam_utilities.check_doc(docid):
-        #        self.set_status(row, exist=1)
-
-        #        title = json.load(open(os.path.join(
-        #            DOCS_PATH, docid,
-        #            'audioanalysis--metadata.json')))['title']
-        #        item = QTableWidgetItem(title)
-        #        self.setItem(row, 1, item)
-        #        self.set_result_checked.emit(docid)
-        #    else:
-        #        self.set_status(row, 2)
 
 
 class DialogCollTable(QDialog):

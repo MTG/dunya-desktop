@@ -1,12 +1,11 @@
 import os
-import json
 
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QDockWidget,
-                             QDialog, QHBoxLayout, QLabel)
+                             QHBoxLayout, QLabel)
 from PyQt5.QtCore import Qt, QMetaObject
 
-from .treewidget import (MetadataTreeMakam, FeatureWidgetAdaptive)
+from .treewidget import FeatureWidgetAdaptive
 from .playerframe import PlayerFrame
 from .playbackframe import PlaybackFrame
 from .table import TablePlaylist
