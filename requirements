@@ -2,4 +2,5 @@ requests
 numpy
 pyqtgraph
 scipy
+sphinx
 sphinx_bootstrap_theme
