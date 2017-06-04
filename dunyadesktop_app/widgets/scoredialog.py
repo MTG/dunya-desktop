@@ -41,12 +41,3 @@ class ScoreWidget(QSvgWidget):
         if hasattr(self, 'tree'):
             change_color(self.svg_path, self.tree, self.root, self.note_index,
                          'black')
-
-
-class ScoreDialog(QDialog):
-    def __init__(self, parent=None):
-        QDialog.__init__(self, parent=parent)
-        self.setFixedSize(900, 600)
-        layout = QVBoxLayout(self)
-        self.score_widget = ScoreWidget(self)
-        layout.addWidget(self.score_widget)

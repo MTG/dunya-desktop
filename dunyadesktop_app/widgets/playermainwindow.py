@@ -26,9 +26,6 @@ class PlayerMainWindow(QMainWindow):
         QMetaObject.connectSlotsByName(self)
 
         # signals
-        #self.feature_tree.item_checked.connect(self.evaluate_checked_signal)
-
-        # signals
         self.playback_frame.button_play.clicked.connect(
             self.player_frame.playback_play)
         self.playback_frame.button_pause.clicked.connect(
@@ -133,62 +130,6 @@ class PlayerMainWindow(QMainWindow):
     def closeEvent(self, close_event):
         self.player_frame.playback.pause()
         self.player_frame.score_widget.close_event()
-
-    def evaluate_checked_signal(self, type, item, is_checked):
-        if item == 'pitch' or item == 'pitch_filtered':
-            if is_checked:
-                self.player_frame.plot_1d_data(type, item)
-            else:
-                self.player_frame.ts_widget.zoom_selection.clearPlots()
-                self.player_frame.is_pitch_plotted = False
-                self.player_frame.ts_widget.pitch_plot = None
-
-                if hasattr(self.player_frame.ts_widget, 'hline_histogram'):
-                    self.player_frame.ts_widget.right_axis.removeItem(
-                        self.player_frame.ts_widget.hline_histogram)
-
-        if item == 'tonic':
-            if is_checked:
-                self.player_frame.plot_1d_data(type, item)
-            else:
-                self.player_frame.ts_widget.remove_given_items(
-                    self.player_frame.ts_widget.zoom_selection,
-                    self.player_frame.ts_widget.tonic_lines)
-
-        if item == 'notes':
-            if is_checked:
-                self.player_frame.add_1d_roi_items(type, item)
-                self.player_frame.open_score_dialog(self.docid)
-            else:
-                self.player_frame.ts_widget.remove_given_items(
-                    self.player_frame.ts_widget.zoom_selection,
-                    self.player_frame.ts_widget.rois)
-                self.player_frame.ts_widget.is_notes_added = False
-
-        if item == 'sections':
-            if is_checked:
-                s_path = self.get_feature_path(self.docid, type=type,
-                                               item=item)
-                self.player_frame.add_sections_to_waveform(s_path)
-            else:
-                self.player_frame.waveform_widget.remove_sections()
-
-        if item == 'pitch_distribution':
-            if is_checked:
-                s_path = self.get_feature_path(self.docid, type=type,
-                                               item=item)
-                vals, bins = load_pd(s_path)
-                self.hist_dialog = HistogramDialog()
-                self.hist_dialog.plot_histogram(bins, vals)
-                self.hist_dialog.show()
-                self.player_frame.hist_visible= True
-
-                self.player_frame.update_histogram.connect(
-                    self.hist_dialog.update_histogram)
-
-            else:
-                self.hist_dialog.close()
-                self.player_frame.hist_visible = False
 
     @staticmethod
     def get_feature_path(mbid, type, item):

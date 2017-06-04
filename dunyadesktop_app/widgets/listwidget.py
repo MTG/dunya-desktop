@@ -41,20 +41,3 @@ class CollectionsWidget(DockListWidget):
     def update_list(self, colls):
         self.clear()
         self.add_collections(colls)
-
-
-class CollectionList(DockListWidget):
-    def __init__(self, parent=None):
-        DockListWidget.__init__(self, parent)
-        self.setDragDropMode(QAbstractItemView.DropOnly)
-        self.setAcceptDrops(True)
-
-    def add_items(self, coll):
-        # first cleans all the items on the list
-        self.clear()
-        for item in coll:
-            path = os.path.join(DOCS_PATH, item,
-                                'audioanalysis--metadata.json')
-            metadata = json.load(open(path))
-            item = QListWidgetItem(metadata['title'])
-            self.addItem(item)

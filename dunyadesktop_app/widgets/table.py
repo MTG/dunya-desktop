@@ -12,7 +12,6 @@ from PyQt5.QtGui import QFont, QCursor, QIcon, QPixmap
 
 from utilities import database, corpusbasestatistics
 from cultures.makam import utilities as makam_utilities
-from widgets.playerframe import load_pd, load_tonic
 from .progressbar import ProgressBar
 from .contextmenu import RCMenu
 from .widgetutilities import set_css, convert_str

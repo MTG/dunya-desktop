@@ -22,7 +22,7 @@ class RCMenu(QMenu):
         QMenu.__init__(self, parent)
         self._add_actions()
 
-
+        # signals
         self.open_dunya.triggered.connect(self._send_player_request)
 
     def _add_actions(self):

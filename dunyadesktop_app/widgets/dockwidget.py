@@ -2,11 +2,11 @@ import os
 
 from PyQt5.QtWidgets import (QDockWidget, QSizePolicy, QWidget, QVBoxLayout,
                              QFrame, QLabel, QToolButton, QHBoxLayout,
-                             QSpacerItem, QDialog)
+                             QSpacerItem)
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import QSize, Qt
 
-from .table import TableWidget, TableViewCollections, DialogCollTable
+from .table import TableWidget, DialogCollTable
 from .listwidget import CollectionsWidget
 from .newcollectiondialog import NewCollectionDialog
 from utilities import database
