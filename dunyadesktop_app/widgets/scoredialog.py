@@ -13,7 +13,7 @@ class ScoreWidget(QSvgWidget):
 
     def __set_design(self):
         self.setStyleSheet('background-color: #F4ECD7;')
-        self.setFixedSize(900, 600)
+        self.setFixedSize(450, 300)
 
     def set_svg(self, path):
         self.svg_path = path

@@ -6,7 +6,6 @@ import pyqtgraph.dockarea as pgdock
 from PyQt5.QtWidgets import QVBoxLayout, QFrame, QLayout, QSizePolicy
 from PyQt5.Qt import pyqtSignal
 
-from .timeserieswidget import TimeSeriesWidget
 from .waveformwidget import WaveformWidget
 from .scoredialog import ScoreWidget
 from .widgetutilities import cursor_pos_sample, current_pitch
