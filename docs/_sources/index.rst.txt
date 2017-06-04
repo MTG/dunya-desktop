@@ -186,12 +186,12 @@ On Ubuntu for Python 3.6
 
 * Go to directory of where dunya-desktop is downloaded.
 
-    **IMPORTANT:** Don't forget to change 'path/to/dunya-desktop' with the
-        actual directory name.
+    **IMPORTANT:** Don't forget to change 'path/to/dunya-desktop' with the actual directory name.
 
     .. code-block:: bash
 
         cd path/to/dunya-desktop
+
 
 * Finally, install the package requirements.
 
