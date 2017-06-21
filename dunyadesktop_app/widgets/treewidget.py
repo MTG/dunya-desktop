@@ -74,6 +74,7 @@ class FeatureTreeWidget(QTreeWidget):
         self.resizeColumnToContents(0)
         self.resizeColumnToContents(1)
         self.is_ready = True
+        self.expandAll()
 
 
 class MBItem(QPushButton):
