@@ -166,6 +166,7 @@ class PlayerFrame(QFrame):
 
         """
         Plots 1D data.
+
         :param f_type:
         :param feature:
         """
@@ -232,6 +233,7 @@ class PlayerFrame(QFrame):
         """
         Updates the positions of cursors when playback position is changed.
         Changes the waveform region item according to the position of playback.
+
         :param playback_pos: (int) Position of player in milliseconds.
         """
         if self.playback.state() == 1:
@@ -281,6 +283,7 @@ class PlayerFrame(QFrame):
     def add_1d_roi_items(self, f_type, item):
         """
         Adds 1d roi item.
+
         :param f_type: (str) Feature type
         :param item: (str) Feature subtype
         """

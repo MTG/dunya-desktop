@@ -81,6 +81,7 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
     def plot_waveform(self, raw_audio):
         """
         Plots the given raw audio.
+
         :param raw_audio: (list of numpy array) List of floats.
         """
 
@@ -113,6 +114,7 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
     def __add_items_to_plot(self, len_plot, min_audio, max_audio):
         """
         Adds a region selector item and vertical line for to the waveform plot.
+
         :param len_plot: (int) Number of samples in plotted waveform array.
         :param min_audio: (float) The minimum value of plotted waveform array.
         :param max_audio: (float) The maximum value of plotted waveform array.
@@ -168,6 +170,7 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
     def update_wf_vline(self, playback_pos_sample):
         """
         Updated the position of vertical line.
+
         :param playback_pos_sample: (int) Position of playback in samples.
         """
         pos = playback_pos_sample/self.ratio

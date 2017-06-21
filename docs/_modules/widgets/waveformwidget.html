@@ -192,6 +192,7 @@
 <div class="viewcode-block" id="WaveformWidget.plot_waveform"><a class="viewcode-back" href="../../index.html#widgets.waveformwidget.WaveformWidget.plot_waveform">[docs]</a>    <span class="k">def</span> <span class="nf">plot_waveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_audio</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots the given raw audio.</span>
+
 <span class="sd">        :param raw_audio: (list of numpy array) List of floats.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -224,6 +225,7 @@
     <span class="k">def</span> <span class="nf">__add_items_to_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">len_plot</span><span class="p">,</span> <span class="n">min_audio</span><span class="p">,</span> <span class="n">max_audio</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a region selector item and vertical line for to the waveform plot.</span>
+
 <span class="sd">        :param len_plot: (int) Number of samples in plotted waveform array.</span>
 <span class="sd">        :param min_audio: (float) The minimum value of plotted waveform array.</span>
 <span class="sd">        :param max_audio: (float) The maximum value of plotted waveform array.</span>
@@ -279,6 +281,7 @@
 <div class="viewcode-block" id="WaveformWidget.update_wf_vline"><a class="viewcode-back" href="../../index.html#widgets.waveformwidget.WaveformWidget.update_wf_vline">[docs]</a>    <span class="k">def</span> <span class="nf">update_wf_vline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">playback_pos_sample</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updated the position of vertical line.</span>
+
 <span class="sd">        :param playback_pos_sample: (int) Position of playback in samples.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pos</span> <span class="o">=</span> <span class="n">playback_pos_sample</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">ratio</span>

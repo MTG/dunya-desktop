@@ -40,8 +40,7 @@ class TimeSeriesWidget(pg.GraphicsLayoutWidget):
 
     def add_1d_view(self):
         """
-        Adds a 1d view to TimeSeriesWidget where you can plot and add items
-        on it.
+        Adds a 1d view to TimeSeriesWidget where you can plot and add items on it.
         """
 
         # To customize the plot axises, create new ones.
@@ -98,12 +97,11 @@ class TimeSeriesWidget(pg.GraphicsLayoutWidget):
     def plot_pitch(self, pitch_plot, x_start, x_end, hop_size):
         """
         Plots the given pitch_plot array.
-        :param pitch_plot: (numpy array or list) List of pitch values.
-        Ex: [234.5, 234,3, 234.0, ...]
-        :param x_start: (int or float) Time stamp of starting point in
-        seconds.
+
+        :param pitch_plot: (numpy array or list) List of pitch values. Ex: [234.5, 234,3, 234.0, ...]
+        :param x_start: (int or float) Time stamp of starting point in seconds.
         :param x_end: (int or float) Time stamp of ending point in seconds.
-        :param hop_size: (int) Hop size in samples. Ex: 128
+        :param hop_size: (int) Hop size in samples. Ex: 128.
         """
         if not self.is_pitch_plotted:  # if pitch is not plotted yet
             self.ratio = 1. / (hop_size / np.float(self.sample_rate))
@@ -120,9 +118,10 @@ class TimeSeriesWidget(pg.GraphicsLayoutWidget):
     def update_plot(self, start, stop, hop_size):
         """
         Updates the view of the plot region with given time stamps.
+
         :param start: (int or float) Time stamp of starting point in seconds.
         :param stop: (int or float) Time stamp of ending point in seconds.
-        :param hop_size: (int) Hop size in samples. Ex: 128
+        :param hop_size: (int) Hop size in samples. Ex: 128.
         """
 
         # convert the given time stamps into samples to specify the plot array
@@ -146,9 +145,9 @@ class TimeSeriesWidget(pg.GraphicsLayoutWidget):
     def plot_histogram_raxis(self, vals, bins):
         """
         Plots histogram to the right axis.
+
         :param vals: (list or numpy array) List of valley values of histogram.
-        :param bins: (list or numpy array) List of bins values of histogram
-        in Hz
+        :param bins: (list or numpy array) List of bins values of histogram in Hz
         """
 
         # shadow pen is the properties of shadow around the lines
@@ -166,6 +165,7 @@ class TimeSeriesWidget(pg.GraphicsLayoutWidget):
     def change_yaxis_range(self):
         """
         Changes the y-axis range according to the selected region in y-axis.
+
         """
         pos_y_min, pos_y_max = self.region_yaxis.getRegion()
         self.zoom_selection.setYRange(pos_y_min, pos_y_max)
@@ -174,7 +174,9 @@ class TimeSeriesWidget(pg.GraphicsLayoutWidget):
     def add_tonic(self, values):
         """
         Adds tonic lines on the pitch plot.
+
         :param values: (list or numpy array) A sequence of tonic values in Hz.
+
         """
         # label options for the tonic values on the tonic line
         label_opts = {'position': 0.1, 'color': (200, 200, 100),
@@ -195,6 +197,7 @@ class TimeSeriesWidget(pg.GraphicsLayoutWidget):
     def set_hist_cursor_pos(self, pos):
         """
         Sets the position of histogram in y-axis.
+
         :param pos: (int or float) Playback position in seconds.
         """
         pos_sample = cursor_pos_sample(pos, self.sample_rate, self.hopsize)
@@ -222,6 +225,7 @@ class TimeSeriesWidget(pg.GraphicsLayoutWidget):
     def remove_given_items(obj, items):
         """
         Removes the given items from the given object
+
         :param obj: pyqtgraph.GraphicsWidget object
         :param items: (list) Sequence of pyqtgraph.GraphicsObject object
         """

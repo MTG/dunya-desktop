@@ -151,8 +151,7 @@
 
 <div class="viewcode-block" id="TimeSeriesWidget.add_1d_view"><a class="viewcode-back" href="../../index.html#widgets.timeserieswidget.TimeSeriesWidget.add_1d_view">[docs]</a>    <span class="k">def</span> <span class="nf">add_1d_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Adds a 1d view to TimeSeriesWidget where you can plot and add items</span>
-<span class="sd">        on it.</span>
+<span class="sd">        Adds a 1d view to TimeSeriesWidget where you can plot and add items on it.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># To customize the plot axises, create new ones.</span>
@@ -209,12 +208,11 @@
 <div class="viewcode-block" id="TimeSeriesWidget.plot_pitch"><a class="viewcode-back" href="../../index.html#widgets.timeserieswidget.TimeSeriesWidget.plot_pitch">[docs]</a>    <span class="k">def</span> <span class="nf">plot_pitch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pitch_plot</span><span class="p">,</span> <span class="n">x_start</span><span class="p">,</span> <span class="n">x_end</span><span class="p">,</span> <span class="n">hop_size</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots the given pitch_plot array.</span>
-<span class="sd">        :param pitch_plot: (numpy array or list) List of pitch values.</span>
-<span class="sd">        Ex: [234.5, 234,3, 234.0, ...]</span>
-<span class="sd">        :param x_start: (int or float) Time stamp of starting point in</span>
-<span class="sd">        seconds.</span>
+
+<span class="sd">        :param pitch_plot: (numpy array or list) List of pitch values. Ex: [234.5, 234,3, 234.0, ...]</span>
+<span class="sd">        :param x_start: (int or float) Time stamp of starting point in seconds.</span>
 <span class="sd">        :param x_end: (int or float) Time stamp of ending point in seconds.</span>
-<span class="sd">        :param hop_size: (int) Hop size in samples. Ex: 128</span>
+<span class="sd">        :param hop_size: (int) Hop size in samples. Ex: 128.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_pitch_plotted</span><span class="p">:</span>  <span class="c1"># if pitch is not plotted yet</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ratio</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="n">hop_size</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">))</span>
@@ -231,9 +229,10 @@
 <div class="viewcode-block" id="TimeSeriesWidget.update_plot"><a class="viewcode-back" href="../../index.html#widgets.timeserieswidget.TimeSeriesWidget.update_plot">[docs]</a>    <span class="k">def</span> <span class="nf">update_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">hop_size</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the view of the plot region with given time stamps.</span>
+
 <span class="sd">        :param start: (int or float) Time stamp of starting point in seconds.</span>
 <span class="sd">        :param stop: (int or float) Time stamp of ending point in seconds.</span>
-<span class="sd">        :param hop_size: (int) Hop size in samples. Ex: 128</span>
+<span class="sd">        :param hop_size: (int) Hop size in samples. Ex: 128.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># convert the given time stamps into samples to specify the plot array</span>
@@ -257,9 +256,9 @@
 <div class="viewcode-block" id="TimeSeriesWidget.plot_histogram_raxis"><a class="viewcode-back" href="../../index.html#widgets.timeserieswidget.TimeSeriesWidget.plot_histogram_raxis">[docs]</a>    <span class="k">def</span> <span class="nf">plot_histogram_raxis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vals</span><span class="p">,</span> <span class="n">bins</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots histogram to the right axis.</span>
+
 <span class="sd">        :param vals: (list or numpy array) List of valley values of histogram.</span>
-<span class="sd">        :param bins: (list or numpy array) List of bins values of histogram</span>
-<span class="sd">        in Hz</span>
+<span class="sd">        :param bins: (list or numpy array) List of bins values of histogram in Hz</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># shadow pen is the properties of shadow around the lines</span>
@@ -277,6 +276,7 @@
 <div class="viewcode-block" id="TimeSeriesWidget.change_yaxis_range"><a class="viewcode-back" href="../../index.html#widgets.timeserieswidget.TimeSeriesWidget.change_yaxis_range">[docs]</a>    <span class="k">def</span> <span class="nf">change_yaxis_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Changes the y-axis range according to the selected region in y-axis.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pos_y_min</span><span class="p">,</span> <span class="n">pos_y_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">region_yaxis</span><span class="o">.</span><span class="n">getRegion</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">zoom_selection</span><span class="o">.</span><span class="n">setYRange</span><span class="p">(</span><span class="n">pos_y_min</span><span class="p">,</span> <span class="n">pos_y_max</span><span class="p">)</span>
@@ -285,7 +285,9 @@
 <div class="viewcode-block" id="TimeSeriesWidget.add_tonic"><a class="viewcode-back" href="../../index.html#widgets.timeserieswidget.TimeSeriesWidget.add_tonic">[docs]</a>    <span class="k">def</span> <span class="nf">add_tonic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds tonic lines on the pitch plot.</span>
+
 <span class="sd">        :param values: (list or numpy array) A sequence of tonic values in Hz.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># label options for the tonic values on the tonic line</span>
         <span class="n">label_opts</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;position&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
@@ -306,6 +308,7 @@
 <div class="viewcode-block" id="TimeSeriesWidget.set_hist_cursor_pos"><a class="viewcode-back" href="../../index.html#widgets.timeserieswidget.TimeSeriesWidget.set_hist_cursor_pos">[docs]</a>    <span class="k">def</span> <span class="nf">set_hist_cursor_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets the position of histogram in y-axis.</span>
+
 <span class="sd">        :param pos: (int or float) Playback position in seconds.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pos_sample</span> <span class="o">=</span> <span class="n">cursor_pos_sample</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hopsize</span><span class="p">)</span>
@@ -333,6 +336,7 @@
     <span class="k">def</span> <span class="nf">remove_given_items</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Removes the given items from the given object</span>
+
 <span class="sd">        :param obj: pyqtgraph.GraphicsWidget object</span>
 <span class="sd">        :param items: (list) Sequence of pyqtgraph.GraphicsObject object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
