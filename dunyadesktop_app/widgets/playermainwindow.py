@@ -179,6 +179,7 @@ class PlayerMainWindow(QMainWindow):
                 mt = MetadataTreeMakam(metadata)
                 layout.addWidget(mt)
                 self.metadata_dialog.setLayout(layout)
+                self.metadata_dialog.resize(500, 500)
                 self.metadata_dialog.show()
             else:
                 self.metadata_dialog.close()

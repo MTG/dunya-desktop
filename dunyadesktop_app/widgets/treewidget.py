@@ -97,6 +97,7 @@ class MetadataTreeMakam(QTreeWidget):
     def __init__(self, metadata_dict, parent=None):
         QTreeWidget.__init__(self, parent=parent)
         self.metadata_dict = metadata_dict
+        self.resize(1000, 1000)
 
         header = QTreeWidgetItem(['Metadata', '', '', '', ''])
         self.setHeaderItem(header)
@@ -167,6 +168,10 @@ class MetadataTreeMakam(QTreeWidget):
 
         duration_item = QTreeWidgetItem(self.root_audio, ['Duration'])
         duration_item.setData(1, Qt.EditRole, duration)
+
+        self.expandAll()
+        self.resizeColumnToContents(0)
+        self.resizeColumnToContents(1)
 
     def __add_musical_attribute(self, root, name, item):
         widget_item = QTreeWidgetItem(root, [name])
