@@ -39,6 +39,8 @@ class MainWindowMakam(MainWindowMakamDesign):
              self.performers, self.instruments) = utilities.get_attributes()
             self._set_combobox_attributes()
             self.frame_query.frame_attributes.comboBox_instrument.setDisabled(True)
+            self.frame_query.frame_attributes.comboBox_composer.setDisabled(True)
+            self.frame_query.frame_attributes.comboBox_performer.setDisabled(True)
             self.recordings = []
             self.work_count = 0
             self.progress_number = 0
