@@ -279,6 +279,12 @@ Player Frame
 .. autoclass:: PlayerFrame
     :members:
 
+Tab Widget
+~~~~~~~~~~
+.. automodule:: widgets.tabwidget
+.. autoclass:: TabWidget
+    :members:
+
 Time Series Widget
 ~~~~~~~~~~~~~~~~~~
 .. automodule:: widgets.timeserieswidget

@@ -1,8 +1,10 @@
 from PyQt5.QtWidgets import QTabWidget, QWidget
 from PyQt5.QtGui import QFont
 
+
 class TabWidget(QTabWidget):
     """Tab widget of related collection/s"""
+
     def __init__(self, parent=None):
         super(TabWidget, self).__init__(parent)
         self._set_font()
