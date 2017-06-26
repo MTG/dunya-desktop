@@ -15,9 +15,8 @@ MB_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
 
 class FeatureTreeWidget(QTreeWidget):
     item_checked = pyqtSignal(str, str, bool)
-    FEATURES = ['melodic_progression', 'metadata', 'note_models', 'pitch',
-                'pitch_distribution', 'pitch_filtered', 'tonic', 'notes',
-                'sections']
+    FEATURES = ['metadata', 'pitch', 'pitch_distribution', 'pitch_filtered',
+                'tonic', 'notes', 'sections']
 
     def __init__(self, parent=None):
         QTreeWidget.__init__(self, parent=parent)
