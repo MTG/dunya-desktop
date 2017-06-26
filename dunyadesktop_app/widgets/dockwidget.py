@@ -294,11 +294,6 @@ class DockWidgetContentsTop(QWidget):
         self.label_status.setSizePolicy(size_policy)
 
     def retranslate_ui(self):
-        self.label_username.setText("<html><head/><body><p "
-                                    "align=\"right\"><span style=\" "
-                                    "font-weight:600; "
-                                    "color:#7c7c7c;\">user.name</span></p"
-                                    "></body></html>")
         self.label_status.setText('<html><head/><body><p><span style=" '
                                   'font-size:10pt; '
                                   'color:#73ff7c;">online</span></p></body'
