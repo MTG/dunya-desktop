@@ -119,8 +119,6 @@
 <span class="c1"># Enable OpenGL and Weave to improve the performance of plotting functions.</span>
 <span class="n">pg</span><span class="o">.</span><span class="n">setConfigOptions</span><span class="p">(</span><span class="n">useOpenGL</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">pg</span><span class="o">.</span><span class="n">setConfigOptions</span><span class="p">(</span><span class="n">useWeave</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="c1"># pg.setConfigOptions(crashWarning=True)</span>
-
 
 <span class="c1"># Colors of the waveform plot, vertical line (cursor) and waveform region</span>
 <span class="c1"># selector</span>
@@ -176,6 +174,9 @@
 
 
 <div class="viewcode-block" id="WaveformWidget"><a class="viewcode-back" href="../../index.html#widgets.waveformwidget.WaveformWidget">[docs]</a><span class="k">class</span> <span class="nc">WaveformWidget</span><span class="p">(</span><span class="n">pg</span><span class="o">.</span><span class="n">GraphicsLayoutWidget</span><span class="p">):</span>
+    <span class="n">limit</span> <span class="o">=</span> <span class="mi">900</span>
+    <span class="n">samplerate</span> <span class="o">=</span> <span class="mf">44100.</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">pg</span><span class="o">.</span><span class="n">GraphicsLayoutWidget</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
@@ -184,10 +185,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">setSpacing</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">section_items</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">limit</span> <span class="o">=</span> <span class="mi">900</span>  <span class="c1"># maximum number of samples to be plotted</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span> <span class="o">=</span> <span class="mf">44100.</span>
-
 
 <div class="viewcode-block" id="WaveformWidget.plot_waveform"><a class="viewcode-back" href="../../index.html#widgets.waveformwidget.WaveformWidget.plot_waveform">[docs]</a>    <span class="k">def</span> <span class="nf">plot_waveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_audio</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -257,7 +254,8 @@
 <span class="sd">        Returns the current position of the waveform region item in seconds if</span>
 <span class="sd">        the waveform region item exists.</span>
 
-<span class="sd">        :return:</span>
+<span class="sd">        :return: xmin, xmax (float): Minimum and maximum values of waveform region item</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;region_wf&#39;</span><span class="p">):</span>
             <span class="n">pos_wf_x_min</span><span class="p">,</span> <span class="n">pos_wf_x_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">region_wf</span><span class="o">.</span><span class="n">getRegion</span><span class="p">()</span>
@@ -284,7 +282,7 @@
 
 <span class="sd">        :param playback_pos_sample: (int) Position of playback in samples.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">pos</span> <span class="o">=</span> <span class="n">playback_pos_sample</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">ratio</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">playback_pos_sample</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">ratio</span>
         <span class="k">if</span> <span class="n">pos</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">elif</span> <span class="n">pos</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">:</span>
@@ -296,35 +294,47 @@
         <span class="n">delta</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">pixelDelta</span><span class="p">()</span><span class="o">.</span><span class="n">y</span><span class="p">()</span>
         <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_waveform_region</span>
         <span class="n">distance</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.03</span>
-        <span class="k">if</span> <span class="n">delta</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">delta</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">xmin</span> <span class="o">+=</span> <span class="n">distance</span>
             <span class="n">xmax</span> <span class="o">-=</span> <span class="n">distance</span>
 
-        <span class="k">elif</span> <span class="n">delta</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">xmin</span> <span class="o">-=</span> <span class="n">distance</span>
             <span class="n">xmax</span> <span class="o">+=</span> <span class="n">distance</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">change_wf_region</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">add_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
-        <span class="n">time</span> <span class="o">*=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span><span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">ratio</span><span class="p">)</span>
+<div class="viewcode-block" id="WaveformWidget.add_section"><a class="viewcode-back" href="../../index.html#widgets.waveformwidget.WaveformWidget.add_section">[docs]</a>    <span class="k">def</span> <span class="nf">add_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots the section on waveform widget.</span>
+
+<span class="sd">        :param time: (int) Position in seconds.</span>
+<span class="sd">        :param label: (str) Label of the given seciton.</span>
+<span class="sd">        :param title: (str) Title of the given section.</span>
+<span class="sd">        :param color: (tuple) RGBa values of a color. Ex: (20, 170, 100, 80)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">time</span> <span class="o">*=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">ratio</span><span class="p">)</span>
         <span class="n">label</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">title</span>
         <span class="n">section_item</span> <span class="o">=</span> <span class="n">SectionItem</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="n">time</span><span class="p">,</span> <span class="n">label_section</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
                                    <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">section_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">section_item</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">waveform</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="n">section_item</span><span class="p">)</span>
-        <span class="n">section_item</span><span class="o">.</span><span class="n">hovering</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__hover_section</span><span class="p">)</span>
+
+        <span class="n">section_item</span><span class="o">.</span><span class="n">hovering</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__hover_section</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">__hover_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">section_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
         <span class="n">org_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapFromGlobal</span><span class="p">(</span><span class="n">QCursor</span><span class="o">.</span><span class="n">pos</span><span class="p">())</span>
-        <span class="n">pos_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len</span> <span class="o">*</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">org_pos</span><span class="o">.</span><span class="n">x</span><span class="p">())</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">waveform</span><span class="o">.</span><span class="n">width</span><span class="p">())</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">section_label</span><span class="o">.</span><span class="n">setPos</span><span class="p">(</span><span class="n">pos_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max</span><span class="o">*</span><span class="mf">2.</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">pos_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len</span> <span class="o">*</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">org_pos</span><span class="o">.</span><span class="n">x</span><span class="p">())</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">waveform</span><span class="o">.</span><span class="n">width</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">section_label</span><span class="o">.</span><span class="n">setPos</span><span class="p">(</span><span class="n">pos_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max</span> <span class="o">*</span> <span class="mf">2.</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">remove_sections</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="WaveformWidget.remove_sections"><a class="viewcode-back" href="../../index.html#widgets.waveformwidget.WaveformWidget.remove_sections">[docs]</a>    <span class="k">def</span> <span class="nf">remove_sections</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes the sections plotted on waveform widget.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">section_items</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">waveform</span><span class="o">.</span><span class="n">removeItem</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">section_items</span> <span class="o">=</span> <span class="p">[]</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">section_items</span> <span class="o">=</span> <span class="p">[]</span></div></div>
 </pre></div>
 
     </div>

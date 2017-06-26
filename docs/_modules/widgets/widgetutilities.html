@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>widgets.widgetutilities &#8212; Dunya-desktop 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          Dunya-desktop</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for widgets.widgetutilities</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="k">def</span> <span class="nf">convert_str</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+    <span class="k">return</span> <span class="sa">u</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">set_css</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">css_path</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">css_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">css</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">widget</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">css</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="downsample_plot"><a class="viewcode-back" href="../../index.html#widgets.widgetutilities.downsample_plot">[docs]</a><span class="k">def</span> <span class="nf">downsample_plot</span><span class="p">(</span><span class="n">plot_array</span><span class="p">,</span> <span class="n">ds_limit</span><span class="p">):</span>
+    <span class="c1"># Decide by how much we should downsample</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Downsamples the given pitch array according to the given downsample limit.</span>
+
+<span class="sd">    :param plot_array: (numpy array) A sequence of pitch values</span>
+<span class="sd">                       [440.4, 442.3, 440.0, ...]</span>
+<span class="sd">    :param ds_limit: (int) Maximum number of samples to be plotted.</span>
+
+<span class="sd">    :return: (numpy array) A sequence of pitch values</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">size_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">plot_array</span><span class="p">)</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">size_array</span> <span class="o">/</span> <span class="n">ds_limit</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">ds</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># Small enough to display with no intervention.</span>
+        <span class="k">return</span> <span class="n">plot_array</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Here convert data into a down-sampled array suitable for</span>
+        <span class="c1"># visualizing. Must do this piecewise to limit memory usage.</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">size_array</span> <span class="o">//</span> <span class="n">ds</span><span class="p">)</span>
+        <span class="n">visible</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">samples</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">plot_array</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="n">source_ptr</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">target_ptr</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># read data in chunks of ~1M samples</span>
+        <span class="n">chunk_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1000000</span> <span class="o">//</span> <span class="n">ds</span><span class="p">)</span> <span class="o">*</span> <span class="n">ds</span>
+        <span class="k">while</span> <span class="n">source_ptr</span> <span class="o">&lt;</span> <span class="n">size_array</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">chunk</span> <span class="o">=</span> <span class="n">plot_array</span><span class="p">[</span><span class="n">source_ptr</span><span class="p">:</span><span class="nb">min</span><span class="p">(</span><span class="n">size_array</span><span class="p">,</span>
+                                              <span class="n">source_ptr</span><span class="o">+</span><span class="n">chunk_size</span><span class="p">)]</span>
+            <span class="n">size_chunk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+            <span class="n">source_ptr</span> <span class="o">+=</span> <span class="n">size_chunk</span>
+            <span class="c1"># reshape chunk to be integral multiple of ds</span>
+            <span class="n">chunk</span> <span class="o">=</span> <span class="n">chunk</span><span class="p">[:(</span><span class="n">size_chunk</span> <span class="o">//</span> <span class="n">ds</span><span class="p">)</span> <span class="o">*</span> <span class="n">ds</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">size_chunk</span><span class="o">//</span><span class="n">ds</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+
+            <span class="c1"># compute max and min</span>
+            <span class="n">chunk_max</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">chunk_min</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># interleave min and max into plot data to preserve</span>
+            <span class="c1"># envelope shape</span>
+            <span class="n">visible</span><span class="p">[</span><span class="n">target_ptr</span><span class="p">:</span><span class="n">target_ptr</span> <span class="o">+</span> <span class="n">chunk</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">chunk_min</span>
+            <span class="n">visible</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span><span class="n">target_ptr</span><span class="p">:</span><span class="mi">1</span><span class="o">+</span><span class="n">target_ptr</span><span class="o">+</span><span class="n">chunk</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">chunk_max</span>
+            <span class="n">target_ptr</span> <span class="o">+=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="n">plot_y</span> <span class="o">=</span> <span class="n">visible</span><span class="p">[:</span><span class="n">target_ptr</span><span class="p">]</span>
+        <span class="n">plot_y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="k">return</span> <span class="n">plot_y</span></div>
+
+
+<div class="viewcode-block" id="cursor_pos_sample"><a class="viewcode-back" href="../../index.html#widgets.widgetutilities.cursor_pos_sample">[docs]</a><span class="k">def</span> <span class="nf">cursor_pos_sample</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">,</span> <span class="n">hopsize</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the current index of sample.</span>
+
+<span class="sd">    :param pos: (int or float) Playback position in seconds.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="n">pos</span> <span class="o">*</span> <span class="n">samplerate</span> <span class="o">/</span> <span class="n">hopsize</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="current_pitch"><a class="viewcode-back" href="../../index.html#widgets.widgetutilities.current_pitch">[docs]</a><span class="k">def</span> <span class="nf">current_pitch</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">pitch_plot</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the current pitch value in Hz.</span>
+<span class="sd">    :param sample: (int) Index of sample.</span>
+
+<span class="sd">    :return: (float) Pitch in Hz.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">pitch_plot</span><span class="p">[</span><span class="n">sample</span><span class="p">]</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, MTG-UPF.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

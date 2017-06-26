@@ -291,6 +291,12 @@ Waveform Widget
 .. autoclass:: WaveformWidget
     :members:
 
+Widget Utilities
+~~~~~~~~~~~~~~~~
+.. automodule:: widgets.widgetutilities
+   :members:
+
+
 
 Extensions
 ----------

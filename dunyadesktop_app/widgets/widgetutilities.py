@@ -18,9 +18,11 @@ def downsample_plot(plot_array, ds_limit):
     # Decide by how much we should downsample
     """
     Downsamples the given pitch array according to the given downsample limit.
+
     :param plot_array: (numpy array) A sequence of pitch values
                        [440.4, 442.3, 440.0, ...]
     :param ds_limit: (int) Maximum number of samples to be plotted.
+
     :return: (numpy array) A sequence of pitch values
     """
     size_array = np.size(plot_array)
@@ -64,6 +66,7 @@ def downsample_plot(plot_array, ds_limit):
 def cursor_pos_sample(pos, samplerate, hopsize):
     """
     Returns the current index of sample.
+
     :param pos: (int or float) Playback position in seconds.
     """
     return np.int(pos * samplerate / hopsize)
@@ -72,7 +75,8 @@ def cursor_pos_sample(pos, samplerate, hopsize):
 def current_pitch(sample, pitch_plot):
     """
     Returns the current pitch value in Hz.
-    :param sample: 
-    :return: 
+    :param sample: (int) Index of sample.
+
+    :return: (float) Pitch in Hz.
     """
     return pitch_plot[sample]

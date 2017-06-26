@@ -93,6 +93,7 @@
 <li><a class="reference internal" href="#module-widgets.playerframe">Player Frame</a></li>
 <li><a class="reference internal" href="#module-widgets.timeserieswidget">Time Series Widget</a></li>
 <li><a class="reference internal" href="#module-widgets.waveformwidget">Waveform Widget</a></li>
+<li><a class="reference internal" href="#module-widgets.widgetutilities">Widget Utilities</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#extensions">Extensions</a><ul>
@@ -690,6 +691,26 @@ Changes the waveform region item according to the position of playback.</p>
 <dt id="widgets.waveformwidget.WaveformWidget">
 <em class="property">class </em><code class="descclassname">widgets.waveformwidget.</code><code class="descname">WaveformWidget</code><a class="reference internal" href="_modules/widgets/waveformwidget.html#WaveformWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.waveformwidget.WaveformWidget" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
+<dt id="widgets.waveformwidget.WaveformWidget.add_section">
+<code class="descname">add_section</code><span class="sig-paren">(</span><em>time</em>, <em>label</em>, <em>title</em>, <em>color</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/waveformwidget.html#WaveformWidget.add_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.waveformwidget.WaveformWidget.add_section" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the section on waveform widget.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>time</strong> – (int) Position in seconds.</li>
+<li><strong>label</strong> – (str) Label of the given seciton.</li>
+<li><strong>title</strong> – (str) Title of the given section.</li>
+<li><strong>color</strong> – (tuple) RGBa values of a color. Ex: (20, 170, 100, 80)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="widgets.waveformwidget.WaveformWidget.change_wf_region">
 <code class="descname">change_wf_region</code><span class="sig-paren">(</span><em>x_start</em>, <em>x_end</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/waveformwidget.html#WaveformWidget.change_wf_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.waveformwidget.WaveformWidget.change_wf_region" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the position of the waveform region item on the waveform widget.</p>
@@ -716,7 +737,7 @@ the waveform region item exists.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">xmin, xmax (float): Minimum and maximum values of waveform region item</td>
 </tr>
 </tbody>
 </table>
@@ -737,6 +758,12 @@ the waveform region item exists.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="widgets.waveformwidget.WaveformWidget.remove_sections">
+<code class="descname">remove_sections</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/waveformwidget.html#WaveformWidget.remove_sections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.waveformwidget.WaveformWidget.remove_sections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the sections plotted on waveform widget.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="widgets.waveformwidget.WaveformWidget.update_wf_vline">
 <code class="descname">update_wf_vline</code><span class="sig-paren">(</span><em>playback_pos_sample</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/waveformwidget.html#WaveformWidget.update_wf_vline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.waveformwidget.WaveformWidget.update_wf_vline" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updated the position of vertical line.</p>
@@ -750,6 +777,60 @@ the waveform region item exists.</p>
 </table>
 </dd></dl>
 
+</dd></dl>
+
+</div>
+<div class="section" id="module-widgets.widgetutilities">
+<span id="widget-utilities"></span><h3>Widget Utilities<a class="headerlink" href="#module-widgets.widgetutilities" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="widgets.widgetutilities.current_pitch">
+<code class="descclassname">widgets.widgetutilities.</code><code class="descname">current_pitch</code><span class="sig-paren">(</span><em>sample</em>, <em>pitch_plot</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/widgetutilities.html#current_pitch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.widgetutilities.current_pitch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current pitch value in Hz.
+:param sample: (int) Index of sample.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(float) Pitch in Hz.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="widgets.widgetutilities.cursor_pos_sample">
+<code class="descclassname">widgets.widgetutilities.</code><code class="descname">cursor_pos_sample</code><span class="sig-paren">(</span><em>pos</em>, <em>samplerate</em>, <em>hopsize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/widgetutilities.html#cursor_pos_sample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.widgetutilities.cursor_pos_sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current index of sample.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pos</strong> – (int or float) Playback position in seconds.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="widgets.widgetutilities.downsample_plot">
+<code class="descclassname">widgets.widgetutilities.</code><code class="descname">downsample_plot</code><span class="sig-paren">(</span><em>plot_array</em>, <em>ds_limit</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/widgetutilities.html#downsample_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.widgetutilities.downsample_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Downsamples the given pitch array according to the given downsample limit.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>plot_array</strong> – (numpy array) A sequence of pitch values
+[440.4, 442.3, 440.0, …]</li>
+<li><strong>ds_limit</strong> – (int) Maximum number of samples to be plotted.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(numpy array) A sequence of pitch values</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>

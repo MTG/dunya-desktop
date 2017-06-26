@@ -8,8 +8,6 @@ from .widgetutilities import downsample_plot
 # Enable OpenGL and Weave to improve the performance of plotting functions.
 pg.setConfigOptions(useOpenGL=True)
 pg.setConfigOptions(useWeave=True)
-# pg.setConfigOptions(crashWarning=True)
-
 
 # Colors of the waveform plot, vertical line (cursor) and waveform region
 # selector
@@ -65,6 +63,9 @@ class SectionItem(pg.LinearRegionItem):
 
 
 class WaveformWidget(pg.GraphicsLayoutWidget):
+    limit = 900
+    samplerate = 44100.
+
     def __init__(self):
         pg.GraphicsLayoutWidget.__init__(self, parent=None)
 
@@ -73,10 +74,6 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
         self.centralWidget.setSpacing(0)
 
         self.section_items = []
-
-        self.limit = 900  # maximum number of samples to be plotted
-        self.samplerate = 44100.
-
 
     def plot_waveform(self, raw_audio):
         """
@@ -146,7 +143,8 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
         Returns the current position of the waveform region item in seconds if
         the waveform region item exists.
 
-        :return:
+        :return: xmin, xmax (float): Minimum and maximum values of waveform region item
+
         """
         if hasattr(self, 'region_wf'):
             pos_wf_x_min, pos_wf_x_max = self.region_wf.getRegion()
@@ -173,7 +171,7 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
 
         :param playback_pos_sample: (int) Position of playback in samples.
         """
-        pos = playback_pos_sample/self.ratio
+        pos = playback_pos_sample / self.ratio
         if pos <= 0:
             pos = 0
         elif pos >= self.len:
@@ -185,32 +183,44 @@ class WaveformWidget(pg.GraphicsLayoutWidget):
         delta = event.pixelDelta().y()
         xmin, xmax = self.get_waveform_region
         distance = (xmax - xmin) * 0.03
-        if delta>0:
+        if delta > 0:
             xmin += distance
             xmax -= distance
 
-        elif delta<0:
+        elif delta < 0:
             xmin -= distance
             xmax += distance
 
         self.change_wf_region(xmin, xmax)
 
     def add_section(self, time, label, title, color):
-        time *= (self.samplerate/ self.ratio)
+        """
+        Plots the section on waveform widget.
+
+        :param time: (int) Position in seconds.
+        :param label: (str) Label of the given seciton.
+        :param title: (str) Title of the given section.
+        :param color: (tuple) RGBa values of a color. Ex: (20, 170, 100, 80)
+        """
+        time *= (self.samplerate / self.ratio)
         label += "\n" + title
         section_item = SectionItem(values=time, label_section=label,
                                    color=color)
         self.section_items.append(section_item)
         self.waveform.addItem(section_item)
+
         section_item.hovering.connect(self.__hover_section)
 
     def __hover_section(self, text):
         self.section_label.setText(text)
         org_pos = self.mapFromGlobal(QCursor.pos())
-        pos_x = self.len * (float(org_pos.x())/self.waveform.width())
-        self.section_label.setPos(pos_x, self.max*2./3)
+        pos_x = self.len * (float(org_pos.x()) / self.waveform.width())
+        self.section_label.setPos(pos_x, self.max * 2. / 3)
 
     def remove_sections(self):
+        """
+        Removes the sections plotted on waveform widget.
+        """
         for item in self.section_items:
             self.waveform.removeItem(item)
         self.section_items = []
