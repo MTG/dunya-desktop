@@ -8,7 +8,6 @@ from .widgetutilities import downsample_plot, cursor_pos_sample, current_pitch
 # Enable OpenGL and Weave to improve the performance of plotting functions.
 pg.setConfigOptions(useOpenGL=True)
 pg.setConfigOptions(useWeave=True)
-# pg.setConfigOptions(crashWarning=True)
 
 CURSOR_PEN = pg.mkPen((255, 40, 35, 150), cosmetic=True, width=3)
 YAXIS_BRUSH = pg.mkBrush((50, 255, 255, 45))
@@ -205,6 +204,12 @@ class TimeSeriesWidget(pg.GraphicsLayoutWidget):
         self.hline_histogram.setPos(pos=[0, pitch])
 
     def update_notes(self, xmin, xmax):
+        """
+        Plots the note squares on the time series widget according to the given region.
+
+        :param xmin: (int) Minimum value of the region selector item
+        :param xmax: (int) Maximum value of the region selector item
+        """
         pen=(225, 224, 181, 175)
         start_ind = self.find_nearest_index(self.notes_start, xmin)
         end_ind = self.find_nearest_index(self.notes_end, xmax)
@@ -234,6 +239,13 @@ class TimeSeriesWidget(pg.GraphicsLayoutWidget):
 
     @staticmethod
     def find_nearest_index(n_array, value):
+        """
+
+        :param n_array: (numpy_array)
+        :param value: (float)
+
+        :return: (int) Index of the nearest item in the given list.
+        """
         index = (np.abs(n_array - value)).argmin()
         val = n_array[index]
         if value < val:

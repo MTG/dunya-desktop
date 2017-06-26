@@ -119,7 +119,6 @@
 <span class="c1"># Enable OpenGL and Weave to improve the performance of plotting functions.</span>
 <span class="n">pg</span><span class="o">.</span><span class="n">setConfigOptions</span><span class="p">(</span><span class="n">useOpenGL</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">pg</span><span class="o">.</span><span class="n">setConfigOptions</span><span class="p">(</span><span class="n">useWeave</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="c1"># pg.setConfigOptions(crashWarning=True)</span>
 
 <span class="n">CURSOR_PEN</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">mkPen</span><span class="p">((</span><span class="mi">255</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">150</span><span class="p">),</span> <span class="n">cosmetic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">YAXIS_BRUSH</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">mkBrush</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">45</span><span class="p">))</span>
@@ -315,7 +314,13 @@
         <span class="n">pitch</span> <span class="o">=</span> <span class="n">current_pitch</span><span class="p">(</span><span class="n">pos_sample</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pitch_plot</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hline_histogram</span><span class="o">.</span><span class="n">setPos</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">pitch</span><span class="p">])</span></div>
 
-    <span class="k">def</span> <span class="nf">update_notes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">):</span>
+<div class="viewcode-block" id="TimeSeriesWidget.update_notes"><a class="viewcode-back" href="../../index.html#widgets.timeserieswidget.TimeSeriesWidget.update_notes">[docs]</a>    <span class="k">def</span> <span class="nf">update_notes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots the note squares on the time series widget according to the given region.</span>
+
+<span class="sd">        :param xmin: (int) Minimum value of the region selector item</span>
+<span class="sd">        :param xmax: (int) Maximum value of the region selector item</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pen</span><span class="o">=</span><span class="p">(</span><span class="mi">225</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">181</span><span class="p">,</span> <span class="mi">175</span><span class="p">)</span>
         <span class="n">start_ind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_nearest_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">notes_start</span><span class="p">,</span> <span class="n">xmin</span><span class="p">)</span>
         <span class="n">end_ind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_nearest_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">notes_end</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)</span>
@@ -330,7 +335,7 @@
             <span class="n">roi</span><span class="o">.</span><span class="n">addScaleHandle</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
             <span class="n">roi</span><span class="o">.</span><span class="n">addScaleHandle</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">zoom_selection</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="n">roi</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">rois</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">roi</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rois</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">roi</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TimeSeriesWidget.remove_given_items"><a class="viewcode-back" href="../../index.html#widgets.timeserieswidget.TimeSeriesWidget.remove_given_items">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">remove_given_items</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
@@ -343,14 +348,21 @@
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">removeItem</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></div>
 
-    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="TimeSeriesWidget.find_nearest_index"><a class="viewcode-back" href="../../index.html#widgets.timeserieswidget.TimeSeriesWidget.find_nearest_index">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">find_nearest_index</span><span class="p">(</span><span class="n">n_array</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param n_array: (numpy_array)</span>
+<span class="sd">        :param value: (float)</span>
+
+<span class="sd">        :return: (int) Index of the nearest item in the given list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">index</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">n_array</span> <span class="o">-</span> <span class="n">value</span><span class="p">))</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
         <span class="n">val</span> <span class="o">=</span> <span class="n">n_array</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">val</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">index</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span></div>
+            <span class="k">return</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span></div></div>
 </pre></div>
 
     </div>

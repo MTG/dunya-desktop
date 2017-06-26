@@ -593,6 +593,26 @@ Changes the waveform region item according to the position of playback.</p>
 <dd><p>Changes the y-axis range according to the selected region in y-axis.</p>
 </dd></dl>
 
+<dl class="staticmethod">
+<dt id="widgets.timeserieswidget.TimeSeriesWidget.find_nearest_index">
+<em class="property">static </em><code class="descname">find_nearest_index</code><span class="sig-paren">(</span><em>n_array</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/timeserieswidget.html#TimeSeriesWidget.find_nearest_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.timeserieswidget.TimeSeriesWidget.find_nearest_index" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>n_array</strong> – (numpy_array)</li>
+<li><strong>value</strong> – (float)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(int) Index of the nearest item in the given list.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="widgets.timeserieswidget.TimeSeriesWidget.plot_histogram_raxis">
 <code class="descname">plot_histogram_raxis</code><span class="sig-paren">(</span><em>vals</em>, <em>bins</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/timeserieswidget.html#TimeSeriesWidget.plot_histogram_raxis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.timeserieswidget.TimeSeriesWidget.plot_histogram_raxis" title="Permalink to this definition">¶</a></dt>
@@ -658,6 +678,24 @@ Changes the waveform region item according to the position of playback.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pos</strong> – (int or float) Playback position in seconds.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.timeserieswidget.TimeSeriesWidget.update_notes">
+<code class="descname">update_notes</code><span class="sig-paren">(</span><em>xmin</em>, <em>xmax</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/timeserieswidget.html#TimeSeriesWidget.update_notes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.timeserieswidget.TimeSeriesWidget.update_notes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the note squares on the time series widget according to the given region.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>xmin</strong> – (int) Minimum value of the region selector item</li>
+<li><strong>xmax</strong> – (int) Maximum value of the region selector item</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
