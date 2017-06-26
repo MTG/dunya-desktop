@@ -131,6 +131,7 @@ class TableView(QTableView):
     def send_rec(self):
         """Emits 'open_dunya_triggered' signal and the current index to open
         the player"""
+        self.index = self._get_current_index()
         if self.index:
             self.open_dunya_triggered.emit(self.index)
             self.index = None
@@ -213,7 +214,6 @@ class TableViewCollections(TableView):
     def _get_current_coll_name(self):
         coll_label = self.parent().findChildren(QLabel)[0]
         return coll_label.text()
-
 
 class TableWidget(QTableWidget, TableView):
     added_new_doc = pyqtSignal(list)
