@@ -34,11 +34,16 @@ Dunya-desktop Documentation
     :caption: Contents:
 
 
+------------------------------------------------------------------------------
+
+
 Installation
 ============
+
 The code is compatible with Python 2.7+ and Python 3. We highly recommend you
 to use the code with Python 3 and with a virtual environment.
 
+------------------------------------------------------------------------------
 
 Installing dependencies on MacOS
 --------------------------------
@@ -59,6 +64,8 @@ Sierra (v10.12.1).
     .. code-block:: bash
 
         /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+------------------------------------------------------------------------------
 
 On Mac OS for Python 3.6
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -91,6 +98,9 @@ On Mac OS for Python 3.6
 
         pip3 install -r requirements
         pip3 install PyQt5
+
+
+------------------------------------------------------------------------------
 
 
 On Mac OS for Python 2.7
@@ -152,6 +162,8 @@ On Mac OS for Python 2.7
         pip install -r requirements
 
 
+------------------------------------------------------------------------------
+
 Installing dependencies on Ubuntu 16.04
 ---------------------------------------
 
@@ -167,6 +179,8 @@ The given installation steps were tried on Ubuntu 16.04.02 LTS (xenial).
         sudo apt-get install -qq ffmpeg
         export QMAKE=/usr/lib/x86_64-linux-gnu/qt5/bin/qmake
 
+
+------------------------------------------------------------------------------
 
 On Ubuntu for Python 3.6
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -200,6 +214,7 @@ On Ubuntu for Python 3.6
         pip3 install -r requirements
         pip3 install PyQt5
 
+------------------------------------------------------------------------------
 
 On Ubuntu for Python 2.7
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -259,14 +274,35 @@ On Ubuntu for Python 2.7
 
         pip install -r requirements
 
+
+------------------------------------------------------------------------------
+
+Annotated Screenshots of The Software
+=====================================
+
+Main Window
+-----------
+
 .. image:: ../../resources/dunya-desktop-main-annotated.png
     :align: center
+
+------------------------------------------------------------------------------
+
+Collection Dialog
+-----------------
+
+.. image:: ../../resources/dunya-desktop-coll-dialog.png
+    :align: center
+
+------------------------------------------------------------------------------
+
 
 Main UI
 -------
 .. automodule:: mainui_makam
     :members:
 
+------------------------------------------------------------------------------
 
 Widgets
 -------
@@ -276,11 +312,15 @@ Combobox
 .. automodule:: widgets.combobox
     :members:
 
+------------------------------------------------------------------------------
+
 Player Frame
 ~~~~~~~~~~~~
 .. automodule:: widgets.playerframe
 .. autoclass:: PlayerFrame
     :members:
+
+------------------------------------------------------------------------------
 
 Tab Widget
 ~~~~~~~~~~
@@ -288,11 +328,15 @@ Tab Widget
 .. autoclass:: TabWidget
     :members:
 
+------------------------------------------------------------------------------
+
 Time Series Widget
 ~~~~~~~~~~~~~~~~~~
 .. automodule:: widgets.timeserieswidget
 .. autoclass:: TimeSeriesWidget
     :members:
+
+------------------------------------------------------------------------------
 
 Waveform Widget
 ~~~~~~~~~~~~~~~
@@ -300,10 +344,14 @@ Waveform Widget
 .. autoclass:: WaveformWidget
     :members:
 
+------------------------------------------------------------------------------
+
 Widget Utilities
 ~~~~~~~~~~~~~~~~
 .. automodule:: widgets.widgetutilities
    :members:
+
+------------------------------------------------------------------------------
 
 
 
@@ -323,7 +371,9 @@ Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
 
 Acknowledgements
 ================
-Dunya-desktop is supported by the European Research Council under the European Union’s Seventh Framework Program, as part of the CompMusic project (ERC grant agreement 267583).
+Dunya-desktop is supported by the European Research Council under the European
+Union’s Seventh Framework Program, as part of the CompMusic project (ERC grant
+agreement 267583).
 
 
 Indices and tables
