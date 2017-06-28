@@ -296,6 +296,38 @@ Collection Dialog
 
 ------------------------------------------------------------------------------
 
+Player Main Window
+------------------
+
+.. image:: ../../resources/dunya-desktop-playermain.png
+    :align: center
+
+------------------------------------------------------------------------------
+
+Histogram Dialog
+----------------
+
+.. image:: ../../resources/dunya-desktop-histogram.png
+    :align: center
+
+------------------------------------------------------------------------------
+
+Score Dialog
+------------
+
+.. image:: ../../resources/dunya-desktop-scoredialog.png
+    :align: center
+
+------------------------------------------------------------------------------
+
+
+Metadata Dialog
+---------------
+
+.. image:: ../../resources/dunya-desktop-metadata.png
+    :align: center
+
+------------------------------------------------------------------------------
 
 Main UI
 -------
