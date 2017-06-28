@@ -38,22 +38,10 @@ DOWNLOAD_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                              'icons', 'download.svg')
 COMPMUSIC_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                               'icons', 'compmusic_white.png')
-PLAY_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
-                              'icons', 'playback', 'play-button_gray.svg')
+PLAY_ICON = os.path.join(os.path.dirname(__file__), '..', 'ui_files', 'icons',
+                         'playback', 'play-button_gray.svg')
 CSS_PATH = os.path.join(os.path.dirname(__file__), '..', 'ui_files',
                         'style.qss')
-
-
-class DownloadButton(QToolButton):
-    def __init__(self, parent=None):
-        QToolButton.__init__(self, parent)
-        # self.clicked.connect(self.download_clicked)
-
-    def download_clicked(self):
-        pass
-        # print('clicked')
-        # print(self.parent())
-        # print(self.parent().pos())
 
 
 class TableView(QTableView):
@@ -94,7 +82,7 @@ class TableView(QTableView):
     def contextMenuEvent(self, event):
         """Pops up the context menu when the right button is clicked."""
         try:
-            index = self._get_current_index()
+            index = self._get_current_index
             menu = RCMenu(self)
             menu.popup(QCursor.pos())
 
@@ -104,7 +92,13 @@ class TableView(QTableView):
         except UnboundLocalError:
             pass
 
+    @property
     def _get_current_index(self):
+        """
+        Returns the index of clicked item.
+
+        :return: (int) Index of clicked item.
+        """
         if self.selectionModel().selection().indexes():
             for index in self.selectionModel().selection().indexes():
                 row, column = index.row(), index.column()
@@ -112,6 +106,9 @@ class TableView(QTableView):
         return index
 
     def _compute_overall_histograms(self):
+        """
+        Computes the overall histograms of selected items in a table.
+        """
         coll_widget =  self.parent().parent().listView_collections
         coll = str(coll_widget.currentItem().text())
 
@@ -131,7 +128,7 @@ class TableView(QTableView):
     def send_rec(self):
         """Emits 'open_dunya_triggered' signal and the current index to open
         the player"""
-        self.index = self._get_current_index()
+        self.index = self._get_current_index
         if self.index:
             self.open_dunya_triggered.emit(self.index)
             self.index = None
@@ -169,6 +166,9 @@ class TableViewResults(TableView):
         self.setSelectionMode(QAbstractItemView.SingleSelection)
 
     def _set_menu(self):
+        """
+
+        """
         self.add_maincoll = QAction("Add to main collection", self)
 
         self.menu.addSeparator()
@@ -177,6 +177,9 @@ class TableViewResults(TableView):
         self.open_dunya.setIcon(QIcon(DUNYA_ICON))
 
     def _set_horizontal_header(self):
+        """
+        Sets the settings of the horizontal header.
+        """
         self.horizontal_header.setStretchLastSection(True)
         self.horizontal_header.hide()
         self.horizontal_header.setResizeMode(QHeaderView.Fixed)
@@ -196,10 +199,13 @@ class TableViewCollections(TableView):
         menu.popup(QCursor.pos())
 
     def _rc_remove_triggerred(self):
-        index = self._get_current_index()
+        """
+        Removes the selected item by clicking on the remove option in context menu.
+        """
+        index = self._get_current_index
         model = self.model().sourceModel()
         docid = model.items[index.row()]
-        coll_name = self._get_current_coll_name()
+        coll_name = self._get_current_coll_name
 
         # removing the selected item
         conn, c = database.connect()
@@ -211,9 +217,16 @@ class TableViewCollections(TableView):
         model.add_recording(collection)
         conn.close()
 
+    @property
     def _get_current_coll_name(self):
+        """
+        Returns the name of the collection.
+
+        :return: (str) Name of the collection
+        """
         coll_label = self.parent().findChildren(QLabel)[0]
         return coll_label.text()
+
 
 class TableWidget(QTableWidget, TableView):
     added_new_doc = pyqtSignal(list)

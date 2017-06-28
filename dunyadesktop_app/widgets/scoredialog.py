@@ -42,6 +42,7 @@ class ScoreWidget(QSvgWidget):
             change_color(self.svg_path, self.tree, self.root, self.note_index,
                          'black')
 
+
 class ScoreDialog(QDialog):
     def __init__(self, parent=None):
         QDialog.__init__(self, parent=parent)

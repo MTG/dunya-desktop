@@ -259,6 +259,9 @@ On Ubuntu for Python 2.7
 
         pip install -r requirements
 
+.. image:: ../../resources/dunya-desktop-main-annotated.png
+    :align: center
+
 Main UI
 -------
 .. automodule:: mainui_makam
