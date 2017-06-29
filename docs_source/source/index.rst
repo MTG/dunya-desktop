@@ -382,9 +382,19 @@ Tree Widgets
 
 ------------------------------------------------------------------------------
 
-
 Time Series Widget
 ~~~~~~~~~~~~~~~~~~
+
+.. image:: ../../resources/timeserieswidget.png
+    :align: center
+
+------------------------------------------------------------------------------
+
+.. image:: ../../resources/timeseries-uml.png
+    :align: center
+
+------------------------------------------------------------------------------
+
 .. automodule:: widgets.timeserieswidget
 .. autoclass:: TimeSeriesWidget
     :members:
