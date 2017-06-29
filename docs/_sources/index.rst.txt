@@ -362,6 +362,50 @@ Tab Widget
 
 ------------------------------------------------------------------------------
 
+Table Widget
+~~~~~~~~~~~~
+
+.. image:: ../../resources/table-uml.png
+    :align: center
+
+------------------------------------------------------------------------------
+
+.. automodule:: widgets.table
+.. autoclass:: TableView
+    :members:
+
+------------------------------------------------------------------------------
+
+.. automodule:: widgets.table
+.. autoclass:: TableViewResults
+    :members:
+
+------------------------------------------------------------------------------
+
+.. automodule:: widgets.table
+.. autoclass:: TableViewCollections
+    :members:
+
+------------------------------------------------------------------------------
+
+.. automodule:: widgets.table
+.. autoclass:: TableWidget
+    :members:
+
+------------------------------------------------------------------------------
+
+.. automodule:: widgets.table
+.. autoclass:: DialogCollTable
+    :members:
+
+------------------------------------------------------------------------------
+
+.. automodule:: widgets.table
+.. autoclass:: TablePlaylist
+    :members:
+
+------------------------------------------------------------------------------
+
 Tree Widgets
 ~~~~~~~~~~~~
 

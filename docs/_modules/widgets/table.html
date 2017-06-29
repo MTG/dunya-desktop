@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>widgets.table &#8212; Dunya-desktop 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          Dunya-desktop</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for widgets.table</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="k">import</span> <span class="p">(</span><span class="n">QToolButton</span><span class="p">,</span> <span class="n">QTableView</span><span class="p">,</span> <span class="n">QAbstractItemView</span><span class="p">,</span>
+                             <span class="n">QAction</span><span class="p">,</span> <span class="n">QHeaderView</span><span class="p">,</span> <span class="n">QTableWidget</span><span class="p">,</span> <span class="n">QDialog</span><span class="p">,</span>
+                             <span class="n">QTableWidgetItem</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">qApp</span><span class="p">,</span>
+                             <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="k">import</span> <span class="n">pyqtSignal</span><span class="p">,</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QPersistentModelIndex</span><span class="p">,</span> <span class="n">QSize</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="k">import</span> <span class="n">QFont</span><span class="p">,</span> <span class="n">QCursor</span><span class="p">,</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QPixmap</span>
+
+<span class="kn">from</span> <span class="nn">utilities</span> <span class="k">import</span> <span class="n">database</span><span class="p">,</span> <span class="n">corpusbasestatistics</span>
+<span class="kn">from</span> <span class="nn">cultures.makam</span> <span class="k">import</span> <span class="n">utilities</span> <span class="k">as</span> <span class="n">makam_utilities</span>
+<span class="kn">from</span> <span class="nn">widgets.playerframe</span> <span class="k">import</span> <span class="n">load_pd</span><span class="p">,</span> <span class="n">load_tonic</span>
+<span class="kn">from</span> <span class="nn">.progressbar</span> <span class="k">import</span> <span class="n">ProgressBar</span>
+<span class="kn">from</span> <span class="nn">.contextmenu</span> <span class="k">import</span> <span class="n">RCMenu</span><span class="p">,</span> <span class="n">RCMenuCollTable</span>
+<span class="kn">from</span> <span class="nn">.widgetutilities</span> <span class="k">import</span> <span class="n">set_css</span><span class="p">,</span> <span class="n">convert_str</span>
+<span class="kn">from</span> <span class="nn">.models.recordingmodel</span> <span class="k">import</span> <span class="n">CollectionTableModel</span>
+<span class="kn">from</span> <span class="nn">.models.proxymodel</span> <span class="k">import</span> <span class="n">SortFilterProxyModel</span>
+
+
+<span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;Linux&#39;</span><span class="p">:</span>
+    <span class="n">FONT_SIZE</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">FONT_SIZE</span> <span class="o">=</span> <span class="mi">12</span>
+
+
+<span class="n">DOCS_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;cultures&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;documents&#39;</span><span class="p">)</span>
+<span class="n">DUNYA_ICON</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;ui_files&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;icons&#39;</span><span class="p">,</span> <span class="s1">&#39;dunya.svg&#39;</span><span class="p">)</span>
+<span class="n">CHECK_ICON</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;ui_files&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;icons&#39;</span><span class="p">,</span> <span class="s1">&#39;tick-inside-circle.svg&#39;</span><span class="p">)</span>
+<span class="n">QUEUE_ICON</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;ui_files&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;icons&#39;</span><span class="p">,</span> <span class="s1">&#39;add-to-queue-button.svg&#39;</span><span class="p">)</span>
+<span class="n">DOWNLOAD_ICON</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;ui_files&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;icons&#39;</span><span class="p">,</span> <span class="s1">&#39;download.svg&#39;</span><span class="p">)</span>
+<span class="n">COMPMUSIC_ICON</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;ui_files&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;icons&#39;</span><span class="p">,</span> <span class="s1">&#39;compmusic_white.png&#39;</span><span class="p">)</span>
+<span class="n">PLAY_ICON</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;ui_files&#39;</span><span class="p">,</span> <span class="s1">&#39;icons&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;playback&#39;</span><span class="p">,</span> <span class="s1">&#39;play-button_gray.svg&#39;</span><span class="p">)</span>
+<span class="n">CSS_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;ui_files&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;style.qss&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="TableView"><a class="viewcode-back" href="../../index.html#widgets.table.TableView">[docs]</a><span class="k">class</span> <span class="nc">TableView</span><span class="p">(</span><span class="n">QTableView</span><span class="p">):</span>
+    <span class="n">open_dunya_triggered</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+    <span class="n">add_to_collection</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">QTableView</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+
+        <span class="c1"># setting the table for no edit and row selection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setEditTriggers</span><span class="p">(</span><span class="n">QAbstractItemView</span><span class="o">.</span><span class="n">NoEditTriggers</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setSelectionBehavior</span><span class="p">(</span><span class="n">QAbstractItemView</span><span class="o">.</span><span class="n">SelectRows</span><span class="p">)</span>
+        <span class="c1"># self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setMouseTracking</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span><span class="o">.</span><span class="n">setStretchLastSection</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">font</span> <span class="o">=</span> <span class="n">QFont</span><span class="p">()</span>
+        <span class="n">font</span><span class="o">.</span><span class="n">setPointSize</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+
+        <span class="c1"># hiding the vertical headers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verticalHeader</span><span class="p">()</span><span class="o">.</span><span class="n">hide</span><span class="p">()</span>
+
+        <span class="c1"># arranging the artist column for being multi-line</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWordWrap</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setTextElideMode</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">ElideMiddle</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_index</span> <span class="o">=</span> <span class="n">QPersistentModelIndex</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viewport</span><span class="p">()</span><span class="o">.</span><span class="n">installEventFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_font</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_set_font</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sets the font of the table&quot;&quot;&quot;</span>
+        <span class="n">font</span> <span class="o">=</span> <span class="n">QFont</span><span class="p">()</span>
+        <span class="n">font</span><span class="o">.</span><span class="n">setPointSize</span><span class="p">(</span><span class="n">FONT_SIZE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TableView.contextMenuEvent"><a class="viewcode-back" href="../../index.html#widgets.table.TableView.contextMenuEvent">[docs]</a>    <span class="k">def</span> <span class="nf">contextMenuEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Pops up the context menu when the right button is clicked.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_current_index</span>
+            <span class="n">menu</span> <span class="o">=</span> <span class="n">RCMenu</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">menu</span><span class="o">.</span><span class="n">popup</span><span class="p">(</span><span class="n">QCursor</span><span class="o">.</span><span class="n">pos</span><span class="p">())</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">selected_indexes</span> <span class="o">=</span> <span class="n">menu</span><span class="o">.</span><span class="n">return_selected_row_indexes</span><span class="p">()</span>
+            <span class="n">menu</span><span class="o">.</span><span class="n">overall_hist_action</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_compute_overall_histograms</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">UnboundLocalError</span><span class="p">:</span>
+            <span class="k">pass</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_get_current_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the index of clicked item.</span>
+
+<span class="sd">        :return: (int) Index of clicked item.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectionModel</span><span class="p">()</span><span class="o">.</span><span class="n">selection</span><span class="p">()</span><span class="o">.</span><span class="n">indexes</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectionModel</span><span class="p">()</span><span class="o">.</span><span class="n">selection</span><span class="p">()</span><span class="o">.</span><span class="n">indexes</span><span class="p">():</span>
+                <span class="n">row</span><span class="p">,</span> <span class="n">column</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">row</span><span class="p">(),</span> <span class="n">index</span><span class="o">.</span><span class="n">column</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">index</span>
+        <span class="k">return</span> <span class="n">index</span>
+
+    <span class="k">def</span> <span class="nf">_compute_overall_histograms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the overall histograms of selected items in a table.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">coll_widget</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span><span class="o">.</span><span class="n">listView_collections</span>
+        <span class="n">coll</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">coll_widget</span><span class="o">.</span><span class="n">currentItem</span><span class="p">()</span><span class="o">.</span><span class="n">text</span><span class="p">())</span>
+
+        <span class="n">conn</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+        <span class="n">histograms</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">selected_indexes</span><span class="p">:</span>
+            <span class="n">mbid</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">database</span><span class="o">.</span><span class="n">get_nth_row</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">coll</span><span class="p">,</span> <span class="n">row</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">pd_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DOCS_PATH</span><span class="p">,</span> <span class="n">mbid</span><span class="p">,</span>
+                                   <span class="s1">&#39;audioanalysis--pitch_distribution.json&#39;</span><span class="p">)</span>
+            <span class="n">tnc_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DOCS_PATH</span><span class="p">,</span> <span class="n">mbid</span><span class="p">,</span>
+                                   <span class="s1">&#39;audioanalysis--tonic.json&#39;</span><span class="p">)</span>
+            <span class="n">vals</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">load_pd</span><span class="p">(</span><span class="n">pd_path</span><span class="p">)</span>
+            <span class="n">tonic</span> <span class="o">=</span> <span class="n">load_tonic</span><span class="p">(</span><span class="n">tnc_path</span><span class="p">)</span>
+            <span class="n">histograms</span><span class="p">[</span><span class="n">mbid</span><span class="p">]</span> <span class="o">=</span> <span class="p">[[</span><span class="n">vals</span><span class="p">,</span> <span class="n">bins</span><span class="p">],</span> <span class="n">tonic</span><span class="p">]</span>
+        <span class="n">corpusbasestatistics</span><span class="o">.</span><span class="n">compute_overall_histogram</span><span class="p">(</span><span class="n">histograms</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TableView.send_rec"><a class="viewcode-back" href="../../index.html#widgets.table.TableView.send_rec">[docs]</a>    <span class="k">def</span> <span class="nf">send_rec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Emits &#39;open_dunya_triggered&#39; signal and the current index to open</span>
+<span class="sd">        the player&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_current_index</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">open_dunya_triggered</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="TableView.get_selected_rows"><a class="viewcode-back" href="../../index.html#widgets.table.TableView.get_selected_rows">[docs]</a>    <span class="k">def</span> <span class="nf">get_selected_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the current selected rows in the table.&quot;&quot;&quot;</span>
+        <span class="n">selected_rows</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectionModel</span><span class="p">()</span><span class="o">.</span><span class="n">selectedRows</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">row</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">selected_rows</span><span class="p">:</span>
+                <span class="n">selected_rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">selected_rows</span></div>
+
+<div class="viewcode-block" id="TableView.send_to_db"><a class="viewcode-back" href="../../index.html#widgets.table.TableView.send_to_db">[docs]</a>    <span class="k">def</span> <span class="nf">send_to_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coll</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Emits &#39;add_to_collection&#39; signal to add the selected rows to the</span>
+<span class="sd">        database&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_to_collection</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">coll</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="kc">None</span></div></div>
+
+
+<div class="viewcode-block" id="TableViewResults"><a class="viewcode-back" href="../../index.html#widgets.table.TableViewResults">[docs]</a><span class="k">class</span> <span class="nc">TableViewResults</span><span class="p">(</span><span class="n">TableView</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Table view widget of query results.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">TableView</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setSortingEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setDragDropMode</span><span class="p">(</span><span class="n">QAbstractItemView</span><span class="o">.</span><span class="n">DragOnly</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">horizontal_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_horizontal_header</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_maincoll</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Add to main collection&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setColumnWidth</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setSelectionMode</span><span class="p">(</span><span class="n">QAbstractItemView</span><span class="o">.</span><span class="n">SingleSelection</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_set_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_maincoll</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Add to main collection&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="o">.</span><span class="n">addSeparator</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">open_dunya</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Open on Player&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">open_dunya</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="n">DUNYA_ICON</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_set_horizontal_header</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the settings of the horizontal header.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">horizontal_header</span><span class="o">.</span><span class="n">setStretchLastSection</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">horizontal_header</span><span class="o">.</span><span class="n">hide</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">horizontal_header</span><span class="o">.</span><span class="n">setResizeMode</span><span class="p">(</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">Fixed</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TableViewCollections"><a class="viewcode-back" href="../../index.html#widgets.table.TableViewCollections">[docs]</a><span class="k">class</span> <span class="nc">TableViewCollections</span><span class="p">(</span><span class="n">TableView</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__index__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">TableView</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setSortingEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setDragDropMode</span><span class="p">(</span><span class="n">QAbstractItemView</span><span class="o">.</span><span class="n">NoDragDrop</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">horizontal_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setSelectionMode</span><span class="p">(</span><span class="n">QAbstractItemView</span><span class="o">.</span><span class="n">SingleSelection</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">contextMenuEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">QContextMenuEvent</span><span class="p">):</span>
+        <span class="n">menu</span> <span class="o">=</span> <span class="n">RCMenuCollTable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">menu</span><span class="o">.</span><span class="n">popup</span><span class="p">(</span><span class="n">QCursor</span><span class="o">.</span><span class="n">pos</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">_rc_remove_triggerred</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes the selected item by clicking on the remove option in context menu.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_current_index</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">()</span><span class="o">.</span><span class="n">sourceModel</span><span class="p">()</span>
+        <span class="n">docid</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">items</span><span class="p">[</span><span class="n">index</span><span class="o">.</span><span class="n">row</span><span class="p">()]</span>
+        <span class="n">coll_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_current_coll_name</span>
+
+        <span class="c1"># removing the selected item</span>
+        <span class="n">conn</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+        <span class="n">database</span><span class="o">.</span><span class="n">delete_nth_row</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">coll_name</span><span class="p">,</span> <span class="n">docid</span><span class="p">)</span>
+
+        <span class="c1"># refreshing the model</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">clear_items</span><span class="p">()</span>
+        <span class="n">collection</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">fetch_collection</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">coll_name</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">add_recording</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_get_current_coll_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the name of the collection.</span>
+
+<span class="sd">        :return: (str) Name of the collection</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">coll_label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span><span class="o">.</span><span class="n">findChildren</span><span class="p">(</span><span class="n">QLabel</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">coll_label</span><span class="o">.</span><span class="n">text</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TableWidget"><a class="viewcode-back" href="../../index.html#widgets.table.TableWidget">[docs]</a><span class="k">class</span> <span class="nc">TableWidget</span><span class="p">(</span><span class="n">QTableWidget</span><span class="p">,</span> <span class="n">TableView</span><span class="p">):</span>
+    <span class="n">added_new_doc</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">open_dunya_triggered</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+    <span class="n">set_result_checked</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">QTableWidget</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+        <span class="n">TableView</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setDragDropMode</span><span class="p">(</span><span class="n">QAbstractItemView</span><span class="o">.</span><span class="n">DropOnly</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setAcceptDrops</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setDragDropOverwriteMode</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_columns</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">recordings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indexes</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coll</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">_set_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setColumnCount</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setHorizontalHeaderLabels</span><span class="p">([</span><span class="s1">&#39;Status&#39;</span><span class="p">,</span> <span class="s1">&#39;Title&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span><span class="o">.</span><span class="n">setResizeMode</span><span class="p">(</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">Fixed</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">dropMimeData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_int</span><span class="p">,</span> <span class="n">p_int_1</span><span class="p">,</span> <span class="n">QMimeData</span><span class="p">,</span> <span class="n">Qt_DropAction</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_drop_row</span> <span class="o">=</span> <span class="n">p_int</span>
+        <span class="k">return</span> <span class="kc">True</span>
+        <span class="c1"># self.last_drop_row = self.rowCount()</span>
+        <span class="c1"># return True</span>
+
+    <span class="k">def</span> <span class="nf">dropEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="c1"># The QTableWidget from which selected rows will be moved</span>
+        <span class="n">sender</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">source</span><span class="p">()</span>
+
+        <span class="c1"># Default dropEvent method fires dropMimeData with appropriate</span>
+        <span class="c1"># parameters (we&#39;re interested in the row index).</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">QTableWidget</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">dropEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="c1"># Now we know where to insert selected row(s)</span>
+        <span class="n">drop_row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_drop_row</span>
+        <span class="n">selected_rows</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">get_selected_rows</span><span class="p">()</span>
+
+        <span class="n">selected_rows_index</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">row</span><span class="p">()</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">selected_rows</span><span class="p">]</span>
+
+        <span class="c1"># if sender == receiver (self), after creating new empty rows selected</span>
+        <span class="c1"># rows might change their locations</span>
+        <span class="n">sel_rows_offsets</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span> <span class="o">!=</span> <span class="n">sender</span> <span class="ow">or</span> <span class="n">srow</span> <span class="o">&lt;</span> <span class="n">drop_row</span>
+                            <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_rows_index</span><span class="p">)</span> <span class="k">for</span> <span class="n">srow</span> <span class="ow">in</span>
+                            <span class="n">selected_rows_index</span><span class="p">]</span>
+        <span class="n">selected_rows_index</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span> <span class="o">+</span> <span class="n">offset</span> <span class="k">for</span> <span class="n">row</span><span class="p">,</span> <span class="n">offset</span>
+                               <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">selected_rows_index</span><span class="p">,</span> <span class="n">sel_rows_offsets</span><span class="p">)]</span>
+
+        <span class="c1"># copy content of selected rows into empty ones</span>
+        <span class="n">docs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">conn</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">srow</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">selected_rows</span><span class="p">):</span>
+            <span class="n">source_index</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">model</span><span class="p">()</span><span class="o">.</span><span class="n">mapToSource</span><span class="p">(</span><span class="n">srow</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">database</span><span class="o">.</span><span class="n">add_doc_to_coll</span><span class="p">(</span>
+                    <span class="n">conn</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">recordings</span><span class="p">[</span><span class="n">source_index</span><span class="o">.</span><span class="n">row</span><span class="p">()],</span> <span class="bp">self</span><span class="o">.</span><span class="n">coll</span><span class="p">):</span>
+                <span class="c1"># index in the source model</span>
+                <span class="n">index</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">model</span><span class="p">()</span><span class="o">.</span><span class="n">mapToSource</span><span class="p">(</span><span class="n">selected_rows</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="c1"># item in the source model</span>
+                <span class="n">item</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">model</span><span class="p">()</span><span class="o">.</span><span class="n">sourceModel</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">index</span><span class="o">.</span><span class="n">row</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">item</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">text</span><span class="p">())</span>
+
+                    <span class="n">docs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recordings</span><span class="p">[</span><span class="n">source_index</span><span class="o">.</span><span class="n">row</span><span class="p">()])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">indexes</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">recordings</span><span class="p">[</span><span class="n">source_index</span><span class="o">.</span><span class="n">row</span><span class="p">()]]</span> <span class="o">=</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
+                    <span class="c1"># sender.model().sourceModel().set_checked(</span>
+                    <span class="c1"># [selected_rows_index[i]])</span>
+        <span class="k">if</span> <span class="n">docs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">added_new_doc</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">docs</span><span class="p">)</span>
+        <span class="n">event</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">add_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insertRow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">source</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">create_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coll</span><span class="p">):</span>
+        <span class="c1"># first cleans the table, sets the columns and enables the widget</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setRowCount</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_columns</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">coll</span><span class="p">):</span>
+            <span class="n">set_check</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DOCS_PATH</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span>
+                                <span class="s1">&#39;audioanalysis--metadata.json&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">makam_utilities</span><span class="o">.</span><span class="n">check_doc</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+                <span class="n">cell</span> <span class="o">=</span> <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">])</span>
+                <span class="n">set_check</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Needs to be downloaded </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
+                <span class="n">cell</span> <span class="o">=</span> <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">insertRow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">cell</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setColumnWidth</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">set_check</span> <span class="ow">is</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_progress_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+        <span class="n">docid</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="n">docid</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="n">step</span>
+        <span class="n">n_progress</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="n">n_progress</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setCellWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indexes</span><span class="p">[</span><span class="n">docid</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ProgressBar</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="n">progress_bar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indexes</span><span class="p">[</span><span class="n">docid</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">progress_bar</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">step</span> <span class="o">==</span> <span class="n">n_progress</span><span class="p">:</span>
+                <span class="n">progress_bar</span><span class="o">.</span><span class="n">update_progress_bar</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">n_progress</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indexes</span><span class="p">[</span><span class="n">docid</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">refresh_row</span><span class="p">(</span><span class="n">docid</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw</span><span class="p">,</span> <span class="n">exist</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">()</span>
+        <span class="n">item</span><span class="o">.</span><span class="n">setAlignment</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignCenter</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">exist</span> <span class="ow">is</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">icon</span> <span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="n">QUEUE_ICON</span><span class="p">)</span><span class="o">.</span><span class="n">scaled</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">KeepAspectRatio</span><span class="p">,</span>
+                                              <span class="n">Qt</span><span class="o">.</span><span class="n">SmoothTransformation</span><span class="p">)</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">setPixmap</span><span class="p">(</span><span class="n">icon</span><span class="p">)</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">setToolTip</span><span class="p">(</span><span class="s1">&#39;Waiting in the download queue...&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">exist</span> <span class="ow">is</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">icon</span> <span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="n">CHECK_ICON</span><span class="p">)</span><span class="o">.</span><span class="n">scaled</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">KeepAspectRatio</span><span class="p">,</span>
+                                              <span class="n">Qt</span><span class="o">.</span><span class="n">SmoothTransformation</span><span class="p">)</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">setPixmap</span><span class="p">(</span><span class="n">icon</span><span class="p">)</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">setToolTip</span><span class="p">(</span><span class="s1">&#39;All the features are downloaded...&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">exist</span> <span class="ow">is</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">setToolTip</span><span class="p">(</span><span class="s1">&#39;Download&#39;</span><span class="p">)</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="n">DOWNLOAD_ICON</span><span class="p">))</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">download_clicked</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setCellWidget</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">download_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">click_me</span> <span class="o">=</span> <span class="n">qApp</span><span class="o">.</span><span class="n">focusWidget</span><span class="p">()</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indexAt</span><span class="p">(</span><span class="n">click_me</span><span class="o">.</span><span class="n">pos</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">index</span><span class="o">.</span><span class="n">isValid</span><span class="p">():</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">row</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">docid</span> <span class="o">=</span> <span class="n">convert_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">docid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">indexes</span><span class="p">[</span><span class="n">docid</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">added_new_doc</span><span class="o">.</span><span class="n">emit</span><span class="p">([</span><span class="n">docid</span><span class="p">])</span>
+
+<div class="viewcode-block" id="TableWidget.refresh_row"><a class="viewcode-back" href="../../index.html#widgets.table.TableWidget.refresh_row">[docs]</a>    <span class="k">def</span> <span class="nf">refresh_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">docid</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;checks the status and the title columns of given row&quot;&quot;&quot;</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indexes</span><span class="p">[</span><span class="n">docid</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">makam_utilities</span><span class="o">.</span><span class="n">check_doc</span><span class="p">(</span><span class="n">docid</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">exist</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+                <span class="n">title</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="n">DOCS_PATH</span><span class="p">,</span> <span class="n">docid</span><span class="p">,</span>
+                    <span class="s1">&#39;audioanalysis--metadata.json&#39;</span><span class="p">)))[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span>
+                <span class="n">item</span> <span class="o">=</span> <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_result_checked</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">docid</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="DialogCollTable"><a class="viewcode-back" href="../../index.html#widgets.table.DialogCollTable">[docs]</a><span class="k">class</span> <span class="nc">DialogCollTable</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+        <span class="n">QDialog</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumSize</span><span class="p">(</span><span class="n">QSize</span><span class="p">(</span><span class="mi">1200</span><span class="p">,</span> <span class="mi">600</span><span class="p">))</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_collection</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_collection</span><span class="o">.</span><span class="n">setAlignment</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignCenter</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_collection</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lineedit_filter</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lineedit_filter</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">coll_table</span> <span class="o">=</span> <span class="n">TableViewCollections</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coll_table</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">CollectionTableModel</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">proxy_model</span> <span class="o">=</span> <span class="n">SortFilterProxyModel</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proxy_model</span><span class="o">.</span><span class="n">setSourceModel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proxy_model</span><span class="o">.</span><span class="n">setFilterKeyColumn</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">coll_table</span><span class="o">.</span><span class="n">setModel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">proxy_model</span><span class="p">)</span>
+
+        <span class="c1"># signals</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lineedit_filter</span><span class="o">.</span><span class="n">textChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lineedit_changed</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_lineedit_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proxy_model</span><span class="o">.</span><span class="n">filter_table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lineedit_filter</span><span class="o">.</span><span class="n">text</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">_set_line_edit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lineedit_filter</span><span class="o">.</span><span class="n">setPlaceholderText</span><span class="p">(</span><span class="s1">&#39;Type here to filter&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">closeEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">QCloseEvent</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">clear_items</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TablePlaylist"><a class="viewcode-back" href="../../index.html#widgets.table.TablePlaylist">[docs]</a><span class="k">class</span> <span class="nc">TablePlaylist</span><span class="p">(</span><span class="n">TableWidget</span><span class="p">,</span> <span class="n">TableViewCollections</span><span class="p">):</span>
+    <span class="n">item_changed</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">TableWidget</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">TableViewCollections</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setDragDropMode</span><span class="p">(</span><span class="n">QAbstractItemView</span><span class="o">.</span><span class="n">NoDragDrop</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_columns</span><span class="p">()</span>
+        <span class="n">set_css</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">CSS_PATH</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">itemClicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_item_clicked</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_item_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="n">current_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentIndex</span><span class="p">()</span><span class="o">.</span><span class="n">row</span><span class="p">()</span>
+        <span class="n">conn</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+
+        <span class="n">coll_label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span><span class="o">.</span><span class="n">findChildren</span><span class="p">(</span><span class="n">QLabel</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">coll_name</span> <span class="o">=</span> <span class="n">coll_label</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+
+        <span class="n">mbid</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">get_nth_row</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">coll_name</span><span class="p">,</span> <span class="n">current_index</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">item_changed</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">mbid</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_set_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setColumnCount</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setHorizontalHeaderLabels</span><span class="p">([</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;Title&#39;</span><span class="p">,</span> <span class="s1">&#39;Artists&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span><span class="o">.</span><span class="n">setResizeMode</span><span class="p">(</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">Fixed</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">add_recordings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recording</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">mbid</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">recording</span><span class="p">):</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="n">CollectionTableModel</span><span class="o">.</span><span class="n">_get_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mbid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">index</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">metadata</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_add_item</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_item</span><span class="p">(</span><span class="n">mbid</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+    <span class="k">def</span> <span class="nf">_add_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insertRow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">())</span>
+
+        <span class="c1"># add play button</span>
+        <span class="n">play_button</span> <span class="o">=</span> <span class="n">QToolButton</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">play_button</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="n">PLAY_ICON</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">_make_item</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">())))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setCellWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">play_button</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_item</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">_make_item</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;artists&#39;</span><span class="p">]))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setColumnWidth</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">23</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setColumnWidth</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_make_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_button_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;meh&#39;</span><span class="p">)</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, MTG-UPF.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

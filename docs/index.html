@@ -101,6 +101,7 @@
 <li><a class="reference internal" href="#module-widgets.combobox">Combobox</a></li>
 <li><a class="reference internal" href="#module-widgets.playerframe">Player Frame</a></li>
 <li><a class="reference internal" href="#module-widgets.tabwidget">Tab Widget</a></li>
+<li><a class="reference internal" href="#table-widget">Table Widget</a></li>
 <li><a class="reference internal" href="#tree-widgets">Tree Widgets</a></li>
 <li><a class="reference internal" href="#time-series-widget">Time Series Widget</a></li>
 <li><a class="reference internal" href="#waveform-widget">Waveform Widget</a></li>
@@ -624,6 +625,80 @@ Changes the waveform region item according to the position of playback.</p>
 <em class="property">class </em><code class="descclassname">widgets.tabwidget.</code><code class="descname">TabWidget</code><span class="sig-paren">(</span><em>parent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/tabwidget.html#TabWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.tabwidget.TabWidget" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tab widget of related collection/s</p>
 </dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="table-widget">
+<h3>Table Widget<a class="headerlink" href="#table-widget" title="Permalink to this headline">¶</a></h3>
+<img alt="_images/table-uml.png" class="align-center" src="_images/table-uml.png" />
+<hr class="docutils" />
+<span class="target" id="module-widgets.table"></span><dl class="class">
+<dt id="widgets.table.TableView">
+<em class="property">class </em><code class="descclassname">widgets.table.</code><code class="descname">TableView</code><span class="sig-paren">(</span><em>parent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/table.html#TableView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.table.TableView" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="widgets.table.TableView.contextMenuEvent">
+<code class="descname">contextMenuEvent</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/table.html#TableView.contextMenuEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.table.TableView.contextMenuEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pops up the context menu when the right button is clicked.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.table.TableView.get_selected_rows">
+<code class="descname">get_selected_rows</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/table.html#TableView.get_selected_rows"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.table.TableView.get_selected_rows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current selected rows in the table.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.table.TableView.send_rec">
+<code class="descname">send_rec</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/table.html#TableView.send_rec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.table.TableView.send_rec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Emits ‘open_dunya_triggered’ signal and the current index to open
+the player</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.table.TableView.send_to_db">
+<code class="descname">send_to_db</code><span class="sig-paren">(</span><em>coll</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/table.html#TableView.send_to_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.table.TableView.send_to_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Emits ‘add_to_collection’ signal to add the selected rows to the
+database</p>
+</dd></dl>
+
+</dd></dl>
+
+<hr class="docutils" />
+<span class="target" id="module-widgets.table"></span><dl class="class">
+<dt id="widgets.table.TableViewResults">
+<em class="property">class </em><code class="descclassname">widgets.table.</code><code class="descname">TableViewResults</code><span class="sig-paren">(</span><em>parent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/table.html#TableViewResults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.table.TableViewResults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Table view widget of query results.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<span class="target" id="module-widgets.table"></span><dl class="class">
+<dt id="widgets.table.TableViewCollections">
+<em class="property">class </em><code class="descclassname">widgets.table.</code><code class="descname">TableViewCollections</code><span class="sig-paren">(</span><em>parent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/table.html#TableViewCollections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.table.TableViewCollections" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<hr class="docutils" />
+<span class="target" id="module-widgets.table"></span><dl class="class">
+<dt id="widgets.table.TableWidget">
+<em class="property">class </em><code class="descclassname">widgets.table.</code><code class="descname">TableWidget</code><span class="sig-paren">(</span><em>parent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/table.html#TableWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.table.TableWidget" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="widgets.table.TableWidget.refresh_row">
+<code class="descname">refresh_row</code><span class="sig-paren">(</span><em>docid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/table.html#TableWidget.refresh_row"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.table.TableWidget.refresh_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks the status and the title columns of given row</p>
+</dd></dl>
+
+</dd></dl>
+
+<hr class="docutils" />
+<span class="target" id="module-widgets.table"></span><dl class="class">
+<dt id="widgets.table.DialogCollTable">
+<em class="property">class </em><code class="descclassname">widgets.table.</code><code class="descname">DialogCollTable</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/table.html#DialogCollTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.table.DialogCollTable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<hr class="docutils" />
+<span class="target" id="module-widgets.table"></span><dl class="class">
+<dt id="widgets.table.TablePlaylist">
+<em class="property">class </em><code class="descclassname">widgets.table.</code><code class="descname">TablePlaylist</code><span class="sig-paren">(</span><em>parent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/widgets/table.html#TablePlaylist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.table.TablePlaylist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 <hr class="docutils" />
