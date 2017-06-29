@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>widgets.treewidget &#8212; Dunya-desktop 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          Dunya-desktop</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for widgets.treewidget</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">webbrowser</span>
+
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="k">import</span> <span class="p">(</span><span class="n">QTreeWidget</span><span class="p">,</span> <span class="n">QTreeWidgetItem</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="k">import</span> <span class="n">QIcon</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="k">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">pyqtSignal</span>
+
+<span class="kn">from</span> <span class="nn">cultures.makam.utilities</span> <span class="k">import</span> <span class="n">get_filenames_in_dir</span>
+
+<span class="n">DOCS_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;cultures&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;documents&#39;</span><span class="p">)</span>
+<span class="n">MB_ICON</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;ui_files&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;icons&#39;</span><span class="p">,</span> <span class="s1">&#39;mb-icon-large.svg&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="FeatureTreeWidget"><a class="viewcode-back" href="../../index.html#widgets.treewidget.FeatureTreeWidget">[docs]</a><span class="k">class</span> <span class="nc">FeatureTreeWidget</span><span class="p">(</span><span class="n">QTreeWidget</span><span class="p">):</span>
+    <span class="n">item_checked</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
+    <span class="n">FEATURES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">,</span> <span class="s1">&#39;pitch&#39;</span><span class="p">,</span> <span class="s1">&#39;pitch_distribution&#39;</span><span class="p">,</span> <span class="s1">&#39;pitch_filtered&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;tonic&#39;</span><span class="p">,</span> <span class="s1">&#39;notes&#39;</span><span class="p">,</span> <span class="s1">&#39;sections&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tree widget to visualize the available features for the related audio recording.</span>
+
+<span class="sd">        :param parent: (QWidget) Parent widget.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">QTreeWidget</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_tree_widget</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expanded</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">resizeColumnToContents</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_item_changed</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_item_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">column</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span><span class="p">:</span>
+            <span class="n">type_t</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">it</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">check_state</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">checkState</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">check_state</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">is_checked</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">is_checked</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">item_checked</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">type_t</span><span class="p">,</span> <span class="n">it</span><span class="p">,</span> <span class="n">is_checked</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_set_tree_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">([</span><span class="s1">&#39;Features&#39;</span><span class="p">,</span> <span class="s1">&#39;Visualize&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setHeaderItem</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="mi">250</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_feature_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">docid</span><span class="p">):</span>
+        <span class="n">fullnames</span><span class="p">,</span> <span class="n">folders</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <span class="n">get_filenames_in_dir</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DOCS_PATH</span><span class="p">,</span> <span class="n">docid</span><span class="p">),</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">&#39;*.json&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+            <span class="n">f_type</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;--&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">f_name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;--&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">f_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">FEATURES</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">f_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_dict</span><span class="p">[</span><span class="n">f_type</span><span class="p">]</span>
+                    <span class="n">f_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f_name</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">feature_dict</span><span class="p">[</span><span class="n">f_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">f_list</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="n">f_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">f_name</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">feature_dict</span><span class="p">[</span><span class="n">f_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">f_list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_items</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">add_items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_dict</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">root</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+                <span class="k">for</span> <span class="n">type_t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+                    <span class="n">feature</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Feature Types&#39;</span><span class="p">])</span>
+                    <span class="n">feature</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">EditRole</span><span class="p">,</span> <span class="n">type_t</span><span class="p">)</span>
+                    <span class="n">feature</span><span class="o">.</span><span class="n">setCheckState</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Unchecked</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resizeColumnToContents</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resizeColumnToContents</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expandAll</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MBItem"><a class="viewcode-back" href="../../index.html#widgets.treewidget.MBItem">[docs]</a><span class="k">class</span> <span class="nc">MBItem</span><span class="p">(</span><span class="n">QPushButton</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mb_link</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Push button for metadata information.</span>
+
+<span class="sd">        :param mb_link: (str) Musicbrainz web-link</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">QPushButton</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setFixedWidth</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setFixedHeight</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="n">MB_ICON</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mb_link</span> <span class="o">=</span> <span class="n">mb_link</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_button_clicked</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_button_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">webbrowser</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mb_link</span><span class="p">,</span> <span class="n">new</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MetadataTreeMakam"><a class="viewcode-back" href="../../index.html#widgets.treewidget.MetadataTreeMakam">[docs]</a><span class="k">class</span> <span class="nc">MetadataTreeMakam</span><span class="p">(</span><span class="n">QTreeWidget</span><span class="p">):</span>
+    <span class="n">MB</span> <span class="o">=</span> <span class="s1">&#39;https://musicbrainz.org/&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata_dict</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TreeWidget to visualize metadata information of a given makam recording.</span>
+
+<span class="sd">        :param metadata_dict: (dict) Metadata dictionary</span>
+<span class="sd">        :param parent:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">QTreeWidget</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata_dict</span> <span class="o">=</span> <span class="n">metadata_dict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+
+        <span class="n">header</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">([</span><span class="s1">&#39;Metadata&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setHeaderItem</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parse_dict</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_parse_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses the given metadata dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_title</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Title&#39;</span><span class="p">])</span>
+        <span class="n">mbid_link</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MB</span> <span class="o">+</span> <span class="s2">&quot;recording/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata_dict</span><span class="p">[</span><span class="s1">&#39;mbid&#39;</span><span class="p">]</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_title</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Title&#39;</span><span class="p">])</span>
+        <span class="n">title</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">EditRole</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata_dict</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">])</span>
+        <span class="n">title_link</span> <span class="o">=</span> <span class="n">MBItem</span><span class="p">(</span><span class="n">mbid_link</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setItemWidget</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">title_link</span><span class="p">)</span>
+
+        <span class="c1"># parsing and adding musical attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_ma</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Musical Attribute&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_release</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Releases&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_art_cred</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Artist Credits&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_artists</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Artists&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_work</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Works&#39;</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">att</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;makam&#39;</span><span class="p">,</span> <span class="s1">&#39;usul&#39;</span><span class="p">,</span> <span class="s1">&#39;form&#39;</span><span class="p">]:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata_dict</span><span class="p">[</span><span class="n">att</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">__add_musical_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_ma</span><span class="p">,</span> <span class="n">att</span><span class="o">.</span><span class="n">title</span><span class="p">(),</span>
+                                                 <span class="n">item</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No&#39;</span><span class="p">,</span> <span class="n">att</span><span class="p">)</span>  <span class="c1"># add logging</span>
+
+        <span class="k">for</span> <span class="n">att</span> <span class="ow">in</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_release</span><span class="p">,</span> <span class="s1">&#39;releases&#39;</span><span class="p">,</span> <span class="s1">&#39;Release&#39;</span><span class="p">),</span>
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_art_cred</span><span class="p">,</span> <span class="s1">&#39;artist_credits&#39;</span><span class="p">,</span> <span class="s1">&#39;Credits&#39;</span><span class="p">),</span>
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_work</span><span class="p">,</span> <span class="s1">&#39;works&#39;</span><span class="p">,</span> <span class="s1">&#39;Work&#39;</span><span class="p">)]:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata_dict</span><span class="p">[</span><span class="n">att</span><span class="p">[</span><span class="mi">1</span><span class="p">]]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">__add_to_tree</span><span class="p">(</span><span class="n">att</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">att</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">item</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;No&#39;</span><span class="p">,</span> <span class="n">att</span><span class="p">)</span>  <span class="c1"># add logging</span>
+
+        <span class="c1"># artists</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata_dict</span><span class="p">[</span><span class="s1">&#39;artists&#39;</span><span class="p">]:</span>
+                <span class="n">mb_artist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MB</span> <span class="o">+</span> <span class="s1">&#39;artist/&#39;</span> <span class="o">+</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;mbid&#39;</span><span class="p">]</span>
+                <span class="n">artist</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_artists</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Artist&#39;</span><span class="p">])</span>
+                <span class="n">artist</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">EditRole</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span>
+                <span class="n">artist</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">EditRole</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+
+                <span class="n">att_list</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;&#39;</span>
+                <span class="k">for</span> <span class="n">item_a</span> <span class="ow">in</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;attribute-list&#39;</span><span class="p">]:</span>
+                    <span class="n">att_list</span> <span class="o">+=</span> <span class="n">item_a</span>
+                <span class="n">artist</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">EditRole</span><span class="p">,</span> <span class="n">att_list</span><span class="p">)</span>
+
+                <span class="n">artist_link</span> <span class="o">=</span> <span class="n">MBItem</span><span class="p">(</span><span class="n">mb_artist</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">setItemWidget</span><span class="p">(</span><span class="n">artist</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">artist_link</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;no artistssss&#39;</span><span class="p">)</span>  <span class="c1"># add logging</span>
+
+        <span class="c1"># audio attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_audio</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Audio&#39;</span><span class="p">])</span>
+        <span class="n">fs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata_dict</span><span class="p">[</span><span class="s1">&#39;sampling_frequency&#39;</span><span class="p">]</span>
+        <span class="n">bit_rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata_dict</span><span class="p">[</span><span class="s1">&#39;bit_rate&#39;</span><span class="p">]</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata_dict</span><span class="p">[</span><span class="s1">&#39;duration&#39;</span><span class="p">]</span>
+
+        <span class="n">fs_item</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_audio</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Sampling Frequency&#39;</span><span class="p">])</span>
+        <span class="n">fs_item</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">EditRole</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+
+        <span class="n">bit_rate_item</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_audio</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Bit Rate&#39;</span><span class="p">])</span>
+        <span class="n">bit_rate_item</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">EditRole</span><span class="p">,</span> <span class="n">bit_rate</span><span class="p">)</span>
+
+        <span class="n">duration_item</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_audio</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Duration&#39;</span><span class="p">])</span>
+        <span class="n">duration_item</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">EditRole</span><span class="p">,</span> <span class="n">duration</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">expandAll</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resizeColumnToContents</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resizeColumnToContents</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__add_musical_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="n">widget_item</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="p">[</span><span class="n">name</span><span class="p">])</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__set_item_widget</span><span class="p">(</span><span class="n">widget_item</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="s1">&#39;mb_attribute&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__set_item_widget</span><span class="p">(</span><span class="n">widget_item</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="s1">&#39;mb_tag&#39;</span><span class="p">)</span>
+
+        <span class="n">mb_item</span> <span class="o">=</span> <span class="n">MBItem</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setItemWidget</span><span class="p">(</span><span class="n">widget_item</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">mb_item</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__add_to_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="n">mb_link</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MB</span> <span class="o">+</span> <span class="s1">&#39;release/&#39;</span> <span class="o">+</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;mbid&#39;</span><span class="p">]</span>
+        <span class="n">item_widget</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="p">[</span><span class="n">name</span><span class="p">])</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__set_item_widget</span><span class="p">(</span><span class="n">item_widget</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__set_item_widget</span><span class="p">(</span><span class="n">item_widget</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span>
+
+        <span class="n">mb_item</span> <span class="o">=</span> <span class="n">MBItem</span><span class="p">(</span><span class="n">mb_link</span><span class="o">=</span><span class="n">mb_link</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setItemWidget</span><span class="p">(</span><span class="n">item_widget</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">mb_item</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__set_item_widget</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="n">widget</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">EditRole</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">title</span><span class="p">())</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, MTG-UPF.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

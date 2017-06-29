@@ -362,6 +362,27 @@ Tab Widget
 
 ------------------------------------------------------------------------------
 
+Tree Widgets
+~~~~~~~~~~~~
+
+.. image:: ../../resources/treewidget-uml.png
+    :align: center
+
+.. automodule:: widgets.treewidget
+.. autoclass:: FeatureTreeWidget
+    :members:
+
+.. automodule:: widgets.treewidget
+.. autoclass:: MBItem
+    :members:
+
+.. automodule:: widgets.treewidget
+.. autoclass:: MetadataTreeMakam
+    :members:
+
+------------------------------------------------------------------------------
+
+
 Time Series Widget
 ~~~~~~~~~~~~~~~~~~
 .. automodule:: widgets.timeserieswidget
@@ -372,6 +393,18 @@ Time Series Widget
 
 Waveform Widget
 ~~~~~~~~~~~~~~~
+
+.. image:: ../../resources/widget-waveform.png
+    :align: center
+
+------------------------------------------------------------------------------
+
+
+.. image:: ../../resources/waveform-uml.png
+    :align: center
+
+------------------------------------------------------------------------------
+
 .. automodule:: widgets.waveformwidget
 .. autoclass:: WaveformWidget
     :members:
