@@ -19,6 +19,11 @@ class FeatureTreeWidget(QTreeWidget):
                 'tonic', 'notes', 'sections']
 
     def __init__(self, parent=None):
+        """
+        Tree widget to visualize the available features for the related audio recording.
+
+        :param parent: (QWidget) Parent widget.
+        """
         QTreeWidget.__init__(self, parent=parent)
         self.feature_dict = {}
         self.is_ready = False
@@ -78,6 +83,11 @@ class FeatureTreeWidget(QTreeWidget):
 
 class MBItem(QPushButton):
     def __init__(self, mb_link):
+        """
+        Push button for metadata information.
+
+        :param mb_link: (str) Musicbrainz web-link
+        """
         QPushButton.__init__(self)
 
         self.setFixedWidth(20)
@@ -95,6 +105,12 @@ class MetadataTreeMakam(QTreeWidget):
     MB = 'https://musicbrainz.org/'
 
     def __init__(self, metadata_dict, parent=None):
+        """
+        TreeWidget to visualize metadata information of a given makam recording.
+
+        :param metadata_dict: (dict) Metadata dictionary
+        :param parent:
+        """
         QTreeWidget.__init__(self, parent=parent)
         self.metadata_dict = metadata_dict
         self.resize(1000, 1000)
@@ -104,6 +120,9 @@ class MetadataTreeMakam(QTreeWidget):
         self._parse_dict()
 
     def _parse_dict(self):
+        """
+        Parses the given metadata dictionary.
+        """
         self.root_title = QTreeWidgetItem(self, ['Title'])
         mbid_link = self.MB + "recording/" + self.metadata_dict['mbid']
         title = QTreeWidgetItem(self.root_title, ['Title'])
