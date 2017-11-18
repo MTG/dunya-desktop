@@ -1,24 +1,28 @@
 import sys
+import requests
+import logging
+
 if sys.version_info[0] == 3:
     from urllib.parse import urlunparse, urlencode
 else:
     from urlparse import urlunparse
     from urllib import urlencode
-import requests
 
-import logging
+
 logger = logging.getLogger("dunya")
-
 HOSTNAME = "dunya.compmusic.upf.edu"
 TOKEN = None
 session = requests.Session()
-session.mount('http://'+HOSTNAME, requests.adapters.HTTPAdapter(max_retries=5))
+session.mount('http://' + HOSTNAME, requests.adapters.HTTPAdapter(max_retries=5))
+
 
 class HTTPError(Exception):
     pass
 
+
 class ConnectionError(Exception):
     pass
+
 
 def set_hostname(hostname):
     """ Change the hostname of the dunya API endpoint.
@@ -42,6 +46,7 @@ def set_token(token):
     global TOKEN
     TOKEN = token
 
+
 def _get_paged_json(path, **kwargs):
     extra_headers = None
     if 'extra_headers' in kwargs:
@@ -57,8 +62,9 @@ def _get_paged_json(path, **kwargs):
         nxt = res.get("next")
     return ret
 
+
 def _dunya_url_query(url, extra_headers=None):
-    logger.debug("query to '%s'"%url)
+    logger.debug("query to '%s'" % url)
     if not TOKEN:
         raise ConnectionError("You need to authenticate with `set_token`")
 
@@ -73,10 +79,11 @@ def _dunya_url_query(url, extra_headers=None):
         raise HTTPError(e)
     return g
 
+
 def _dunya_post(url, data=None, files=None):
     data = data or {}
     files = files or {}
-    logger.debug("post to '%s'"%url)
+    logger.debug("post to '%s'" % url)
     if not TOKEN:
         raise ConnectionError("You need to authenticate with `set_token`")
     headers = {"Authorization": "Token %s" % TOKEN}
@@ -86,6 +93,7 @@ def _dunya_post(url, data=None, files=None):
     except requests.exceptions.HTTPError as e:
         raise HTTPError(e)
     return p
+
 
 def _make_url(path, **kwargs):
     if not kwargs:
@@ -103,10 +111,12 @@ def _make_url(path, **kwargs):
     ))
     return url
 
+
 def _dunya_query_json(path, **kwargs):
     """Make a query to dunya and expect the results to be JSON"""
     g = _dunya_url_query(_make_url(path, **kwargs))
     return g.json() if g else None
+
 
 def _dunya_query_file(path, **kwargs):
     """Make a query to dunya and return the raw result"""
