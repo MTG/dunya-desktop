@@ -22,7 +22,6 @@ class RCMenu(QMenu):
         QMenu.__init__(self, parent)
         self._add_actions()
 
-
         self.open_dunya.triggered.connect(self._send_player_request)
 
     def _add_actions(self):
@@ -42,7 +41,7 @@ class RCMenu(QMenu):
         conn.close()
 
         self.addSeparator()
-        self.overall_hist_action = QAction("Compute oveall histograms", self)
+        self.overall_hist_action = QAction("Compute overall histograms", self)
         self.addAction(self.overall_hist_action)
 
     def _send_request_to_parent(self, coll):

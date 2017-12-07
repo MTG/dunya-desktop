@@ -2,6 +2,7 @@ import os
 import platform
 import json
 import sys
+import shutil
 
 from PyQt5.QtWidgets import (QToolButton, QTableView, QAbstractItemView,
                              QAction, QHeaderView, QTableWidget, QDialog,
@@ -206,16 +207,26 @@ class TableViewCollections(TableView):
         model = self.model().sourceModel()
         docid = model.items[index.row()]
         coll_name = self._get_current_coll_name
+        doc_directory = os.path.join(DOCS_PATH, docid)
+        mainWindows = self.parent().parent().parent().parent()
 
         # removing the selected item
         conn, c = database.connect()
         database.delete_nth_row(conn, c, coll_name, docid)
 
+        # remove the directory
+        shutil.rmtree(doc_directory)
+
         # refreshing the model
         model.clear_items()
         collection = database.fetch_collection(c, coll_name)
         model.add_recording(collection)
+
+        # refresh the TableWidget in the main windows
+        mainWindows.update_coll_list(coll_name)
+
         conn.close()
+
 
     @property
     def _get_current_coll_name(self):
