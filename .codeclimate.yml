@@ -19,3 +19,8 @@ ratings:
 exclude_paths:
   - "dunyadesktop_app/ui_files/style_rc.py"
   - "dunyadesktop_app/ui_files/style_qss.py"
+  - "docs"
+  - "docs_source"
+  - "resources"
+  - "uml-diagrams"
+  - ".travis"
